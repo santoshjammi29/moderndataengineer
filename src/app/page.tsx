@@ -90,7 +90,7 @@ export default function DashboardPage() {
     {
       question: "How does Lakehouse Architect prepare engineers for DP-600 and Databricks certifications?",
       answer:
-        "Lakehouse Architect provides over 10,700 verified interview scenarios, 660+ architectural concepts, 32 digital whiteboard blueprints, and dedicated Spark execution labs covering Microsoft Fabric Analytics Engineer (DP-600), Azure Data Engineer (DP-203), and Databricks Certified Data Engineer Professional.",
+        "Lakehouse Architect provides over 11,500 verified interview scenarios, 679 architectural concepts, 42 digital whiteboard blueprints, and dedicated Spark execution labs covering Microsoft Fabric Analytics Engineer (DP-600), Azure Data Engineer (DP-203), and Databricks Certified Data Engineer Professional.",
     },
   ]);
 

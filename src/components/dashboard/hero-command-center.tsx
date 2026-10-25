@@ -37,7 +37,7 @@ const PILLARS: PillarItem[] = [
   {
     id: "concepts",
     title: "1. Concepts & Foundations",
-    badge: "660+ Concepts · Mind Map",
+    badge: "679 Concepts · Mind Map",
     badgeColor: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
     icon: BookOpen,
     iconColor: "text-emerald-400",
@@ -47,7 +47,7 @@ const PILLARS: PillarItem[] = [
     description:
       "Comprehensive architectural glossaries, visual hierarchy taxonomy depth tree, and core lakehouse engine concepts.",
     features: [
-      "Concepts Glossary (660+ Terms)",
+      "Concepts Glossary (679 Terms)",
       "Interactive Mind Map Tree",
       "Delta Lake vs Iceberg Internals",
       "Modern Stack Core Concepts",
@@ -112,7 +112,7 @@ const PILLARS: PillarItem[] = [
   {
     id: "visuals",
     title: "4. Visual Blueprints & Diagrams",
-    badge: "32 Whiteboards · Interactive Flows",
+    badge: "42 Whiteboards · Interactive Flows",
     badgeColor: "bg-rose-500/15 text-rose-400 border-rose-500/30",
     icon: Sparkles,
     iconColor: "text-rose-400",
@@ -122,7 +122,7 @@ const PILLARS: PillarItem[] = [
     description:
       "Hand-drawn whiteboard architectural diagrams, system design workflows, and interactive end-to-end data pipeline flow SVGs.",
     features: [
-      "32 Whiteboard Architecture Blueprints",
+      "42 Whiteboard Architecture Blueprints",
       "Interactive DataOps Pipeline SVG",
       "Modern Stack Visual Flow Canvas",
       "Spark Memory & Shuffling Sketches",
@@ -264,7 +264,7 @@ export function HeroCommandCenter() {
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">32</strong> Blueprints</span>
+              <span><strong className="text-[var(--foreground)]">42</strong> Blueprints</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">

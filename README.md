@@ -1,11 +1,17 @@
 # Modern Data Engineer & Lakehouse Architect (`moderndataengineer.uk`)
 
-[![Next.js 16](https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![React 19](https://img.shields.io/badge/React-19_Server_Components-61DAFB?style=flat-square&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x_Strict-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Vitest](https://img.shields.io/badge/Tests-49_Files_•_399_Passed-green?style=flat-square&logo=vitest)](https://vitest.dev/)
-[![Edge Architecture](https://img.shields.io/badge/Deployment-Cloudflare_OpenNext-F38020?style=flat-square&logo=cloudflare)](https://developers.cloudflare.com/workers/)
-[![Security Policy](https://img.shields.io/badge/Security-Policy_Active-blue?style=flat-square&logo=securityscorecard)](SECURITY.md)
+<p align="center">
+  <img src="assets/og_modern_stack.svg" alt="Modern Data Engineer & Lakehouse Architect Hub" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js" alt="Next.js 16"></a>
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19_Server_Components-61DAFB?style=flat-square&logo=react" alt="React 19"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.x_Strict-3178C6?style=flat-square&logo=typescript" alt="TypeScript"></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-49_Files_%E2%80%A2_399_Passed-green?style=flat-square&logo=vitest" alt="Vitest"></a>
+  <a href="https://developers.cloudflare.com/workers/"><img src="https://img.shields.io/badge/Deployment-Cloudflare_OpenNext-F38020?style=flat-square&logo=cloudflare" alt="Edge Architecture"></a>
+  <a href="SECURITY.md"><img src="https://img.shields.io/badge/Security-Policy_Active-blue?style=flat-square&logo=securityscorecard" alt="Security Policy"></a>
+</p>
 
 > **Enterprise-Grade Cloud Educational Platform & Lakehouse Architecture Encyclopedia**  
 > Tailored for Principal Data Architects, Staff Data Engineers, and Lead Analytics Engineers mastering Microsoft Fabric, Databricks, Apache Spark, Delta Lake, Apache Iceberg, Power BI, Azure Data Factory, dbt, Apache Airflow, and Modern Multi-Engine Lakehouse Design.  
@@ -17,23 +23,35 @@
 
 Built on a **Zero-Bundle, Zero-Egress, Edge-Native Architecture**: massive data catalogs stay strictly server-side within React 19 `cache()` Data Access Layers (DAL), serving zero-bundle lightweight JSON payloads to 60 FPS virtualized client surfaces (`@tanstack/react-virtual` + HTML5 `<canvas>`). Large dataset shards are persistently cached in the browser's IndexedDB (`idb`), guaranteeing **0 bytes of repeat network egress** across tab switches and page reloads:
 
-```
-       ┌─────────────────────────────────────────────────────────────┐
-       │             GLOBAL EDGE TIER (Cloudflare OpenNext)          │
-       │       proxy.ts (Edge Routing, SWR Invalidation, R2 Cache)   │
-       └──────────────────────────────┬──────────────────────────────┘
-                                      │
-              ┌───────────────────────┴───────────────────────┐
-              ▼                                               ▼
-┌───────────────────────────┐                   ┌───────────────────────────┐
-│     SERVER DATA LAYER     │                   │   CLIENT BROWSING ENGINE  │
-│  - React 19 cache() DAL   │                   │  - 0 KB Raw JSON Bundled  │
-│  - Sharded R2 Artifacts   │                   │  - Persistent IndexedDB   │
-│  - Edge SWR API Routes    │                   │  - TanStack Virtual DOM   │
-│  - Google-Grade BM25F     │                   │  - Zero-Egress Tab Switch │
-│  - Streaming PDF API      │                   │  - Cloudflare KV Progress │
-│  - Bounded Redis Cache    │                   │  - 3-in-1 View Switchers  │
-└───────────────────────────┘                   └───────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph EDGE["Global Edge Tier (Cloudflare OpenNext)"]
+        direction TB
+        E1["proxy.ts (Edge Routing, SWR Invalidation, R2 Cache)"]
+    end
+
+    subgraph SERVER["Server Data Layer"]
+        direction TB
+        S1["React 19 cache() DAL"]
+        S2["Sharded R2 Artifacts"]
+        S3["Edge SWR API Routes"]
+        S4["Google-Grade BM25F Search Engine"]
+        S5["Streaming PDF Attachment API"]
+        S6["Bounded Redis LRU Memory Cache"]
+    end
+
+    subgraph CLIENT["Client Browsing Engine"]
+        direction TB
+        C1["0 KB Raw JSON Bundled in Client"]
+        C2["Persistent Browser IndexedDB Cache"]
+        C3["TanStack Virtual DOM (60 FPS)"]
+        C4["Zero-Egress Tab Switch & Navigation"]
+        C5["Cloudflare KV Progress Sync"]
+        C6["3-in-1 View Switchers (Glossary, Mindmap, Cards)"]
+    end
+
+    EDGE --> SERVER
+    EDGE --> CLIENT
 ```
 
 ---
@@ -52,13 +70,13 @@ The platform hosts the industry's most rigorous, verified repository of data eng
 | **Curriculum** | Databricks 100 Mastery | **100** | 100-day structured roadmap with certification mappings (DE Associate & Pro). |
 | **Visual Design** | Whiteboard Blueprints | **42** | High-resolution digital hand-drawn blueprints with detailed mechanics across 7 domains. |
 | **Modern Stack** | Modern Architecture Blueprints | **18** | End-to-end modern lakehouse, vector pipeline, and CDC stream blueprints. |
-| **Enterprise Guide**| GCC Enterprise Directory | **156** | Tier-1 Global Capability Centers (Bangalore/Hyderabad) with hiring rubrics & tech stacks. |
+| **Enterprise Guide** | GCC Enterprise Directory | **156** | Tier-1 Global Capability Centers (Bangalore/Hyderabad) with hiring rubrics & tech stacks. |
 | **Coding Practice** | Engine Benchmark Exercises | **178** | Hands-on PySpark (51), Spark SQL (50), Python/DataOps (42), and MSSQL (35). |
 | **Databricks Hub** | Unified Databricks Operations | **148+** | 48 suite cards + 100 architectural operations + 6 production memory triage playbooks. |
 | **PDF Downloads** | Compiled Master Vector PDFs | **7** | Production vector PDFs (Architecture, PySpark, Python, Spark Core, Spark SQL, Incident Runbooks, Master Ref). |
 | **Reference** | Cheatsheet Card Suites | **124** | 48 Databricks suite cards + 76 quick reference cards (Web, PDF, Poster). |
 | **Polyglot Matrix** | Multi-Engine Code Matrix | **15** | Comparative code execution matrix across Databricks, Snowflake, BigQuery, Fabric, and DuckDB. |
-| **Lakehouse FinOps**| Modern Cost Playbooks | **15** | Cloud Lakehouse FinOps & compute cost reduction playbooks with risk assessments. |
+| **Lakehouse FinOps** | Modern Cost Playbooks | **15** | Cloud Lakehouse FinOps & compute cost reduction playbooks with risk assessments. |
 | **Roadmaps** | Learning Paths | **12** | Structured certification paths for DP-600, DP-203, PL-300, and Databricks. |
 
 ---
@@ -69,13 +87,13 @@ All blueprints are rendered as high-fidelity hand-drawn digital schematics (avai
 
 | Architectural Domain | Count | Highlighted Production Blueprints |
 | :--- | :---: | :--- |
-| **Compute & Optimization** | **11** | Catalyst Optimizer & Photon Engine • Shuffle & Memory Architecture • Data Skew & AQE • SaveMode Handling • Join Strategy Decision Matrix • Tungsten Spill Mechanics • Structured Streaming State Store (RocksDB) • Photon vs. JVM • Broadcast & Accumulators • SQL Server Engine Internals |
-| **Storage Engines & Formats** | **8** | Delta Lake ACID Under the Hood • Apache Iceberg Snapshot Tree • Open Table Formats (Delta vs. Iceberg vs. Hudi) • Open File Formats (Parquet vs. ORC vs. Avro) • 6 Delta Optimization Levers • Lakehouse ACID Concurrency Matrix • SCD Types 0–6 in Medallion • Master Enterprise Lakehouse Reference |
-| **Pipelines & Ingestion** | **8** | Apache Airflow Distributed Architecture • dbt Modern Analytics Engineering DAG • Azure Data Factory Hybrid IR • Kafka Event Streaming • CDC with Debezium • Databricks Medallion Architecture • Delta Live Tables (DLT) • Databricks Asset Bundles (DABs) & Serverless CI/CD |
-| **Platform Landscape** | **5** | Databricks Unified Platform Master • Enterprise RAG & Vector Data Pipelines • Modern Python Data (Arrow, Polars, DuckDB) • FinOps & Cloud Cost Optimization • Enterprise Edge & IoT Architecture |
-| **Microsoft Fabric & Power BI**| **4** | Microsoft Fabric Unified Architecture & OneLake • Power BI Direct Lake & VertiPaq • Power BI DAX Engine Mechanics & Context Transition • Fabric OneLake Shortcuts & Direct Lake Mode |
-| **Data Modeling & Architecture**| **4** | Kimball Dimensional Modeling & Star Schema • Data Vault 2.0 Enterprise Modeling • Distributed Systems Resilience & Consensus • Enterprise Data Mesh & Data Products |
-| **Governance & Security** | **2** | Unity Catalog Unified Governance & 3-Level Namespace • Microsoft Purview Unified Metadata & Catalog |
+| **Compute & Optimization** | **11** | Catalyst Optimizer & Photon Engine<br>• Shuffle & Memory Architecture<br>• Data Skew & AQE<br>• SaveMode Handling<br>• Join Strategy Decision Matrix<br>• Tungsten Spill Mechanics<br>• Structured Streaming State Store (RocksDB)<br>• Photon vs. JVM<br>• Broadcast & Accumulators<br>• SQL Server Engine Internals |
+| **Storage Engines & Formats** | **8** | Delta Lake ACID Under the Hood<br>• Apache Iceberg Snapshot Tree<br>• Open Table Formats (Delta vs. Iceberg vs. Hudi)<br>• Open File Formats (Parquet vs. ORC vs. Avro)<br>• 6 Delta Optimization Levers<br>• Lakehouse ACID Concurrency Matrix<br>• SCD Types 0–6 in Medallion<br>• Master Enterprise Lakehouse Reference |
+| **Pipelines & Ingestion** | **8** | Apache Airflow Distributed Architecture<br>• dbt Modern Analytics Engineering DAG<br>• Azure Data Factory Hybrid IR<br>• Kafka Event Streaming<br>• CDC with Debezium<br>• Databricks Medallion Architecture<br>• Delta Live Tables (DLT)<br>• Databricks Asset Bundles (DABs) & Serverless CI/CD |
+| **Platform Landscape** | **5** | Databricks Unified Platform Master<br>• Enterprise RAG & Vector Data Pipelines<br>• Modern Python Data (Arrow, Polars, DuckDB)<br>• FinOps & Cloud Cost Optimization<br>• Enterprise Edge & IoT Architecture |
+| **Microsoft Fabric & Power BI** | **4** | Microsoft Fabric Unified Architecture & OneLake<br>• Power BI Direct Lake & VertiPaq<br>• Power BI DAX Engine Mechanics & Context Transition<br>• Fabric OneLake Shortcuts & Direct Lake Mode |
+| **Data Modeling & Architecture** | **4** | Kimball Dimensional Modeling & Star Schema<br>• Data Vault 2.0 Enterprise Modeling<br>• Distributed Systems Resilience & Consensus<br>• Enterprise Data Mesh & Data Products |
+| **Governance & Security** | **2** | Unity Catalog Unified Governance & 3-Level Namespace<br>• Microsoft Purview Unified Metadata & Catalog |
 
 ---
 
@@ -83,7 +101,7 @@ All blueprints are rendered as high-fidelity hand-drawn digital schematics (avai
 
 - **Google-Grade BM25F Search Engine (`⌘K` / `Ctrl+K`)**:
   - Sub-millisecond client-side discovery engine indexing all 11,500+ assets with instant keyboard navigation.
-  - Field-weighted scoring (Title $\times 3$, Subtitle $\times 2$, Content $\times 1$) with typo tolerance and zero-OOM memory optimization on Cloudflare Workers edge.
+  - Field-weighted scoring (Title: 3×, Subtitle: 2×, Content: 1×) with typo tolerance and zero-OOM memory optimization on Cloudflare Workers edge.
 - **Single-Roof Concepts & Mind Map Hub (`/concepts`)**:
   - Unified view switcher seamlessly toggles between **Glossary & Cards (679 terms)**, **4-Level Interactive Mind Map (14 pillars)**, and **Active Recall Flashcards** without page reload.
 - **Dedicated Databricks Coding Hub (`/code-practice/databricks`)**:
@@ -146,10 +164,10 @@ Detailed platform architecture guides and engineering runbooks are maintained in
 
 | Documentation Pillar | Scope & Focus Areas | Direct Links |
 | :--- | :--- | :--- |
-| **[Architecture & Blueprints](docs/architecture/README.md)** | Lakehouse systems, storage internals, and engine blueprints | [`01_azure_synapse.md`](docs/architecture/01_azure_synapse.md) • [`02_microsoft_fabric.md`](docs/architecture/02_microsoft_fabric.md) • [`05_lakehouse_finops.md`](docs/architecture/05_lakehouse_finops.md) • [`06_enterprise_blueprints.md`](docs/architecture/06_enterprise_blueprints.md) • [`07_open_storage_formats.md`](docs/architecture/07_open_storage_formats.md) • [`08_delta_optimization.md`](docs/architecture/08_delta_optimization.md) |
-| **[Databricks Operations & Triage](docs/databricks_master_operations_and_triage_guide.md)** | Operational reference: DBFS, Volumes, PySpark, SQL & OOM Triage | [`databricks_master_operations_and_triage_guide.md`](docs/databricks_master_operations_and_triage_guide.md) |
-| **[Production Audits](docs/audits/README.md)** | Edge benchmarks, theme contrast, design system & accessibility | [`production_audit.md`](docs/audits/production_audit.md) • [`theme_audit.md`](docs/audits/theme_audit.md) • [`design_system_audit.md`](docs/audits/design_system_audit.md) |
+| **[Architecture & Blueprints](docs/architecture/README.md)** | Lakehouse systems, storage internals, and engine blueprints | [`01_azure_synapse.md`](docs/architecture/01_azure_synapse.md)<br>• [`02_microsoft_fabric.md`](docs/architecture/02_microsoft_fabric.md)<br>• [`05_lakehouse_finops.md`](docs/architecture/05_lakehouse_finops.md)<br>• [`06_enterprise_blueprints.md`](docs/architecture/06_enterprise_blueprints.md)<br>• [`07_open_storage_formats.md`](docs/architecture/07_open_storage_formats.md)<br>• [`08_delta_optimization.md`](docs/architecture/08_delta_optimization.md) |
+| **[Databricks Operations & Triage](docs/databricks_master_operations_and_triage_guide.md)** | Operational reference: DBFS, Volumes, PySpark, SQL & OOM Triage | [`Master Operations & Triage Guide`](docs/databricks_master_operations_and_triage_guide.md) |
+| **[Production Audits](docs/audits/README.md)** | Edge benchmarks, theme contrast, design system & accessibility | [`production_audit.md`](docs/audits/production_audit.md)<br>• [`theme_audit.md`](docs/audits/theme_audit.md)<br>• [`design_system_audit.md`](docs/audits/design_system_audit.md) |
 | **[Design System](docs/design-system/README.md)** | Fluid tokens, typography scale & motion specifications | [`tokens_and_primitives.md`](docs/design-system/tokens_and_primitives.md) |
-| **[Engineering & Operations](docs/engineering/README.md)** | App Router DAL, deployment guide & platform roadmap | [`development_guide.md`](docs/engineering/development_guide.md) • [`workers-for-platforms.md`](docs/engineering/workers-for-platforms.md) • [`roadmap.md`](docs/engineering/roadmap.md) |
+| **[Engineering & Operations](docs/engineering/README.md)** | App Router DAL, deployment guide & platform roadmap | [`development_guide.md`](docs/engineering/development_guide.md)<br>• [`workers-for-platforms.md`](docs/engineering/workers-for-platforms.md)<br>• [`roadmap.md`](docs/engineering/roadmap.md) |
 
 👉 **[Browse Full Documentation Hub (`docs/README.md`)](docs/README.md)**
