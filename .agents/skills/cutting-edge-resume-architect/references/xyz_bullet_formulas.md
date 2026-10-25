@@ -24,6 +24,14 @@ Formula: **Accomplished [X] as measured by [Y] by doing [Z].**
 - **Formula**: Re-engineered legacy [Legacy System] into [Modern Stack], resolving [Specific Bottleneck] to boost [Execution / Query Metric] by [X%].
 - **Example**: "Re-engineered legacy ETL workloads into modern Azure Data Factory and Databricks pipelines, solving the Small File Problem and cutting query execution times by 40% through parallelism tuning and Integration Runtime right-sizing."
 
-## 6. Leadership & Governance
+## 6. Production Memory Triage & Spark Bottleneck Remediation
+- **Formula**: Triaged [Incident / Memory Failure] in [Engine / Cluster Scale] by implementing [Root Cause Remediation], eliminating [Error / Spill Metric] and accelerating [Pipeline SLA].
+- **Example**: "Resolved recurrent Executor OOMs and 2.4TB shuffle disk spills across a 64-node Databricks cluster by implementing synthetic key salting for skewed joins, tuning Tungsten off-heap allocations, and migrating to Delta Lake Liquid Clustering, reducing batch runtimes from 4.2 hours to 48 minutes."
+
+## 7. Multi-Engine Polyglot Architecture & Governance
+- **Formula**: Architected [Cross-Engine / Polyglot Lakehouse] across [Engines] leveraging [Catalog / Format], enabling [Consumption Metric] without [Data Duplication / Lock-In].
+- **Example**: "Architected multi-engine polyglot Lakehouse unifying Databricks, Snowflake, and BigQuery over OneLake and ADLS Gen2 via Unity Catalog and Apache Iceberg REST Catalog, enabling zero-copy cross-engine querying and eliminating multi-cloud storage duplication."
+
+## 8. Leadership & Governance
 - **Formula**: Directed [Team Size / Scope] as [Role], establishing [Governance / Standards Framework] that ensured [Delivery / Compliance Metric].
 - **Example**: "Served as primary technical point of contact for onsite Product Owners and Architects, governing offshore delivery of 5+ senior engineers, driving sprint roadmaps with zero schedule slippage across all enterprise deliverables."

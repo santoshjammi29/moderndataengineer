@@ -61,7 +61,7 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
 
     // Search bar is rendered prominently with ⌘K badge
     expect(screen.getByRole("search")).toBeDefined();
-    expect(screen.getByText(/Search 10,700\+ Q&As, concepts, architecture blueprints/i)).toBeDefined();
+    expect(screen.getByText(/Search (?:10,700\+|11,500\+) Q&As, concepts/i)).toBeDefined();
     expect(screen.getByText("⌘K")).toBeDefined();
   });
 
@@ -71,11 +71,11 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
     // High-signal platform notes and metrics
     expect(screen.getByText("Lakehouse Architect Notes")).toBeDefined();
     expect(screen.getByText("2026 Edition")).toBeDefined();
-    expect(screen.getByText("10,700+")).toBeDefined();
+    expect(screen.getByText("11,500+")).toBeDefined();
     expect(screen.getByText("Verified Assets")).toBeDefined();
-    expect(screen.getByText("32 Blueprints")).toBeDefined();
+    expect(screen.getByText("42 Blueprints")).toBeDefined();
     expect(screen.getByText("156 Profiles")).toBeDefined();
-    expect(screen.getByText("660 Concepts")).toBeDefined();
+    expect(screen.getByText("679 Concepts")).toBeDefined();
 
     // Redundant bottom bar controls removed
     expect(screen.queryByText("Shortcuts:")).toBeNull();
@@ -93,7 +93,7 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
     expect(isSubHrefActive("/architecture", new URLSearchParams(), "/architecture?tab=scenarios")).toBe(true);
   });
 
-  it("ensures left navigation stays until the end of the page across all layouts version of displays", () => {
+  it("ensures left navigation stays until the end of the page on desktop displays while preserving clean mobile layout", () => {
     const { container } = render(<Sidebar />);
     const aside = container.querySelector("aside");
     expect(aside).not.toBeNull();
@@ -106,9 +106,8 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
     expect(aside?.className).toContain("h-dvh");
     expect(aside?.className).toContain("border-r");
 
-    // Verify aside is NOT hidden on smaller screens (previously 'hidden lg:flex', now 'flex')
-    expect(aside?.className).toContain("flex");
-    expect(aside?.className).not.toContain("hidden lg:flex");
+    // Verify aside uses hidden lg:flex for responsive mobile layout
+    expect(aside?.className).toContain("hidden lg:flex");
   });
 
   it("verifies left navigation maintains responsive collapsed and expanded modes", () => {

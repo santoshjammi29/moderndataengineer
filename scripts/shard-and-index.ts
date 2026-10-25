@@ -447,6 +447,16 @@ function run() {
   copyStaticDirectory('cheat-sheets', 'cheat-sheets');
   copyStaticDirectory('cheatsheets', 'cheat-sheets');
 
+  // Mirror artifacts to public/_artifacts so OpenNext bundles them into Cloudflare Static Assets (env.ASSETS)
+  const publicArtifactsDir = path.join(process.cwd(), 'public', '_artifacts');
+  try {
+    ensureDir(publicArtifactsDir);
+    fs.cpSync(R2_OUT_DIR, publicArtifactsDir, { recursive: true });
+    console.log(`✓ Seeded static asset cache at ${publicArtifactsDir}`);
+  } catch (err) {
+    console.warn('Note: Could not mirror to public/_artifacts:', err);
+  }
+
   console.log(`✓ Sharding complete! Manifest and ${searchDocs.length} search documents written to .build-artifacts/r2`);
 }
 

@@ -2,7 +2,8 @@
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "lakehouse-customer-dispatcher",
   "main": "src/index.ts",
-  "compatibility_date": "2026-10-20",
+  "compatibility_date": "2026-10-25",
+  "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "dispatch_namespaces": [
     {

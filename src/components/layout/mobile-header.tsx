@@ -10,7 +10,7 @@ import { KbdShortcut } from "@/components/ui/kbd-shortcut";
 import { Search, Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { cn } from "@/lib/utils";
-import { NAV_GROUPS } from "@/data/navigation-data";
+import { NAV_GROUPS, isSubHrefActive } from "@/data/navigation-data";
 
 const badgeVariants: Record<string, string> = {
   easy: "bg-green-500/10 text-green-400 border-green-500/20",
@@ -140,8 +140,8 @@ function MobileHeaderInner() {
               <div className="flex items-center gap-2.5">
                 <BrandLogo size={28} className="rounded-lg shadow-xs" />
                 <div>
-                  <div className="text-xs font-bold text-[var(--foreground)]">DataPlatform Architect</div>
-                  <div className="text-[10px] text-[var(--muted-foreground)]">Enterprise Learning System</div>
+                  <div className="text-xs font-bold text-[var(--foreground)]">Lakehouse Architect</div>
+                  <div className="text-[10px] text-[var(--muted-foreground)]">Platform &amp; Systems Reference</div>
                 </div>
               </div>
               <button
@@ -182,18 +182,18 @@ function MobileHeaderInner() {
                       const active = isItemActive(item);
                       const Icon = item.icon;
                       return (
-                        <div key={item.href}>
+                        <div key={item.href} className="space-y-0.5">
                           <Link
                             href={item.href}
                             onClick={() => setDrawerOpen(false)}
                             className={cn(
-                              "flex items-center justify-between px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all",
+                              "flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all",
                               active
                                 ? "bg-blue-600 text-white font-semibold shadow-xs"
                                 : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
                             )}
                           >
-                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <div className="flex items-center gap-2.5 min-w-0 flex-1">
                               <Icon size={16} className={cn(active ? "text-white" : "text-blue-500 dark:text-blue-400 shrink-0")} />
                               <span className="break-words whitespace-normal leading-snug">{item.label}</span>
                             </div>
@@ -208,6 +208,53 @@ function MobileHeaderInner() {
                               </span>
                             )}
                           </Link>
+
+                          {/* Subpages when present — Visually distinct indented tree */}
+                          {item.subItems && item.subItems.length > 0 && (
+                            <ul className="ml-5 pl-2.5 border-l-2 border-blue-500/25 my-1 space-y-1">
+                              {item.subItems.map((sub) => {
+                                const isSubActive = isSubHrefActive(pathname, searchParams, sub.href);
+                                return (
+                                  <li key={sub.href}>
+                                    <Link
+                                      href={sub.href}
+                                      onClick={() => setDrawerOpen(false)}
+                                      className={cn(
+                                        "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all",
+                                        isSubActive
+                                          ? "bg-blue-600/15 text-blue-500 dark:text-blue-400 font-semibold"
+                                          : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                                      )}
+                                    >
+                                      <div className="flex items-center gap-2 min-w-0">
+                                        <span
+                                          className={cn(
+                                            "w-1.5 h-1.5 rounded-full shrink-0 transition-all",
+                                            isSubActive
+                                              ? "bg-blue-500 scale-125 shadow-[0_0_6px_rgba(59,130,246,0.8)]"
+                                              : "bg-[var(--muted-foreground)]/30"
+                                          )}
+                                        />
+                                        <span className="truncate">{sub.label}</span>
+                                      </div>
+                                      {sub.badge && (
+                                        <span
+                                          className={cn(
+                                            "text-[9px] font-mono px-1.5 py-0.2 rounded shrink-0",
+                                            isSubActive
+                                              ? "bg-blue-500/20 text-blue-400 font-bold"
+                                              : "bg-[var(--surface-3)] text-[var(--muted-foreground)]"
+                                          )}
+                                        >
+                                          {sub.badge}
+                                        </span>
+                                      )}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          )}
                         </div>
                       );
                     })}

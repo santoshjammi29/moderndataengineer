@@ -243,7 +243,7 @@ export function PdfDownloadsHub() {
 
           <div className="flex flex-row md:flex-col items-center md:items-end gap-2 shrink-0">
             <a
-              href="/api/download/pdf/lakehouse_enterprise_master_reference.pdf"
+              href="/cheatsheets/pdf/lakehouse_enterprise_master_reference.pdf"
               download="lakehouse_enterprise_master_reference.pdf"
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 active:scale-95 text-white text-xs font-semibold shadow-md transition-all cursor-pointer whitespace-nowrap"
             >
@@ -252,7 +252,7 @@ export function PdfDownloadsHub() {
             </a>
             <div className="flex items-center gap-1.5">
               <a
-                href="/api/download/pdf/databricks_master_cheatsheet.pdf"
+                href="/cheatsheets/pdf/databricks_master_cheatsheet.pdf"
                 download="databricks_master_cheatsheet.pdf"
                 className="flex items-center gap-1 px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium border border-slate-700 transition-all cursor-pointer whitespace-nowrap"
               >
@@ -260,7 +260,7 @@ export function PdfDownloadsHub() {
                 <span>Coding Suite (8p)</span>
               </a>
               <a
-                href="/api/download/pdf/incident_runbooks.pdf"
+                href="/cheatsheets/pdf/incident_runbooks.pdf"
                 download="incident_runbooks.pdf"
                 className="flex items-center gap-1 px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium border border-slate-700 transition-all cursor-pointer whitespace-nowrap"
               >
@@ -326,7 +326,6 @@ export function PdfDownloadsHub() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredSuites.map((doc) => {
           const pdfFilename = doc.pdfUrl.split("/").pop() || "document.pdf";
-          const downloadApiUrl = `/api/download/pdf/${pdfFilename}`;
           return (
             <div
               key={doc.id}
@@ -390,10 +389,10 @@ export function PdfDownloadsHub() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Action Buttons: Serve directly from static assets with edge caching */}
                 <div className="pt-2 border-t border-[var(--border)] flex items-center gap-1.5">
                   <a
-                    href={downloadApiUrl}
+                    href={doc.pdfUrl}
                     download={pdfFilename}
                     className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
                   >
@@ -402,11 +401,11 @@ export function PdfDownloadsHub() {
                   </a>
 
                   <a
-                    href={`${downloadApiUrl}?inline=true`}
+                    href={doc.pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--foreground)] text-xs font-semibold border border-[var(--border)] transition-colors cursor-pointer"
-                    title="View PDF inline in new tab"
+                    title="View PDF in new tab"
                   >
                     <FileText size={12} className="text-sky-400" />
                     <span className="hidden sm:inline">View</span>

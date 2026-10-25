@@ -27,8 +27,8 @@ describe('Professional Reference Portal IA & Search Indexing', () => {
     // Check specific pill tags for streamlined primary hubs
     expect(screen.getByText('Matrix')).toBeDefined();
     expect(screen.getByText('3.2k+')).toBeDefined();
-    expect(screen.getByText('660+')).toBeDefined();
-    expect(screen.getByText('7.1k+')).toBeDefined();
+    expect(screen.getByText('679')).toBeDefined();
+    expect(screen.getByText('6.8k+')).toBeDefined();
   });
 
   it('supports toggling collapsed and expanded states smoothly', () => {

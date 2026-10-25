@@ -60,12 +60,51 @@ export async function GET(
     return NextResponse.json({ error: 'Path traversal attempt detected' }, { status: 400 });
   }
 
-  // 1. Try Cloudflare Worker R2 Bucket
+  // 1. Edge Cache: Check Cloudflare Cache API first to eliminate Worker & R2 Class B reads
+  const cache = typeof caches !== 'undefined' && (caches as any).default ? ((caches as any).default as Cache) : null;
+  if (cache) {
+    try {
+      const cachedResponse = await cache.match(request.url);
+      if (cachedResponse) {
+        const response = new NextResponse(cachedResponse.body, cachedResponse);
+        setCorsHeaders(response.headers, request);
+        return response;
+      }
+    } catch {}
+  }
+
+  // 2. Try Cloudflare Workers context (Static Assets first for zero-cost Class B reads, then R2)
   try {
     const { getCloudflareContext } = await import('@opennextjs/cloudflare');
     const cloudflareContext = await getCloudflareContext({ async: true });
+    const assets = (cloudflareContext?.env as any)?.ASSETS as { fetch: (req: Request) => Promise<Response> } | undefined;
     const bucket = (cloudflareContext?.env as any)?.ARTIFACTS_BUCKET as R2Bucket | undefined;
 
+    // Check Cloudflare Static Assets (Zero Class A / Class B cost, global edge delivery)
+    if (assets) {
+      const assetUrl = new URL(`/_artifacts/${normalizedKey}`, request.url);
+      const assetRes = await assets.fetch(new Request(assetUrl.toString()));
+      if (assetRes.ok && assetRes.body) {
+        const headers = new Headers(assetRes.headers);
+        setCorsHeaders(headers, request);
+        if (normalizedKey.endsWith('manifest.json')) {
+          headers.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+        } else {
+          headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+        if (normalizedKey.endsWith('.json')) {
+          headers.set('Content-Type', 'application/json; charset=utf-8');
+        }
+
+        const response = new NextResponse(assetRes.body as any, { status: 200, headers });
+        if (cache && cloudflareContext?.ctx?.waitUntil) {
+          cloudflareContext.ctx.waitUntil(cache.put(request.url, response.clone()));
+        }
+        return response;
+      }
+    }
+
+    // Fallback to Cloudflare Worker R2 Bucket
     if (bucket) {
       const object = await bucket.get(normalizedKey);
       if (object) {
@@ -80,7 +119,11 @@ export async function GET(
           headers.set('Cache-Control', 'public, max-age=31536000, immutable');
         }
 
-        return new NextResponse(object.body as any, { status: 200, headers });
+        const response = new NextResponse(object.body as any, { status: 200, headers });
+        if (cache && cloudflareContext?.ctx?.waitUntil) {
+          cloudflareContext.ctx.waitUntil(cache.put(request.url, response.clone()));
+        }
+        return response;
       }
     }
   } catch {

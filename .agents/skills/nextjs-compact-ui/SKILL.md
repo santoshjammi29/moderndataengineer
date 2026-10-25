@@ -4,10 +4,11 @@ description: |
   Design and refactoring patterns for compact, dense, fast-navigating UI in Next.js data-heavy applications.
   Activate when:
   - A user says a page is "too big", "not compact", "hard to navigate", or "overwhelming"
-  - Designing list-heavy pages with 100+ items (Q&A lists, data tables, knowledge bases, concept indexes)
+  - Designing list-heavy pages with 100+ items (Q&A lists, data tables, knowledge bases, concept indexes, architecture scenarios)
   - Refactoring pages from marketing-style to reference-style layouts
   - Designing multi-level accessible filter decks, dynamic stretching trees/mindmaps, or command palettes
   - The user wants VS Code / terminal aesthetic — dense, keyboard-friendly, scannable
+  - Implementing multi-view single-roof hubs (e.g. Glossary, Mind Map, Flashcards) or dense PDF download hubs
 
   DO NOT trigger for:
   - Landing pages or marketing pages (they SHOULD be spacious)
@@ -130,7 +131,57 @@ Replace single vertical select menus or double-row disjointed scrollbars with an
 
 ---
 
-## 3. Keyboard-First Accessibility Triggers
+## 3. 36-Keyword Multi-Domain Filter Section (`KeywordFilterBar`)
+
+When navigating massive libraries (e.g. 3,200+ architecture scenarios), a flat tag cloud causes visual exhaustion. Group tags into strict functional domain buckets with live matched counts and URL synchronization:
+
+```tsx
+// Pattern: 6 Domain Groups with 6 Keywords each = 36 curated tags
+const DOMAIN_GROUPS = [
+  { id: "compute", name: "Compute & Engine", tags: ["Catalyst", "Photon", "AQE", "Shuffle", "Tungsten", "OOM"] },
+  { id: "storage", name: "Storage & Formats", tags: ["Delta Lake", "Iceberg", "Hudi", "Parquet", "Liquid Clustering", "ACID"] },
+  { id: "ingestion", name: "Pipelines & CDC", tags: ["Debezium", "Kafka", "DLT", "Airflow", "Auto Loader", "Idempotence"] },
+  { id: "finops", name: "FinOps & Scaling", tags: ["CU Smoothing", "Spot Arbitrage", "VACUUM", "Autoscale", "DBU", "Serverless"] },
+  { id: "governance", name: "Governance & Security", tags: ["Unity Catalog", "Purview", "RLS/CLS", "Lineage", "Audit", "Zero Trust"] },
+  { id: "modeling", name: "Modeling & Semantics", tags: ["Kimball", "Data Vault", "Direct Lake", "Star Schema", "SCD Type 2", "Data Mesh"] }
+];
+```
+- Each keyword displays its active matched count `(42)`.
+- Clicking a keyword updates the URL search query parameter `?kw=Photon` for shareable state.
+- Clicking an active tag toggles it off without reloading the page.
+
+---
+
+## 4. Single-Roof Multi-View Switcher Pattern
+
+Instead of fragmenting related features into disjointed sub-routes (e.g. separate pages for Concepts Glossary, Mind Map, and Flashcards), consolidate them into a single-roof route with a persistent zero-reload view switcher:
+
+```tsx
+<div className="flex items-center gap-1 p-1 bg-[var(--surface-2)] rounded-lg border border-[var(--border)]">
+  <button
+    onClick={() => setView('glossary')}
+    className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all", view === 'glossary' && "bg-[var(--surface-1)] shadow-sm font-semibold")}
+  >
+    Glossary & Cards (679)
+  </button>
+  <button
+    onClick={() => setView('mindmap')}
+    className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all", view === 'mindmap' && "bg-[var(--surface-1)] shadow-sm font-semibold")}
+  >
+    Multi-Level Mind Map (14 Pillars)
+  </button>
+  <button
+    onClick={() => setView('flashcards')}
+    className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all", view === 'flashcards' && "bg-[var(--surface-1)] shadow-sm font-semibold")}
+  >
+    Active Recall Flashcards
+  </button>
+</div>
+```
+
+---
+
+## 5. Keyboard-First Accessibility Triggers
 
 Always wire up global and local keyboard listeners to make high-volume portals feel native:
 - `/` or `⌘K`: Focus search bar immediately.
@@ -159,56 +210,19 @@ useEffect(() => {
 
 ---
 
-## 4. Ultra-Dense Item Row Pattern (Lists of 100+ Items)
+## 6. High-Density PDF Downloads Hub Pattern
 
-```tsx
-// ✅ Compact row — single line, click to expand
-<div className="group flex items-center gap-2 px-3 py-1.5 hover:bg-[var(--surface-3)] transition-all duration-150 cursor-pointer border-b border-[var(--border)]">
-  {/* Checkbox / Status */}
-  <button className="w-3.5 h-3.5 rounded border border-[var(--border)] shrink-0 flex items-center justify-center text-[9px]" />
-
-  {/* Micro Difficulty Badge */}
-  <span className={cn(
-    "text-[9px] font-mono font-semibold px-1 py-0.2 rounded border shrink-0",
-    difficulty === 'ARCHITECT' && "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    difficulty === 'HARD' && "bg-rose-500/10 text-rose-400 border-rose-500/20",
-    difficulty === 'MEDIUM' && "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    difficulty === 'EASY' && "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-  )}>
-    {difficulty}
-  </span>
-
-  {/* Title — single line truncate */}
-  <span className="flex-1 text-xs text-[var(--foreground)] truncate font-medium">
-    {title}
-  </span>
-
-  {/* Category Pill */}
-  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-2)] px-1.5 py-0.5 rounded shrink-0">
-    {category}
-  </span>
-
-  {/* Action icons — only visible on hover */}
-  <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-    <Bookmark size={12} className="text-[var(--muted-foreground)] hover:text-amber-400" />
-    <ExternalLink size={12} className="text-[var(--muted-foreground)]" />
-  </div>
-</div>
-
-{/* Expanded Body — lazy rendered */}
-{isExpanded && (
-  <div className="px-8 py-2.5 text-xs text-[var(--muted-foreground)] bg-[var(--surface-1)] border-b border-[var(--border)] space-y-2">
-    <p className="leading-relaxed">{answer}</p>
-  </div>
-)}
-```
+When offering production PDF cheat sheets, runbooks, or blueprints:
+- Present a grid of compact asset cards displaying file size, page count, and direct download links.
+- Provide a 1-click **Preview Modal** using `<iframe src="...">` so users can inspect documents without leaving the page.
+- Direct download triggers should point to `/api/download/pdf/[filename]` with `Content-Disposition: attachment; filename="..."` headers to prevent browser hijacking.
 
 ---
 
-## 5. Dynamic Stretching Mindmap / Tree Pattern
+## 7. Dynamic Stretching Mindmap / Tree Pattern
 
-When displaying taxonomic knowledge structures (e.g., 660 concepts across 13 core pillars), implement progressive stretch depth levels:
-- **Depth 1: Domain Pillars** (Fabric, Databricks, Spark, Governance, Lakehouse)
+When displaying taxonomic knowledge structures (e.g., 679 concepts across 14 core pillars), implement progressive stretch depth levels:
+- **Depth 1: Domain Pillars** (Fabric, Databricks, Spark, Governance, Lakehouse, Modern FinOps)
 - **Depth 2: Sub-Topics** (OneLake, Direct Lake, Unity Catalog, Liquid Clustering)
 - **Depth 3: Leaf Concepts** (Compact term chips with difficulty color dots)
 - **Depth 4: Deep Inline Mechanisms** (Inline official definition and 3 key takeaways)
@@ -216,7 +230,7 @@ When displaying taxonomic knowledge structures (e.g., 660 concepts across 13 cor
 
 ---
 
-## 6. Mobile Optimization (Responsive Compactness)
+## 8. Mobile Optimization (Responsive Compactness)
 
 - Never hide essential filters behind 4-click nested sub-menus.
 - Use a **slide-up bottom sheet drawer** on screens `<768px` for filter selection.

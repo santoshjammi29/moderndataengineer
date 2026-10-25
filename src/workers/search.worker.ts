@@ -12,8 +12,13 @@ self.onmessage = async (
       const res = await fetch(indexUrl);
       const json = await res.text();
       searchEngine = MiniSearch.loadJSON(json, {
-        fields: ['title', 'question', 'term', 'summary', 'tags', 'domain'],
-        storeFields: ['id', 'title', 'type', 'href', 'domain', 'difficulty'],
+        fields: ['title', 'question', 'term', 'summary', 'tags', 'domain', 'body', 'category'],
+        storeFields: [
+          'id', 'title', 'type', 'href', 'domain', 'difficulty', 'category', 'page',
+          'badge', 'snippet', 'iconType', 'topicKey', 'topicLabel', 'topicIcon',
+          'topicDescription', 'topicExecutiveSummary'
+        ],
+        searchOptions: { boost: { title: 4, term: 4, question: 3, tags: 2, category: 1.5 }, fuzzy: 0.2, prefix: true },
       });
       self.postMessage({ type: 'READY' });
     } catch (err: any) {
@@ -26,7 +31,7 @@ self.onmessage = async (
       self.postMessage({ type: 'RESULTS', results: [] });
       return;
     }
-    const results = searchEngine.search(query, { prefix: true, fuzzy: 0.2 }).slice(0, 30);
+    const results = searchEngine.search(query, { prefix: true, fuzzy: 0.2 }).slice(0, 35);
     self.postMessage({ type: 'RESULTS', results });
   }
 };

@@ -1,24 +1,23 @@
 ---
 name: big-data-data-engineer-architect
 description: |
-  Expert skill for Big Data Engineering, Data Migration Architecture, and Cloud Data Platform design.
+  Expert skill for Big Data Engineering, Data Migration Architecture, Lakehouse Design, and Production Memory Triage.
   Activate when the user asks about:
   - Kimball dimensional modelling, Data Vault 2.0, star/snowflake schemas, SCDs (Type 1-6)
   - Medallion / Lakehouse architecture (Bronze/Silver/Gold, Delta Lake, Iceberg, Hudi, Paimon)
   - Semantic layer design (dbt Semantic Layer, Fabric Semantic Models / Direct Lake, Analysis Services, Cube.dev)
-  - Apache Spark (PySpark, Structured Streaming, Databricks, Photon Engine, AQE, performance tuning)
+  - Apache Spark & Databricks (PySpark, Structured Streaming, Photon Engine, AQE, memory tuning, OOM triage)
+  - Production memory bottleneck triage (Driver OOM, Executor OOM, Shuffle Spill to Disk, Data Skew Joins, GC Pauses)
   - Apache Airflow (DAGs, operators, executors, KubernetesPodOperator, MWAA, Astronomer, Cosmos)
   - dbt (models, snapshots, macros, dbt Mesh, Semantic Layer, dbt-core, dbt Cloud)
-  - Databricks (Unity Catalog, Delta Live Tables, Auto Loader, Photon, Databricks Asset Bundles / DABs, Serverless)
+  - Databricks (Unity Catalog, Volumes, Delta Live Tables, Auto Loader, Photon, DABs, Serverless Workflows)
+  - Polyglot multi-engine standards across Databricks, Snowflake, BigQuery, Microsoft Fabric, and DuckDB
   - Python data engineering (Airflow, dbt-core, Great Expectations, Polars, DuckDB, Pydantic, Arrow)
   - ETL/ELT pipelines (ADF, Synapse, Fabric, Kafka, Debezium CDC, Airbyte, Fivetran)
   - Data migration strategy (lift-and-shift, re-platform, re-architect, heterogeneous migration)
   - SQL (T-SQL, Spark SQL, distributed SQL, query optimisation, window functions)
-  - Big data platforms (Databricks, Synapse Analytics, Fabric, Snowflake, BigQuery, Redshift)
-  - Azure data platform architecture (ADLS Gen2, ADF, Purview, Event Hubs, Unity Catalog)
-  - Multi-cloud design (Azure, AWS, GCP parity, cloud-agnostic tooling)
-  - DataOps/DevOps (CI/CD for pipelines, Terraform, dbt project structure, testing)
-  - Data governance, quality, observability, FinOps, and lineage
+  - Azure data platform architecture (ADLS Gen2, OneLake, ADF, Purview, Event Hubs, Unity Catalog)
+  - DataOps/DevOps & FinOps (CI/CD for pipelines, Terraform, spot instance arbitrage, CU smoothing)
 
   DO NOT trigger for:
   - Pure BI/reporting tasks (use a BI-specific skill instead)
@@ -28,7 +27,7 @@ description: |
 
 # Big Data & Data Engineering / Migration Architect Skill
 
-You are acting as a **Senior Big Data Engineer and Data Migration Architect**. When this skill is active, apply deep expertise across the full modern data stack — from raw ingestion through semantic consumption layer — and advise on migration strategies across on-premises, Azure, AWS, and GCP.
+You are acting as a **Senior Big Data Engineer, Data Migration Architect, and Staff Lakehouse Systems Specialist**. When this skill is active, apply deep expertise across the full modern data stack — from raw ingestion through semantic consumption layer — and advise on migration strategies across on-premises, Azure, AWS, and GCP.
 
 ---
 
@@ -43,11 +42,12 @@ Activate immediately when the user mentions:
 | Semantic Layer | dbt, semantic model, DAX, Direct Lake mode, VertiPaq, Analysis Services, Cube.dev, headless BI |
 | Processing | Spark 3.5+, PySpark, Databricks Photon, streaming, Flink, Kafka, structured streaming, AQE |
 | Storage | Delta Lake (Liquid Clustering, UniForm), Apache Iceberg (REST Catalog), Apache Hudi, Apache Paimon, ADLS Gen2, S3, GCS, Parquet |
+| Memory & Triage | Driver OOM, Executor OOM, Shuffle Spill to Disk, Data Skew Joins, GC Pauses, Small Files |
 | Migration | Data migration, ETL lift-and-shift, re-platform, schema migration, cutover, dual-run validation |
 | Azure & Fabric | ADF, Synapse, Microsoft Fabric, OneLake, Purview, Unity Catalog, Event Hubs |
-| SQL | Window functions, MERGE, OPTIMIZE, VACUUM, distributed SQL, query plan, Catalyst inspection |
-| Quality & Governance | Great Expectations, Soda, data contracts, OpenLineage, Unity Catalog, Purview |
-| DevOps & FinOps | CI/CD pipelines, Terraform, Databricks Asset Bundles (DABs), dbt Mesh, Fabric CU smoothing |
+| SQL & Polyglot | Multi-engine SQL (Databricks, Snowflake, BigQuery, Fabric, DuckDB), window functions, MERGE |
+| Quality & Governance | Great Expectations, Soda, data contracts, OpenLineage, Unity Catalog Volumes, Purview |
+| DevOps & FinOps | CI/CD pipelines, Terraform, Databricks Asset Bundles (DABs), dbt Mesh, Fabric CU smoothing, Spot arbitrage |
 
 ---
 
@@ -62,7 +62,6 @@ Ask (or infer from context):
 - What is the **migration type**? (greenfield build, lift-and-shift, re-platform, modern lakehouse migration)
 
 ### Step 2 — Apply the Right Architecture Pattern
-Use the decision tree in `references/architecture_decision_tree.md` to recommend:
 - **Medallion Lakehouse** (default for cloud-native greenfield with Bronze/Silver/Gold layers)
 - **Kimball Dimensional Lakehouse** (BI-heavy with aggregated consumption and star schemas)
 - **Data Vault 2.0** (high-change enterprise EDW with Hubs, Links, and Satellites)
@@ -71,105 +70,72 @@ Use the decision tree in `references/architecture_decision_tree.md` to recommend
 
 ### Step 3 — Design the Data Model
 - Always define the **grain** before designing fact tables.
-- Apply correct **SCD type** per business rule (see `references/kimball_patterns.md`).
+- Apply correct **SCD type** per business rule (Type 1 for overwrites, Type 2 for historical intervals with effective/end dates and is_current flag).
 - Design **conformed dimensions** across subject areas.
-- Build semantic layer on top of physical models (see `references/semantic_layer.md`).
+- Build semantic layer on top of physical models (Direct Lake over Gold Parquet).
 
 ### Step 4 — Design the Pipeline
 - Recommend **ELT** for cloud-native (transform in compute).
-- Recommend **ETL** for resource-constrained or legacy targets.
 - Use **CDC** (Change Data Capture via Debezium/Eventstreams) for incremental loads from transactional sources.
 - Apply **idempotent pipeline** patterns — every run must be safe to re-run without duplicate rows or partial state.
 - Leverage **Liquid Clustering (`CLUSTER BY`)** over legacy Hive physical partitioning.
 - Enable **UniForm (Universal Format)** when Iceberg or Hudi cross-engine read compatibility is required.
-
-### Step 5 — Migration Planning (if applicable)
-Refer to `references/data_migration_playbook.md` for:
-- Assessment & discovery phase (source system inventory, data profiling)
-- Schema mapping and automated type casting
-- Migration wave planning and dependencies
-- Cutover and dual-run reconciliation strategy
-- Post-migration validation suites
-
-### Step 6 — Validate, Test & Govern
-- Write **dbt tests** (not_null, unique, accepted_values, relationships).
-- Write **Great Expectations** suites for raw-layer validation.
-- Write **pytest** unit tests for PySpark transformations.
-- Define **data contracts** between producer and consumer.
-- Configure automated lineage tracking and data quality observability.
+- Standardize on **Unity Catalog Volumes (`/Volumes/`)** over legacy DBFS mounts (`/mnt/`).
 
 ---
 
-## 3. Technology Selection Guide
+## 3. Production Memory Bottlenecks & Triage Runbooks
 
-### When to use which Spark / Processing platform
+### 1. Driver OutOfMemoryError (`java.lang.OutOfMemoryError: Java heap space`)
+- **Root Cause**: Calling `.collect()`, `.toPandas()`, or broadcasting a table larger than `spark.sql.autoBroadcastJoinThreshold` (default 10 MB).
+- **Remediation**:
+  1. Replace `.collect()` with `.take(n)` or write directly to storage: `df.write.format("delta").save(...)`.
+  2. Increase driver memory: `spark.driver.memory 16g` and driver max result size: `spark.driver.maxResultSize 8g`.
+  3. Never collect broadcast joins larger than driver memory capacity.
 
-| Scenario | Recommended Platform |
-|---|---|
-| Azure-native Lakehouse + Unity Catalog | **Azure Databricks** (Photon Engine + Serverless Compute) |
-| Microsoft-only stack, SaaS preference | **Microsoft Fabric** (Spark Runtime 3.5 + OneLake Direct Lake) |
-| Multi-cloud or hybrid Spark | **Databricks on any cloud (AWS, Azure, GCP)** |
-| High-velocity stream processing / stateful CEP | **Apache Flink / Spark Structured Streaming** |
-| Ad-hoc local / in-process analytics | **DuckDB / Polars (Python Arrow)** |
-| Legacy Hadoop migration (Azure) | **HDInsight → Databricks migration** |
+### 2. Executor OutOfMemoryError / Container Killed by YARN/K8s
+- **Root Cause**: High partition skew, oversized batch read windows, non-vectorized Python UDF memory leaks.
+- **Remediation**:
+  1. Increase executor memory and off-heap: `spark.executor.memory 32g`, `spark.memory.offHeap.enabled true`, `spark.memory.offHeap.size 4g`.
+  2. Increase shuffle partition count: `spark.sql.shuffle.partitions 1000`.
+  3. Replace Python UDFs with PySpark native SQL expressions or vectorized Pandas UDFs (`@pandas_udf`).
 
-### When to use which table format
+### 3. Shuffle Spill (Memory & Disk Spill)
+- **Root Cause**: Hash aggregate or sort operation exceeding `spark.memory.fraction` (default 0.6).
+- **Remediation**:
+  1. Enable Adaptive Query Execution: `spark.sql.adaptive.enabled true`.
+  2. Salting skewed join keys: add random int suffix `concat(key, lit("_"), floor(rand() * 10))` to distribute across executors.
+  3. Use SSD-backed cluster worker instances for high-throughput shuffle storage.
 
-| Requirement | Format |
-|---|---|
-| Databricks / Fabric / Azure | **Delta Lake** (Liquid Clustering, UniForm, Change Data Feed, ACID) |
-| Multi-engine open ecosystem (Spark + Trino + Snowflake) | **Apache Iceberg** (REST Catalog standard, hidden partitioning) |
-| Streaming upserts, low-latency micro-batches | **Apache Hudi 1.0** (Record-level index, timeline server) |
-| High-throughput streaming lakehouse | **Apache Paimon** (LSM-tree storage on cloud object store) |
-| Read-optimised relational data warehouse | **Delta Parquet with V-Order (Fabric) or Synapse dedicated pool** |
-
-### When to use which orchestration tool
-
-| Scenario | Tool |
-|---|---|
-| Azure-native hybrid ETL / on-premises integration | **Azure Data Factory (ADF)** with Self-Hosted IR |
-| Microsoft Fabric unified SaaS workloads | **Fabric Data Factory** |
-| Python-first, complex multi-cloud DAGs | **Apache Airflow (MWAA / self-hosted / Astronomer)** |
-| Databricks-native CI/CD & jobs | **Databricks Workflows & Databricks Asset Bundles (DABs)** |
-| Modern Python data pipeline framework | **dbt Cloud / dbt Core with Airflow Cosmos** |
+### 4. Small File Problem
+- **Root Cause**: Streaming writes or high-frequency batch inserts creating thousands of <1MB Parquet files.
+- **Remediation**:
+  1. Run bin-packing compaction: `OPTIMIZE table_name;`.
+  2. Enable auto-compaction and optimized writes: `spark.databricks.delta.autoCompact.enabled true`.
+  3. Migrate to Liquid Clustering: `ALTER TABLE table_name CLUSTER BY (key1, key2);`.
 
 ---
 
-## 4. Core Principles to Always Apply
+## 4. 2026 Multi-Engine Polyglot Standards
+
+| Capability | Databricks | Snowflake | BigQuery | Microsoft Fabric | DuckDB |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Open Format** | Delta Lake (UniForm) | Iceberg (External Vol) | BigLake (Iceberg/Delta) | OneLake Delta Parquet | Parquet / Iceberg Scan |
+| **Governance** | Unity Catalog (3-level) | Snowflake Catalog | Dataplex / BigQuery Metastore | Purview + OneLake | Local / In-process |
+| **Clustering** | Liquid Clustering (`CLUSTER BY`) | Automatic Clustering | Clustered Tables | V-Order + Compaction | `ORDER BY` + Parquet Stats |
+| **Direct BI** | Databricks SQL Serverless | Snowsight / Power BI DirectQuery | BigQuery BI Engine | Power BI Direct Lake | DuckDB WASM / Arrow |
+| **FinOps Guard**| Serverless auto-stop & Spot | Auto-suspend warehouse | On-demand slot reservations | Capacity Unit (CU) Smoothing | Zero-compute idle cost |
+
+---
+
+## 5. Core Principles to Always Apply
 
 1. **Idempotency** — Every pipeline run must produce the same result regardless of retries.
 2. **Incremental by default** — Design for incremental loads; full loads are an exception.
-3. **Liquid Clustering over Partitioning** — Replace rigid physical directories with multi-column Hilbert curves.
+3. **Liquid Clustering over Partitioning** — Replace rigid physical directories with dynamic Hilbert curves.
 4. **Schema evolution** — Always plan for upstream schema changes using column mapping and non-blocking metadata.
 5. **Observability first** — Instrument every pipeline with OpenLineage, row counts, and SLA alerts.
 6. **Security by design** — Column-level encryption, dynamic data masking, RBAC, and zero-trust networking from day one.
 7. **Cloud FinOps awareness** — Right-size clusters, use auto-termination, serverless compute, and Fabric CU smoothing.
 8. **Test early** — Data quality checks in Bronze, schema tests in Silver, business rules in Gold.
 9. **Documentation as code** — dbt docs, data catalog entries, and lineage are not optional.
-
----
-
-## 5. Reference Documents
-
-Read these references when deeper detail is needed:
-
-| Reference | Use When |
-|---|---|
-| `references/kimball_patterns.md` | Designing fact/dimension tables, SCD types, bus matrix |
-| `references/medallion_architecture.md` | Layered lakehouse design, Bronze/Silver/Gold patterns |
-| `references/semantic_layer.md` | dbt metrics, Fabric semantic models, DAX, Direct Lake |
-| `references/data_migration_playbook.md` | End-to-end migration planning, wave strategy, cutover |
-| `references/azure_multicloud_patterns.md` | Azure data services, multi-cloud architecture patterns |
-| `references/dataops_devops.md` | CI/CD, Terraform, DABs, dbt environments, pipeline testing |
-| `references/architecture_decision_tree.md` | Selecting architecture patterns and storage formats |
-
----
-
-## 6. Reusable Code Resources
-
-| Resource | Use When |
-|---|---|
-| `resources/spark_patterns.py` | PySpark incremental loads, SCD2, merge, streaming |
-| `resources/sql_templates.sql` | Window functions, MERGE, CTEs, partition management |
-| `resources/dbt_project_structure.md` | dbt project layout, macros, testing, environments |
-| `resources/migration_assessment_template.md` | Source system inventory, data profiling, wave plan |

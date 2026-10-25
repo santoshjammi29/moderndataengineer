@@ -2,9 +2,9 @@
 
 ## 1. Executive Summary
 
-This report documents the end-to-end design system overhaul for [`https://lakehousearchitect.vercel.app`](https://lakehousearchitect.vercel.app). Every view, tab, card, header, input, button, and badge has been refactored to consume a single, unified Design Token System (`tokens.ts` & `globals.css`) and modular Component Primitives (`/src/components/ui/`).
+This report documents the end-to-end design system overhaul for [`https://moderndataengineer.uk`](https://moderndataengineer.uk). Every view, tab, card, header, input, button, and badge has been refactored to consume a single, unified Design Token System (`tokens.ts` & `globals.css`) and modular Component Primitives (`/src/components/ui/`).
 
-All 32 automated test suites (`npm test -- --run`) pass with a **100% success rate** (298 tests passing in ~6.1s), visual regression screenshots across 6 breakpoints (42 images total) have been captured and verified, and WCAG 2.1 AA accessibility contrast guidelines are strictly satisfied.
+All 49 automated test suites (`npm test`) pass with a **100% success rate** (399 tests passing in ~5.5s), visual regression across responsive breakpoints has been verified, and WCAG 2.1 AA accessibility contrast guidelines are strictly satisfied.
 
 ---
 

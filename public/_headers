@@ -1,0 +1,48 @@
+# Cloudflare Workers Static Assets HTTP Response Headers
+# https://developers.cloudflare.com/workers/static-assets/headers/
+
+# Next.js build output (content-hashed, immutable forever)
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# High-resolution whiteboard architecture blueprints (WebP & AVIF)
+/diagrams/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Master Vector PDF downloads & cheatsheet assets
+/cheatsheets/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Pre-computed static artifacts
+/_artifacts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Theme initialization script (stale-while-revalidate for fast rendering with periodic freshness)
+/theme-init.js
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# Application icons and favicons
+/favicon.ico
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/favicon.svg
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/icon*.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/apple-*.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# Web manifest and security metadata
+/manifest.webmanifest
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/security.txt
+  Cache-Control: public, max-age=86400
+/.well-known/security.txt
+  Cache-Control: public, max-age=86400
+/robots.txt
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+/sitemap.xml
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400

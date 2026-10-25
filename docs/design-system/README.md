@@ -1,7 +1,7 @@
 # Design System & Editorial Guidelines
 
 > **Visual Language, Design Tokens, Component Primitives & Motion Specifications**  
-> Defining the quiet, data-dense, Apple- and Linear-inspired aesthetic of [`lakehousearchitect.vercel.app`](https://lakehousearchitect.vercel.app).
+> Defining the quiet, data-dense, Apple- and Linear-inspired aesthetic of [`moderndataengineer.uk`](https://moderndataengineer.uk).
 
 ---
 

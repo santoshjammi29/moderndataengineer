@@ -10,6 +10,7 @@ import {
   DataOpsDataset,
   DatabricksSuiteData,
   Databricks100Concept,
+  CodeSheetItem,
 } from "@/types/data";
 
 /**
@@ -100,6 +101,14 @@ export const getCodePracticeDataDAL = cache(async () => {
   return await serverlessDb.getCodePractice();
 });
 
+export const getPythonCodePracticeDAL = cache(async (): Promise<CodeSheetItem[]> => {
+  return await serverlessDb.getPythonCodePractice();
+});
+
+export const getPysparkCodePracticeDAL = cache(async (): Promise<CodeSheetItem[]> => {
+  return await serverlessDb.getPysparkCodePractice();
+});
+
 // --- 5. LEARNING PATHS & CHEATSHEETS ---
 export const getLearningPathsDAL = cache(async (): Promise<LearningPath[]> => {
   return await serverlessDb.getLearningPaths();
@@ -128,6 +137,10 @@ export const getDatabricksCodingHubDAL = cache(async () => {
 // --- 6. MODERN STACK & BLUEPRINTS ---
 export const getModernStackDAL = cache(async () => {
   return await serverlessDb.getModernStack();
+});
+
+export const getArchitectureModernDataDAL = cache(async () => {
+  return await serverlessDb.getArchitectureModernData();
 });
 
 // --- 7. COMPANY PROFILES ---

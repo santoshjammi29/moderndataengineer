@@ -67,17 +67,20 @@ START: What is the primary use case?
 ## Azure Platform Selection
 
 ```
-Microsoft-only organization with SaaS preference?
-→ Microsoft Fabric (all-in-one platform)
+Microsoft-only organization with SaaS preference & Direct Lake BI?
+→ Microsoft Fabric (all-in-one OneLake platform)
 
-Azure-native but want best-in-class Spark + Unity Catalog?
-→ Azure Databricks + ADLS Gen2
+Azure-native but want best-in-class Spark, Photon & Unity Catalog?
+→ Azure Databricks + ADLS Gen2 (Liquid Clustering, Serverless, Volumes)
 
 High-concurrency SQL DW with existing SQL Server skills?
-→ Azure Synapse Analytics (Dedicated SQL Pool)
+→ Azure Synapse Analytics (Dedicated SQL Pool) or Fabric Warehouse
 
-Multi-cloud or vendor-neutral required?
-→ Databricks (runs on Azure, AWS, GCP) + Delta Lake + Terraform
+Multi-cloud or open-format vendor-neutral required?
+→ Databricks (Azure/AWS/GCP) + Delta Lake (UniForm) / Apache Iceberg + Terraform
+
+Sub-100GB single-node or local embedded transformations?
+→ DuckDB + Polars / PyArrow (zero cluster management overhead)
 
 Hybrid (on-prem + cloud)?
 → ADF Self-Hosted IR + Databricks + Azure SQL
@@ -91,12 +94,14 @@ Hybrid (on-prem + cloud)?
 |---|---|---|
 | Simple file copy, schedule-based | ADF Copy Activity | No code, GUI-based, fast setup |
 | Complex multi-step pipeline, Azure-native | ADF Pipelines + Data Flows | Full orchestration, 90+ connectors |
-| SQL-based transformations | dbt | Version control, testing, docs |
-| Large-scale Spark transformations | Databricks Notebooks/Jobs | Full Spark power |
-| Python-complex DAGs | Airflow | Unlimited flexibility |
-| SaaS source ingestion | Fivetran / Airbyte | Pre-built connectors, no-code |
-| Real-time streaming | Kafka + Structured Streaming | Event-driven, exactly-once |
-| Low-latency CDC | Debezium + Kafka | Log-based, sub-second |
+| SQL-based transformations & modeling | dbt (Core / Cloud / Mesh) | Version control, testing, docs, semantic layer |
+| Declarative Lakehouse Medallion pipelines | Databricks Delta Live Tables (DLT) | Out-of-the-box expectations, lineage, auto-compaction |
+| Large-scale Spark transformations | Databricks Notebooks/Jobs / Photon | Full distributed Spark compute, Liquid Clustering |
+| In-process analytical transformations (<100GB)| DuckDB + Polars | Ultra-low memory, sub-second execution, zero cluster spinup |
+| Python-complex DAGs & custom orchestrations | Apache Airflow / Astronomer / Cosmos | Unlimited extensibility, dynamic DAG generation |
+| SaaS source ingestion | Fivetran / Airbyte | Pre-built connectors, no-code managed syncs |
+| Real-time streaming & event analytics | Kafka / Event Hubs + Structured Streaming | Exactly-once guarantees, stateful RocksDB processing |
+| Low-latency CDC ingestion | Debezium + Kafka / Fabric Eventstreams | Log-based, sub-second transactional replication |
 
 ---
 

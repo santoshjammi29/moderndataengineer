@@ -35,7 +35,7 @@ jobs:
         run: npm run lint
 
       - name: Run TypeScript typecheck
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
   # ──────────────────────────────────────────────────────────────────────────
   # JOB 2: Automated Vitest Suite (Unit, Component, Data Integrity & Routes)
@@ -84,4 +84,6 @@ jobs:
         run: npm ci
 
       - name: Build Cloudflare Worker
-        run: npm run build:cf
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: npm run build

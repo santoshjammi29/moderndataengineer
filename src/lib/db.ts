@@ -235,6 +235,32 @@ export const serverlessDb = {
     };
   },
 
+  // Narrow Code Practice Loaders (eliminates multi-dataset imports for single-discipline routes)
+  async getPythonCodePractice(): Promise<CodeSheetItem[]> {
+    const mod = await import("@/data/json/data_python.json");
+    return mod.default as unknown as CodeSheetItem[];
+  },
+
+  async getPysparkCodePractice(): Promise<CodeSheetItem[]> {
+    const mod = await import("@/data/json/data_pyspark.json");
+    return mod.default as unknown as CodeSheetItem[];
+  },
+
+  // Architecture Hub subset of Modern Data (loads only matrix and stack without blueprints, cost playbooks, etc.)
+  async getArchitectureModernData(): Promise<{
+    matrix: ModernCodeMatrix[];
+    stack: ModernStackQuestion[];
+  }> {
+    const [matrixMod, stackMod] = await Promise.all([
+      import("@/data/json/modern_code_matrix.json"),
+      import("@/data/json/modern_stack.json"),
+    ]);
+    return {
+      matrix: matrixMod.default as unknown as ModernCodeMatrix[],
+      stack: stackMod.default as unknown as ModernStackQuestion[],
+    };
+  },
+
   // Companies (226 KB) - Lazy loaded
   async getCompanyProfiles(): Promise<CompanyProfile[]> {
     const mod = await import("@/data/json/company_profiles.json");

@@ -1,0 +1,12 @@
+{
+  "name": "@lakehouse/customer-dispatcher",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Workers for Platforms dispatcher for isolated customer workers",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev --config wrangler.jsonc",
+    "deploy": "wrangler deploy --config wrangler.jsonc",
+    "typecheck": "tsc --noEmit"
+  }
+}

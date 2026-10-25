@@ -33,11 +33,16 @@ jobs:
       - name: Verify TypeScript types
         run: npm run typecheck
 
-      - name: Generate artifacts required by integration tests
-        run: npm run content:shard
+      - name: Run Vitest Suite
+        run: |
+          npm run content:shard
+          npm test
 
-      - name: Run test suite
-        run: npm test
+      - name: Cache R2 sync hash
+        uses: actions/cache@v4
+        with:
+          path: .build-artifacts/r2/.last-synced-hash
+          key: r2-sync-hash-${{ hashFiles('src/data/json/**', 'content/**') }}
 
       - name: Check Cloudflare credentials
         id: check-creds
@@ -58,8 +63,11 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run deploy:cf
 
       - name: Validate and build without deployment credentials
         if: steps.check-creds.outputs.configured != 'true'
-        run: npm run build:cf
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: npm run build

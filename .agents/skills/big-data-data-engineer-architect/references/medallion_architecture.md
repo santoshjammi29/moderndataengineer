@@ -109,10 +109,8 @@ expectations = [
 
 ### Gold Table Optimisation
 ```sql
--- Delta Lake: Optimise and Z-Order for query performance
-OPTIMIZE gold.fact_sales ZORDER BY (order_date_sk, customer_sk, product_sk);
-
--- Partition large fact tables by date
+-- Modern Standard (Delta Lake 3.x+ / Databricks Runtime 13.3+): Liquid Clustering
+-- Replaces rigid physical partitioning and Z-Order with flexible multidimensional clustering
 CREATE TABLE gold.fact_sales (
     order_date_sk INT,
     customer_sk   BIGINT,
@@ -121,7 +119,13 @@ CREATE TABLE gold.fact_sales (
     quantity      INT
 )
 USING DELTA
-PARTITIONED BY (order_date_sk);
+CLUSTER BY (order_date_sk, customer_sk);
+
+-- Incremental optimization for clustered tables
+OPTIMIZE gold.fact_sales;
+
+-- Legacy Pattern (for backward compatibility on older clusters):
+-- OPTIMIZE gold.fact_sales ZORDER BY (order_date_sk, customer_sk, product_sk);
 ```
 
 ---
@@ -160,9 +164,10 @@ from pyspark.sql.functions import *
 
 @dlt.table(comment="Bronze: raw orders from source system")
 def bronze_orders():
+    # Unity Catalog Volumes path (recommended standard)
     return spark.readStream.format("cloudFiles") \
         .option("cloudFiles.format", "json") \
-        .load("/mnt/raw/orders/")
+        .load("/Volumes/prod_catalog/raw_data/orders_volume/")
 
 @dlt.table(
     comment="Silver: cleansed orders",

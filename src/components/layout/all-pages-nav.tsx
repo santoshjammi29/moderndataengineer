@@ -26,7 +26,7 @@ function AllPagesNavInner() {
           <div className="flex items-center gap-2.5 min-w-0 text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
             <Search size={15} className="shrink-0 text-blue-500 group-hover:scale-110 transition-transform" />
             <span className="text-xs sm:text-sm font-medium truncate">
-              Search 10,700+ Q&As, concepts, architecture blueprints, system design...
+              Search 11,500+ Q&As, concepts, 42 architecture blueprints, system design...
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 import bundleAnalyzer from "@next/bundle-analyzer";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
@@ -11,6 +12,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: path.join(__dirname),
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
@@ -56,12 +58,6 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
-        ],
-      },
-      {
-        source: "/static/(.*)",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
       {

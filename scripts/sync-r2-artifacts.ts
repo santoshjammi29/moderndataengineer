@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { readdirSync, statSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readdirSync, statSync, readFileSync, writeFileSync, existsSync, unlinkSync } from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { promisify } from "node:util";
@@ -60,21 +60,80 @@ async function uploadArtifacts() {
     .digest("hex");
 
   const isForce = process.argv.includes("--force");
-  if (!isForce && existsSync(hashFilePath)) {
+  let existingRemoteShards = new Set<string>();
+
+  if (!isForce) {
+    // 1. Check local hash file (cached across runs)
+    if (existsSync(hashFilePath)) {
+      try {
+        const lastHash = readFileSync(hashFilePath, "utf-8").trim();
+        if (lastHash === currentManifestHash) {
+          console.log(
+            `⚡ R2 artifacts are already up-to-date (manifest hash: ${currentManifestHash.slice(0, 12)}). Skipping upload. Use --force to re-upload.`
+          );
+          return;
+        }
+      } catch {}
+    }
+
+    // 2. In CI or fresh runner, check remote R2 manifest before performing redundant Class A uploads
     try {
-      const lastHash = readFileSync(hashFilePath, "utf-8").trim();
-      if (lastHash === currentManifestHash) {
-        console.log(
-          `⚡ R2 artifacts are already up-to-date (manifest hash: ${currentManifestHash.slice(0, 12)}). Skipping upload. Use --force to re-upload.`
-        );
-        return;
+      const tempRemoteManifestPath = path.join(artifactRoot, ".remote-manifest.json");
+      await run(
+        "npx",
+        ["wrangler", "r2", "object", "get", `${bucketName}/manifest.json`, `--file=${tempRemoteManifestPath}`, "--remote"],
+        { maxBuffer: 1024 * 1024, env: process.env },
+      );
+      if (existsSync(tempRemoteManifestPath)) {
+        const remoteManifestRaw = readFileSync(tempRemoteManifestPath, "utf-8");
+        const remoteManifestHash = crypto
+          .createHash("sha256")
+          .update(remoteManifestRaw)
+          .digest("hex");
+
+        if (remoteManifestHash === currentManifestHash) {
+          console.log(
+            `⚡ Remote R2 manifest already matches current build (hash: ${currentManifestHash.slice(0, 12)}). Skipping ${files.length} uploads to save Class A operations.`
+          );
+          writeFileSync(hashFilePath, currentManifestHash, "utf-8");
+          try { unlinkSync(tempRemoteManifestPath); } catch {}
+          return;
+        }
+
+        // Collect existing remote content keys to avoid re-uploading identical immutable shards
+        try {
+          const parsed = JSON.parse(remoteManifestRaw);
+          if (parsed.collections) {
+            for (const col of Object.values(parsed.collections) as any[]) {
+              if (Array.isArray(col?.shards)) {
+                for (const s of col.shards) {
+                  if (s.key) existingRemoteShards.add(s.key);
+                }
+              }
+            }
+          }
+          if (parsed.searchIndexKey) existingRemoteShards.add(parsed.searchIndexKey);
+        } catch {}
+
+        try { unlinkSync(tempRemoteManifestPath); } catch {}
       }
-    } catch {}
+    } catch {
+      // Remote manifest check failed or manifest does not exist yet. Proceed with differential or full upload.
+    }
   }
 
-  // Publish immutable content first. The manifest is the pointer to the current
-  // release, so it must not become visible before every referenced object exists.
-  const contentFiles = files.filter((file) => !manifestFiles.includes(file));
+  // Publish immutable content first. Filter out shards that already exist in remote bucket.
+  const manifestFilesList = manifestFiles;
+  const contentFiles = files.filter((file) => {
+    if (manifestFilesList.includes(file)) return false;
+    const key = path.relative(artifactRoot, file).split(path.sep).join("/");
+    return !existingRemoteShards.has(key);
+  });
+
+  const skippedCount = files.length - 1 - contentFiles.length;
+  if (skippedCount > 0) {
+    console.log(`⚡ Skipping ${skippedCount} unchanged content objects already in R2. Uploading ${contentFiles.length} new/changed objects.`);
+  }
 
   let nextFileIndex = 0;
   const uploadNext = async () => {
@@ -84,7 +143,7 @@ async function uploadArtifacts() {
     }
   };
 
-  await Promise.all(Array.from({ length: Math.min(6, contentFiles.length) }, uploadNext));
+  await Promise.all(Array.from({ length: Math.min(4, contentFiles.length) }, uploadNext));
   await putObject(manifestPath);
 
   try {

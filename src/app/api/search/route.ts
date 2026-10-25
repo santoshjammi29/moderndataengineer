@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { executePortalSearch } from "@/lib/search-engine";
 import type { TopicIdentification, SearchResultItem } from "@/lib/search-types";
 
 export const runtime = "nodejs";
@@ -29,6 +28,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const { executePortalSearch } = await import("@/lib/search-engine");
     const response = executePortalSearch(query, limit, categoryFilter);
 
     return NextResponse.json(response, {

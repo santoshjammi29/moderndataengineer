@@ -233,7 +233,7 @@ export function HomeWhiteboardsShowcase() {
                   alt={featuredDiagram.title}
                   width={1200}
                   height={750}
-                  priority={true}
+                  loading="lazy"
                   sizes="(max-width: 1024px) 100vw, 65vw"
                   className={cn(
                     "max-h-full max-w-full w-auto h-auto object-contain transition-transform duration-300 group-hover/img:scale-[1.018]",

@@ -1,13 +1,12 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { getCodePracticeDataDAL } from "@/lib/dal";
+import { getPysparkCodePracticeDAL } from "@/lib/dal";
 import { SparkEngineClient } from "./spark-engine-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const codeData = await getCodePracticeDataDAL();
   return generatePageMetadata({
     title: "Apache Spark 4.0 Engine Architecture & Physical Execution Simulator",
     description: `Interactive simulator of Apache Spark 4.0 execution plan, Catalyst Optimizer, Tungsten memory allocator, and shuffle mechanics.`,
@@ -17,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SparkEnginePage() {
-  const codeData = await getCodePracticeDataDAL();
+  const pysparkData = await getPysparkCodePracticeDAL();
 
   const courseSchema = generateCourseSchema(
     "Apache Spark 4.0 Internals & Physical Execution Simulator",
@@ -40,7 +39,7 @@ export default async function SparkEnginePage() {
           </div>
         }
       >
-        <SparkEngineClient initialPyspark={codeData.pyspark} />
+        <SparkEngineClient initialPyspark={pysparkData} />
       </Suspense>
     </>
   );

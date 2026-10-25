@@ -29,6 +29,7 @@ const ROUTE_LABELS: Record<string, string> = {
   "/guided-learning": "Guided Learning",
   "/cheat-sheet": "Production Cheat Sheet",
   "/dataops": "DataOps & CI/CD Lifecycle",
+  "/code-practice/databricks": "Databricks Coding Hub",
 };
 
 const ARCHITECTURE_TABS: Record<string, string> = {
@@ -42,6 +43,7 @@ const ARCHITECTURE_TABS: Record<string, string> = {
 const CHEATSHEET_TABS: Record<string, string> = {
   runbooks: "Production Runbooks",
   databricks: "Databricks Cheat Sheets",
+  pdf_hub: "A4 PDF Reference Hub",
 };
 
 const CODE_PRACTICE_DBS: Record<string, string> = {
@@ -49,6 +51,7 @@ const CODE_PRACTICE_DBS: Record<string, string> = {
   sparksql: "Spark SQL Drills",
   mssql: "T-SQL Drills",
   python: "Python & Polars",
+  databricks: "Databricks Coding Hub",
 };
 
 const DATAOPS_TABS: Record<string, string> = {

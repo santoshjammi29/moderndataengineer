@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { getModernStackDAL, getCodePracticeDataDAL } from "@/lib/dal";
+import { getModernStackDAL, getPythonCodePracticeDAL } from "@/lib/dal";
 import { ModernStackClient } from "./modern-stack-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
@@ -17,9 +17,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ModernStackPage() {
-  const [modernData, codeData] = await Promise.all([
+  const [modernData, pythonData] = await Promise.all([
     getModernStackDAL(),
-    getCodePracticeDataDAL(),
+    getPythonCodePracticeDAL(),
   ]);
 
   const courseSchema = generateCourseSchema(
@@ -45,7 +45,7 @@ export default async function ModernStackPage() {
       >
         <ModernStackClient
           initialModernStack={modernData}
-          initialPython={codeData.python}
+          initialPython={pythonData}
         />
       </Suspense>
     </>

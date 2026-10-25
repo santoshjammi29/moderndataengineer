@@ -59,7 +59,20 @@ export async function GET(
     ? `inline; filename="${filename}"`
     : `attachment; filename="${filename}"`;
 
-  // 1. Try Cloudflare Workers context (via OpenNext env.ASSETS or env.ARTIFACTS_BUCKET)
+  // 1. Edge Cache: Check Cloudflare Cache API first to eliminate Worker & R2 Class B reads
+  const cache = typeof caches !== 'undefined' && (caches as any).default ? ((caches as any).default as Cache) : null;
+  if (cache) {
+    try {
+      const cachedResponse = await cache.match(request.url);
+      if (cachedResponse) {
+        const response = new NextResponse(cachedResponse.body, cachedResponse);
+        setCorsHeaders(response.headers, request);
+        return response;
+      }
+    } catch {}
+  }
+
+  // 2. Try Cloudflare Workers context (via OpenNext env.ASSETS or env.ARTIFACTS_BUCKET)
   try {
     const { getCloudflareContext } = await import('@opennextjs/cloudflare');
     const cloudflareContext = await getCloudflareContext({ async: true });
@@ -75,7 +88,11 @@ export async function GET(
         headers.set('Content-Type', 'application/pdf');
         headers.set('Content-Disposition', disposition);
         headers.set('Cache-Control', 'public, max-age=31536000, immutable');
-        return new NextResponse(assetRes.body as any, { status: 200, headers });
+        const response = new NextResponse(assetRes.body as any, { status: 200, headers });
+        if (cache && cloudflareContext?.ctx?.waitUntil) {
+          cloudflareContext.ctx.waitUntil(cache.put(request.url, response.clone()));
+        }
+        return response;
       }
     }
 
@@ -88,7 +105,11 @@ export async function GET(
         headers.set('Content-Disposition', disposition);
         headers.set('Cache-Control', 'public, max-age=31536000, immutable');
         headers.set('etag', r2Object.httpEtag);
-        return new NextResponse(r2Object.body as any, { status: 200, headers });
+        const response = new NextResponse(r2Object.body as any, { status: 200, headers });
+        if (cache && cloudflareContext?.ctx?.waitUntil) {
+          cloudflareContext.ctx.waitUntil(cache.put(request.url, response.clone()));
+        }
+        return response;
       }
     }
   } catch {

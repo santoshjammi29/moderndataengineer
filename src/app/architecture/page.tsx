@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 import {
-  getCodePracticeDataDAL,
-  getModernStackDAL,
+  getPythonCodePracticeDAL,
+  getArchitectureModernDataDAL,
 } from "@/lib/dal";
 import { TOTAL_SCENARIO_COUNT, INITIAL_SCENARIO_ITEMS } from "@/data/initial-data";
 import { ArchitectureClient } from "./architecture-client";
@@ -29,9 +29,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ArchitecturePage() {
-  const [codeData, modernData] = await Promise.all([
-    getCodePracticeDataDAL(),
-    getModernStackDAL(),
+  const [pythonData, modernData] = await Promise.all([
+    getPythonCodePracticeDAL(),
+    getArchitectureModernDataDAL(),
   ]);
 
   const totalCount = TOTAL_SCENARIO_COUNT;
@@ -83,7 +83,7 @@ export default async function ArchitecturePage() {
         <ArchitectureClient
           initialArchitecture={initialArchitecture}
           totalCount={totalCount}
-          initialPython={codeData.python}
+          initialPython={pythonData}
           initialMatrix={modernData.matrix}
           initialModernStack={modernData.stack}
         />

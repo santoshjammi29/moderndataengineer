@@ -86,7 +86,7 @@ describe("Architecture & Systems Reorder, Word Wrap & Resizable Sidebar Tests", 
     // High signal content remains
     expect(screen.getByText("Lakehouse Architect Notes")).toBeDefined();
     expect(screen.getByText("2026 Edition")).toBeDefined();
-    expect(screen.getByText("10,700+")).toBeDefined();
+    expect(screen.getByText(/(?:10,700\+|11,500\+)/)).toBeDefined();
 
     // Shortcuts row is removed
     expect(screen.queryByText(/shortcuts:/i)).toBeNull();

@@ -2,14 +2,15 @@
 
 ## 1. Overview & Core Philosophy
 
-**DataPlatform Architect** (`lakehousearchitect.vercel.app`) is engineered for high-performance, real-time global access by thousands of concurrent engineers, architects, and interview candidates.
+**Modern Data Engineer & Lakehouse Architect** (`moderndataengineer.uk`) is engineered for high-performance, real-time global access by thousands of concurrent engineers, architects, and interview candidates, deployed on **Cloudflare OpenNext / Workers** with R2 artifact synchronization.
 
-To guarantee zero latency worldwide and seamless future maintenance, the codebase adheres to four architectural invariants:
+To guarantee zero latency worldwide and seamless future maintenance, the codebase adheres to five architectural invariants:
 
 1. **Strict Server/Client Boundary**: Every page uses a Server Component entry point (`page.tsx`) for metadata, SEO, and edge caching (ISR), paired with an interactive Client Component (`*-client.tsx`).
 2. **Central Source of Truth**: All platform constants, brand metadata, caching rules, and UI presets reside in `src/config/platform.config.ts`.
 3. **Data Access Layer (DAL)**: All datasets are queried through `src/lib/dal.ts` with React `cache()` request deduplication.
 4. **Zero-Lag Continuous Reading Mode**: All card-centric views support instant "Read All" (`Shift + E`) with $O(1)$ inverse Set evaluation.
+5. **Zero-Bundle Edge Mandate**: Zero raw JSON data bundled into client JavaScript; massive datasets are served via streaming R2 shards and cached in persistent IndexedDB.
 
 ---
 
@@ -17,22 +18,26 @@ To guarantee zero latency worldwide and seamless future maintenance, the codebas
 
 ```text
 src/
-├── app/                           # App Router routes (14 static ISR pages)
+├── app/                           # App Router routes (Edge / OpenNext)
 │   ├── qa-prep/
 │   │   ├── page.tsx               # Server Component (ISR, metadata, JSON-LD, Suspense)
 │   │   └── qa-prep-client.tsx     # Client Component (Virtualizer, Read All, filters)
 │   ├── concepts/
 │   │   ├── page.tsx
-│   │   └── concepts-client.tsx
+│   │   └── concepts-client.tsx    # 3-in-1 single-roof view switcher (Glossary, Mindmap, Flashcards)
 │   ├── architecture/
 │   │   ├── page.tsx
-│   │   └── architecture-client.tsx
-│   ├── guided-learning/
-│   │   ├── page.tsx
-│   │   └── guided-learning-client.tsx
-│   └── studio/
-│       ├── page.tsx
-│       └── studio-client.tsx
+│   │   └── architecture-client.tsx # 36-keyword filter deck & 42 whiteboard blueprints
+│   ├── code-practice/
+│   │   ├── databricks/            # Unified Databricks hub (148+ operations & memory triage)
+│   │   └── code-practice-client.tsx
+│   ├── cheat-sheet/
+│   │   └── cheat-sheet-client.tsx # 7 Master Vector PDFs & PDF Downloads Hub
+│   ├── modern-stack/
+│   │   └── modern-stack-client.tsx # 2026 Polyglot matrix & FinOps cost playbooks
+│   └── api/
+│       ├── download/pdf/[filename]/ # Streaming PDF download API with attachment headers
+│       └── search/                # BM25F zero-OOM search route
 ├── config/
 │   └── platform.config.ts         # Single Source of Truth for brand, caching, & hubs
 ├── types/
@@ -41,18 +46,21 @@ src/
 │   └── progress.ts                # Study tracker state models
 ├── data/
 │   ├── index.ts                   # Strong-typed dataset access
-│   ├── json/                      # Raw JSON knowledge bases
-│   ├── diagrams.ts                # 32 Whiteboard architecture blueprints
+│   ├── json/                      # Raw JSON knowledge bases (11,500+ assets)
+│   ├── diagrams.ts                # 42 Whiteboard architecture blueprints
 │   ├── navigation-data.ts         # Navigation items & hierarchies
 │   └── guided-learning-topics.ts  # Curriculum topics & milestones
 ├── lib/
 │   ├── dal.ts                     # Server-side Data Access Layer (React cache())
+│   ├── search-engine.ts           # Google-grade BM25F search engine
+│   ├── redis.ts                   # Bounded LRU cache
 │   ├── seo.ts                     # Schema.org & OpenGraph generators
 │   └── utils.ts                   # Utility functions & class merger
 └── components/
     ├── layout/                    # Header, Footer, Subnav, Navigation
     ├── ui/                        # Reusable glassmorphic cards, accordions, badges
-    └── architecture/              # Lightbox, diagrams gallery
+    ├── cheatsheet/                # PDF Downloads Hub & interactive card decks
+    └── architecture/              # Lightbox, diagrams gallery, keyword filter bar
 ```
 
 ---

@@ -31,7 +31,7 @@ Use consistent semantic colors across components:
 - **Red / Coral** (`#E03131` / light red fill): Schedulers, master orchestrators, and compute clusters (e.g., Apache Airflow, Azure Databricks, Spark, Flink).
 - **Blue / Sky** (`#1971C2` / light blue fill): Execution dispatchers, conversion engines, and middleware (e.g., Azure Data Factory, Step Functions, dbt, conversion processors).
 - **Yellow / Amber** (`#F08C00` / light yellow fill): Sources, raw landing zones, unmanaged files, and input datasets (e.g., Plain Parquet, ADLS Raw, S3 landing, Kafka topics).
-- **Purple / Violet** (`#9C36B5` / light purple fill): Governance, catalogs, data access control, and quality centers (e.g., Unity Catalog, Collibra, DTC, Microsoft Purview, Great Expectations).
+- **Purple / Violet** (`#9C36B5` / light purple fill): Governance, catalogs, data access control, and quality centers (e.g., Unity Catalog, Collibra, Microsoft Purview, Great Expectations).
 - **Green / Emerald** (`#2B8A3E` / light green fill): Target lakehouse tables, curated gold/silver layers, completed outputs, and unlocked features (e.g., Delta Parquet, Iceberg tables, verified badges).
 
 ---
@@ -62,7 +62,69 @@ Use when explaining how a specific file format, algorithm, or conversion works s
 
 ---
 
-## 3. Formula for `generate_image` Prompts
+## 3. Platform Production Blueprints Inventory (42 Blueprints)
+
+The platform maintains 42 hand-drawn digital blueprints across 7 architectural domains (`src/data/diagrams.ts`):
+
+### 1. Compute & Optimization (11)
+- `spark-catalyst-photon-engine`: Catalyst Optimizer, AQE & Native Photon C++ Engine
+- `spark-shuffle-memory-internals`: Apache Spark Shuffle Internals & Unified JVM Memory
+- `sql-server-engine-internals`: SQL Server Relational Engine & Buffer Pool Mechanics
+- `spark-data-skew-aqe-optimization`: Apache Spark Data Skew Handling & Adaptive Query Execution
+- `delta-lake-optimization-techniques`: 6 Delta Lake Optimization Levers (Partitioning, Z-Order, OPTIMIZE, Liquid Clustering, VACUUM)
+- `structured-streaming-rocksdb-state`: Structured Streaming Stateful Operations & RocksDB State Store
+- `spark-tungsten-memory-spill`: Spark Tungsten Engine Memory Management & Spill Mechanics
+- `spark-join-strategies-decision-matrix`: Apache Spark Distributed Join Strategy Decision Flowchart
+- `photon-vectorized-vs-jvm-catalyst`: Photon Native Vectorized Execution vs JVM Whole-Stage CodeGen
+- `broadcast-variables-accumulators`: Spark Broadcast Variables & Accumulator Internals
+- `fabric-onelake-shortcuts-directlake`: Fabric OneLake Cross-Cloud Shortcuts & Direct Lake Paging
+
+### 2. Storage Engines & Formats (8)
+- `delta-lake-under-the-hood`: Delta Lake Under-The-Hood ACID Transaction Mechanics
+- `apache-iceberg-open-table-format`: Apache Iceberg Open Table Format & Snapshot Trees
+- `open-table-formats-comparison`: Open Table Formats Comparison (Delta vs Iceberg vs Hudi)
+- `open-file-formats-comparison`: Open File Formats Comparison (Parquet vs ORC vs Avro)
+- `lakehouse-acid-concurrency-matrix`: Lakehouse ACID Concurrency & Conflict Detection Matrix
+- `scd-types-medallion-architecture`: Slowly Changing Dimensions (SCD Types 0-6) in Medallion
+- `delta-savemode-concurrency-handling`: Delta Lake SaveMode Behaviors & Concurrent Append/Overwrite
+- `lakehouse-master-enterprise-architecture`: Master Enterprise Lakehouse Reference Blueprint
+
+### 3. Pipelines & Ingestion (8)
+- `apache-airflow-distributed-architecture`: Apache Airflow Distributed Architecture & Schedulers
+- `dbt-analytics-engineering-dag`: dbt Analytics Engineering DAG & Transformation Mesh
+- `adf-hybrid-integration-runtime`: Azure Data Factory Hybrid Pipeline & SHIR
+- `kafka-event-streaming-pipeline`: Apache Kafka Event Streaming & High-Throughput Messaging
+- `cdc-debezium-lakehouse-pipeline`: CDC with Debezium & Streaming Lakehouse Ingestion
+- `delta-live-tables-pipeline`: Databricks Delta Live Tables (DLT) Declarative ETL
+- `databricks-asset-bundles-cicd`: Databricks Asset Bundles (DABs) & Serverless CI/CD
+- `rag-vector-search-data-pipeline`: Enterprise RAG & Vector Search Data Ingestion Pipeline
+
+### 4. Platform Landscape (5)
+- `databricks-medallion-pipeline`: Databricks Multi-Hop Medallion Architecture
+- `databricks-platform-master`: Databricks Unified Platform Master Blueprint
+- `python-arrow-polars-duckdb`: Python High-Performance Data Engineering: Arrow, Polars & DuckDB
+- `lakehouse-finops-cost-optimization`: Enterprise Lakehouse FinOps & Cloud Cost Optimization
+- `enterprise-edge-iot-architecture`: Enterprise Edge Computing, IoT Hub & Distributed Gateways
+
+### 5. Microsoft Fabric & Power BI (4)
+- `fabric-onelake-architecture`: Microsoft Fabric Unified Architecture & OneLake
+- `powerbi-direct-lake-vertipaq`: Power BI Direct Lake Mode & VertiPaq Semantic Engine
+- `powerbi-dax-engine-context`: Power BI DAX Formula/Storage Engine Mechanics
+- `fabric-onelake-shortcuts-directlake`: Fabric OneLake Cross-Cloud Shortcuts & Direct Lake Mode
+
+### 6. Data Modeling & Architecture (4)
+- `kimball-dimensional-star-schema`: Kimball Dimensional Modeling & Enterprise Star Schema
+- `data-vault-enterprise-architecture`: Data Vault 2.0 Enterprise Modeling (Hubs, Links, Satellites)
+- `distributed-systems-resilience`: Distributed Systems Resilience & Circuit Breakers
+- `enterprise-data-mesh-architecture`: Enterprise Data Mesh Architecture & Federated Governance
+
+### 7. Governance & Security (2)
+- `unity-catalog-governance-lineage`: Databricks Unity Catalog Centralized Governance & Lineage
+- `purview-enterprise-governance`: Microsoft Purview Enterprise Unified Governance & Metadata
+
+---
+
+## 4. Formula for `generate_image` Prompts
 
 When invoking the `generate_image` tool, construct the prompt following this exact template:
 
@@ -70,12 +132,8 @@ When invoking the `generate_image` tool, construct the prompt following this exa
 {
     "AspectRatio": "16:9",  # Use 16:9 for horizontal flows/swimlanes, 4:3 for compact maps
     "ImageName": "<descriptive_snake_case_name>",
-    "ImagePaths": [
-        # Pass the sample reference images stored in this skill's resources
-        "/Users/santosh/antigravity/.agents/skills/whiteboard-architecture-diagrams/resources/sample_enterprise_pipeline.jpg"
-    ],
     "Prompt": """
-A clear, high-resolution digital architecture and infographic diagram explaining '<TOPIC_TITLE>' in a polished hand-drawn whiteboard sketch style on a clean white background, strictly matching the visual style, rounded colored cards, and friendly marker typography of the reference image.
+A clear, high-resolution digital architecture and infographic diagram explaining '<TOPIC_TITLE>' in a polished hand-drawn whiteboard sketch style on a clean solid white background, strictly matching the visual style, rounded colored cards, and friendly marker typography.
 
 Title at top: '<MAIN_TITLE>'
 Subtitle below: '<SUBTITLE_OR_CONTEXT>'
@@ -98,48 +156,3 @@ Clean linework, vibrant colored borders, high contrast, perfectly legible hand-d
 """
 }
 ```
-
----
-
-## 4. Enterprise Whiteboard Blueprints Catalog (32 Production Blueprints)
-
-The platform maintains an authoritative catalog of 32 digital whiteboard architecture diagrams, persisted in `public/diagrams/`:
-
-1. `fabric_onelake_architecture`: Microsoft Fabric Unified Architecture & OneLake Storage Substrate
-2. `powerbi_direct_lake_vertipaq`: Power BI Direct Lake Mode & VertiPaq In-Memory Semantic Engine
-3. `powerbi_dax_engine_context`: Power BI DAX Formula/Storage Engine Mechanics & Context Transition
-4. `apache_airflow_architecture`: Apache Airflow Distributed Architecture, Schedulers & Executors
-5. `dbt_analytics_engineering_dag`: dbt Analytics Engineering DAG, Mesh & Transformation Framework
-6. `adf_hybrid_architecture`: Azure Data Factory Hybrid Pipeline & Self-Hosted Integration Runtime (SHIR)
-7. `kafka_event_streaming_pipeline`: Apache Kafka Event Streaming, Partitions & High-Throughput Messaging
-8. `cdc_debezium_lakehouse_pipeline`: Change Data Capture (CDC) with Debezium & Streaming Lakehouse Ingestion
-9. `databricks_medallion_architecture`: Databricks Multi-Hop Medallion Architecture (Bronze/Silver/Gold)
-10. `databricks_dlt_pipeline`: Databricks Delta Live Tables (DLT) Declarative ETL & Expectations Pipeline
-11. `databricks_ecosystem_landscape`: Databricks Platform Landscape & Core Engine Overview
-12. `rag_vector_search_data_pipeline`: Enterprise RAG & Vector Search Data Ingestion Pipeline
-13. `unity_catalog_architecture`: Databricks Unity Catalog Centralized Governance, Access Control & Lineage
-14. `purview_governance_catalog`: Microsoft Purview Enterprise Unified Governance, Classification & Metadata
-15. `delta_lake_mechanism`: Delta Lake Under-The-Hood ACID Transaction Mechanics & Checkpointing
-16. `apache_iceberg_open_table_format`: Apache Iceberg Open Table Format, Snapshot Trees & Hidden Partitioning
-17. `open_table_formats_lakehouse_architecture`: Open Table Formats Comparison (Delta Lake vs Iceberg vs Hudi)
-18. `open_file_formats_storage_architecture`: Open File Formats Comparison (Parquet vs ORC vs Avro)
-19. `databricks_optimization_techniques_architecture`: 6 Delta Lake Optimization Techniques (Partitioning, Z-Order, OPTIMIZE, Auto Optimize, Liquid Clustering, VACUUM)
-20. `catalyst_photon_engine`: Databricks Compute: Catalyst Optimizer, AQE & Native Photon C++ Engine
-21. `spark_shuffle_memory_execution`: Apache Spark Shuffle Internals & Unified JVM Memory Architecture
-22. `sql_server_query_engine_optimization`: SQL Server Relational Engine, Query Optimizer & Buffer Pool Mechanics
-23. `kimball_dimensional_star_schema`: Kimball Dimensional Modeling & Enterprise Star Schema Design
-24. `data_vault_enterprise_architecture`: Data Vault 2.0 Enterprise Modeling (Hubs, Links, Satellites)
-25. `enterprise_edge_architecture`: Enterprise Edge Computing, IoT Hub & Distributed Gateways
-26. `distributed_systems_resilience_architecture`: Distributed Systems Resilience, Circuit Breakers & Consensus
-27. `python_arrow_polars_architecture`: Python High-Performance Data Engineering: Apache Arrow, Polars & DuckDB
-28. `data_mesh_enterprise_architecture`: Enterprise Data Mesh Architecture (Domain Ownership & Data Products)
-29. `spark_data_skew_aqe_optimization`: Apache Spark Data Skew Handling & Adaptive Query Execution (AQE)
-30. `lakehouse_finops_cost_optimization`: Enterprise Lakehouse FinOps & Cloud Compute/Storage Cost Optimization
-31. `databricks_dabs_devops_pipeline`: Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture
-32. `databricks_master_architecture`: Databricks End-to-End Enterprise Lakehouse Architecture Master Blueprint
-
----
-
-## 5. WebP & AVIF Multi-Format Optimization
-
-All diagram outputs are automatically converted from source JPG to modern `.webp` and `.avif` formats via `scripts/convert_diagrams_avif_webp.py` to achieve 60-80% smaller payloads and instant client-side rendering.

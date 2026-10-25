@@ -23,7 +23,6 @@ const DEFAULT_WIDTH = 285;
 const MIN_WIDTH = 220;
 const MAX_WIDTH = 520;
 const COLLAPSED_WIDTH_DESKTOP = 72;
-const COLLAPSED_WIDTH_MOBILE = 56;
 
 function SidebarInner() {
   const pathname = usePathname();
@@ -32,28 +31,14 @@ function SidebarInner() {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [isDragging, setIsDragging] = useState(false);
   const [showWidthMenu, setShowWidthMenu] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
     const savedCollapsed = localStorage.getItem("sidebar-collapsed");
     if (savedCollapsed === "true") {
       setCollapsed(true);
     } else if (savedCollapsed === "false") {
       setCollapsed(false);
-    } else {
-      // If user hasn't explicitly set preference:
-      // On screens < 1024px (tablet & mobile), default to compact collapsed rail
-      // On desktop (>= 1024px), default to expanded
-      if (window.innerWidth < 1024) {
-        setCollapsed(true);
-      }
     }
 
     const savedWidth = localStorage.getItem("sidebar-width");
@@ -63,8 +48,6 @@ function SidebarInner() {
         setWidth(num);
       }
     }
-
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Close width menu on outside click
@@ -142,26 +125,15 @@ function SidebarInner() {
     return pathname === item.href || pathname.startsWith(item.href + "/");
   };
 
-  const currentCollapsedWidth = isMobile ? COLLAPSED_WIDTH_MOBILE : COLLAPSED_WIDTH_DESKTOP;
-  const currentWidth = collapsed ? currentCollapsedWidth : (isMobile ? Math.min(width, 280) : width);
-  const spacerWidth = (!collapsed && isMobile) ? currentCollapsedWidth : currentWidth;
+  const currentWidth = collapsed ? COLLAPSED_WIDTH_DESKTOP : width;
 
   return (
     <>
-      {/* Mobile backdrop when expanded on small mobile screens (<640px) */}
-      {!collapsed && isMobile && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-35 sm:hidden"
-          onClick={toggleCollapsed}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* In-flow flex spacer ensuring the main content stays aligned beside the fixed sidebar */}
+      {/* In-flow flex spacer ensuring the main content stays aligned beside the fixed desktop sidebar */}
       <div
-        style={{ width: spacerWidth }}
+        style={{ width: currentWidth }}
         className={cn(
-          "shrink-0",
+          "hidden lg:block shrink-0",
           isDragging ? "transition-none" : "transition-[width] duration-200 ease-in-out"
         )}
         aria-hidden="true"
@@ -170,16 +142,15 @@ function SidebarInner() {
       <aside
         style={{ width: currentWidth }}
         className={cn(
-          "fixed top-0 bottom-0 left-0 z-30 flex flex-col h-dvh border-r shrink-0",
+          "hidden lg:flex fixed top-0 bottom-0 left-0 z-30 flex-col h-dvh border-r shrink-0",
           "bg-[var(--surface-1)] border-[var(--border)]",
-          isDragging ? "transition-none select-none" : "transition-[width] duration-200 ease-in-out",
-          !collapsed && isMobile && "z-40 shadow-2xl"
+          isDragging ? "transition-none select-none" : "transition-[width] duration-200 ease-in-out"
         )}
       >
         {/* Brand & Resize Controls */}
         <div
           className={cn(
-            "flex items-center h-14 sm:h-16 px-2 sm:px-4 border-b border-[var(--border)] shrink-0",
+            "flex items-center h-14 sm:h-16 px-3 sm:px-4 border-b border-[var(--border)] shrink-0",
             collapsed ? "flex-col justify-center gap-1 py-2 h-auto" : "justify-between"
           )}
         >
@@ -189,7 +160,7 @@ function SidebarInner() {
             title="Lakehouse Architect - Home"
           >
             <BrandLogo
-              size={collapsed ? (isMobile ? 24 : 28) : 32}
+              size={collapsed ? 28 : 32}
               className="transition-transform duration-200 group-hover:scale-105 shrink-0"
             />
             {!collapsed && (
@@ -251,39 +222,35 @@ function SidebarInner() {
                       )}
                     >
                       <span>{preset.label}</span>
-                      <span className="text-[10px] font-mono text-[var(--muted-foreground)]">{preset.val}px</span>
+                      <span className="font-mono text-[10px] text-[var(--muted-foreground)]">
+                        {preset.val}px
+                      </span>
                     </button>
                   ))}
-                  <div className="mt-1.5 pt-1.5 border-t border-[var(--border)] px-1 text-[10px] text-[var(--muted-foreground)]">
-                    Tip: Drag right border to freely resize
+                  <div className="mt-1 pt-1 border-t border-[var(--border)] px-2 text-[10px] text-[var(--muted-foreground)]">
+                    Tip: Drag right border to resize
                   </div>
                 </div>
               )}
             </div>
           )}
 
+          {/* Collapse/Expand Toggle Button */}
           <button
             onClick={toggleCollapsed}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-[var(--surface-3)] transition-colors cursor-pointer",
-              "text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
-              collapsed && "mt-1"
-            )}
+            className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <ChevronLeft
               size={16}
-              className={cn(
-                "transition-transform duration-300",
-                collapsed && "rotate-180"
-              )}
+              className={cn("transition-transform duration-200", collapsed && "rotate-180")}
             />
           </button>
         </div>
       </div>
 
-      {/* Navigation Tree — Always Visible on All Layouts with Full Word Wrap */}
+      {/* Navigation Tree — Desktop Sidebar with Branch Guides */}
       <nav className="flex-1 overflow-y-auto py-2.5 sm:py-3 px-1 sm:px-2 scrollbar-none">
         {NAV_GROUPS.map((group, gi) => (
           <div key={gi} className={cn(gi > 0 && "mt-3 sm:mt-3.5")}>
@@ -303,11 +270,6 @@ function SidebarInner() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      onClick={() => {
-                        if (isMobile && !collapsed) {
-                          toggleCollapsed();
-                        }
-                      }}
                       className={cn(
                         "flex items-start gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
                         "hover:bg-[var(--surface-3)]",
@@ -318,7 +280,14 @@ function SidebarInner() {
                       )}
                       title={collapsed ? item.label : undefined}
                     >
-                      <Icon size={18} className="shrink-0 mt-0.5" />
+                      <Icon
+                        size={18}
+                        className={cn(
+                          "shrink-0 transition-colors mt-0.5",
+                          active ? "text-blue-600 dark:text-blue-400" : "text-blue-500 dark:text-blue-400",
+                          collapsed && "mt-0"
+                        )}
+                      />
                       {!collapsed && (
                         <>
                           <span className="flex-1 break-words whitespace-normal leading-snug text-left">
@@ -337,9 +306,9 @@ function SidebarInner() {
                         </>
                       )}
                     </Link>
-                    {/* Sub-navigation items when parent is active */}
+                    {/* Sub-navigation items when parent is active — Visually Indented Tree */}
                     {active && !collapsed && item.subItems && item.subItems.length > 0 && (
-                      <ul className="ml-6 pl-2.5 border-l border-[var(--border)] my-1 space-y-0.5">
+                      <ul className="ml-5 pl-2.5 border-l-2 border-blue-500/25 my-1.5 space-y-1">
                         {item.subItems.map((sub) => {
                           const isSubActive = isSubHrefActive(pathname, searchParams, sub.href);
                           return (
@@ -347,21 +316,33 @@ function SidebarInner() {
                               <Link
                                 href={sub.href}
                                 scroll={false}
-                                onClick={() => {
-                                  if (isMobile && !collapsed) {
-                                    toggleCollapsed();
-                                  }
-                                }}
                                 className={cn(
-                                  "flex items-center justify-between px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-150",
+                                  "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150",
                                   isSubActive
-                                    ? "bg-blue-600/10 text-blue-500 font-semibold"
+                                    ? "bg-blue-600/15 text-blue-500 font-semibold"
                                     : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]"
                                 )}
                               >
-                                <span>{sub.label}</span>
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <span
+                                    className={cn(
+                                      "w-1.5 h-1.5 rounded-full shrink-0 transition-all",
+                                      isSubActive
+                                        ? "bg-blue-500 scale-125 shadow-[0_0_6px_rgba(59,130,246,0.8)]"
+                                        : "bg-[var(--muted-foreground)]/30"
+                                    )}
+                                  />
+                                  <span className="truncate">{sub.label}</span>
+                                </div>
                                 {sub.badge && (
-                                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--surface-3)] text-[var(--muted-foreground)]">
+                                  <span
+                                    className={cn(
+                                      "text-[10px] font-mono px-1.5 py-0.2 rounded shrink-0",
+                                      isSubActive
+                                        ? "bg-blue-500/20 text-blue-400 font-bold"
+                                        : "bg-[var(--surface-3)] text-[var(--muted-foreground)]"
+                                    )}
+                                  >
                                     {sub.badge}
                                   </span>
                                 )}
@@ -385,13 +366,9 @@ function SidebarInner() {
         <ThemeSwitcher collapsed={collapsed} direction="up" align="start" />
       </div>
 
-      {/* Interactive Draggable Resize Handle */}
+      {/* Draggable Resizer Handle on Right Border */}
       {!collapsed && (
         <div
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Resize nav bar width"
-          title="Drag to resize nav bar width · Double-click to reset (285px)"
           onMouseDown={handleMouseDown}
           onDoubleClick={() => setWidth(DEFAULT_WIDTH)}
           className={cn(
@@ -399,11 +376,15 @@ function SidebarInner() {
             "hover:bg-blue-500/25 active:bg-blue-500/40 transition-colors group",
             isDragging && "bg-blue-500/35"
           )}
+          title="Drag to resize nav bar width • Double-click to reset width"
+          aria-label="Resize nav bar width"
+          role="separator"
+          aria-orientation="vertical"
         >
           <div
             className={cn(
-              "w-0.5 h-8 rounded-full bg-[var(--border)] group-hover:bg-blue-400 group-hover:h-12 transition-all opacity-40 group-hover:opacity-100",
-              isDragging && "bg-blue-400 h-16 opacity-100 ring-2 ring-blue-500/30"
+              "w-0.5 h-8 rounded-full bg-[var(--border)] group-hover:bg-blue-400 transition-colors",
+              isDragging && "bg-blue-500 h-12"
             )}
           />
         </div>
@@ -417,13 +398,10 @@ export function Sidebar() {
   return (
     <Suspense
       fallback={
-        <>
-          <div className="w-[56px] sm:w-[72px] lg:w-[285px] shrink-0" aria-hidden="true" />
-          <aside
-            className="fixed top-0 bottom-0 left-0 z-30 flex flex-col h-dvh border-r shrink-0 w-[56px] sm:w-[72px] lg:w-[285px] bg-[var(--surface-1)] border-[var(--border)]"
-            aria-hidden="true"
-          />
-        </>
+        <aside
+          className="hidden lg:flex flex-col h-dvh fixed top-0 left-0 border-r shrink-0 z-30 w-[285px] bg-[var(--surface-1)] border-[var(--border)]"
+          aria-hidden="true"
+        />
       }
     >
       <SidebarInner />

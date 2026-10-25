@@ -1,18 +1,24 @@
 # Data Platform Architect — v2 Roadmap
 
-This roadmap outlines achieved milestones and future planned expansions for **Version 2.0+** of the Data Platform Architect Prep platform.
+This roadmap outlines achieved milestones and future planned expansions for **Version 2.0+** of the Data Platform Architect Prep platform (`moderndataengineer.uk`).
 
 ---
 
-## 🏆 Recently Completed Architectural Initiatives (v1.0 – v1.1)
+## 🏆 Recently Completed Architectural Initiatives (v1.0 – v1.4)
 
-- [x] **Databricks 100 Day Challenge**: 100-day structured mastery curriculum with code snippets, certification mapping, and progressive tracking.
-- [x] **6 Delta Lake Optimization Levers**: Under-the-hood blueprint and 50M-row hands-on benchmarking (Partitioning, Z-Order, OPTIMIZE, Auto Optimize, Liquid Clustering, VACUUM).
-- [x] **Open Format Storage Types**: Whiteboard blueprints and technical deep-dive guide comparing Delta Lake, Apache Iceberg, Apache Hudi, Parquet, ORC, and Avro.
-- [x] **Zero-Bundle Data Architecture**: React 19 `cache()` Server Data Access Layer (DAL) with Edge SWR caching.
-- [x] **Universal Multi-Word Fuzzy Search Engine**: Sub-5ms cross-page discovery with keyboard command palette (`⌘K` / `Ctrl+K`).
-- [x] **Databricks Cheat Sheet Suite**: 48 cards with vector PDFs, printable posters, and line-by-line code breakdowns.
-- [x] **Enterprise Knowledge Base**: 6 comprehensive modules covering Synapse, Fabric, NoSQL/Vector, ETL/Streaming, FinOps, and Architectural Practice.
+- [x] **Master Vector PDF Suite & Streaming API (v1.4)**: 7 production vector PDFs compiled with direct edge streaming API (`/api/download/pdf/[filename]`), attachment headers, and in-modal interactive preview.
+- [x] **Google-Grade BM25F Search Engine (v1.4)**: In-memory field-weighted BM25F search algorithm with typo tolerance and zero-OOM memory optimization under 128 MB on Cloudflare Workers edge.
+- [x] **2026 Cloud × Engine Polyglot Matrix (v1.4)**: Comparative cross-engine execution matrices and 15 FinOps cost playbooks covering Databricks, Snowflake, BigQuery, Microsoft Fabric, and DuckDB.
+- [x] **Enterprise Security Hardening (v1.4)**: Canonical domain alignment (`moderndataengineer.uk`), active security policy (`SECURITY.md`), `/.well-known/security.txt`, bounded Redis LRU cache, and Cloudflare KV/D1 authentication.
+- [x] **Single-Roof Concepts & 14-Pillar Mind Map (v1.3)**: 679 concepts merged with 3-in-1 view switcher (Glossary, Mindmap, Flashcards) under `/concepts` with zero page reload.
+- [x] **Dedicated Databricks Coding Hub (v1.3)**: Unified `/code-practice/databricks` subpage with 148+ operations, Unity Catalog Volumes, DBFS, and 6 memory bottleneck triage runbooks (Driver/Executor OOM, Shuffle Spill, Skew Joins, Small Files, GC Pauses).
+- [x] **36-Keyword Architecture Scenario Filter Deck (v1.3)**: 6 domain groups with live counts and URL query sync across 3,206 architecture scenarios.
+- [x] **42 Whiteboard Architecture Blueprints (v1.2)**: Lossless WebP/AVIF digital whiteboard schematics across 7 domains with full-screen zoom inspection.
+- [x] **Databricks 100 Day Challenge (v1.1)**: 100-day structured mastery curriculum with code snippets, certification mapping, and progressive tracking.
+- [x] **6 Delta Lake Optimization Levers (v1.1)**: Under-the-hood blueprint and 50M-row hands-on benchmarking (Partitioning, Z-Order, OPTIMIZE, Auto Optimize, Liquid Clustering, VACUUM).
+- [x] **Open Format Storage Types (v1.0)**: Whiteboard blueprints and technical deep-dive guide comparing Delta Lake, Apache Iceberg, Apache Hudi, Parquet, ORC, and Avro.
+- [x] **Zero-Bundle Data Architecture**: React 19 `cache()` Server Data Access Layer (DAL) with Edge SWR caching and persistent IndexedDB (`idb`).
+- [x] **Vitest Test Suite Scale**: Expanded automated test gates to 49 test files and 399 unit/integration tests with 100% pass rate.
 
 ---
 
