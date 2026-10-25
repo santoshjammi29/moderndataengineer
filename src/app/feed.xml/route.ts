@@ -31,11 +31,27 @@ export async function GET() {
   </item>
 
   <item>
-    <title>Lakehouse Concepts &amp; Architecture Glossary (660 Terms)</title>
+    <title>Lakehouse Concepts &amp; Architecture Glossary (679 Terms)</title>
     <link>${BASE_URL}/concepts</link>
     <guid>${BASE_URL}/concepts</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>Complete architectural lexicon covering Delta Lake internals, Liquid Clustering, Apache Iceberg metadata, and Unity Catalog.</description>
+    <description>Complete architectural lexicon covering Delta Lake internals, Liquid Clustering, Apache Iceberg metadata tree, and Unity Catalog 3-level namespace.</description>
+  </item>
+
+  <item>
+    <title>Production Cheat Sheets &amp; Compiled Master Vector PDFs</title>
+    <link>${BASE_URL}/cheat-sheet</link>
+    <guid>${BASE_URL}/cheat-sheet</guid>
+    <pubDate>${new Date().toUTCString()}</pubDate>
+    <description>124+ production runbooks and 7 downloadable high-resolution vector PDFs covering PySpark, Databricks, Incident Runbooks, and Master Reference.</description>
+  </item>
+
+  <item>
+    <title>Databricks Unified Operations Hub &amp; Memory Bottleneck Triage</title>
+    <link>${BASE_URL}/code-practice/databricks</link>
+    <guid>${BASE_URL}/code-practice/databricks</guid>
+    <pubDate>${new Date().toUTCString()}</pubDate>
+    <description>148+ Databricks operations with code snippets, Unity Catalog Volumes, DBFS commands, and Sev-1 Driver OOM, Executor OOM, and Skew Join triage runbooks.</description>
   </item>
 
   <item>
@@ -43,7 +59,7 @@ export async function GET() {
     <link>${BASE_URL}/spark-engine</link>
     <guid>${BASE_URL}/spark-engine</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>Interactive simulator of Apache Spark 4.0 Catalyst Optimizer, Tungsten memory allocator, and shuffle mechanics.</description>
+    <description>Interactive visual runtime simulator of Apache Spark 4.0 Catalyst Optimizer, Tungsten memory allocator, and shuffle stage mechanics.</description>
   </item>
 </channel>
 </rss>`;

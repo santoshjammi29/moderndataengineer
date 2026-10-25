@@ -117,6 +117,17 @@ const nextConfig: NextConfig = {
         has: [
           {
             type: "host",
+            value: "www.moderndataengineer.uk",
+          },
+        ],
+        destination: "https://moderndataengineer.uk/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
             value: "lakehousearchitect.com",
           },
         ],

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>Lakehouse Architect</ShortName>
-  <Description>Search 10,700+ Lakehouse Architecture scenarios, concepts, and interview drills</Description>
+  <Description>Search 11,500+ Lakehouse Architecture scenarios, concepts, and interview drills</Description>
   <Tags>lakehouse architecture fabric databricks spark</Tags>
   <Contact>santoshjammi29@gmail.com</Contact>
-  <Url type="text/html" template="https://lakehousearchitect.com/concepts?search={searchTerms}"/>
-  <Image width="16" height="16" type="image/x-icon">https://lakehousearchitect.com/favicon.ico</Image>
-  <Image width="64" height="64" type="image/png">https://lakehousearchitect.com/icon-192.png</Image>
+  <Url type="text/html" template="https://moderndataengineer.uk/concepts?search={searchTerms}"/>
+  <Image width="16" height="16" type="image/x-icon">https://moderndataengineer.uk/favicon.ico</Image>
+  <Image width="64" height="64" type="image/png">https://moderndataengineer.uk/icon-192.png</Image>
   <Developer>Santosh Jammi</Developer>
 </OpenSearchDescription>

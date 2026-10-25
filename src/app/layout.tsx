@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     template: "%s | Lakehouse Architect",
   },
   description:
-    "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 10,700+ verified scenarios.",
+    "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 11,500+ verified scenarios.",
   keywords: [
     "Lakehouse",
     "Lakehouse Architecture",
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Lakehouse Architect | Modern Lakehouse Architecture & Systems Guide",
     description:
-      "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 10,700+ verified scenarios.",
+      "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 11,500+ verified scenarios.",
     url: CANONICAL_SITE_URL,
     siteName: "Lakehouse Architect",
     images: [
@@ -95,9 +95,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lakehouse Architect | Modern Lakehouse Architecture & Systems Guide",
     description:
-      "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 10,700+ verified scenarios.",
-    site: "@lakehouse_arch",
-    creator: "@lakehouse_arch",
+      "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 11,500+ verified scenarios.",
+    site: "@SANt0shJ",
+    creator: "@SANt0shJ",
     images: ["/diagrams/fabric_onelake_architecture.webp"],
   },
   robots: {
@@ -296,6 +296,11 @@ export default function RootLayout({
                     },
                     "sameAs": [
                       "https://github.com/santoshjammi29/fabric-pbi-prep",
+                      "https://github.com/santoshjammi29/pyspark-handbook",
+                      "https://github.com/santoshjammi29/azure-cheat-sheet",
+                      "https://www.linkedin.com/in/santoshjammi29/",
+                      "https://santoshjammi.in",
+                      "https://x.com/SANt0shJ",
                     ],
                     "knowsAbout": [
                       "Lakehouse",

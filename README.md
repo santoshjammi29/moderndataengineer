@@ -10,12 +10,15 @@
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.x_Strict-3178C6?style=flat-square&logo=typescript" alt="TypeScript"></a>
   <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-49_Files_%E2%80%A2_399_Passed-green?style=flat-square&logo=vitest" alt="Vitest"></a>
   <a href="https://developers.cloudflare.com/workers/"><img src="https://img.shields.io/badge/Deployment-Cloudflare_OpenNext-F38020?style=flat-square&logo=cloudflare" alt="Edge Architecture"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="MIT License"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/Security-Policy_Active-blue?style=flat-square&logo=securityscorecard" alt="Security Policy"></a>
 </p>
 
-> **Enterprise-Grade Cloud Educational Platform & Lakehouse Architecture Encyclopedia**  
-> Tailored for Principal Data Architects, Staff Data Engineers, and Lead Analytics Engineers mastering Microsoft Fabric, Databricks, Apache Spark, Delta Lake, Apache Iceberg, Power BI, Azure Data Factory, dbt, Apache Airflow, and Modern Multi-Engine Lakehouse Design.  
-> Live at: **[https://moderndataengineer.uk](https://moderndataengineer.uk)**
+> **The Definitive Open-Access Enterprise Data Engineering & Lakehouse Systems Encyclopedia**  
+> 11,500+ verified scenarios, system design drills, and high-resolution architecture blueprints covering **Microsoft Fabric (DP-600), Databricks, Apache Spark 4.0, Delta Lake, Apache Iceberg, Unity Catalog, dbt, Apache Airflow, and Medallion Lakehouse Architecture**.  
+> 
+> 🌐 **Live Web Application**: **[https://moderndataengineer.uk](https://moderndataengineer.uk)**  
+> 📦 **Sister Repository**: **[The PySpark Handbook (105 Production Recipes)](https://github.com/santoshjammi29/pyspark-handbook)** • **[Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet)**
 
 ---
 
