@@ -100,10 +100,20 @@ function getInitialLegacyData(): Partial<UserStoreState> {
 }
 
 function generateSecureId(prefix: string): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return `${prefix}_${crypto.randomUUID()}`;
+  if (typeof crypto !== "undefined") {
+    if (typeof crypto.randomUUID === "function") {
+      return `${prefix}_${crypto.randomUUID()}`;
+    }
+    if (typeof crypto.getRandomValues === "function") {
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+      return `${prefix}_${hex}`;
+    }
   }
-  return `${prefix}_${Math.random().toString(36).substring(2)}${Date.now().toString(36)}`;
+  const timestamp = Date.now().toString(36);
+  const perf = typeof performance !== "undefined" ? Math.floor(performance.now()).toString(36) : "";
+  return `${prefix}_${timestamp}${perf}`;
 }
 
 // Debounced Edge Sync for global low-latency state persistence

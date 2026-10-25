@@ -11,6 +11,9 @@ concurrency:
   group: cloudflare-deploy-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Build, sync artifacts, and deploy

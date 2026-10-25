@@ -2,9 +2,24 @@ import useSWRImmutable from 'swr/immutable';
 import { openDB, IDBPDatabase } from 'idb';
 
 const rawCdn = typeof process !== 'undefined' ? process.env?.NEXT_PUBLIC_CDN_URL : undefined;
+
+function isValidCdnUrl(urlStr: string | undefined): boolean {
+  if (!urlStr) return false;
+  try {
+    const parsed = new URL(urlStr);
+    // Explicitly reject legacy unresolvable domain
+    if (parsed.hostname === 'cdn.lakehousearchitect.com') {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // If the CDN domain is unconfigured/unresolvable or empty, fallback to the edge Worker R2 API
 const CDN_BASE =
-  (rawCdn && !rawCdn.includes('cdn.lakehousearchitect.com') ? rawCdn.replace(/\/$/, '') : '') ||
+  (rawCdn && isValidCdnUrl(rawCdn) ? rawCdn.replace(/\/$/, '') : '') ||
   '/api/artifacts';
 
 export function getArtifactUrl(key: string): string {

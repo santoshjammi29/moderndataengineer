@@ -139,6 +139,16 @@ export function generateCourseSchema(
   };
 }
 
+function stripHtmlTags(input: string): string {
+  let previous: string;
+  let result = input;
+  do {
+    previous = result;
+    result = result.replace(/<[^>]*>/g, "");
+  } while (result !== previous);
+  return result.replace(/[<>]/g, "");
+}
+
 /**
  * JSON-LD FAQPage Schema Generator
  */
@@ -151,7 +161,7 @@ export function generateFAQSchema(faqs: { question: string; answer: string }[]) 
       name: faq.question,
       acceptedAnswer: {
         "@type": "Answer",
-        text: faq.answer.replace(/<[^>]*>?/gm, "").substring(0, 1000),
+        text: stripHtmlTags(faq.answer).substring(0, 1000),
       },
     })),
   };
