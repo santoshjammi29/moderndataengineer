@@ -29,9 +29,13 @@ import {
   Share2,
   CheckCheck,
   BookMarked,
+  Route,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { LearningPath } from "@/types/data";
+import { learningPathsDb } from "@/data";
+import { CareerCurriculaView } from "@/components/guided-learning/career-curricula-view";
 import {
   getTopicItems,
   getTopicCounts,
@@ -145,8 +149,56 @@ const stages = [
   },
 ] as const;
 
-function GuidedLearningContent() {
+interface GuidedLearningContentProps {
+  initialPaths?: LearningPath[];
+  defaultTab?: "topics" | "curricula";
+}
+
+function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLearningContentProps) {
   const searchParams = useSearchParams();
+  const paths = useMemo(
+    () => (initialPaths && initialPaths.length > 0 ? initialPaths : learningPathsDb),
+    [initialPaths]
+  );
+
+  const [activeMainTab, setActiveMainTab] = useState<"topics" | "curricula">(() => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam === "curricula" || defaultTab === "curricula") return "curricula";
+    const idParam = searchParams.get("id") || searchParams.get("card");
+    if (idParam && idParam.startsWith("path-")) return "curricula";
+    return "topics";
+  });
+
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam === "curricula") {
+      setActiveMainTab("curricula");
+    } else if (tabParam === "topics") {
+      setActiveMainTab("topics");
+    } else {
+      const idParam = searchParams.get("id") || searchParams.get("card");
+      if (idParam && idParam.startsWith("path-")) {
+        setActiveMainTab("curricula");
+      }
+    }
+  }, [searchParams]);
+
+  const handleMainTabChange = useCallback((tab: "topics" | "curricula") => {
+    setActiveMainTab(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (tab === "curricula") {
+        url.searchParams.set("tab", "curricula");
+        url.searchParams.delete("topic");
+      } else {
+        url.searchParams.delete("tab");
+        url.searchParams.delete("id");
+        url.searchParams.delete("card");
+      }
+      window.history.pushState(null, "", url.toString());
+    }
+  }, []);
+
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedDomain, setSelectedDomain] = useState<string>("All Tracks");
   const [searchQuery, setSearchQuery] = useState("");
@@ -439,8 +491,43 @@ function GuidedLearningContent() {
 
   return (
     <div className="space-y-4 pb-16 max-w-7xl mx-auto px-2 sm:px-4">
-      {/* ── TOP BANNER & TRACK MATRIX ─────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 shadow-xs isolate">
+      {/* ─── UNIFIED VIEW MODE SWITCHER: TOPIC TRACKS vs CAREER CURRICULA ─── */}
+      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">
+        <button
+          type="button"
+          onClick={() => handleMainTabChange("topics")}
+          className={cn(
+            "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
+            activeMainTab === "topics"
+              ? "bg-blue-600 text-white shadow-xs font-semibold"
+              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+          )}
+        >
+          <Route size={13} />
+          <span>Specialized Topic Tracks ({GUIDED_TOPICS.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleMainTabChange("curricula")}
+          className={cn(
+            "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
+            activeMainTab === "curricula"
+              ? "bg-purple-600 text-white shadow-xs font-semibold"
+              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+          )}
+        >
+          <GraduationCap size={13} />
+          <span>Revamped Career Curricula ({paths.length} Roadmaps)</span>
+        </button>
+      </div>
+
+      {activeMainTab === "curricula" ? (
+        <CareerCurriculaView paths={paths} />
+      ) : (
+        <>
+          {/* ── TOP BANNER & TRACK MATRIX ─────────────────────────────────── */}
+          <section className="relative overflow-hidden rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 shadow-xs isolate">
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -1435,11 +1522,18 @@ function GuidedLearningContent() {
           </m.div>
         )}
       </AnimatePresence>
+        </>
+      )}
     </div>
   );
 }
 
-export function GuidedLearningClient() {
+interface GuidedLearningClientProps {
+  initialPaths?: LearningPath[];
+  defaultTab?: "topics" | "curricula";
+}
+
+export function GuidedLearningClient({ initialPaths, defaultTab = "topics" }: GuidedLearningClientProps) {
   return (
     <Suspense
       fallback={
@@ -1448,7 +1542,7 @@ export function GuidedLearningClient() {
         </div>
       }
     >
-      <GuidedLearningContent />
+      <GuidedLearningContent initialPaths={initialPaths} defaultTab={defaultTab} />
     </Suspense>
   );
 }

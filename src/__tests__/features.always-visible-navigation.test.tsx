@@ -41,19 +41,38 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
   it("renders ALL hubs and subpages in the left Sidebar as the primary navigation", () => {
     render(<Sidebar />);
 
-    // Check that pages across all groups are cleanly rendered and visible in the left sidebar
+    // Check that primary navigation hubs across all groups are cleanly rendered and visible in the left sidebar
     expect(screen.getByText("Cloud × Table Matrix")).toBeDefined();
     expect(screen.getByText("Architecture Scenarios")).toBeDefined();
     expect(screen.getByText("Spark Engine Lab")).toBeDefined();
     expect(screen.getByText("DataOps & CI/CD")).toBeDefined();
     expect(screen.getByText("Concepts Glossary")).toBeDefined();
-    expect(screen.getByText("Concepts Mind Map")).toBeDefined();
     expect(screen.getByText("Code Practice")).toBeDefined();
     expect(screen.getByText("Cheat Sheets")).toBeDefined();
     expect(screen.getByText("Question Drill Bank")).toBeDefined();
-    expect(screen.getByText("Target Company Intel")).toBeDefined();
     expect(screen.getByText("Guided Learning")).toBeDefined();
-    expect(screen.getByText("Career Curricula")).toBeDefined();
+    expect(screen.getByText("Target Company Intel")).toBeDefined();
+    expect(screen.getByText("My Studio")).toBeDefined();
+
+    // Verify Target Company Intel is moved to the last of the list in Interviews & Roadmaps
+    const interviewItems = NAV_GROUPS[2].items.map((i) => i.label);
+    expect(interviewItems[interviewItems.length - 1]).toBe("Target Company Intel");
+
+    // Verify Concepts Mind Map is moved under Concepts Glossary
+    const conceptsItem = NAV_GROUPS[1].items.find((i) => i.label === "Concepts Glossary");
+    expect(conceptsItem?.subItems?.map((s) => s.label)).toContain("Concepts Mind Map");
+
+    // Verify Career Curricula is moved under Guided Learning
+    const guidedItem = NAV_GROUPS[2].items.find((i) => i.label === "Guided Learning");
+    expect(guidedItem?.subItems?.map((s) => s.label)).toContain("Career Curricula");
+
+    // Verify Worker Deployments is removed from navigation
+    const allLabels = NAV_GROUPS.flatMap((g) => g.items.map((i) => i.label));
+    expect(allLabels).not.toContain("Worker Deployments");
+
+    // Verify Spark Engine Lab has Catalyst & Visualizer sub-item
+    const sparkItem = NAV_GROUPS[0].items.find((i) => i.label === "Spark Engine Lab");
+    expect(sparkItem?.subItems?.map((s) => s.label)).toContain("Catalyst & Visualizer");
   });
 
   it("renders AllPagesNav with only the universal search bar at the top", () => {

@@ -88,13 +88,13 @@ describe("Cloud × Table Matrix First & Consolidated Clubbed Pages Verification"
   });
 
   describe("3. Concepts Pages Cleanly Cataloged & Clubbed", () => {
-    it("clubs glossary and mind map under Knowledge & Drills", () => {
+    it("clubs glossary and mind map under Concepts Glossary in Knowledge & Drills", () => {
       const kdGroup = NAV_GROUPS.find((g) => g.title === "Knowledge & Drills");
       expect(kdGroup).toBeDefined();
 
-      const labels = kdGroup?.items.map((s) => s.label) || [];
-      expect(labels).toContain("Concepts Glossary");
-      expect(labels).toContain("Concepts Mind Map");
+      const conceptsItem = kdGroup?.items.find((s) => s.label === "Concepts Glossary");
+      expect(conceptsItem).toBeDefined();
+      expect(conceptsItem?.subItems?.map((s) => s.label)).toContain("Concepts Mind Map");
     });
 
     it("assigns Category 'Concepts' to all flat concepts subpages in catalog", () => {
@@ -105,7 +105,7 @@ describe("Cloud × Table Matrix First & Consolidated Clubbed Pages Verification"
 
       const hrefs = conceptPages.map((p) => p.href);
       expect(hrefs).toContain("/concepts");
-      expect(hrefs).toContain("/mindmap");
+      expect(hrefs).toContain("/concepts?view=mindmap");
       expect(hrefs).toContain("/modern-stack?tab=concepts");
     });
   });
@@ -138,7 +138,7 @@ describe("Cloud × Table Matrix First & Consolidated Clubbed Pages Verification"
   });
 
   describe("6. Q&A & Interview Prep Cleanly Clubbed Together", () => {
-    it("clubs Question Drill Bank and Target Company Intel under Interviews & Roadmaps", () => {
+    it("clubs Question Drill Bank, Guided Learning, and Target Company Intel under Interviews & Roadmaps", () => {
       const interviewGroup = NAV_GROUPS.find((g) => g.title === "Interviews & Roadmaps");
       expect(interviewGroup).toBeDefined();
 
@@ -146,7 +146,10 @@ describe("Cloud × Table Matrix First & Consolidated Clubbed Pages Verification"
       expect(hrefs).toContain("/qa-prep");
       expect(hrefs).toContain("/company-research");
       expect(hrefs).toContain("/guided-learning");
-      expect(hrefs).toContain("/learning-paths");
+
+      // Verify Career Curricula is unified under Guided Learning
+      const guidedItem = interviewGroup?.items.find((i) => i.href === "/guided-learning");
+      expect(guidedItem?.subItems?.map((s) => s.label)).toContain("Career Curricula");
     });
 
     it("assigns Category 'Q&A' to Question Drill Bank and Target Company Intel", () => {
@@ -177,14 +180,20 @@ describe("Cloud × Table Matrix First & Consolidated Clubbed Pages Verification"
       expect(screen.getByText("Spark Engine Lab")).toBeDefined();
       expect(screen.getByText("DataOps & CI/CD")).toBeDefined();
       expect(screen.getByText("Concepts Glossary")).toBeDefined();
-      expect(screen.getByText("Concepts Mind Map")).toBeDefined();
       expect(screen.getByText("Code Practice")).toBeDefined();
       expect(screen.getByText("Cheat Sheets")).toBeDefined();
       expect(screen.getByText("Question Drill Bank")).toBeDefined();
-      expect(screen.getByText("Target Company Intel")).toBeDefined();
       expect(screen.getByText("Guided Learning")).toBeDefined();
-      expect(screen.getByText("Career Curricula")).toBeDefined();
+      expect(screen.getByText("Target Company Intel")).toBeDefined();
       expect(screen.getByText("My Studio")).toBeDefined();
+
+      // Verify Concepts Mind Map is unified under Concepts Glossary
+      const conceptsItem = NAV_GROUPS[1].items.find((i) => i.label === "Concepts Glossary");
+      expect(conceptsItem?.subItems?.map((s) => s.label)).toContain("Concepts Mind Map");
+
+      // Verify Career Curricula is unified under Guided Learning
+      const guidedItem = NAV_GROUPS[2].items.find((i) => i.label === "Guided Learning");
+      expect(guidedItem?.subItems?.map((s) => s.label)).toContain("Career Curricula");
     });
   });
 

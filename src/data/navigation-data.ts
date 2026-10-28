@@ -85,7 +85,17 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
         ],
       },
-      { label: "Spark Engine Lab", href: "/spark-engine", icon: Cpu, pill: { text: "Spark", variant: "medium" } },
+      {
+        label: "Spark Engine Lab",
+        href: "/spark-engine",
+        icon: Cpu,
+        pill: { text: "Spark", variant: "medium" },
+        matches: ["/spark-engine", "/spark-catalyst"],
+        subItems: [
+          { label: "Engine & Memory Lab", href: "/spark-engine" },
+          { label: "Catalyst & Visualizer", href: "/spark-catalyst", badge: "Live" },
+        ],
+      },
       {
         label: "DataOps & CI/CD",
         href: "/dataops",
@@ -103,8 +113,18 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     title: "Knowledge & Drills",
     items: [
-      { label: "Concepts Glossary", href: "/concepts", icon: BookOpen, pill: { text: "679", variant: "easy" } },
-      { label: "Concepts Mind Map", href: "/mindmap", icon: GitBranch, pill: { text: "Tree", variant: "info" } },
+      {
+        label: "Concepts Glossary",
+        href: "/concepts",
+        icon: BookOpen,
+        pill: { text: "679", variant: "easy" },
+        matches: ["/concepts", "/mindmap"],
+        subItems: [
+          { label: "Glossary & Cards", href: "/concepts", badge: "679" },
+          { label: "Concepts Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars" },
+          { label: "Flashcards Study", href: "/concepts?view=study", badge: "Recall" },
+        ],
+      },
       {
         label: "Code Practice",
         href: "/code-practice",
@@ -135,25 +155,24 @@ export const NAV_GROUPS: NavGroup[] = [
     title: "Interviews & Roadmaps",
     items: [
       { label: "Question Drill Bank", href: "/qa-prep", icon: MessageSquare, pill: { text: "6.8k+", variant: "hard" } },
-      { label: "Target Company Intel", href: "/company-research", icon: Briefcase, pill: { text: "156+", variant: "new" } },
       {
         label: "Guided Learning",
         href: "/guided-learning",
         icon: Route,
         pill: { text: "Tracks", variant: "info" },
+        matches: ["/guided-learning", "/learning-paths"],
         subItems: [
           { label: "Topic Tracks", href: "/guided-learning" },
-          { label: "Career Curricula", href: "/learning-paths" },
+          { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: "12 Paths" },
         ],
       },
-      { label: "Career Curricula", href: "/learning-paths", icon: GraduationCap, pill: { text: "Roadmap", variant: "info" } },
+      { label: "Target Company Intel", href: "/company-research", icon: Briefcase, pill: { text: "156+", variant: "new" } },
     ],
   },
   {
     title: "Workspace",
     items: [
       { label: "My Studio", href: "/studio", icon: User, pill: { text: "Personal", variant: "info" } },
-      { label: "Worker Deployments", href: "/deployments", icon: Cloud, pill: { text: "Isolated", variant: "new" } },
     ],
   },
 ];
@@ -168,12 +187,13 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   
   // Concepts & Foundations (Clubbed)
   { id: "concepts", label: "Concepts Glossary", shortLabel: "Glossary", href: "/concepts", category: "Concepts", categoryColor: "emerald", icon: BookOpen, badge: "679" },
-  { id: "mindmap", label: "Concepts Mind Map", shortLabel: "Mind Map", href: "/mindmap", category: "Concepts", categoryColor: "emerald", icon: GitBranch, badge: "Mind Map" },
+  { id: "mindmap", label: "Concepts Mind Map", shortLabel: "Mind Map", href: "/concepts?view=mindmap", category: "Concepts", categoryColor: "emerald", icon: GitBranch, badge: "Mind Map" },
   { id: "modern-concepts", label: "Core Lakehouse Concepts", shortLabel: "Lakehouse Concepts", href: "/modern-stack?tab=concepts", category: "Concepts", categoryColor: "emerald", icon: Zap, badge: "FinOps" },
   
   // Architecture & Systems (Clubbed)
   { id: "arch-scenarios", label: "System Scenarios", shortLabel: "Scenarios", href: "/architecture?tab=scenarios", category: "Architecture", categoryColor: "purple", icon: Layers, badge: "3.2k+" },
   { id: "spark-engine", label: "Spark Engine Lab", shortLabel: "Spark Lab", href: "/spark-engine", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Lab" },
+  { id: "spark-catalyst", label: "Catalyst Optimizer & Visualizer", shortLabel: "Catalyst Lab", href: "/spark-catalyst", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Live" },
   { id: "modern-stack", label: "Modern Stack & FinOps", shortLabel: "Modern Stack", href: "/modern-stack", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "FinOps" },
   { id: "modern-compat", label: "Cloud × Table Compatibility", shortLabel: "Cloud Matrix", href: "/modern-stack?tab=compatibility", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "Matrix" },
   { id: "dataops-conn", label: "Tool Connectivity & Secrets", shortLabel: "Tool Secrets", href: "/dataops?tab=connectivity", category: "Architecture", categoryColor: "purple", icon: Network, badge: "Secrets" },
@@ -196,13 +216,12 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "dataops-diagram", label: "Whiteboard Architecture Flow", shortLabel: "Architecture Flow", href: "/dataops?tab=diagram", category: "Images & Diagrams", categoryColor: "rose", icon: Layers, badge: "Flow" },
   { id: "modern-blueprints", label: "Modern Stack Blueprints", shortLabel: "Stack Blueprints", href: "/modern-stack?tab=blueprints", category: "Images & Diagrams", categoryColor: "rose", icon: Cpu, badge: "Blueprints" },
   
-  // Interview Drill Hub / Q&A (Clubbed)
+  // Interview Drill Hub / Q&A (Clubbed) - Target Company Intel at the last
   { id: "qa-prep", label: "Question Drill Bank", shortLabel: "Q&A Drill Bank", href: "/qa-prep", category: "Q&A", categoryColor: "amber", icon: MessageSquare, badge: "6.8k+" },
   { id: "company-research", label: "Target Company Intel", shortLabel: "Company Intel", href: "/company-research", category: "Q&A", categoryColor: "amber", icon: Briefcase, badge: "156" },
   
   // Workspace
   { id: "studio", label: "My Studio", shortLabel: "My Studio", href: "/studio", category: "Workspace", categoryColor: "rose", icon: User, badge: "Personal" },
-  { id: "deployments", label: "Worker Deployments", shortLabel: "Deployments", href: "/deployments", category: "Workspace", categoryColor: "rose", icon: Cloud, badge: "Workers" },
 ];
 
 /**
@@ -217,7 +236,8 @@ export function isSubHrefActive(pathname: string | null, searchParams: URLSearch
     if (!searchParams) return true;
     const currentTab = searchParams.get("tab");
     const currentDb = searchParams.get("db");
-    if (!currentTab && !currentDb) return true;
+    const currentView = searchParams.get("view");
+    if (!currentTab && !currentDb && !currentView) return true;
     return false;
   }
 
@@ -239,6 +259,12 @@ export function isSubHrefActive(pathname: string | null, searchParams: URLSearch
       return true;
     }
     if (pathname === "/modern-stack" && key === "tab" && val === "compatibility" && !currentVal) {
+      return true;
+    }
+    if (pathname === "/concepts" && key === "view" && val === "glossary" && !currentVal) {
+      return true;
+    }
+    if (pathname === "/guided-learning" && key === "tab" && val === "topics" && !currentVal) {
       return true;
     }
     if (currentVal !== val) return false;
@@ -273,7 +299,15 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
         ],
       },
-      { label: "Spark Engine Lab", href: "/spark-engine", badge: "AQE & Memory" },
+      {
+        label: "Spark Engine Lab",
+        href: "/spark-engine",
+        badge: "AQE & Memory",
+        subpages: [
+          { label: "Engine & Memory Lab", href: "/spark-engine" },
+          { label: "Catalyst Optimizer & Visualizer", href: "/spark-catalyst", badge: "Live" },
+        ],
+      },
       {
         label: "Cloud × Table Matrix",
         href: "/modern-stack",
@@ -302,10 +336,25 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
     title: "Knowledge & Drills",
     badge: "Foundations",
     pages: [
-      { label: "Concepts Glossary", href: "/concepts", badge: "679" },
-      { label: "Concepts Mind Map", href: "/mindmap", badge: "Interactive Tree" },
-      { label: "Guided Topic Tracks", href: "/guided-learning", badge: "4 Tiers" },
-      { label: "Career Curricula", href: "/learning-paths", badge: "12 Paths" },
+      {
+        label: "Concepts Glossary",
+        href: "/concepts",
+        badge: "679",
+        subpages: [
+          { label: "Glossary & Cards", href: "/concepts", badge: "679" },
+          { label: "Concepts Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars" },
+          { label: "Flashcards Study", href: "/concepts?view=study", badge: "Recall" },
+        ],
+      },
+      {
+        label: "Guided Learning",
+        href: "/guided-learning",
+        badge: "Tracks & Roadmaps",
+        subpages: [
+          { label: "Specialized Topic Tracks", href: "/guided-learning", badge: "13 Tracks" },
+          { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: "12 Paths" },
+        ],
+      },
       { label: "Question Drill Bank", href: "/qa-prep", badge: "6.8k+ Scenarios" },
       { label: "Target Company Intel", href: "/company-research", badge: "156 GCC" },
     ],
@@ -343,7 +392,6 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
     badge: "Personal",
     pages: [
       { label: "My Learning Studio", href: "/studio", badge: "Bookmarks & Tracker" },
-      { label: "Worker Deployments", href: "/deployments", badge: "Isolated Platform" },
     ],
   },
 ];

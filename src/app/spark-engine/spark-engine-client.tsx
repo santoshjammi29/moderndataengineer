@@ -24,6 +24,7 @@ import {
   Flame,
   Workflow,
   Table,
+  ArrowRight,
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -351,6 +352,35 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Dedicated Catalyst Optimizer & Spark Visualizer Portal Banner */}
+      <div className="p-3.5 sm:p-4 rounded-xl border border-red-500/40 bg-gradient-to-r from-red-600/15 via-purple-600/10 to-amber-600/10 flex flex-col sm:flex-row items-center justify-between gap-3.5 shadow-xs">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Cpu size={18} />
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">
+                Catalyst Optimizer &amp; Spark Physical Visualizer
+              </h4>
+              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                Dedicated Lab Page
+              </span>
+            </div>
+            <p className="text-[11px] text-[var(--muted-foreground)] break-words mt-0.5">
+              Explore the 5-phase query optimization pipeline, rule-based transforms, AQE skew join splitting, and the live interactive cluster partition simulator.
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/spark-catalyst"
+          className="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-xs transition-colors"
+        >
+          <span>Launch Catalyst Visualizer</span>
+          <ArrowRight size={13} />
+        </Link>
       </div>
 
       {/* Databricks & Spark Core Cheat Sheet Cross-Link */}

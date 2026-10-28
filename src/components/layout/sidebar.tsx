@@ -114,6 +114,9 @@ function SidebarInner() {
   const isItemActive = (item: NavItem) => {
     if (!pathname) return false;
     if (item.href === "/") return pathname === "/";
+    if (item.matches && item.matches.some((m) => pathname === m || pathname.startsWith(m + "/"))) {
+      return true;
+    }
     if (item.href.includes("?")) {
       const [itemPath, itemQuery] = item.href.split("?");
       if (pathname !== itemPath) return false;
