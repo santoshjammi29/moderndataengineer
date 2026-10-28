@@ -1,12 +1,9 @@
 import { Suspense } from "react";
-import { getPysparkCodePracticeDAL } from "@/lib/dal";
 import { SparkCatalystClient } from "./spark-catalyst-client";
 
 export const dynamic = "force-static";
 
-export default async function SparkCatalystPage() {
-  const pysparkData = await getPysparkCodePracticeDAL();
-
+export default function SparkCatalystPage() {
   return (
     <Suspense
       fallback={
@@ -18,7 +15,7 @@ export default async function SparkCatalystPage() {
         </div>
       }
     >
-      <SparkCatalystClient initialPyspark={pysparkData} />
+      <SparkCatalystClient />
     </Suspense>
   );
 }

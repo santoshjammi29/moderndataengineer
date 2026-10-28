@@ -20,6 +20,7 @@ const VALID_ROUTES = new Set([
   '/code-practice',
   '/spark-engine',
   '/spark-catalyst',
+  '/visualizer',
   '/learning-paths',
   '/modern-stack',
   '/company-research',

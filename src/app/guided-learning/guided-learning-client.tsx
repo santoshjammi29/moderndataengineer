@@ -44,7 +44,7 @@ import {
   getPlatformOverviewStats,
   LearningItem,
 } from "@/lib/guided-learning";
-import { GUIDED_TOPICS, GUIDED_DOMAINS } from "@/data/guided-learning-topics";
+import { GUIDED_TOPICS, GUIDED_DOMAINS, GUIDED_TIERS } from "@/data/guided-learning-topics";
 import type { ArchitectureDiagramItem } from "@/data/diagrams";
 import { TopicIcon } from "@/components/ui/topic-icon";
 import dynamic from "next/dynamic";
@@ -477,11 +477,63 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     setCollapsedStages((prev) => ({ ...prev, [stageId]: !prev[stageId] }));
   }, []);
 
-  // Filter topics for the domain selector
-  const visibleTopics = useMemo(() => {
-    if (selectedDomain === "All Tracks") return GUIDED_TOPICS;
-    return GUIDED_TOPICS.filter((t) => t.domain === selectedDomain);
+  // Filter topics for the domain selector and 4-tier progressive hierarchy
+  const tieredTopics = useMemo(() => {
+    const tiers = [
+      {
+        id: "tier-1",
+        num: 1,
+        title: "Tier 1: Foundations & Core Modeling",
+        level: "Beginner to Intermediate",
+        badgeColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+        description: "Python for DE, Arrow/Polars, SQL engine internals, Kimball modeling, and Power BI DAX semantic models.",
+        topics: GUIDED_TOPICS.filter((t) => t.tierNum === 1),
+      },
+      {
+        id: "tier-2",
+        num: 2,
+        title: "Tier 2: Ingestion & Modern Pipeline Orchestration",
+        level: "Intermediate to Advanced",
+        badgeColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+        description: "Azure Data Factory hybrid IRs, dbt modular SQL modeling with Mesh, and Apache Airflow TaskFlow & Triggerers.",
+        topics: GUIDED_TOPICS.filter((t) => t.tierNum === 2),
+      },
+      {
+        id: "tier-3",
+        num: 3,
+        title: "Tier 3: Distributed Compute & Storage Engines",
+        level: "Advanced to Architect",
+        badgeColor: "text-orange-400 bg-orange-500/10 border-orange-500/20",
+        description: "Apache Spark 4.0 Catalyst & Tungsten, Databricks Lakehouse, Microsoft Fabric OneLake, and Delta Lake ACID.",
+        topics: GUIDED_TOPICS.filter((t) => t.tierNum === 3),
+      },
+      {
+        id: "tier-4",
+        num: 4,
+        title: "Tier 4: Enterprise Scale, Real-Time & Systems Architecture",
+        level: "Staff to Principal Architect",
+        badgeColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+        description: "Apache Kafka event streaming, Purview/Unity data governance, data contracts, and distributed systems resilience.",
+        topics: GUIDED_TOPICS.filter((t) => t.tierNum === 4),
+      },
+    ];
+
+    if (selectedDomain === "All Tracks") {
+      return tiers;
+    }
+    return tiers
+      .map((tier) => ({
+        ...tier,
+        topics: tier.topics.filter(
+          (t) => t.domain === selectedDomain || t.tier === selectedDomain
+        ),
+      }))
+      .filter((tier) => tier.topics.length > 0);
   }, [selectedDomain]);
+
+  const visibleTopics = useMemo(() => {
+    return tieredTopics.flatMap((tier) => tier.topics);
+  }, [tieredTopics]);
 
   // Overall completion metrics for active topic
   const totalItemsCount = rawItems.length;
@@ -572,7 +624,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
           </div>
         </div>
 
-        {/* Domain Filter Pills - Styled after media_1792228927376_5ece2e88.png */}
+        {/* Domain & Tier Filter Pills */}
         <div className="flex items-center gap-1 p-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs mb-2.5">
           {GUIDED_DOMAINS.map((dom) => (
             <button
@@ -590,56 +642,81 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
           ))}
         </div>
 
-        {/* Tracks Grid: Clean, compact 5-column grid with authentic tech vector icons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-          {visibleTopics.map((topic) => {
-            const isActive = selectedTopic === topic.key;
-            const counts = getTopicCounts(topic.key);
-            let localDone = 0;
-            try {
-              if (typeof window !== "undefined") {
-                const s = localStorage.getItem(`gl-completed-${topic.key}`);
-                if (s) localDone = JSON.parse(s).length;
-              }
-            } catch {
-              localDone = 0;
-            }
-            const trackPct = counts.total > 0 ? Math.round((localDone / counts.total) * 100) : 0;
-
-            return (
-              <button
-                key={topic.key}
-                onClick={() => setSelectedTopic(topic.key)}
-                className={cn(
-                  "p-2 rounded-xl border text-left transition-all duration-150 relative group flex items-center gap-2.5 overflow-hidden",
-                  isActive
-                    ? "bg-[var(--surface-2)] border-purple-500 ring-1 ring-purple-500/40 shadow-xs"
-                    : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/30 hover:bg-[var(--surface-2)]/80"
-                )}
-              >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-[var(--surface-2)] border border-[var(--border)] group-hover:border-purple-500/30 group-hover:bg-purple-500/5 transition-all shadow-xs">
-                  <TopicIcon topicKey={topic.key} size={18} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors leading-tight truncate">
-                    {topic.label}
-                  </h3>
-                  <div className="flex items-center gap-1.5 text-[10px] text-[var(--muted-foreground)] font-mono leading-none pt-0.5">
-                    <span>{counts.total} items</span>
-                    <span>•</span>
-                    <span className="truncate max-w-[105px]">{topic.domain}</span>
-                  </div>
-                </div>
-                {trackPct > 0 ? (
-                  <span className="text-[10px] font-mono font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 px-1.5 py-0.5 rounded-md shrink-0 ml-auto">
-                    {trackPct}%
+        {/* Progressive 4-Tier Tracks: Ordered by increasing difficulty */}
+        <div className="space-y-3 pt-1">
+          {tieredTopics.map((tier) => (
+            <div key={tier.id} className="space-y-1.5">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <span className={cn("text-[9px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider", tier.badgeColor)}>
+                    {tier.level}
                   </span>
-                ) : isActive ? (
-                  <div className="w-2 h-2 rounded-full bg-purple-500 shrink-0 ml-auto animate-pulse" />
-                ) : null}
-              </button>
-            );
-          })}
+                  <h3 className="text-xs font-bold text-[var(--foreground)]">
+                    {tier.title}
+                  </h3>
+                </div>
+                <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
+                  {tier.topics.length} Tracks
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {tier.topics.map((topic) => {
+                  const isActive = selectedTopic === topic.key;
+                  const counts = getTopicCounts(topic.key);
+                  let localDone = 0;
+                  try {
+                    if (typeof window !== "undefined") {
+                      const s = localStorage.getItem(`gl-completed-${topic.key}`);
+                      if (s) localDone = JSON.parse(s).length;
+                    }
+                  } catch {
+                    localDone = 0;
+                  }
+                  const trackPct = counts.total > 0 ? Math.round((localDone / counts.total) * 100) : 0;
+
+                  return (
+                    <button
+                      key={topic.key}
+                      onClick={() => setSelectedTopic(topic.key)}
+                      className={cn(
+                        "p-2 rounded-xl border text-left transition-all duration-150 relative group flex items-center gap-2.5 overflow-hidden cursor-pointer",
+                        isActive
+                          ? "bg-[var(--surface-2)] border-purple-500 ring-1 ring-purple-500/40 shadow-xs"
+                          : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/30 hover:bg-[var(--surface-2)]/80"
+                      )}
+                    >
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[var(--surface-2)] border border-[var(--border)] group-hover:border-purple-500/30 group-hover:bg-purple-500/5 transition-all shadow-2xs">
+                        <TopicIcon topicKey={topic.key} size={15} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <h4 className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors leading-tight truncate">
+                            {topic.label}
+                          </h4>
+                          <span className="text-[9px] font-mono text-[var(--muted-foreground)] shrink-0">
+                            {topic.difficulty}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[10px] text-[var(--muted-foreground)] font-mono leading-none pt-0.5">
+                          <span>{counts.total} items</span>
+                          <span>•</span>
+                          <span className="truncate max-w-[90px]">{topic.domain}</span>
+                        </div>
+                      </div>
+                      {trackPct > 0 ? (
+                        <span className="text-[9px] font-mono font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 px-1.5 py-0.5 rounded shrink-0 ml-auto">
+                          {trackPct}%
+                        </span>
+                      ) : isActive ? (
+                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shrink-0 ml-auto animate-pulse" />
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

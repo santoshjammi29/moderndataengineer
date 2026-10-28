@@ -198,6 +198,7 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
   const isStudyMode = viewMode === "study";
   const [studyIndex, setStudyIndex] = useState(0);
   const [isCardFlipped, setIsCardFlipped] = useState(false);
+  const [densityMode, setDensityMode] = useState<"compact" | "cards">("compact");
 
   const scrollTimerRef = useRef<NodeJS.Timeout | null>(null);
   const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -652,34 +653,34 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
         ]}
       />
 
-      {/* Study Flashcard Mode */}
+      {/* Study Flashcard Mode (Compact Reference Layout) */}
       {isStudyMode && currentStudyCard && (
-            <div className="p-4 sm:p-5 rounded-2xl bg-[var(--surface-1)] border border-blue-500/30 shadow-md space-y-3.5">
-              <div className="flex items-center justify-between text-xs text-[var(--muted-foreground)]">
-                <span className="font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[11px]">
-                  Flashcard {studyIndex + 1} of {filteredConcepts.length}
-                </span>
+        <div className="p-3 sm:p-4 rounded-xl bg-[var(--surface-1)] border border-blue-500/30 shadow-xs space-y-2.5">
+          <div className="flex items-center justify-between text-xs text-[var(--muted-foreground)]">
+            <span className="font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[11px]">
+              Flashcard {studyIndex + 1} of {filteredConcepts.length}
+            </span>
             <span className="font-mono text-[10px]">{currentStudyCard.category}</span>
           </div>
 
           <div
             onClick={() => setIsCardFlipped(!isCardFlipped)}
-            className="min-h-[170px] p-4 sm:p-5 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex flex-col justify-center items-center text-center cursor-pointer select-none space-y-3 hover:border-blue-500/30 transition-all"
+            className="min-h-[110px] p-3 sm:p-4 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] flex flex-col justify-center items-center text-center cursor-pointer select-none space-y-2 hover:border-blue-500/30 transition-all"
           >
             {!isCardFlipped ? (
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Term</span>
-                <h3 className="text-lg sm:text-xl font-bold text-[var(--foreground)]">
+                <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
                   {currentStudyCard.term}
                 </h3>
-                <p className="text-[11px] text-[var(--muted-foreground)] pt-2">Click card or spacebar to reveal definition</p>
+                <p className="text-[10px] text-[var(--muted-foreground)] pt-1">Click card or spacebar to reveal definition</p>
               </div>
             ) : (
-              <div className="space-y-2 max-w-xl text-left">
+              <div className="space-y-1.5 max-w-xl text-left">
                 <span className="text-[10px] font-semibold text-green-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles size={12} /> Official Definition &amp; Explanation
+                  <Sparkles size={11} /> Official Definition &amp; Explanation
                 </span>
-                <p className="text-xs sm:text-sm font-medium text-[var(--foreground)] leading-relaxed">
+                <p className="text-xs sm:text-[13px] font-medium text-[var(--foreground)] leading-relaxed">
                   {currentStudyCard.definition}
                 </p>
                 <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
@@ -695,18 +696,18 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                 setIsCardFlipped(false);
                 setStudyIndex((i) => (i === 0 ? filteredConcepts.length - 1 : i - 1));
               }}
-              className="px-3 py-1.5 rounded-lg bg-[var(--surface-2)] text-xs font-semibold text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors flex items-center gap-1 cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)] text-xs font-semibold text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors flex items-center gap-1 cursor-pointer"
             >
-              <ChevronLeft size={14} /> Prev
+              <ChevronLeft size={13} /> Prev
             </button>
             <button
               onClick={() => {
                 setIsCardFlipped(false);
                 setStudyIndex((i) => (i + 1) % filteredConcepts.length);
               }}
-              className="px-3 py-1.5 rounded-lg bg-[var(--surface-2)] text-xs font-semibold text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors flex items-center gap-1 cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)] text-xs font-semibold text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors flex items-center gap-1 cursor-pointer"
             >
-              Next <ChevronRight size={14} />
+              Next <ChevronRight size={13} />
             </button>
           </div>
         </div>
@@ -720,6 +721,38 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
               Showing <strong className="text-[var(--foreground)]">{filteredConcepts.length}</strong> matching concepts
             </span>
             <div className="flex items-center gap-2">
+              {/* Density Mode Switcher */}
+              <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+                <button
+                  type="button"
+                  onClick={() => setDensityMode("compact")}
+                  className={cn(
+                    "px-2 py-0.5 rounded text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1",
+                    densityMode === "compact"
+                      ? "bg-blue-600 text-white shadow-2xs"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  )}
+                  title="High-density scannable rows"
+                >
+                  <Zap size={11} />
+                  <span>Compact</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDensityMode("cards")}
+                  className={cn(
+                    "px-2 py-0.5 rounded text-[11px] font-semibold transition-all cursor-pointer flex items-center gap-1",
+                    densityMode === "cards"
+                      ? "bg-blue-600 text-white shadow-2xs"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  )}
+                  title="Comfortable cards"
+                >
+                  <BookOpen size={11} />
+                  <span>Cards</span>
+                </button>
+              </div>
+
               <button
                 onClick={handleShuffle}
                 className={cn(
@@ -761,6 +794,159 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                 const isBookmarked = bookmarks.includes(concept.id);
                 const diffStyle = difficultyColors[concept.difficulty] || difficultyColors.MEDIUM;
 
+                if (densityMode === "compact") {
+                  return (
+                    <div
+                      key={concept.id}
+                      data-index={virtualRow.index}
+                      ref={virtualizer.measureElement}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                      className="pb-1"
+                    >
+                      <div
+                        id={`concept-${concept.id}`}
+                        className={cn(
+                          "rounded-lg border transition-all duration-150 overflow-hidden bg-[var(--surface-1)] scroll-mt-20",
+                          isExpanded
+                            ? "border-blue-500/50 shadow-xs"
+                            : "border-[var(--border)] hover:border-blue-500/30 hover:bg-[var(--surface-2)]/40"
+                        )}
+                      >
+                        {/* Compact Single-Row Summary */}
+                        <div
+                          onClick={() => toggleExpand(concept.id)}
+                          className="px-2.5 py-1 sm:px-3 sm:py-1.5 flex items-center justify-between gap-2 cursor-pointer select-none"
+                        >
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <span className="text-[var(--muted-foreground)] shrink-0">
+                              <ChevronDown
+                                size={13}
+                                className={cn(
+                                  "transition-transform duration-200",
+                                  isExpanded && "rotate-180"
+                                )}
+                              />
+                            </span>
+                            <span className="text-[9px] font-bold text-blue-500 dark:text-blue-400 tracking-wider uppercase px-1.5 py-0.2 rounded bg-blue-500/10 border border-blue-500/20 shrink-0 hidden sm:inline">
+                              {concept.category}
+                            </span>
+                            <span
+                              className={cn(
+                                "text-[9px] font-bold px-1.5 py-0.2 rounded border shrink-0",
+                                diffStyle.bg,
+                                diffStyle.text,
+                                diffStyle.border
+                              )}
+                            >
+                              {concept.difficulty}
+                            </span>
+                            <span className="text-xs sm:text-[13px] font-bold text-[var(--foreground)] shrink-0">
+                              {concept.term}
+                            </span>
+                            {!isExpanded && (
+                              <span className="text-xs text-[var(--muted-foreground)] truncate hidden md:inline ml-2 border-l border-[var(--border)] pl-2">
+                                {concept.definition}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={(e) => toggleBookmark(concept.id, e)}
+                              className={cn(
+                                "p-1 rounded border transition-colors cursor-pointer",
+                                isBookmarked
+                                  ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                                  : "bg-[var(--surface-2)] text-[var(--muted-foreground)] border-[var(--border)] hover:text-[var(--foreground)]"
+                              )}
+                              title={isBookmarked ? "Bookmarked" : "Bookmark"}
+                            >
+                              {isBookmarked ? <BookmarkCheck size={12} /> : <Bookmark size={12} />}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => copyToClipboard(concept.definition, concept.id, e)}
+                              className="p-1 rounded border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+                              title="Copy Definition"
+                            >
+                              {copiedId === concept.id ? <Check size={12} className="text-green-400" /> : <Copy size={12} />}
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Expanded View */}
+                        {isExpanded && (
+                          <div className="px-3 pb-3 pt-1 border-t border-[var(--border)]/60 bg-[var(--surface-2)]/30 space-y-2 text-xs">
+                            <div className="rounded-lg border-l-2 border-blue-500 bg-[var(--surface-2)]/60 px-3 py-1.5">
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400 block mb-0.5">
+                                Official Definition
+                              </span>
+                              <p className="text-xs sm:text-[13px] text-[var(--foreground)] font-medium leading-relaxed">
+                                {concept.definition}
+                              </p>
+                            </div>
+
+                            <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)]/50 p-2.5 space-y-1">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400 flex items-center gap-1.5">
+                                <Sparkles size={11} /> Detailed Explanation:
+                              </span>
+                              <p className="text-xs text-[var(--foreground)] leading-relaxed">
+                                {concept.explanation}
+                              </p>
+                            </div>
+
+                            {concept.keyPoints && concept.keyPoints.length > 0 && (
+                              <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)]/50 p-2.5 space-y-1">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500 dark:text-amber-400 flex items-center gap-1.5">
+                                  <Zap size={11} /> Architectural Key Points:
+                                </span>
+                                <ul className="space-y-0.5 text-xs text-[var(--foreground)] list-disc pl-4">
+                                  {concept.keyPoints.map((pt, idx) => (
+                                    <li key={idx} className="leading-relaxed">
+                                      {pt}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            <div className="pt-1.5 flex items-center justify-between flex-wrap gap-2">
+                              <Link
+                                href={`/qa-prep?q=${encodeURIComponent(concept.term)}`}
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-500 hover:text-blue-400 transition-colors"
+                              >
+                                <MessageSquare size={12} />
+                                <span>Practice Q&amp;As on {concept.term}</span>
+                              </Link>
+                              {(() => {
+                                const matchingDiagram = getConceptMatchingDiagram(concept, diagrams);
+                                if (!matchingDiagram) return null;
+                                return (
+                                  <Link
+                                    href={`/architecture?tab=diagrams&diagram=${matchingDiagram.id}`}
+                                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-400 hover:text-purple-300 transition-colors"
+                                  >
+                                    <Sparkles size={11} />
+                                    <span>Blueprint: {matchingDiagram.title}</span>
+                                    <ArrowRight size={10} />
+                                  </Link>
+                                );
+                              })()}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <div
                     key={concept.id}
@@ -773,7 +959,7 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                       width: "100%",
                       transform: `translateY(${virtualRow.start}px)`,
                     }}
-                    className="pb-3"
+                    className="pb-2"
                   >
                     <div
                       id={`concept-${concept.id}`}
@@ -784,7 +970,7 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                     >
                       <div
                         onClick={() => toggleExpand(concept.id)}
-                        className="p-3 sm:p-3.5 cursor-pointer select-none space-y-1.5"
+                        className="p-2.5 sm:p-3 cursor-pointer select-none space-y-1.5"
                       >
                         <div className="flex items-start justify-between gap-2.5">
                           <div className="space-y-0.5 min-w-0">
@@ -880,7 +1066,7 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                               if (!matchingDiagram) return null;
                               return (
                                 <Link
-                                  href={`/architecture?tab=diagrams&id=${matchingDiagram.id}`}
+                                  href={`/architecture?tab=diagrams&diagram=${matchingDiagram.id}`}
                                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-500 transition-colors"
                                 >
                                   <span>📐 Blueprint: {matchingDiagram.title}</span>

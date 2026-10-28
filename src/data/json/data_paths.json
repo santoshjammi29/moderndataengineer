@@ -1,9 +1,69 @@
 [
   {
+    "id": "path-powerbi-pl300",
+    "slug": "powerbi-pl300",
+    "title": "1. Microsoft Power BI Data Analyst (PL-300)",
+    "icon": "\ud83d\udcca",
+    "badge": "Certified Path",
+    "weeks": 6,
+    "difficulty": "MEDIUM",
+    "prerequisites": "Excel, Basic SQL",
+    "description": "Transform raw datasets into actionable insights with Power Query M, advanced DAX, star schema modeling, and Power BI Service administration.",
+    "progress": 0,
+    "skills": [
+      "Power Query M",
+      "DAX Measure Tuning",
+      "Star Schema",
+      "Power BI Service",
+      "Incremental Refresh",
+      "Deployment Pipelines"
+    ],
+    "phases": [
+      {
+        "name": "Phase 1: Power Query ETL & Data Transformation",
+        "weeks": "Weeks 1-2",
+        "milestone": "Master query folding, custom M functions, and non-additive data unpivoting.",
+        "topics": [
+          "Query Folding Optimization",
+          "M Language Custom Functions",
+          "Error Handling & Parameterization"
+        ]
+      },
+      {
+        "name": "Phase 2: Star Schema Modeling & Advanced DAX",
+        "weeks": "Weeks 3-4",
+        "milestone": "Write complex time intelligence, CALCULATE modifier DAX measures on 50M rows.",
+        "topics": [
+          "Star Schema vs Snowflake Schema",
+          "CALCULATE & Filter Context",
+          "Time Intelligence DAX",
+          "USERELATIONSHIP & Role-Playing"
+        ]
+      },
+      {
+        "name": "Phase 3: Optimization, Incremental Refresh & Security",
+        "weeks": "Weeks 5-6",
+        "milestone": "Deploy incremental refresh, RLS dynamic security roles, and automated workspaces.",
+        "topics": [
+          "DAX Studio & VertiPaq Analyzer",
+          "Incremental Refresh Setup",
+          "Dynamic RLS with USERPRINCIPALNAME()"
+        ]
+      }
+    ],
+    "handsOn": {
+      "title": "Enterprise Power BI Financial Dashboard",
+      "repo": "https://github.com/santoshjammi29/powerbi-pl300-starter",
+      "description": "Build a fully responsive star schema report with custom bookmarks and dynamic RLS."
+    },
+    "capstone": "Global Supply Chain Dashboard with Incremental Refresh & DAX Performance Tuning",
+    "examQsCount": 150
+  },
+  {
     "id": "path-fabric-dp600",
     "slug": "fabric-dp600",
-    "title": "1. Microsoft Fabric Analytics Engineer (DP-600)",
-    "icon": "🔷",
+    "title": "2. Microsoft Fabric Analytics Engineer (DP-600)",
+    "icon": "\ud83d\udd37",
     "badge": "Certified Path",
     "weeks": 8,
     "difficulty": "HARD",
@@ -74,8 +134,8 @@
   {
     "id": "path-azure-dp203",
     "slug": "azure-dp203",
-    "title": "2. Azure Data Engineer Associate (DP-203)",
-    "icon": "☁️",
+    "title": "3. Azure Data Engineer Associate (DP-203)",
+    "icon": "\u2601\ufe0f",
     "badge": "Certified Path",
     "weeks": 10,
     "difficulty": "HARD",
@@ -143,70 +203,70 @@
     "examQsCount": 220
   },
   {
-    "id": "path-powerbi-pl300",
-    "slug": "powerbi-pl300",
-    "title": "3. Microsoft Power BI Data Analyst (PL-300)",
-    "icon": "📊",
-    "badge": "Certified Path",
+    "id": "path-bigquery-gcp",
+    "slug": "bigquery-gcp",
+    "title": "4. Google BigQuery & GCP Data Engineering",
+    "icon": "\ud83d\udd0d",
+    "badge": "Cloud Platform Track",
     "weeks": 6,
-    "difficulty": "MEDIUM",
-    "prerequisites": "Excel, Basic SQL",
-    "description": "Transform raw datasets into actionable insights with Power Query M, advanced DAX, star schema modeling, and Power BI Service administration.",
+    "difficulty": "HARD",
+    "prerequisites": "SQL, GCP Fundamentals",
+    "description": "Design enterprise BigQuery storage, Colossus file system, Capacitor columnar format, BigLake Iceberg shortcuts, and Pub/Sub streaming.",
     "progress": 0,
     "skills": [
-      "Power Query M",
-      "DAX Measure Tuning",
-      "Star Schema",
-      "Power BI Service",
-      "Incremental Refresh",
-      "Deployment Pipelines"
+      "BigQuery Slot Commitments",
+      "Partitioning & Clustering",
+      "BigLake Iceberg",
+      "Dataproc Serverless",
+      "Dataflow Streaming",
+      "Colossus Storage"
     ],
     "phases": [
       {
-        "name": "Phase 1: Power Query ETL & Data Transformation",
+        "name": "Phase 1: BigQuery Storage Engine & Partitioning",
         "weeks": "Weeks 1-2",
-        "milestone": "Master query folding, custom M functions, and non-additive data unpivoting.",
+        "milestone": "Optimize 1TB tables using ingestion-time partitioning and 4-column clustering.",
         "topics": [
-          "Query Folding Optimization",
-          "M Language Custom Functions",
-          "Error Handling & Parameterization"
+          "Colossus & Capacitor Columnar Storage",
+          "Partitioning Strategies",
+          "Clustering Mechanics",
+          "BI Engine In-Memory"
         ]
       },
       {
-        "name": "Phase 2: Star Schema Modeling & Advanced DAX",
+        "name": "Phase 2: BigLake & Open Table Interoperability",
         "weeks": "Weeks 3-4",
-        "milestone": "Write complex time intelligence, CALCULATE modifier DAX measures on 50M rows.",
+        "milestone": "Query S3 and GCS Apache Iceberg tables zero-copy via BigLake Connection.",
         "topics": [
-          "Star Schema vs Snowflake Schema",
-          "CALCULATE & Filter Context",
-          "Time Intelligence DAX",
-          "USERELATIONSHIP & Role-Playing"
+          "BigLake Object Tables",
+          "Iceberg & Delta Manifest Queries",
+          "Row-Level & Column-Level Security"
         ]
       },
       {
-        "name": "Phase 3: Optimization, Incremental Refresh & Security",
+        "name": "Phase 3: FinOps, Slots & Streaming Ingestion",
         "weeks": "Weeks 5-6",
-        "milestone": "Deploy incremental refresh, RLS dynamic security roles, and automated workspaces.",
+        "milestone": "Configure edition-based slot reservations (Enterprise Edition) and high-throughput Storage Write API.",
         "topics": [
-          "DAX Studio & VertiPaq Analyzer",
-          "Incremental Refresh Setup",
-          "Dynamic RLS with USERPRINCIPALNAME()"
+          "BigQuery Storage Write API",
+          "Slot Reservations & Autoscale",
+          "Cost Optimization Best Practices"
         ]
       }
     ],
     "handsOn": {
-      "title": "Enterprise Power BI Financial Dashboard",
-      "repo": "https://github.com/santoshjammi29/powerbi-pl300-starter",
-      "description": "Build a fully responsive star schema report with custom bookmarks and dynamic RLS."
+      "title": "BigQuery BigLake Iceberg Integration",
+      "repo": "https://github.com/santoshjammi29/bigquery-biglake-starter",
+      "description": "Query external Iceberg tables stored on Cloud Storage directly inside BigQuery console."
     },
-    "capstone": "Global Supply Chain Dashboard with Incremental Refresh & DAX Performance Tuning",
-    "examQsCount": 150
+    "capstone": "Global GCP Streaming Analytics Platform with BigQuery Edition Slot Management",
+    "examQsCount": 130
   },
   {
     "id": "path-spark-migration",
     "slug": "spark-migration",
-    "title": "4. Apache Spark 3 → 4 Engineering & Optimization",
-    "icon": "⚡",
+    "title": "5. Apache Spark 3 \u2192 4 Engineering & Optimization",
+    "icon": "\u26a1",
     "badge": "Core Engine Track",
     "weeks": 6,
     "difficulty": "HARD",
@@ -264,10 +324,79 @@
     "examQsCount": 140
   },
   {
+    "id": "path-streaming-cdc",
+    "slug": "streaming-cdc",
+    "title": "6. Real-Time Streaming & Log-Based CDC Architecture",
+    "icon": "\ud83d\udce1",
+    "badge": "Core Engine Track",
+    "weeks": 8,
+    "difficulty": "HARD",
+    "prerequisites": "Kafka Fundamentals, Python/Java",
+    "description": "Architect event-driven real-time pipelines with Apache Kafka, Debezium CDC, Spark Structured Streaming, Flink, and RocksDB state backend.",
+    "progress": 0,
+    "skills": [
+      "Kafka Schema Registry",
+      "Debezium CDC",
+      "Watermarking",
+      "RocksDB State Backend",
+      "Exactly-Once Semantics",
+      "Spark Streaming"
+    ],
+    "phases": [
+      {
+        "name": "Phase 1: Event Ingestion & Schema Registry",
+        "weeks": "Weeks 1-2",
+        "milestone": "Deploy multi-broker Kafka cluster with Schema Registry and Avro serialization.",
+        "topics": [
+          "Kafka Partitions & Consumer Groups",
+          "Schema Registry & Compatibility Modes",
+          "Producers & Acks Configuration"
+        ]
+      },
+      {
+        "name": "Phase 2: Log-Based CDC with Debezium",
+        "weeks": "Weeks 3-4",
+        "milestone": "Configure Debezium for Postgres/MySQL WAL logs capturing INSERT/UPDATE/DELETE events.",
+        "topics": [
+          "WAL / Binlog Capture",
+          "Schema Evolution in Streams",
+          "Outbox Pattern for Microservices"
+        ]
+      },
+      {
+        "name": "Phase 3: Stream Processing Mechanics & Watermarks",
+        "weeks": "Weeks 5-6",
+        "milestone": "Implement windowed aggregations with late data handling via Event-Time Watermarks.",
+        "topics": [
+          "Tumbling, Hopping & Session Windows",
+          "Watermarking & Lateness",
+          "RocksDB State Management"
+        ]
+      },
+      {
+        "name": "Phase 4: Exactly-Once Processing & Sink Merging",
+        "weeks": "Weeks 7-8",
+        "milestone": "Build end-to-end exactly-once pipeline from Kafka into Delta Lake table using Structured Streaming.",
+        "topics": [
+          "Two-Phase Commit Sinks",
+          "Idempotent Writes",
+          "Fault Tolerance & Checkpointing"
+        ]
+      }
+    ],
+    "handsOn": {
+      "title": "End-to-End Debezium \u2192 Kafka \u2192 Delta CDC Pipeline",
+      "repo": "https://github.com/santoshjammi29/realtime-cdc-delta-starter",
+      "description": "Capture Postgres database changes using Debezium and stream directly into Delta Lake tables."
+    },
+    "capstone": "100k msg/sec Financial Transaction Streaming Platform with Zero Event Loss",
+    "examQsCount": 140
+  },
+  {
     "id": "path-databricks-photon",
     "slug": "databricks-photon",
-    "title": "5. Databricks Lakehouse & Photon Vectorized Engine",
-    "icon": "🧱",
+    "title": "7. Databricks Lakehouse & Photon Vectorized Engine",
+    "icon": "\ud83e\uddf1",
     "badge": "Architect Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -337,8 +466,8 @@
   {
     "id": "path-snowflake-snowpro",
     "slug": "snowflake-snowpro",
-    "title": "6. Snowflake SnowPro Advanced Architect",
-    "icon": "❄️",
+    "title": "8. Snowflake SnowPro Advanced Architect",
+    "icon": "\u2744\ufe0f",
     "badge": "Certified Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -404,70 +533,10 @@
     "examQsCount": 150
   },
   {
-    "id": "path-bigquery-gcp",
-    "slug": "bigquery-gcp",
-    "title": "7. Google BigQuery & GCP Data Engineering",
-    "icon": "🔍",
-    "badge": "Cloud Platform Track",
-    "weeks": 6,
-    "difficulty": "HARD",
-    "prerequisites": "SQL, GCP Fundamentals",
-    "description": "Design enterprise BigQuery storage, Colossus file system, Capacitor columnar format, BigLake Iceberg shortcuts, and Pub/Sub streaming.",
-    "progress": 0,
-    "skills": [
-      "BigQuery Slot Commitments",
-      "Partitioning & Clustering",
-      "BigLake Iceberg",
-      "Dataproc Serverless",
-      "Dataflow Streaming",
-      "Colossus Storage"
-    ],
-    "phases": [
-      {
-        "name": "Phase 1: BigQuery Storage Engine & Partitioning",
-        "weeks": "Weeks 1-2",
-        "milestone": "Optimize 1TB tables using ingestion-time partitioning and 4-column clustering.",
-        "topics": [
-          "Colossus & Capacitor Columnar Storage",
-          "Partitioning Strategies",
-          "Clustering Mechanics",
-          "BI Engine In-Memory"
-        ]
-      },
-      {
-        "name": "Phase 2: BigLake & Open Table Interoperability",
-        "weeks": "Weeks 3-4",
-        "milestone": "Query S3 and GCS Apache Iceberg tables zero-copy via BigLake Connection.",
-        "topics": [
-          "BigLake Object Tables",
-          "Iceberg & Delta Manifest Queries",
-          "Row-Level & Column-Level Security"
-        ]
-      },
-      {
-        "name": "Phase 3: FinOps, Slots & Streaming Ingestion",
-        "weeks": "Weeks 5-6",
-        "milestone": "Configure edition-based slot reservations (Enterprise Edition) and high-throughput Storage Write API.",
-        "topics": [
-          "BigQuery Storage Write API",
-          "Slot Reservations & Autoscale",
-          "Cost Optimization Best Practices"
-        ]
-      }
-    ],
-    "handsOn": {
-      "title": "BigQuery BigLake Iceberg Integration",
-      "repo": "https://github.com/santoshjammi29/bigquery-biglake-starter",
-      "description": "Query external Iceberg tables stored on Cloud Storage directly inside BigQuery console."
-    },
-    "capstone": "Global GCP Streaming Analytics Platform with BigQuery Edition Slot Management",
-    "examQsCount": 130
-  },
-  {
     "id": "path-modern-lakehouse",
     "slug": "modern-lakehouse",
-    "title": "8. Open Table Formats (Delta / Iceberg / Hudi / Paimon)",
-    "icon": "🪶",
+    "title": "9. Open Table Formats (Delta / Iceberg / Hudi / Paimon)",
+    "icon": "\ud83e\udeb6",
     "badge": "Architect Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -507,7 +576,7 @@
       {
         "name": "Phase 3: Apache Iceberg Spec v2 / v3",
         "weeks": "Weeks 5-6",
-        "milestone": "Deconstruct Iceberg Catalog → metadata.json → Manifest List → Manifest File → Parquet Data File.",
+        "milestone": "Deconstruct Iceberg Catalog \u2192 metadata.json \u2192 Manifest List \u2192 Manifest File \u2192 Parquet Data File.",
         "topics": [
           "Iceberg Snapshot Isolation",
           "Partition Evolution without Table Rewrite",
@@ -534,79 +603,69 @@
     "examQsCount": 160
   },
   {
-    "id": "path-streaming-cdc",
-    "slug": "streaming-cdc",
-    "title": "9. Real-Time Streaming & Log-Based CDC Architecture",
-    "icon": "📡",
-    "badge": "Core Engine Track",
-    "weeks": 8,
-    "difficulty": "HARD",
-    "prerequisites": "Kafka Fundamentals, Python/Java",
-    "description": "Architect event-driven real-time pipelines with Apache Kafka, Debezium CDC, Spark Structured Streaming, Flink, and RocksDB state backend.",
+    "id": "path-serverless-finops",
+    "slug": "serverless-finops",
+    "title": "10. Serverless Cost Engineering & FinOps Mastery",
+    "icon": "\ud83d\udcb0",
+    "badge": "Architect Path",
+    "weeks": 6,
+    "difficulty": "ARCHITECT",
+    "prerequisites": "Cloud Data Platforms, SQL",
+    "description": "Engineered cost optimization strategies for Databricks DBUs, Snowflake credits, BigQuery slots, Fabric capacity, and AWS S3 storage tiers.",
     "progress": 0,
     "skills": [
-      "Kafka Schema Registry",
-      "Debezium CDC",
-      "Watermarking",
-      "RocksDB State Backend",
-      "Exactly-Once Semantics",
-      "Spark Streaming"
+      "DBU Optimization",
+      "Snowflake Credit Auditing",
+      "BigQuery Slot Management",
+      "S3 Lifecycle Policies",
+      "Query Cost Budgeting",
+      "FinOps Metrics"
     ],
     "phases": [
       {
-        "name": "Phase 1: Event Ingestion & Schema Registry",
+        "name": "Phase 1: Cloud Storage FinOps & Lifecycle Optimization",
         "weeks": "Weeks 1-2",
-        "milestone": "Deploy multi-broker Kafka cluster with Schema Registry and Avro serialization.",
+        "milestone": "Audit 500TB S3/ADLS bucket and implement lifecycle rules saving 40% monthly costs.",
         "topics": [
-          "Kafka Partitions & Consumer Groups",
-          "Schema Registry & Compatibility Modes",
-          "Producers & Acks Configuration"
+          "S3 Standard vs Infrequent Access vs Glacier",
+          "Small File Problem Cost Tax",
+          "Intelligent Tiering Mechanics"
         ]
       },
       {
-        "name": "Phase 2: Log-Based CDC with Debezium",
+        "name": "Phase 2: Databricks DBU & Cluster Sizing Optimization",
         "weeks": "Weeks 3-4",
-        "milestone": "Configure Debezium for Postgres/MySQL WAL logs capturing INSERT/UPDATE/DELETE events.",
+        "milestone": "Eliminate idle cluster waste using Graviton VM instances, Spot instances, and Serverless SQL auto-stop.",
         "topics": [
-          "WAL / Binlog Capture",
-          "Schema Evolution in Streams",
-          "Outbox Pattern for Microservices"
+          "Spot vs On-Demand Instance Sizing",
+          "Graviton/ARM Compute Efficiency",
+          "Serverless Auto-suspend Tuning"
         ]
       },
       {
-        "name": "Phase 3: Stream Processing Mechanics & Watermarks",
+        "name": "Phase 3: Snowflake Credit & Warehouse Cost Reduction",
         "weeks": "Weeks 5-6",
-        "milestone": "Implement windowed aggregations with late data handling via Event-Time Watermarks.",
+        "milestone": "Analyze ACCOUNT_USAGE query history to optimize multi-cluster auto-suspend and statement timeouts.",
         "topics": [
-          "Tumbling, Hopping & Session Windows",
-          "Watermarking & Lateness",
-          "RocksDB State Management"
-        ]
-      },
-      {
-        "name": "Phase 4: Exactly-Once Processing & Sink Merging",
-        "weeks": "Weeks 7-8",
-        "milestone": "Build end-to-end exactly-once pipeline from Kafka into Delta Lake table using Structured Streaming.",
-        "topics": [
-          "Two-Phase Commit Sinks",
-          "Idempotent Writes",
-          "Fault Tolerance & Checkpointing"
+          "Warehouse Credit Consumption Audit",
+          "Statement Timeout & Queueing Tuning",
+          "Spilling to Storage Cost Elimination"
         ]
       }
     ],
     "handsOn": {
-      "title": "End-to-End Debezium → Kafka → Delta CDC Pipeline",
-      "repo": "https://github.com/santoshjammi29/realtime-cdc-delta-starter",
-      "description": "Capture Postgres database changes using Debezium and stream directly into Delta Lake tables."
+      "title": "Automated Cloud Data FinOps Dashboard",
+      "repo": "https://github.com/santoshjammi29/cloud-finops-dashboard-starter",
+      "description": "Build a unified cost tracking engine aggregating billing metrics across Databricks, Snowflake, and AWS."
     },
-    "capstone": "100k msg/sec Financial Transaction Streaming Platform with Zero Event Loss",
-    "examQsCount": 140
+    "capstone": "Enterprise 30% Cost Reduction Architecture Blueprint for Multi-Cloud Data Platforms",
+    "examQsCount": 120
   },
   {
     "id": "path-ai-llm-de",
     "slug": "ai-llm-de",
-    "title": "10. AI / LLM Data Engineering & RAG Architecture",
-    "icon": "🤖",
+    "title": "11. AI / LLM Data Engineering & RAG Architecture",
+    "icon": "\ud83e\udd16",
     "badge": "Architect Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -673,69 +732,10 @@
     "examQsCount": 150
   },
   {
-    "id": "path-serverless-finops",
-    "slug": "serverless-finops",
-    "title": "11. Serverless Cost Engineering & FinOps Mastery",
-    "icon": "💰",
-    "badge": "Architect Path",
-    "weeks": 6,
-    "difficulty": "ARCHITECT",
-    "prerequisites": "Cloud Data Platforms, SQL",
-    "description": "Engineered cost optimization strategies for Databricks DBUs, Snowflake credits, BigQuery slots, Fabric capacity, and AWS S3 storage tiers.",
-    "progress": 0,
-    "skills": [
-      "DBU Optimization",
-      "Snowflake Credit Auditing",
-      "BigQuery Slot Management",
-      "S3 Lifecycle Policies",
-      "Query Cost Budgeting",
-      "FinOps Metrics"
-    ],
-    "phases": [
-      {
-        "name": "Phase 1: Cloud Storage FinOps & Lifecycle Optimization",
-        "weeks": "Weeks 1-2",
-        "milestone": "Audit 500TB S3/ADLS bucket and implement lifecycle rules saving 40% monthly costs.",
-        "topics": [
-          "S3 Standard vs Infrequent Access vs Glacier",
-          "Small File Problem Cost Tax",
-          "Intelligent Tiering Mechanics"
-        ]
-      },
-      {
-        "name": "Phase 2: Databricks DBU & Cluster Sizing Optimization",
-        "weeks": "Weeks 3-4",
-        "milestone": "Eliminate idle cluster waste using Graviton VM instances, Spot instances, and Serverless SQL auto-stop.",
-        "topics": [
-          "Spot vs On-Demand Instance Sizing",
-          "Graviton/ARM Compute Efficiency",
-          "Serverless Auto-suspend Tuning"
-        ]
-      },
-      {
-        "name": "Phase 3: Snowflake Credit & Warehouse Cost Reduction",
-        "weeks": "Weeks 5-6",
-        "milestone": "Analyze ACCOUNT_USAGE query history to optimize multi-cluster auto-suspend and statement timeouts.",
-        "topics": [
-          "Warehouse Credit Consumption Audit",
-          "Statement Timeout & Queueing Tuning",
-          "Spilling to Storage Cost Elimination"
-        ]
-      }
-    ],
-    "handsOn": {
-      "title": "Automated Cloud Data FinOps Dashboard",
-      "repo": "https://github.com/santoshjammi29/cloud-finops-dashboard-starter",
-      "description": "Build a unified cost tracking engine aggregating billing metrics across Databricks, Snowflake, and AWS."
-    },
-    "capstone": "Enterprise 30% Cost Reduction Architecture Blueprint for Multi-Cloud Data Platforms",
-    "examQsCount": 120
-  },
-  {
     "id": "path-architecture-mastery",
     "slug": "architecture-mastery",
     "title": "12. Enterprise Data Architecture Mastery (32-Week Track)",
-    "icon": "🏛️",
+    "icon": "\ud83c\udfdb\ufe0f",
     "badge": "Mastery Track",
     "weeks": 32,
     "difficulty": "ARCHITECT",
@@ -752,7 +752,7 @@
     ],
     "phases": [
       {
-        "name": "Phase 1: Architectural Paradigms (Monolith → Lakehouse → Data Mesh)",
+        "name": "Phase 1: Architectural Paradigms (Monolith \u2192 Lakehouse \u2192 Data Mesh)",
         "weeks": "Weeks 1-8",
         "milestone": "Design domain-driven Data Mesh specifications with decentralized ownership and centralized governance.",
         "topics": [

@@ -90,10 +90,11 @@ export const NAV_GROUPS: NavGroup[] = [
         href: "/spark-engine",
         icon: Cpu,
         pill: { text: "Spark", variant: "medium" },
-        matches: ["/spark-engine", "/spark-catalyst"],
+        matches: ["/spark-engine", "/spark-catalyst", "/visualizer"],
         subItems: [
           { label: "Engine & Memory Lab", href: "/spark-engine" },
           { label: "Catalyst & Visualizer", href: "/spark-catalyst", badge: "Live" },
+          { label: "Execution Visualizer", href: "/visualizer", badge: "Simulator" },
         ],
       },
       {
@@ -194,6 +195,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "arch-scenarios", label: "System Scenarios", shortLabel: "Scenarios", href: "/architecture?tab=scenarios", category: "Architecture", categoryColor: "purple", icon: Layers, badge: "3.2k+" },
   { id: "spark-engine", label: "Spark Engine Lab", shortLabel: "Spark Lab", href: "/spark-engine", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Lab" },
   { id: "spark-catalyst", label: "Catalyst Optimizer & Visualizer", shortLabel: "Catalyst Lab", href: "/spark-catalyst", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Live" },
+  { id: "spark-visualizer", label: "Spark Execution Visualizer", shortLabel: "Visualizer", href: "/visualizer", category: "Architecture", categoryColor: "purple", icon: Activity, badge: "Simulator" },
   { id: "modern-stack", label: "Modern Stack & FinOps", shortLabel: "Modern Stack", href: "/modern-stack", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "FinOps" },
   { id: "modern-compat", label: "Cloud × Table Compatibility", shortLabel: "Cloud Matrix", href: "/modern-stack?tab=compatibility", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "Matrix" },
   { id: "dataops-conn", label: "Tool Connectivity & Secrets", shortLabel: "Tool Secrets", href: "/dataops?tab=connectivity", category: "Architecture", categoryColor: "purple", icon: Network, badge: "Secrets" },
@@ -306,6 +308,7 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         subpages: [
           { label: "Engine & Memory Lab", href: "/spark-engine" },
           { label: "Catalyst Optimizer & Visualizer", href: "/spark-catalyst", badge: "Live" },
+          { label: "Execution Visualizer", href: "/visualizer", badge: "Simulator" },
         ],
       },
       {
