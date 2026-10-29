@@ -100,10 +100,10 @@ Lists containing hundreds or thousands of cards (`/qa-prep`, `/concepts`, `/arch
 
 ## 4. Automated Testing Suite (Vitest)
 
-Our automated verification suite enforces 100% test passing across 51 test files before any pull request or deployment:
+Our automated verification suite enforces 100% test passing across 52 test files before any pull request or deployment:
 
 ```bash
-# Run all 51 test suites
+# Run all 52 test suites
 npm test
 ```
 
@@ -114,8 +114,9 @@ npm test
 4. **Whiteboard Learning & Blueprints (`src/__tests__/features.whiteboards-learning.test.tsx`)**: 42 blueprints, multi-persona metadata structures, and 7 architectural categories.
 5. **Keyword Filter Bar (`src/__tests__/features.architecture-keyword-filters.test.tsx`)**: 36-keyword scenario filter logic across 6 domain groups.
 6. **Databricks Coding Hub (`src/__tests__/features.code-practice-databricks.test.tsx`)**: Unified operations, memory triage views, and category filtering.
-7. **PDF Download API Route (`src/__tests__/features.pdf-download-route.test.ts`)**: Security against path traversal, attachment headers, and streaming responses.
-8. **Progress API & Redis Bounded Cache (`src/__tests__/features.api-progress-security.test.ts` & `features.redis-cache-bounded.test.ts`)**: Bounded memory limits, cache eviction, and authentication verification.
+7. **Target Company Intel Hub (`src/__tests__/features.company-research-client.test.tsx` & `features.company-research.test.tsx`)**: Triple view modes (Compact Grid, Split Workbench, Comparison Table), in-card drawer tabs, GCC hub filtering, and 1-click clipboard prompt copying.
+8. **PDF Download API Route (`src/__tests__/features.pdf-download-route.test.ts`)**: Security against path traversal, attachment headers, and streaming responses.
+9. **Progress API & Redis Bounded Cache (`src/__tests__/features.api-progress-security.test.ts` & `features.redis-cache-bounded.test.ts`)**: Bounded memory limits, cache eviction, and authentication verification.
 
 ---
 
@@ -125,7 +126,7 @@ npm test
 # 1. Type checking and Cloudflare OpenNext build
 npm run build:cf
 
-# 2. Automated test run (51 files, 410 tests)
+# 2. Automated test run (52 files, 419 tests)
 npm test
 
 # 3. Fast-track worker deploy (~35 seconds, skips R2 uploads)

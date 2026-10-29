@@ -179,7 +179,7 @@ All 42 blueprints follow the hand-drawn digital whiteboard sketch style with 100
 ## 4. Standard Dev Commands, Testing & Cloudflare Deployment
 
 ```bash
-# 1. Run full test suite (must ALWAYS pass all 51 test files and 410 tests)
+# 1. Run full test suite (must ALWAYS pass all 52 test files and 419 tests)
 npm test
 
 # 2. Production build check (OpenNext Cloudflare build)
@@ -233,3 +233,11 @@ Combines 679 concepts and the 14-pillar mind map into a single roof with a 3-way
 ### 5. Google-Grade BM25F Search Engine (`src/lib/search-engine.ts`)
 - Zero-OOM memory-optimized search catalog executing on Cloudflare Workers edge.
 - Field-weighted BM25F scoring (Title $\times 3$, Subtitle $\times 2$, Content $\times 1$) with typo tolerance and keyboard command palette (`⌘K` / `Ctrl+K`).
+
+### 6. Target Company Intel Workbench (`/company-research`)
+- Space-efficient, dense layout following `nextjs-compact-ui` principles.
+- 3 interactive view modes:
+  - **Compact Grid**: Cards reduced in height by 50%+ with dual USD/INR salary benchmark strips, archetype badges, and in-card interactive accordion tabs (`Prompts`, `Interview Focus`, `Scale Challenge`).
+  - **Master-Detail Split Workbench**: Left directory rail with company logos, tier dots, and quick salary indicators + sticky right full dossier pane.
+  - **Dense Comparison Table**: Bloomberg-style matrix with sortable columns (name, tier, salary) and 1-click modal dossier action.
+- Real interview loops with 1-click prompt copying and direct simulator links.

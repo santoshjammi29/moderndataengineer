@@ -1,6 +1,15 @@
 # Changelog
 
-## v1.5 — 42 Architect-Grade Whiteboard Blueprints, 5-Role Multi-Perspective Breakdowns & Production Triage Runbooks (2026-10-29)
+## v1.5 — Target Company Intel Revamp, 42 Architect-Grade Whiteboard Blueprints & 5-Role Multi-Perspective Breakdowns (2026-10-29)
+
+### 🏢 Ultra-Dense Target Company Intel Revamp (`/company-research`)
+- **Space-Efficient Multi-View Architecture**: Revamped `/company-research` according to `nextjs-compact-ui` design standards, eliminating excessive whitespace and reducing card height by 50%+ without compromising on any data:
+  1. **Compact Grid View**: Dense, scannable cards (~220px) featuring micro-badges, dual-currency salary benchmark strips (Senior DE & Principal Architect in USD & INR), System Design Archetypes, and in-card interactive accordion tabs (`Prompts`, `Interview Focus`, and `Scale Challenge`).
+  2. **Master-Detail Split Workbench**: Linear-style 2-column workbench with a compact left directory rail (showing company logo, tier dot, salary preview, and stack tags) and a sticky, full-fidelity right dossier pane.
+  3. **Dense Comparison Table**: Bloomberg-style matrix view with sortable columns (by company name, tier, and salary bands), tech stack tags, and 1-click dossier modal actions.
+- **Unified Compact Control Deck**: Single-container command deck with real-time search, GCC Hub selector (Bengaluru, Hyderabad, Pune, Gurugram, Mumbai, Chennai, Noida, Remote), segmented tier tabs (BigTech, FinTech, GCCs), popular tech micro-chips with live counts, and `Shift+E` global prompt expansion.
+- **Standalone Modal Inspector**: Full-fidelity modal dossier accessible from Grid and Table views with 1-click clipboard prompt copying, keyboard shortcuts (`/` to focus, `Esc` to close), and direct links to simulate system design scenarios in the Architecture Hub.
+- **Comprehensive Vitest Suite (`src/__tests__/features.company-research-client.test.tsx`)**: 9 new automated tests covering all 3 view modes, in-card accordion drawers, tier and search filters, copy feedback, and modal inspector lifecycle.
 
 ### 🎨 42 Architect-Grade Whiteboard Blueprints (`src/data/diagrams.ts`)
 - **Full Architectural Elevation**: Every single one of the 42 whiteboard architecture blueprints across all 7 domains was comprehensively elevated with deep technical granularity, grounded against the platform's knowledge base of 679 concepts, 3,206 architecture scenarios, and 6,847 Q&A items.
@@ -23,8 +32,8 @@
   4. **Governance & Compliance**: Lineage, security guardrails, and official documentation deep links.
 - **Card Preview Visual Badges (`src/components/architecture/whiteboard-card.tsx`)**: Added "Architect Grade • 5 Roles" category badges and a persona indicator ribbon displaying role coverage directly on card previews.
 
-### 🧪 Test Suite Expansion (51 Files, 410 Unit Tests)
-- **100% Passing Quality Gates**: Verified all 51 test suites and 410 unit tests pass, validating zero-OOM memory footprints, multi-persona schema integrity, and Cloudflare OpenNext edge deployment.
+### 🧪 Test Suite Expansion (52 Files, 419 Unit Tests)
+- **100% Passing Quality Gates**: Verified all 52 test suites and 419 unit tests pass, validating zero-OOM memory footprints, multi-persona schema integrity, company research multi-view modes, and Cloudflare OpenNext edge deployment.
 
 ---
 

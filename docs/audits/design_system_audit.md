@@ -4,7 +4,7 @@
 
 This report documents the end-to-end design system overhaul for [`https://moderndataengineer.uk`](https://moderndataengineer.uk). Every view, tab, card, header, input, button, and badge has been refactored to consume a single, unified Design Token System (`tokens.ts` & `globals.css`) and modular Component Primitives (`/src/components/ui/`).
 
-All 51 automated test suites (`npm test`) pass with a **100% success rate** (410 tests passing in ~5.5s), visual regression across responsive breakpoints has been verified, and WCAG 2.1 AA accessibility contrast guidelines are strictly satisfied.
+All 52 automated test suites (`npm test`) pass with a **100% success rate** (419 tests passing in ~5.5s), visual regression across responsive breakpoints has been verified, and WCAG 2.1 AA accessibility contrast guidelines are strictly satisfied.
 
 ---
 

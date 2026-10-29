@@ -6,6 +6,7 @@ This roadmap outlines achieved milestones and future planned expansions for **Ve
 
 ## 🏆 Recently Completed Architectural Initiatives (v1.0 – v1.5)
 
+- [x] **Target Company Intel Hub Revamp (v1.5)**: High-density, space-efficient multi-view workbench (Compact Grid, Master-Detail Split, Dense Comparison Matrix) with GCC Hub selector, in-card drawers, and 1-click prompt copying.
 - [x] **Architect-Grade Whiteboard Blueprints & 5-Role Breakdown (v1.5)**: All 42 blueprints elevated with 5 persona perspectives (Architect, Senior DE, DE, Data Steward, Business Analyst), technical mechanisms, failure triage runbooks, governance compliance, and interactive 4-tab inspector.
 - [x] **Master Vector PDF Suite & Streaming API (v1.4)**: 7 production vector PDFs compiled with direct edge streaming API (`/api/download/pdf/[filename]`), attachment headers, and in-modal interactive preview.
 - [x] **Google-Grade BM25F Search Engine (v1.4)**: In-memory field-weighted BM25F search algorithm with typo tolerance and zero-OOM memory optimization under 128 MB on Cloudflare Workers edge.
@@ -19,7 +20,7 @@ This roadmap outlines achieved milestones and future planned expansions for **Ve
 - [x] **6 Delta Lake Optimization Levers (v1.1)**: Under-the-hood blueprint and 50M-row hands-on benchmarking (Partitioning, Z-Order, OPTIMIZE, Auto Optimize, Liquid Clustering, VACUUM).
 - [x] **Open Format Storage Types (v1.0)**: Whiteboard blueprints and technical deep-dive guide comparing Delta Lake, Apache Iceberg, Apache Hudi, Parquet, ORC, and Avro.
 - [x] **Zero-Bundle Data Architecture**: React 19 `cache()` Server Data Access Layer (DAL) with Edge SWR caching and persistent IndexedDB (`idb`).
-- [x] **Vitest Test Suite Scale**: Expanded automated test gates to 51 test files and 410 unit/integration tests with 100% pass rate.
+- [x] **Vitest Test Suite Scale**: Expanded automated test gates to 52 test files and 419 unit/integration tests with 100% pass rate.
 
 ---
 
