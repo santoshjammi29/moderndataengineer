@@ -221,4 +221,12 @@ flowchart TD
 
 ---
 
+## 5. Interactive Whiteboard Architecture Blueprints (42 Blueprints)
+
+For visual, architect-level whiteboard schematics covering each of these enterprise topologies—including **5-Role Persona Breakdowns** (Lead Architect, Senior DE, Data Engineer, Data Steward, Business Analyst), **Under-the-Hood Engine Mechanisms**, **Production Triage Incident Runbooks**, and **Regulatory Compliance**:
+- Explore the interactive gallery at [`/whiteboards`](https://moderndataengineer.uk/whiteboards) or [`/architecture?tab=diagrams`](https://moderndataengineer.uk/architecture?tab=diagrams).
+- Inspect the blueprint dataset in [`src/data/diagrams.ts`](../../src/data/diagrams.ts) and reference the multi-persona schema in [`STANDARDIZED_ARCHITECTURE.md`](../STANDARDIZED_ARCHITECTURE.md).
+
+---
+
 [← Back to Architecture Library](./README.md) • [Documentation Hub](../README.md)

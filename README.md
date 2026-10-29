@@ -8,7 +8,7 @@
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js" alt="Next.js 16"></a>
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19_Server_Components-61DAFB?style=flat-square&logo=react" alt="React 19"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.x_Strict-3178C6?style=flat-square&logo=typescript" alt="TypeScript"></a>
-  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-49_Files_%E2%80%A2_399_Passed-green?style=flat-square&logo=vitest" alt="Vitest"></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-51_Files_%E2%80%A2_410_Passed-green?style=flat-square&logo=vitest" alt="Vitest"></a>
   <a href="https://developers.cloudflare.com/workers/"><img src="https://img.shields.io/badge/Deployment-Cloudflare_OpenNext-F38020?style=flat-square&logo=cloudflare" alt="Edge Architecture"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="MIT License"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/Security-Policy_Active-blue?style=flat-square&logo=securityscorecard" alt="Security Policy"></a>
@@ -71,7 +71,7 @@ The platform hosts the industry's most rigorous, verified repository of data eng
 | **Staff+ Mastery** | Extreme Architect Scenarios | **125** | High-pressure Staff/Principal interview design problems across 5 domain blocks. |
 | **Core Concepts** | Architectural Concepts | **679** | 14 pillars: Fabric, Databricks, Lakehouse, Spark, Power BI, ADF, Airflow, dbt, FinOps, etc. |
 | **Curriculum** | Databricks 100 Mastery | **100** | 100-day structured roadmap with certification mappings (DE Associate & Pro). |
-| **Visual Design** | Whiteboard Blueprints | **42** | High-resolution digital hand-drawn blueprints with detailed mechanics across 7 domains. |
+| **Visual Design** | Whiteboard Blueprints | **42** | High-resolution digital hand-drawn blueprints with 5 role perspectives (Architect, Senior DE, DE, Steward, BA), failure triage & engine mechanics across 7 domains. |
 | **Modern Stack** | Modern Architecture Blueprints | **18** | End-to-end modern lakehouse, vector pipeline, and CDC stream blueprints. |
 | **Enterprise Guide** | GCC Enterprise Directory | **156** | Tier-1 Global Capability Centers (Bangalore/Hyderabad) with hiring rubrics & tech stacks. |
 | **Coding Practice** | Engine Benchmark Exercises | **178** | Hands-on PySpark (51), Spark SQL (50), Python/DataOps (42), and MSSQL (35). |
@@ -84,9 +84,20 @@ The platform hosts the industry's most rigorous, verified repository of data eng
 
 ---
 
-## 🎨 Enterprise Whiteboard Blueprints (42 Blueprints)
+## 🎨 Enterprise Whiteboard Blueprints (42 Architect-Grade Blueprints)
 
-All blueprints are rendered as high-fidelity hand-drawn digital schematics (available in `src/data/diagrams.ts` and `/public/diagrams/` in WebP & AVIF formats) grouped into 7 core architectural domains:
+All 42 blueprints are rendered as high-fidelity hand-drawn digital schematics (available in `src/data/diagrams.ts` and `/public/diagrams/` in WebP & AVIF formats) grouped into 7 core architectural domains. Every single blueprint has been elevated with **exhaustive technical granularity and multi-persona engineering depth**:
+
+- **5 Distinct Role Perspectives per Blueprint**:
+  - 🏛️ **Lead Data Architect**: Macro system design, multi-cloud federation, SLA/SLO definition, FinOps unit economics, disaster recovery.
+  - ⚙️ **Senior / Staff Data Engineer**: Low-level engine internals, CPU cache line alignment, AST query plans, off-heap Tungsten memory, shuffle spill triage, ACID log serialization.
+  - 🔧 **Data Engineer**: Daily ELT pipeline engineering, partition/clustering choices, idempotency, streaming checkpoints, schema evolution, and CDC ingestion.
+  - 🛡️ **Data Steward & Governance**: Unity Catalog 3-level namespace (`catalog.schema.table`), Purview lineage graphs, dynamic row/column masks, PII classification, and GDPR deletion workflows.
+  - 📊 **Business Analyst & BI**: Power BI Direct Lake sub-second DAX response, VertiPaq memory limits, metric consistency across dimensional bus matrices, and self-service exploration.
+- **Executive Architect Manifesto (`architectNotes`)**: Explicit trade-offs, scaling limits, anti-patterns, and cost burndown models.
+- **Under-the-Hood Technical Mechanisms**: 4–6 concrete engine mechanisms per blueprint (e.g. V-Order Parquet sorting, Netty socket buffers, HNSW vector indexing, RocksDB LSM memtables, OCC commit protocols).
+- **Production Triage & Incident Runbooks**: Detailed incident cards featuring alert symptoms, root causes, and step-by-step engineering mitigations.
+- **Interactive 4-Tab Lightbox Inspector**: Modal viewer across `/architecture` and `/whiteboards` enabling seamless switching between **Architecture & Pillars**, **5 Role Perspectives**, **Production Triage**, and **Governance & Compliance**.
 
 | Architectural Domain | Count | Highlighted Production Blueprints |
 | :--- | :---: | :--- |
@@ -102,6 +113,9 @@ All blueprints are rendered as high-fidelity hand-drawn digital schematics (avai
 
 ## ⚡ Core Platform Capabilities & Recent Additions
 
+- **42 Architect-Grade Whiteboard Blueprints & 5-Role Interactive Inspector (`/architecture` & `/whiteboards`)**:
+  - Full architectural elevation across all 42 blueprints featuring 5 dedicated role perspectives (Lead Architect, Senior DE, Data Engineer, Data Steward, Business Analyst), under-the-hood engine mechanisms, and production incident runbooks.
+  - Interactive 4-tab Lightbox inspection modal with real-time zooming, dark/light canvas mode, and official technical documentation deep links.
 - **Google-Grade BM25F Search Engine (`⌘K` / `Ctrl+K`)**:
   - Sub-millisecond client-side discovery engine indexing all 11,500+ assets with instant keyboard navigation.
   - Field-weighted scoring (Title: 3×, Subtitle: 2×, Content: 1×) with typo tolerance and zero-OOM memory optimization on Cloudflare Workers edge.
@@ -136,7 +150,7 @@ npm install
 npm run dev
 # Open http://localhost:3000
 
-# 3. Execute automated test suite (49 test files, 399 passed tests)
+# 3. Execute automated test suite (51 test files, 410 passed tests)
 npm test
 
 # 4. Production build check (Cloudflare OpenNext build)
@@ -155,8 +169,8 @@ npm run deploy:quick
 
 Automated quality gates validate data schemas, bundle hygiene, accessibility, and search indexing:
 
-- **49 Test Files**: 100% passing across unit, integration, and UI component tests.
-- **399 Tests**: Comprehensive coverage spanning BM25F ranking, virtual scroll limits, SIMD worker offloads, responsive layout constraints, and PDF download streaming headers.
+- **51 Test Files**: 100% passing across unit, integration, and UI component tests.
+- **410 Tests**: Comprehensive coverage spanning BM25F ranking, virtual scroll limits, SIMD worker offloads, responsive layout constraints, 42 blueprint persona structures, and PDF download streaming headers.
 - **Zero-Bundle Enforcement**: Automated tests verify that no raw JSON data leaks into client JavaScript bundles.
 
 ---

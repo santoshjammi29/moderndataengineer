@@ -9,7 +9,7 @@
 
 | Document | Primary Scope | Operational Focus | Link |
 | :--- | :--- | :--- | :--- |
-| **Development & Operations Guide** | Project architecture, Server Data Layer, Vitest suite, Cloudflare OpenNext | App Router folder layout, Zero-Bundle Data Mandate, 49-file test suite, deployment lifecycle. | [`development_guide.md`](./development_guide.md) |
+| **Development & Operations Guide** | Project architecture, Server Data Layer, Vitest suite, Cloudflare OpenNext | App Router folder layout, Zero-Bundle Data Mandate, 51-file test suite, deployment lifecycle. | [`development_guide.md`](./development_guide.md) |
 | **Platform Engineering Roadmap** | Completed milestones & future architectural expansions | BM25F search, Databricks 148+ operations hub, 7 master PDFs, single-roof concepts & mindmap. | [`roadmap.md`](./roadmap.md) |
 | **Workers for Platforms** | Dynamic tenant isolation and customer workers | Edge sandboxing, execution safety, and container isolation. | [`workers-for-platforms.md`](./workers-for-platforms.md) |
 
@@ -21,7 +21,7 @@
 # Start local development server
 npm run dev
 
-# Run full Vitest automated test suite (49 test files, 399 tests)
+# Run full Vitest automated test suite (51 test files, 410 tests)
 npm test
 
 # Run Next.js production build for Cloudflare OpenNext

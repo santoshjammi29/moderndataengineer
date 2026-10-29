@@ -181,4 +181,4 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
 - [ ] **Enums**: Check difficulty matches exact uppercase values (`EASY`, `MEDIUM`, `HARD`, `ARCHITECT`).
 - [ ] **No Placeholders**: Never use `TODO`, `TBD`, or lorem ipsum text in answers or explanations.
 - [ ] **Encoding**: Always open with `encoding='utf-8'` and write with `ensure_ascii=False`.
-- [ ] **Automated Test Run**: Run `npm test` immediately after modifying datasets to verify all 49 test files pass.
+- [ ] **Automated Test Run**: Run `npm test` immediately after modifying datasets to verify all 51 test files (410 tests) pass.

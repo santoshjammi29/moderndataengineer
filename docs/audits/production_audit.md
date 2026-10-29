@@ -3,8 +3,8 @@
 **System Status**: Deployed to Cloudflare OpenNext / Workers with Edge R2 Caching  
 **Canonical Deployment Target**: [https://moderndataengineer.uk](https://moderndataengineer.uk)  
 **Architecture Spec**: Zero-Bundle Server Components + Edge DAL + Persistent IndexedDB + HTML5 Canvas 60 FPS Engine + Web Workers  
-**Test Suite**: 49 / 49 test files passed (399 / 399 unit & integration tests)  
-**Date of Audit**: October 2026 (Updated to v1.4)  
+**Test Suite**: 51 / 51 test files passed (410 / 410 unit & integration tests)  
+**Date of Audit**: October 2026 (Updated to v1.5)  
 
 ---
 
@@ -116,7 +116,7 @@ TOTAL INITIAL PAGE PAYLOAD             ~2.8 MB - 3.4 MB    ~160 KB - 185 KB  ~93
 Run these commands locally to replicate and verify this audit:
 
 ```bash
-# 1. Run full unit and integration test suite (49 test files, 399 tests)
+# 1. Run full unit and integration test suite (51 test files, 410 tests)
 npm test
 
 # 2. Run TypeScript type validation

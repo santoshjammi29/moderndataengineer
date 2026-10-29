@@ -62,9 +62,16 @@ Use when explaining how a specific file format, algorithm, or conversion works s
 
 ---
 
-## 3. Platform Production Blueprints Inventory (42 Blueprints)
+## 3. Platform Production Blueprints Inventory (42 Architect-Grade Blueprints)
 
-The platform maintains 42 hand-drawn digital blueprints across 7 architectural domains (`src/data/diagrams.ts`):
+The platform maintains 42 hand-drawn digital blueprints across 7 architectural domains (`src/data/diagrams.ts`). Every blueprint is elevated with:
+- **5 Enterprise Role Perspectives (`personaBreakdown`)**: Lead Architect, Senior / Staff DE, Data Engineer, Data Steward, Business Analyst.
+- **Executive Architect Manifesto (`architectNotes`)**: Explicit architectural trade-offs, scaling limits, anti-patterns, and cost models.
+- **6–8 Key Pillars (`keyPoints`)**: Deep engine mechanics and configuration flags.
+- **Under-the-Hood Technical Mechanisms (`technicalMechanisms`)**: 4–6 concrete engine mechanisms per blueprint.
+- **Production Incident Triage Runbooks (`failureModesAndTriage`)**: Actionable incident cards with symptoms, root causes, and mitigations.
+- **Governance & Compliance Standards (`governanceAndCompliance`)**: Audit trails, sensitivity labels, and regulatory standards.
+- **Interactive 4-Tab Lightbox Inspector**: Seamless exploration across Architecture & Pillars, 5 Role Perspectives, Production Triage, and Governance.
 
 ### 1. Compute & Optimization (11)
 - `spark-catalyst-photon-engine`: Catalyst Optimizer, AQE & Native Photon C++ Engine

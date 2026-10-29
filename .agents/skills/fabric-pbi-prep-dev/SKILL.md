@@ -79,7 +79,7 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── guided-learning.ts             # Topic-based cross-dataset aggregation
 │   │   └── diagram-theme.ts               # Whiteboard blueprint styling & asset links
 │   ├── types/data.ts                      # TypeScript interfaces & types
-│   └── __tests__/                         # Vitest test suite (49 test files, 399 unit tests)
+│   └── __tests__/                         # Vitest test suite (51 test files, 410 unit tests)
 ├── public/
 │   ├── diagrams/                          # 42 Whiteboard Architecture Blueprints (.webp, .avif, .jpg)
 │   └── cheatsheets/pdf/                   # 7 Master Vector PDFs & printable incident runbooks
@@ -118,9 +118,16 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 
 ---
 
-## 3. 42 Enterprise Whiteboard Blueprints Catalog
+## 3. 42 Enterprise Whiteboard Blueprints Catalog (Architect-Grade • 5 Roles)
 
-All blueprints follow the hand-drawn digital whiteboard sketch style with 100% white background, semantic colors (Red compute, Blue engine/dispatcher, Yellow raw source, Purple governance, Green Delta/Iceberg target), and are persisted in `src/data/diagrams.ts` and `public/diagrams/`:
+All 42 blueprints follow the hand-drawn digital whiteboard sketch style with 100% white background, semantic colors (Red compute, Blue engine/dispatcher, Yellow raw source, Purple governance, Green Delta/Iceberg target), and are persisted in `src/data/diagrams.ts` and `public/diagrams/`. Every blueprint includes:
+- **5 Role Perspectives (`personaBreakdown`)**: Lead Architect, Senior / Staff DE, Data Engineer, Data Steward, and Business Analyst.
+- **Executive Architect Manifesto (`architectNotes`)**: Explicit architectural trade-offs, scalability limits, and FinOps models.
+- **6–8 Key Architectural Pillars (`keyPoints`)**: Deep engine configurations and technical invariants.
+- **Under-the-Hood Technical Mechanisms (`technicalMechanisms`)**: 4–6 specific engine mechanisms per blueprint.
+- **Production Incident Triage Runbooks (`failureModesAndTriage`)**: Actionable incident cards with symptoms, root causes, and mitigations.
+- **Governance & Compliance Guardrails (`governanceAndCompliance`)**: Audit trails, sensitivity labels, and regulatory standards.
+- **Interactive 4-Tab Lightbox Inspector**: Full modal exploration across Architecture & Pillars, 5 Role Perspectives, Production Triage, and Governance.
 
 | Blueprint ID | Title | Category |
 | :--- | :--- | :--- |
@@ -172,7 +179,7 @@ All blueprints follow the hand-drawn digital whiteboard sketch style with 100% w
 ## 4. Standard Dev Commands, Testing & Cloudflare Deployment
 
 ```bash
-# 1. Run full test suite (must ALWAYS pass all 49 test files and 399 tests)
+# 1. Run full test suite (must ALWAYS pass all 51 test files and 410 tests)
 npm test
 
 # 2. Production build check (OpenNext Cloudflare build)

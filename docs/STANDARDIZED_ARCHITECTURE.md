@@ -47,7 +47,7 @@ src/
 ├── data/
 │   ├── index.ts                   # Strong-typed dataset access
 │   ├── json/                      # Raw JSON knowledge bases (11,500+ assets)
-│   ├── diagrams.ts                # 42 Whiteboard architecture blueprints
+│   ├── diagrams.ts                # 42 Architect-grade blueprints (5 role perspectives, incident runbooks)
 │   ├── navigation-data.ts         # Navigation items & hierarchies
 │   └── guided-learning-topics.ts  # Curriculum topics & milestones
 ├── lib/

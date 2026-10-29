@@ -57,9 +57,9 @@ Verified edge network benchmarks, accessibility certifications, and Lighthouse a
 
 | Document | Primary Focus | Key Score / Metric | Link |
 | :--- | :--- | :--- | :--- |
-| **Enterprise Production Audit** | Edge TTFB, LCP, Zero-Bundle DAL, Test Coverage | **99/100 Lighthouse**, LCP: 0.78s, **399 Tests Passed (49 Suites)** | [`audits/production_audit.md`](./audits/production_audit.md) |
+| **Enterprise Production Audit** | Edge TTFB, LCP, Zero-Bundle DAL, Test Coverage | **99/100 Lighthouse**, LCP: 0.78s, **410 Tests Passed (51 Suites)** | [`audits/production_audit.md`](./audits/production_audit.md) |
 | **Theme & Contrast Audit** | Zero-Flash Theme Switch, Runtime Contrast Matrix | **<16ms Theme Toggle**, WCAG 2.1 AA Certified | [`audits/theme_audit.md`](./audits/theme_audit.md) |
-| **Design System Audit** | Fluid Typography Clamp, 6 Responsive Breakpoints | **100% Pass Rate across 49 Test Suites** | [`audits/design_system_audit.md`](./audits/design_system_audit.md) |
+| **Design System Audit** | Fluid Typography Clamp, 6 Responsive Breakpoints | **100% Pass Rate across 51 Test Suites** | [`audits/design_system_audit.md`](./audits/design_system_audit.md) |
 
 👉 **[Explore Full Audits Directory](./audits/README.md)**
 
@@ -83,7 +83,7 @@ Developer onboarding, architecture rules, testing runbooks, and strategic planni
 
 | Document | Primary Focus | Operational Guide | Link |
 | :--- | :--- | :--- | :--- |
-| **Development & Operations Guide** | Next.js 16 App Router, DAL, Vitest suite, Cloudflare OpenNext | Local setup, Zero-Bundle rule, 49-suite test runbook, R2 sync | [`engineering/development_guide.md`](./engineering/development_guide.md) |
+| **Development & Operations Guide** | Next.js 16 App Router, DAL, Vitest suite, Cloudflare OpenNext | Local setup, Zero-Bundle rule, 51-suite test runbook, R2 sync | [`engineering/development_guide.md`](./engineering/development_guide.md) |
 | **Platform Engineering Roadmap** | Completed milestones & v2.0+ planned expansions | BM25F search, Databricks 148+ hub, 7 master PDFs, single-roof concepts | [`engineering/roadmap.md`](./engineering/roadmap.md) |
 | **Workers for Platforms** | Dynamic tenant isolation and customer workers | Edge sandboxing, execution safety, and container isolation | [`engineering/workers-for-platforms.md`](./engineering/workers-for-platforms.md) |
 
