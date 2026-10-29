@@ -80,6 +80,7 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Layers,
         pill: { text: "3.2k+", variant: "architect" },
         subItems: [
+          { label: "Whiteboard Mastery Hub", href: "/whiteboards", badge: "42 Master" },
           { label: "System Blueprints", href: "/architecture?tab=scenarios", badge: "3.2k" },
           { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: "42" },
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
@@ -192,6 +193,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "modern-concepts", label: "Core Lakehouse Concepts", shortLabel: "Lakehouse Concepts", href: "/modern-stack?tab=concepts", category: "Concepts", categoryColor: "emerald", icon: Zap, badge: "FinOps" },
   
   // Architecture & Systems (Clubbed)
+  { id: "whiteboards", label: "Whiteboard Mastery Hub", shortLabel: "Whiteboards", href: "/whiteboards", category: "Architecture", categoryColor: "purple", icon: Sparkles, badge: "42 Blueprints" },
   { id: "arch-scenarios", label: "System Scenarios", shortLabel: "Scenarios", href: "/architecture?tab=scenarios", category: "Architecture", categoryColor: "purple", icon: Layers, badge: "3.2k+" },
   { id: "spark-engine", label: "Spark Engine Lab", shortLabel: "Spark Lab", href: "/spark-engine", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Lab" },
   { id: "spark-catalyst", label: "Catalyst Optimizer & Visualizer", shortLabel: "Catalyst Lab", href: "/spark-catalyst", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Live" },
