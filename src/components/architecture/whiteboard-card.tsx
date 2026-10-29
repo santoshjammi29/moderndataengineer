@@ -92,10 +92,15 @@ export function WhiteboardCard({
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="flex items-center gap-2 mb-1.5">
+                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 px-2.5 py-0.5 rounded-lg bg-blue-500/10 border border-blue-500/20">
                     {diagram.category}
                   </span>
+                  {diagram.personaBreakdown && (
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 px-2 py-0.5 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                      Architect Grade • 5 Roles
+                    </span>
+                  )}
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)] group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors leading-snug">
                   {diagram.title}
@@ -164,6 +169,18 @@ export function WhiteboardCard({
                     </li>
                   ))}
                 </ul>
+              </div>
+            )}
+
+            {/* Persona Perspectives Ribbon */}
+            {diagram.personaBreakdown && (
+              <div className="pt-2 border-t border-[var(--border)]/60 flex items-center gap-1.5 text-[10px] text-[var(--muted-foreground)] font-mono overflow-x-auto scrollbar-none py-0.5">
+                <span className="font-semibold text-purple-600 dark:text-purple-400 shrink-0">Roles:</span>
+                <span className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--foreground)] border border-[var(--border)] shrink-0">🏛️ Architect</span>
+                <span className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--foreground)] border border-[var(--border)] shrink-0">⚙️ Senior DE</span>
+                <span className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--foreground)] border border-[var(--border)] shrink-0">🔧 Data Eng</span>
+                <span className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--foreground)] border border-[var(--border)] shrink-0">🛡️ Steward</span>
+                <span className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--foreground)] border border-[var(--border)] shrink-0">📊 Analyst</span>
               </div>
             )}
           </div>

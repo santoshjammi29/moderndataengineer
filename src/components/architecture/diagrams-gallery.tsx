@@ -10,6 +10,16 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
+  Compass,
+  Users,
+  AlertTriangle,
+  ShieldCheck,
+  CheckCircle2,
+  ExternalLink,
+  Cpu,
+  Wrench,
+  BarChart3,
+  Layers,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -35,6 +45,8 @@ export function ArchitectureDiagramsGallery() {
   const [activeDiagram, setActiveDiagram] = useState<ArchitectureDiagramItem | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [theme] = useDiagramTheme();
+  const [modalTab, setModalTab] = useState<"architecture" | "personas" | "triage" | "governance">("architecture");
+  const [activePersona, setActivePersona] = useState<"architect" | "seniorDe" | "dataEngineer" | "steward" | "businessAnalyst">("architect");
 
   const isDark = theme === "dark";
 
@@ -285,18 +297,238 @@ export function ArchitectureDiagramsGallery() {
               </div>
             </div>
 
-            {/* Modal Footer / Architectural Context */}
-            <div className="p-3 sm:p-6 border-t border-[var(--border)] bg-[var(--surface-2)] space-y-2 sm:space-y-3 max-h-[32vh] sm:max-h-none overflow-y-auto">
-              <p className="text-xs sm:text-sm text-[var(--foreground)] leading-relaxed">
-                {activeDiagram.description}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 pt-1 border-t border-[var(--border)] text-[11px] sm:text-xs text-[var(--muted-foreground)]">
-                {activeDiagram.keyPoints.map((point, idx) => (
-                  <div key={idx} className="flex items-start gap-1.5">
-                    <span className="text-purple-400 font-bold shrink-0">✔</span>
-                    <span>{point}</span>
+            {/* Modal Footer / Multi-Perspective Architectural Context */}
+            <div className="border-t border-[var(--border)] bg-[var(--surface-2)] flex flex-col max-h-[46vh] sm:max-h-[48vh] overflow-hidden">
+              {/* Modal Sub-Tabs */}
+              <div className="flex items-center gap-1 px-4 sm:px-6 py-2 border-b border-[var(--border)] bg-[var(--surface-1)] overflow-x-auto scrollbar-none shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setModalTab("architecture")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
+                    modalTab === "architecture"
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                  )}
+                >
+                  <Compass size={13} />
+                  <span>Architecture &amp; Pillars</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setModalTab("personas")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
+                    modalTab === "personas"
+                      ? "bg-purple-600 text-white shadow-xs"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                  )}
+                >
+                  <Users size={13} />
+                  <span>5 Role Perspectives</span>
+                  <span className="text-[10px] px-1 rounded bg-black/20 font-mono">5</span>
+                </button>
+
+                {activeDiagram.failureModesAndTriage && activeDiagram.failureModesAndTriage.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setModalTab("triage")}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
+                      modalTab === "triage"
+                        ? "bg-amber-600 text-white shadow-xs"
+                        : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                    )}
+                  >
+                    <AlertTriangle size={13} />
+                    <span>Production Triage</span>
+                    <span className="text-[10px] px-1 rounded bg-black/20 font-mono">
+                      {activeDiagram.failureModesAndTriage.length}
+                    </span>
+                  </button>
+                )}
+
+                {activeDiagram.governanceAndCompliance && activeDiagram.governanceAndCompliance.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setModalTab("governance")}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
+                      modalTab === "governance"
+                        ? "bg-emerald-600 text-white shadow-xs"
+                        : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                    )}
+                  >
+                    <ShieldCheck size={13} />
+                    <span>Governance &amp; Compliance</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Tab Content Body (Scrollable) */}
+              <div className="p-4 sm:p-6 overflow-y-auto space-y-4">
+                {/* 1. Architecture & Pillars Tab */}
+                {modalTab === "architecture" && (
+                  <div className="space-y-4">
+                    <p className="text-xs sm:text-sm text-[var(--foreground)] leading-relaxed">
+                      {activeDiagram.description}
+                    </p>
+
+                    {/* Architect Manifesto Box */}
+                    {activeDiagram.architectNotes && (
+                      <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/25 space-y-1">
+                        <div className="text-xs font-bold text-purple-600 dark:text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                          <Compass size={14} className="text-purple-500" /> Executive Architect Manifesto &amp; Trade-offs
+                        </div>
+                        <p className="text-xs text-[var(--foreground)] leading-relaxed">
+                          {activeDiagram.architectNotes}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Key Architectural Pillars */}
+                    <div className="space-y-2 pt-1 border-t border-[var(--border)]">
+                      <div className="text-xs font-bold uppercase tracking-wider text-[var(--foreground)] flex items-center gap-1.5">
+                        <Sparkles size={13} className="text-blue-500" /> Key Architectural Pillars ({activeDiagram.keyPoints.length})
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-[var(--muted-foreground)]">
+                        {activeDiagram.keyPoints.map((point, idx) => (
+                          <div key={idx} className="flex items-start gap-1.5 p-2 rounded-lg bg-[var(--surface-1)] border border-[var(--border)]/60">
+                            <CheckCircle2 size={14} className="text-emerald-500 shrink-0 mt-0.5" />
+                            <span className="leading-relaxed text-[var(--foreground)]">{point}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Under-The-Hood Technical Mechanisms */}
+                    {activeDiagram.technicalMechanisms && activeDiagram.technicalMechanisms.length > 0 && (
+                      <div className="space-y-2 pt-2 border-t border-[var(--border)]">
+                        <div className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                          <Cpu size={14} /> Under-The-Hood Engine Mechanisms
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {activeDiagram.technicalMechanisms.map((mech, idx) => (
+                            <div key={idx} className="p-2.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs text-[var(--foreground)] flex items-start gap-2">
+                              <span className="text-blue-500 font-mono font-bold shrink-0">#{idx + 1}</span>
+                              <span className="leading-snug">{mech}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                ))}
+                )}
+
+                {/* 2. Persona Perspectives Tab */}
+                {modalTab === "personas" && (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                      {[
+                        { id: "architect", label: "Lead Architect", icon: Compass, color: "text-purple-400" },
+                        { id: "seniorDe", label: "Senior / Staff DE", icon: Cpu, color: "text-blue-400" },
+                        { id: "dataEngineer", label: "Data Engineer", icon: Wrench, color: "text-emerald-400" },
+                        { id: "steward", label: "Data Steward", icon: ShieldCheck, color: "text-amber-400" },
+                        { id: "businessAnalyst", label: "Business Analyst", icon: BarChart3, color: "text-pink-400" },
+                      ].map((p) => {
+                        const Icon = p.icon;
+                        const isSelected = activePersona === p.id;
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => setActivePersona(p.id as any)}
+                            className={cn(
+                              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer border",
+                              isSelected
+                                ? "bg-purple-600 border-purple-500 text-white"
+                                : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                            )}
+                          >
+                            <Icon size={13} className={isSelected ? "text-white" : p.color} />
+                            <span>{p.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {activeDiagram.personaBreakdown && (
+                      <div className="p-4 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+                            Role Responsibility &amp; Tactical Ownership:
+                          </span>
+                          <span className="text-[11px] font-mono text-[var(--muted-foreground)]">
+                            Perspective: {activePersona.toUpperCase()}
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-[var(--foreground)] leading-relaxed">
+                          {activeDiagram.personaBreakdown[activePersona]}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 3. Production Triage & Runbooks Tab */}
+                {modalTab === "triage" && activeDiagram.failureModesAndTriage && (
+                  <div className="space-y-3">
+                    <div className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                      <AlertTriangle size={14} /> Production Incident Scenarios &amp; Engineering Triage Runbooks
+                    </div>
+                    <div className="space-y-2.5">
+                      {activeDiagram.failureModesAndTriage.map((failure, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 space-y-1.5"
+                        >
+                          <div className="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
+                            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-[10px] font-mono">
+                              INCIDENT #{idx + 1}
+                            </span>
+                          </div>
+                          <p className="text-xs text-[var(--foreground)] leading-relaxed">
+                            {failure}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Governance & Compliance Tab */}
+                {modalTab === "governance" && activeDiagram.governanceAndCompliance && (
+                  <div className="space-y-3">
+                    <div className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                      <ShieldCheck size={14} /> Regulatory Compliance, Lineage &amp; Security Guardrails
+                    </div>
+                    <div className="space-y-2">
+                      {activeDiagram.governanceAndCompliance.map((gov, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-start gap-2 text-xs text-[var(--foreground)]"
+                        >
+                          <CheckCircle2 size={15} className="text-emerald-500 shrink-0 mt-0.5" />
+                          <span className="leading-relaxed">{gov}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {activeDiagram.docLink && (
+                      <div className="pt-2 flex justify-end">
+                        <a
+                          href={activeDiagram.docLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors"
+                        >
+                          <span>Official Technical Documentation</span>
+                          <ExternalLink size={13} />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
