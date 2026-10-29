@@ -32,8 +32,14 @@
   4. **Governance & Compliance**: Lineage, security guardrails, and official documentation deep links.
 - **Card Preview Visual Badges (`src/components/architecture/whiteboard-card.tsx`)**: Added "Architect Grade • 5 Roles" category badges and a persona indicator ribbon displaying role coverage directly on card previews.
 
-### 🧪 Test Suite Expansion (52 Files, 419 Unit Tests)
-- **100% Passing Quality Gates**: Verified all 52 test suites and 419 unit tests pass, validating zero-OOM memory footprints, multi-persona schema integrity, company research multi-view modes, and Cloudflare OpenNext edge deployment.
+### 🖼️ Whiteboard Blueprint Image Asset Resolution & Verification
+- **Path Reconciliation**: Restored exact canonical paths for `enterprise_edge_architecture.webp`, `open_table_formats_lakehouse_architecture.webp`, and `open_file_formats_storage_architecture.webp`.
+- **Dual Alias Support**: Provided dual asset aliases in `public/diagrams/` for backward and forward compatibility (`enterprise_edge_client_architecture.webp`, `open_table_formats_lakehouse.webp`, `open_file_formats_storage.webp`).
+- **Zero-Collapse Container Fix**: Added `min-h-[200px]` and explicit layout positioning to `whiteboards-client.tsx` and `whiteboard-card.tsx` to eliminate layout shift and prevent 0-height collapses.
+- **Dedicated Automated Integrity Test (`src/__tests__/features.whiteboards-integrity.test.ts`)**: Automated test verifying that all 42 diagrams point to existing, valid (>20 KB) WebP assets on disk, all 5 personas are present, and all 7 categories map seamlessly.
+
+### 🧪 Test Suite Expansion (53 Files, 424 Unit Tests)
+- **100% Passing Quality Gates**: Verified all 53 test suites and 424 unit tests pass, validating zero-OOM memory footprints, multi-persona schema integrity, 42 whiteboard asset integrity, and Cloudflare OpenNext edge deployment.
 
 ---
 

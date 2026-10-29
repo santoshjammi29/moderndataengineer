@@ -118,7 +118,7 @@ export function HomeWhiteboardsShowcase() {
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20">
               <Workflow size={13} className="text-purple-500 dark:text-purple-400" />
-              <span>21 Architecture Whiteboards</span>
+              <span>42 Architecture Whiteboards</span>
             </span>
             <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 hidden sm:inline">
               Hand-Drawn System Design
@@ -190,7 +190,7 @@ export function HomeWhiteboardsShowcase() {
                   {featuredDiagram.category}
                 </span>
                 <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
-                  Blueprint #{architectureDiagrams.findIndex((d) => d.id === featuredDiagram.id) + 1} of 21
+                  Blueprint #{architectureDiagrams.findIndex((d) => d.id === featuredDiagram.id) + 1} of {architectureDiagrams.length}
                 </span>
               </div>
 

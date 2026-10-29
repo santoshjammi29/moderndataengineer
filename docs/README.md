@@ -57,9 +57,9 @@ Verified edge network benchmarks, accessibility certifications, and Lighthouse a
 
 | Document | Primary Focus | Key Score / Metric | Link |
 | :--- | :--- | :--- | :--- |
-| **Enterprise Production Audit** | Edge TTFB, LCP, Zero-Bundle DAL, Test Coverage | **99/100 Lighthouse**, LCP: 0.78s, **419 Tests Passed (52 Suites)** | [`audits/production_audit.md`](./audits/production_audit.md) |
+| **Enterprise Production Audit** | Edge TTFB, LCP, Zero-Bundle DAL, Test Coverage | **99/100 Lighthouse**, LCP: 0.78s, **424 Tests Passed (53 Suites)** | [`audits/production_audit.md`](./audits/production_audit.md) |
 | **Theme & Contrast Audit** | Zero-Flash Theme Switch, Runtime Contrast Matrix | **<16ms Theme Toggle**, WCAG 2.1 AA Certified | [`audits/theme_audit.md`](./audits/theme_audit.md) |
-| **Design System Audit** | Fluid Typography Clamp, 6 Responsive Breakpoints | **100% Pass Rate across 52 Test Suites** | [`audits/design_system_audit.md`](./audits/design_system_audit.md) |
+| **Design System Audit** | Fluid Typography Clamp, 6 Responsive Breakpoints | **100% Pass Rate across 53 Test Suites** | [`audits/design_system_audit.md`](./audits/design_system_audit.md) |
 
 👉 **[Explore Full Audits Directory](./audits/README.md)**
 

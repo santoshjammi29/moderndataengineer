@@ -179,7 +179,7 @@ All 42 blueprints follow the hand-drawn digital whiteboard sketch style with 100
 ## 4. Standard Dev Commands, Testing & Cloudflare Deployment
 
 ```bash
-# 1. Run full test suite (must ALWAYS pass all 52 test files and 419 tests)
+# 1. Run full test suite (must ALWAYS pass all 53 test files and 424 tests)
 npm test
 
 # 2. Production build check (OpenNext Cloudflare build)

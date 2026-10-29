@@ -818,7 +818,7 @@ export const architectureDiagrams: ArchitectureDiagramItem[] =
     "title": "Enterprise Edge Architecture: Data, Edge & Client Flow",
     "subtitle": "IoT Edge Gateways, MQTT/OPC-UA Telemetry, Cloud Ingestion Hubs, and Offline Client Sync",
     "category": "Platform Landscape",
-    "image": "/diagrams/enterprise_edge_client_architecture.webp",
+    "image": "/diagrams/enterprise_edge_architecture.webp",
     "tags": [
       "Edge Computing",
       "IoT Hub",
@@ -1205,7 +1205,7 @@ export const architectureDiagrams: ArchitectureDiagramItem[] =
     "title": "Open Table Formats Blueprint: Lakehouse Storage Engines",
     "subtitle": "Comparative Technical Architecture: Delta Lake vs Apache Iceberg vs Apache Hudi",
     "category": "Storage Engine",
-    "image": "/diagrams/open_table_formats_lakehouse.webp",
+    "image": "/diagrams/open_table_formats_lakehouse_architecture.webp",
     "tags": [
       "Open Table Formats",
       "Delta Lake",
@@ -1260,7 +1260,7 @@ export const architectureDiagrams: ArchitectureDiagramItem[] =
     "title": "Open File Formats Blueprint: Physical Storage Engines",
     "subtitle": "Columnar vs Row-Based: Parquet, ORC, and Avro Encoding, Compression, and Memory Layouts",
     "category": "Storage Engine",
-    "image": "/diagrams/open_file_formats_storage.webp",
+    "image": "/diagrams/open_file_formats_storage_architecture.webp",
     "tags": [
       "File Formats",
       "Parquet",

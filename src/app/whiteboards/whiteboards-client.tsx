@@ -705,8 +705,9 @@ export function WhiteboardsClient() {
                   {/* Blueprint Image Preview */}
                   <div
                     onClick={() => setActiveDiagram(currentCategory.diagrams[0])}
+                    style={{ position: "relative", height: "280px" }}
                     className={cn(
-                      "lg:col-span-7 relative aspect-[16/10] rounded-xl overflow-hidden border border-[var(--border)] cursor-pointer group flex items-center justify-center p-3 select-none transition-colors",
+                      "lg:col-span-7 relative aspect-[16/10] min-h-[240px] rounded-xl overflow-hidden border border-[var(--border)] cursor-pointer group flex items-center justify-center p-3 select-none transition-colors",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                     )}
                   >
@@ -942,8 +943,9 @@ export function WhiteboardsClient() {
                 >
                   {/* Canvas Container */}
                   <div
+                    style={{ position: "relative", minHeight: "200px" }}
                     className={cn(
-                      "relative aspect-[16/10] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors",
+                      "relative aspect-[16/10] min-h-[200px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                     )}
                   >

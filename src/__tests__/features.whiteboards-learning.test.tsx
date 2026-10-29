@@ -101,6 +101,8 @@ describe("Whiteboard Learning Data & Architecture", () => {
 describe("WhiteboardsClient Interactive Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, value: 300 });
+    Object.defineProperty(HTMLElement.prototype, "clientWidth", { configurable: true, value: 500 });
   });
 
   it("renders the main title, metrics ribbon, and category stepper", () => {

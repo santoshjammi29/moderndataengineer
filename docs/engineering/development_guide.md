@@ -100,10 +100,10 @@ Lists containing hundreds or thousands of cards (`/qa-prep`, `/concepts`, `/arch
 
 ## 4. Automated Testing Suite (Vitest)
 
-Our automated verification suite enforces 100% test passing across 52 test files before any pull request or deployment:
+Our automated verification suite enforces 100% test passing across 53 test files before any pull request or deployment:
 
 ```bash
-# Run all 52 test suites
+# Run all 53 test suites
 npm test
 ```
 
@@ -111,7 +111,7 @@ npm test
 1. **Data Integrity (`src/__tests__/data.integrity.test.ts`)**: Schema compliance, unique ID validation, non-empty fields, and difficulty rating integrity across all 27 JSON files.
 2. **Domain Helpers (`src/__tests__/data.helpers.test.ts`)**: `getStandardizedDomain`, topic counters, and category mappings.
 3. **Google BM25F Search Engine (`src/__tests__/features.google-search-algo.test.ts`)**: BM25F scoring, typo tolerance, prefix matching, and ranking accuracy.
-4. **Whiteboard Learning & Blueprints (`src/__tests__/features.whiteboards-learning.test.tsx`)**: 42 blueprints, multi-persona metadata structures, and 7 architectural categories.
+4. **Whiteboard Learning & Blueprint Integrity (`src/__tests__/features.whiteboards-learning.test.tsx` & `features.whiteboards-integrity.test.ts`)**: 42 blueprints, multi-persona metadata structures, disk asset presence and minimum byte size, and 7 architectural categories.
 5. **Keyword Filter Bar (`src/__tests__/features.architecture-keyword-filters.test.tsx`)**: 36-keyword scenario filter logic across 6 domain groups.
 6. **Databricks Coding Hub (`src/__tests__/features.code-practice-databricks.test.tsx`)**: Unified operations, memory triage views, and category filtering.
 7. **Target Company Intel Hub (`src/__tests__/features.company-research-client.test.tsx` & `features.company-research.test.tsx`)**: Triple view modes (Compact Grid, Split Workbench, Comparison Table), in-card drawer tabs, GCC hub filtering, and 1-click clipboard prompt copying.
@@ -126,7 +126,7 @@ npm test
 # 1. Type checking and Cloudflare OpenNext build
 npm run build:cf
 
-# 2. Automated test run (52 files, 419 tests)
+# 2. Automated test run (53 files, 424 tests)
 npm test
 
 # 3. Fast-track worker deploy (~35 seconds, skips R2 uploads)

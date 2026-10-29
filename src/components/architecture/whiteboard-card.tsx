@@ -66,12 +66,12 @@ export function WhiteboardCard({
       {/* Visual Canvas Container - Clean, Pristine Whiteboard View without Obstructive Overlays */}
       <div
         className={cn(
-          "relative aspect-[16/10] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 sm:p-5 select-none transition-colors duration-300",
+          "relative aspect-[16/10] min-h-[220px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 sm:p-5 select-none transition-colors duration-300",
           isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
         )}
       >
         {/* Diagram Image with Hardware-Accelerated Theme Transition */}
-        <div className="relative w-full h-full min-h-[220px] flex items-center justify-center">
+        <div style={{ position: "relative", minHeight: "220px" }} className="relative w-full h-full min-h-[220px] flex items-center justify-center">
           <Image
             src={diagram.image}
             alt={diagram.title}
