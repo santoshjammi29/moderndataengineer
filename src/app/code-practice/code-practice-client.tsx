@@ -28,6 +28,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { CodeSheetItem, CodeLevel } from "@/types/data";
+import { PipelineExecutionFlow } from "@/components/code-practice/pipeline-execution-flow";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { recordLastTopic } from "@/lib/user-progress";
@@ -332,6 +333,15 @@ export function CodePracticeClient({ initialData }: CodePracticeClientProps) {
           </div>
         </div>
       </div>
+
+      {/* ─── PRODUCTION PYSPARK & DELTA PIPELINE EXECUTION FLOW ─── */}
+      <PipelineExecutionFlow
+        onSelectLang={(lang) => {
+          if (lang in languageConfigs) {
+            handleLangChange(lang as any);
+          }
+        }}
+      />
 
       {/* Databricks Dedicated Coding Subpage Banner */}
       <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-red-950/30 via-red-900/10 to-[var(--surface-1)] border border-red-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">

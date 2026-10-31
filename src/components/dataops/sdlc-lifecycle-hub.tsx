@@ -24,6 +24,7 @@ import {
   SdlcPhase,
   SdlcTopic,
 } from "@/data/sdlc-lifecycle-data";
+import { SdlcPipelineFlow } from "./sdlc-pipeline-flow";
 
 export function SdlcLifecycleHub() {
   const [selectedPhaseNumber, setSelectedPhaseNumber] = useState<number>(1);
@@ -122,6 +123,14 @@ export function SdlcLifecycleHub() {
           </button>
         </div>
       </div>
+
+      {/* ── Interactive SDLC Lifecycle Flow Diagram ──────────────────── */}
+      <SdlcPipelineFlow
+        onSelectPhase={(phaseNum) => {
+          setSelectedPhaseNumber(phaseNum);
+          setActiveViewMode("phases");
+        }}
+      />
 
       {/* ── Search Bar ─────────────────────────────────────────────── */}
       <div className="relative">

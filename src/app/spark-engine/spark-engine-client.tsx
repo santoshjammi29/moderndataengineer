@@ -37,6 +37,7 @@ import { useDiagramTheme } from "@/lib/diagram-theme";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { PrerequisiteBanner } from "@/components/ui/prerequisite-banner";
+import { OptimizationFlow } from "@/components/cheatsheet/optimization-flow";
 import { recordLastTopic } from "@/lib/user-progress";
 
 type SparkSubtab = "architecture" | "simulator" | "memory" | "curriculum" | "lexicon";
@@ -497,6 +498,9 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
           </div>
         </Link>
       </div>
+
+      {/* Interactive Catalyst Optimization Lifecycle Diagram */}
+      <OptimizationFlow />
 
       {/* Subtab Navigation Chips - Styled after media_1792228927376_5ece2e88.png */}
       <div className="flex items-center gap-1 overflow-x-auto p-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] max-w-fit shadow-xs scrollbar-none">

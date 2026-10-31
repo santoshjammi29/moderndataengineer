@@ -56,6 +56,7 @@ import {
 import { type ArchitectureDiagramItem } from "@/data/diagrams";
 import { useDiagramTheme } from "@/lib/diagram-theme";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
+import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Cpu,
@@ -495,6 +496,9 @@ export function WhiteboardsClient() {
 
       {/* ── ACTIVE CATEGORY CONTENT CONTAINER ─────────────────────────────── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+        {/* Interactive Architecture System Design Flow */}
+        <SystemDesignFlow />
+
         {/* Category Header Milestone Card */}
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-1)] p-5 sm:p-7 relative overflow-hidden">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">

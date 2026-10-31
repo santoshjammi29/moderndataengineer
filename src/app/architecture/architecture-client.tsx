@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
 import { TopicIcon } from "@/components/ui/topic-icon";
 import { UnifiedSearchFilterBox } from "@/components/ui/unified-search-filter-box";
 import { architectureDiagrams } from "@/data/diagrams";
@@ -1150,12 +1151,19 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
 
       {/* ─── UNIFIED SEARCH & MULTI-LEVEL FILTER BOX (ACTIVE PER TAB) ─── */}
       {activeTab === "scenarios" && (
-        <UnifiedSearchFilterBox
-          searchQuery={searchQuery}
-          onSearchChange={(val) => {
-            setSearchQuery(val);
-            setVisibleCount(initialBatch);
-          }}
+        <div className="space-y-3.5">
+          <SystemDesignFlow
+            onSelectSearchQuery={(val) => {
+              setSearchQuery(val);
+              setVisibleCount(initialBatch);
+            }}
+          />
+          <UnifiedSearchFilterBox
+            searchQuery={searchQuery}
+            onSearchChange={(val) => {
+              setSearchQuery(val);
+              setVisibleCount(initialBatch);
+            }}
           searchPlaceholder="Search 3,080+ architecture blueprints (e.g., Vitess, Spanner TrueTime, Little's Law)... (Press / to search)"
           matchCount={filteredItems.length}
           totalCount={totalScenariosCount}
@@ -1248,6 +1256,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
               : []),
           ]}
         />
+        </div>
       )}
 
       {activeTab === "python" && (

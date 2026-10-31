@@ -33,6 +33,7 @@ import { cn } from "@/lib/utils";
 import { UnifiedSearchFilterBox } from "@/components/ui/unified-search-filter-box";
 import { UnifiedQuestion, Difficulty, STANDARDIZED_DOMAINS } from "@/types/data";
 import { ArchitectureDiagramItem } from "@/data/diagrams";
+import { InterviewDefenseFlow } from "@/components/qa-prep/interview-defense-flow";
 import dynamic from "next/dynamic";
 import {
   TECH_ECOSYSTEMS,
@@ -553,6 +554,13 @@ export function QaPrepClient({
           </div>
         </div>
       </div>
+
+      {/* ─── INTERACTIVE INTERVIEW DEFENSE FRAMEWORK ─── */}
+      <InterviewDefenseFlow
+        onSelectArchetype={(arch) => {
+          setSelectedArchetype(arch as any);
+        }}
+      />
 
       {/* ─── UNIFIED SEARCH & SIMPLE 3-SLICER FILTER BOX ─── */}
       <UnifiedSearchFilterBox

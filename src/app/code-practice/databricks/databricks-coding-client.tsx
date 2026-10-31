@@ -42,6 +42,7 @@ import { DatabricksCard } from "@/components/cheatsheet/databricks-card";
 import { PosterLightbox } from "@/components/cheatsheet/poster-lightbox";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
+import { PipelineExecutionFlow } from "@/components/code-practice/pipeline-execution-flow";
 
 export interface DatabricksCodingClientProps {
   suiteData: DatabricksSuiteData;
@@ -514,6 +515,9 @@ export function DatabricksCodingClient({
           </div>
         </div>
       </div>
+
+      {/* Interactive PySpark & Delta Lake Pipeline Execution Flow */}
+      <PipelineExecutionFlow />
 
       {/* ────────────────────────────────────────────────────────── */}
       {/* 2. SUBPAGE VIEW MODE SWITCHER */}

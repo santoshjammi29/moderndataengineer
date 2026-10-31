@@ -9,12 +9,16 @@ import { TrendingSpotlight } from "@/components/dashboard/trending-spotlight";
 import { HomeWhiteboardsShowcase } from "@/components/dashboard/home-whiteboards-showcase";
 import { StatCards } from "@/components/dashboard/stat-cards";
 import { ArchitectDigest } from "@/components/dashboard/architect-digest";
+import { MasteryRoadmapFlow } from "@/components/guided-learning/mastery-roadmap-flow";
 
 export function DashboardClient() {
   return (
     <div className="space-y-8 sm:space-y-10 pb-16 max-w-7xl mx-auto px-2 sm:px-4">
       {/* 1. Motivational Hero & 6 Core Pillars of Mastery */}
       <HeroCommandCenter />
+
+      {/* Interactive Principal Data Architect Mastery Roadmap Flow */}
+      <MasteryRoadmapFlow />
 
       {/* 2. Platform Release Radar & What's Recently Deployed */}
       <RecentDeploymentsRadar />

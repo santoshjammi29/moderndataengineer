@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TopicIcon } from "@/components/ui/topic-icon";
+import { EnterpriseStackFlow } from "@/components/company-research/enterprise-stack-flow";
 import type { CompanyProfile, CompanyTier } from "@/types/data";
 
 const POPULAR_TECHS = [
@@ -345,6 +346,9 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
           </div>
         </div>
       </header>
+
+      {/* ─── TIER-1 ENTERPRISE ARCHITECTURE STACK BLUEPRINT ─── */}
+      <EnterpriseStackFlow />
 
       {/* ─── UNIFIED ULTRA-COMPACT CONTROL DECK ─── */}
       <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-2 sm:p-2.5 space-y-2 shadow-xs">

@@ -33,6 +33,7 @@ import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-them
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { PrerequisiteBanner } from "@/components/ui/prerequisite-banner";
+import { OptimizationFlow } from "@/components/cheatsheet/optimization-flow";
 
 type CatalystSubtab = "visualizer" | "pipeline" | "inspector" | "blueprint" | "tuning";
 
@@ -398,6 +399,9 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
           </Link>
         </div>
       </div>
+
+      {/* Interactive Catalyst Optimization Flow Diagram */}
+      <OptimizationFlow />
 
       {/* ─── Mode Switcher Navigation Pills ─── */}
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">

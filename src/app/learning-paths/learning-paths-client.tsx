@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { LearningPath, Difficulty } from "@/types/data";
 import { DecisionLedger } from "@/components/learning-paths/decision-ledger";
 import { TopicIcon } from "@/components/ui/topic-icon";
+import { MasteryRoadmapFlow } from "@/components/guided-learning/mastery-roadmap-flow";
 
 const difficultyColors: Record<Difficulty, { bg: string; text: string; border: string }> = {
   EASY: { bg: "bg-green-500/10", text: "text-green-400", border: "border-green-500/20" },
@@ -90,6 +91,9 @@ export function LearningPathsClient({ initialPaths }: { initialPaths: LearningPa
           </div>
         </div>
       </div>
+
+      {/* ─── PRINCIPAL DATA ARCHITECT CAREER PROGRESSION ROADMAP ─── */}
+      <MasteryRoadmapFlow />
 
       {/* Horizontal Difficulty Filter Pills - Styled after user reference image media_1792228927376_5ece2e88.png */}
       <div className="flex items-center gap-1 p-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">

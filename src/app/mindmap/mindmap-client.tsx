@@ -5,6 +5,7 @@ import Link from "next/link";
 import { BookOpen, GitBranch, Zap, Layers, HelpCircle, ArrowRight } from "lucide-react";
 import { Concept } from "@/types/data";
 import { ConceptsMindmapView } from "@/components/concepts/concepts-mindmap-view";
+import { LakehouseMedallionFlow } from "@/components/concepts/lakehouse-medallion-flow";
 
 interface MindmapClientProps {
   concepts: Concept[];
@@ -70,6 +71,9 @@ export function MindmapClient({ concepts }: MindmapClientProps) {
           <ArrowRight size={11} />
         </Link>
       </div>
+
+      {/* Interactive Lakehouse Medallion Architecture Lifecycle Flow */}
+      <LakehouseMedallionFlow />
 
       {/* Integrated Multi-Level Stretching Mind Map */}
       <ConceptsMindmapView concepts={concepts} />

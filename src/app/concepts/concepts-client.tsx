@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { LakehouseMedallionFlow } from "@/components/concepts/lakehouse-medallion-flow";
 import { Concept, Difficulty } from "@/types/data";
 import { ArchitectureDiagramItem } from "@/data/diagrams";
 import dynamic from "next/dynamic";
@@ -485,6 +486,16 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
           </div>
         </div>
       </div>
+
+      {/* ─── INTERACTIVE MEDALLION ARCHITECTURE FLOW ─── */}
+      <LakehouseMedallionFlow
+        onSelectConceptQuery={(query) => {
+          setSearchQuery(query);
+          if (viewMode === "study") {
+            handleViewChange("glossary");
+          }
+        }}
+      />
 
       {/* ─── UNIFIED VIEW MODE SWITCHER (Single Roof) ─── */}
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">

@@ -37,6 +37,7 @@ import { LearningPath } from "@/types/data";
 import { learningPathsDb } from "@/data";
 import { CareerCurriculaView } from "@/components/guided-learning/career-curricula-view";
 import { LabTreeView } from "@/components/guided-learning/lab-tree-view";
+import { MasteryRoadmapFlow } from "@/components/guided-learning/mastery-roadmap-flow";
 import {
   getTopicItems,
   getTopicCounts,
@@ -596,6 +597,9 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
           <span>Lab &amp; Topic Tree (130 Dives)</span>
         </button>
       </div>
+
+      {/* ─── PRINCIPAL DATA ARCHITECT CAREER PROGRESSION ROADMAP ─── */}
+      <MasteryRoadmapFlow />
 
       {activeMainTab === "curricula" ? (
         <CareerCurriculaView paths={paths} />
