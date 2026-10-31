@@ -281,14 +281,14 @@ export function LakehouseArchitectureGuide() {
               </tr>
               <tr className="hover:bg-[var(--surface-1)]">
                 <td className="p-3 font-medium text-[var(--foreground)]">ACID Transaction Support</td>
-                <td className="p-3 text-rose-500">None (Prone to dirty reads)</td>
+                <td className="p-3 text-amber-400">None (Prone to dirty reads)</td>
                 <td className="p-3 text-emerald-500">Full ACID (Proprietary)</td>
                 <td className="p-3 text-emerald-500 font-medium">Full ACID (via Delta Log / Iceberg Metadata)</td>
               </tr>
               <tr className="hover:bg-[var(--surface-1)]">
                 <td className="p-3 font-medium text-[var(--foreground)]">File &amp; Storage Format</td>
                 <td className="p-3">Open (CSV, JSON, Parquet)</td>
-                <td className="p-3 text-rose-500">Proprietary Columnar Blocks</td>
+                <td className="p-3 text-amber-400">Proprietary Columnar Blocks</td>
                 <td className="p-3 text-[var(--foreground)] font-medium">Open Apache Parquet + ACID Logs</td>
               </tr>
               <tr className="hover:bg-[var(--surface-1)]">
@@ -299,14 +299,14 @@ export function LakehouseArchitectureGuide() {
               </tr>
               <tr className="hover:bg-[var(--surface-1)]">
                 <td className="p-3 font-medium text-[var(--foreground)]">Time Travel &amp; Rollbacks</td>
-                <td className="p-3 text-rose-500">Manual (Object versioning)</td>
+                <td className="p-3 text-amber-400">Manual (Object versioning)</td>
                 <td className="p-3 text-emerald-500">Available (Proprietary retention)</td>
                 <td className="p-3 text-emerald-500 font-medium">Standard (SELECT * FROM table TIMESTAMP AS OF)</td>
               </tr>
               <tr className="hover:bg-[var(--surface-1)]">
                 <td className="p-3 font-medium text-[var(--foreground)]">Vendor Lock-In Risk</td>
                 <td className="p-3 text-emerald-500">Very Low</td>
-                <td className="p-3 text-rose-500">Extremely High</td>
+                <td className="p-3 text-amber-400">Extremely High</td>
                 <td className="p-3 text-emerald-500 font-medium">Zero (Open formats readable by any engine)</td>
               </tr>
             </tbody>

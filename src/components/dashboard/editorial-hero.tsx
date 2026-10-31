@@ -60,11 +60,11 @@ const THEME_STYLES = {
     textHover: "group-hover:text-amber-300",
     sparkle: "text-amber-400",
   },
-  rose: {
-    badge: "bg-rose-500/20 text-rose-300 border-rose-500/30",
-    button: "bg-rose-600 hover:bg-rose-500 shadow-rose-500/25",
-    textHover: "group-hover:text-rose-300",
-    sparkle: "text-rose-400",
+  indigo: {
+    badge: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
+    button: "bg-indigo-600 hover:bg-indigo-500 shadow-indigo-500/25",
+    textHover: "group-hover:text-indigo-300",
+    sparkle: "text-indigo-400",
   },
   cyan: {
     badge: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",

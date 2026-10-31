@@ -321,7 +321,7 @@ export function DiagnosticModal({
                     if (isCorrect) {
                       optionStyle = "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200";
                     } else if (isSelected) {
-                      optionStyle = "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-200";
+                      optionStyle = "border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-200";
                     } else {
                       optionStyle = "border-[var(--border)]/40 bg-[var(--surface-2)]/40 text-[var(--muted-foreground)]";
                     }

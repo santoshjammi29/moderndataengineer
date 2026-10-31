@@ -113,7 +113,7 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
       className={cn(
         "group relative flex flex-col rounded-xl border bg-[#0d1424] text-slate-100 p-3 sm:p-4 transition-all duration-200 shadow-md hover:shadow-xl scroll-mt-24",
         isHighlighted
-          ? "border-red-500 ring-2 ring-red-500/40 bg-[#10192e]"
+          ? "border-amber-500 ring-2 ring-amber-500/40 bg-[#10192e]"
           : "border-slate-800 hover:border-slate-700"
       )}
     >

@@ -1666,7 +1666,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                 <div className="space-y-0.5">
                   <label htmlFor="sim-shuffle-skew" className="flex justify-between text-xs font-medium cursor-pointer">
                     <span>Data Skew Multiplier:</span>
-                    <span className={cn("font-bold", shuffleSkew >= 2.5 ? "text-red-400" : "text-orange-400")}>
+                    <span className={cn("font-bold", shuffleSkew >= 2.5 ? "text-amber-400" : "text-orange-400")}>
                       {shuffleSkew}x
                     </span>
                   </label>
@@ -1713,7 +1713,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     <span className="text-purple-300 font-bold">Predicted Shuffle Spill:</span>
                     <span className={cn(
                       "text-[10px] font-semibold px-2 py-0.5 rounded-full border",
-                      isHighSkew ? "bg-red-500/10 text-red-400 border-red-500/20" : "bg-green-500/10 text-green-400 border-green-500/20"
+                      isHighSkew ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : "bg-green-500/10 text-green-400 border-green-500/20"
                     )}>
                       {isHighSkew ? "⚠️ High Disk Spill Risk" : "Normal Spill Risk"}
                     </span>
@@ -1725,7 +1725,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     Optimal Partitions: <span className="text-purple-300 font-mono font-bold">{recPartitions}</span> (target ~150MB/partition)
                   </div>
                   {isHighSkew && (
-                    <div className="text-[10px] text-red-300/90 pt-1 border-t border-red-500/20 leading-relaxed">
+                    <div className="text-[10px] text-amber-300/90 pt-1 border-t border-amber-500/20 leading-relaxed">
                       💡 Skew &gt; 2.5x detected! Enable AQE skew join: <code className="text-purple-300">spark.sql.adaptive.skewJoin.enabled = true</code> or apply salting keys.
                     </div>
                   )}
@@ -2074,7 +2074,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
           <div className="p-3.5 sm:p-4 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] space-y-3 flex flex-col justify-between">
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                   <RotateCcw size={12} /> 6. Streaming Watermark &amp; State Sizer
                 </span>
                 <button
@@ -2092,7 +2092,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                 <div className="space-y-0.5">
                   <label htmlFor="sim-watermark" className="flex justify-between text-xs font-medium cursor-pointer">
                     <span>Allowed Lateness:</span>
-                    <span className="font-bold text-red-400">{watermarkMins} Mins</span>
+                    <span className="font-bold text-amber-400">{watermarkMins} Mins</span>
                   </label>
                   <input
                     id="sim-watermark"
@@ -2101,7 +2101,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     max={60}
                     value={watermarkMins}
                     onChange={(e) => setWatermarkMins(Number(e.target.value))}
-                    className="w-full accent-red-500"
+                    className="w-full accent-amber-500"
                   />
                 </div>
 
@@ -2120,7 +2120,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     step={1000}
                     value={streamIngestRate}
                     onChange={(e) => setStreamIngestRate(Number(e.target.value))}
-                    className="w-full accent-red-500"
+                    className="w-full accent-amber-500"
                   />
                 </div>
               </div>
@@ -2131,15 +2131,15 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
               const stateMb = Math.round((inFlightEvents * 200) / (1024 * 1024));
 
               return (
-                <div className="p-3 rounded-lg bg-[var(--surface-2)] border border-red-500/20 text-xs space-y-1">
-                  <div className="text-red-300 font-bold">State Store Memory Impact:</div>
+                <div className="p-3 rounded-lg bg-[var(--surface-2)] border border-amber-500/20 text-xs space-y-1">
+                  <div className="text-amber-300 font-bold">State Store Memory Impact:</div>
                   <div className="text-[var(--foreground)] font-mono text-[11px]">
                     In-Flight State Store: ~{(stateMb / 1024).toFixed(2)} GB ({inFlightEvents.toLocaleString()} events)
                   </div>
                   <div className="text-[var(--muted-foreground)] text-[11px]">
                     Events lagging &gt; {watermarkMins}m dropped without updating state.
                   </div>
-                  <div className="text-[10px] text-red-300/80 pt-0.5">
+                  <div className="text-[10px] text-amber-300/80 pt-0.5">
                     💡 Requires RocksDB provider to eliminate JVM heap garbage collection pauses.
                   </div>
                 </div>

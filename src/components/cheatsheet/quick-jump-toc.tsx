@@ -191,12 +191,12 @@ export function QuickJumpTOC({
             className={cn(
               "w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all text-left cursor-pointer",
               activeScenario === "p0_outages"
-                ? "bg-red-500/20 text-red-300 font-semibold border border-red-500/40"
-                : "text-[var(--muted-foreground)] hover:text-red-300 hover:bg-red-500/10"
+                ? "bg-amber-500/15 text-amber-300 font-semibold border border-amber-500/30"
+                : "text-[var(--muted-foreground)] hover:text-amber-300 hover:bg-amber-500/10"
             )}
           >
             <span className="flex items-center gap-1.5 truncate">
-              <AlertTriangle size={13} className="text-red-400 shrink-0" />
+              <AlertTriangle size={13} className="text-amber-400 shrink-0" />
               <span className="truncate">P0 Sev-1 Outages</span>
             </span>
             <span className="text-[10px] font-mono opacity-70">&rarr;</span>

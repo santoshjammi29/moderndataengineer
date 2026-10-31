@@ -274,7 +274,7 @@ export function StudioClient() {
                   </Link>
                   <button
                     onClick={() => removeBookmark(item.id)}
-                    className="p-1 rounded-md text-[var(--muted-foreground)] hover:text-red-400 hover:bg-red-500/10 transition-colors shrink-0 cursor-pointer"
+                    className="p-1 rounded-md text-[var(--muted-foreground)] hover:text-amber-400 hover:bg-amber-500/10 transition-colors shrink-0 cursor-pointer"
                     title="Remove Bookmark"
                   >
                     <Trash2 size={13} />
@@ -306,7 +306,7 @@ export function StudioClient() {
 
               <button
                 onClick={resetAllProgress}
-                className="w-full py-1.5 px-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-400 hover:bg-red-500/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-1.5 px-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-400 hover:bg-amber-500/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <RotateCcw size={13} />
                 <span>Reset All Data</span>

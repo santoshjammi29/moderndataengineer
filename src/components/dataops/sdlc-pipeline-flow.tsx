@@ -124,9 +124,9 @@ export function SdlcPipelineFlow({
       name: "Observability & SRE",
       subtitle: "Phases 14 - 19 · Reliability",
       icon: Activity,
-      color: "text-rose-400",
-      bgColor: "bg-rose-500/10",
-      borderColor: "border-rose-500/30",
+      color: "text-violet-400",
+      bgColor: "bg-violet-500/10",
+      borderColor: "border-violet-500/30",
       description:
         "Operate with high reliability: ingest OpenLineage run telemetry, monitor SLO error budgets, conduct blameless incident postmortems, rehearse dual-region DR game days, and execute compliant sunsetting.",
       keyTechniques: [

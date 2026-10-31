@@ -180,7 +180,7 @@ export function CustomerWorkerConsole() {
                     disabled={busy}
                     onClick={() => removeDeployment(deployment.name)}
                     aria-label={`Delete ${deployment.name}`}
-                    className="rounded-md p-1.5 text-red-500 hover:bg-red-500/10 disabled:opacity-50"
+                    className="rounded-md p-1.5 text-amber-500 hover:bg-amber-500/10 disabled:opacity-50"
                   >
                     <Trash2 size={15} />
                   </button>
@@ -189,7 +189,7 @@ export function CustomerWorkerConsole() {
             ))}
           </ul>
         )}
-        {error && <p role="alert" className="rounded-lg bg-red-500/10 p-3 text-sm text-red-500">{error}</p>}
+        {error && <p role="alert" className="rounded-lg bg-amber-500/10 p-3 text-sm text-amber-400">{error}</p>}
         {notice && <p role="status" className="rounded-lg bg-green-500/10 p-3 text-sm text-green-600">{notice}</p>}
       </section>
     </div>

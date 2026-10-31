@@ -524,7 +524,7 @@ export function UnifiedSearchFilterBox({
             <button
               type="button"
               onClick={onResetAll}
-              className="text-[11px] text-[var(--muted-foreground)] hover:text-red-400 underline cursor-pointer ml-1 font-medium inline-flex items-center gap-1"
+              className="text-[11px] text-[var(--muted-foreground)] hover:text-amber-400 underline cursor-pointer ml-1 font-medium inline-flex items-center gap-1"
             >
               <RotateCcw size={10} />
               <span>Reset all</span>

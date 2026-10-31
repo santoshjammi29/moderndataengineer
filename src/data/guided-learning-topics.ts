@@ -313,7 +313,7 @@ export const GUIDED_TOPICS: GuidedTopic[] = [
     tier: 'Tier 4: Enterprise Scale & Systems Design',
     tierNum: 4,
     difficulty: 'Architect',
-    gradient: 'from-amber-500 to-rose-600',
+    gradient: 'from-amber-500 to-orange-600',
     description: 'Event-driven architectures, Kafka, Structured Streaming & low-latency CDC',
     executiveSummary: 'Design low-latency event processing architectures: Apache Kafka partition topologies, Spark Structured Streaming stateful watermarking, exactly-once processing guarantees, and Debezium CDC.',
     diagramId: 'kafka-event-streaming-pipeline',

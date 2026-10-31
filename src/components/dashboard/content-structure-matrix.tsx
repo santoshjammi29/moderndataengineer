@@ -59,7 +59,7 @@ const HUB_METADATA: Record<string, HubMetadata> = {
     id: "visuals",
     pillar: "Visual Blueprints & Diagrams",
     badge: "42 Visuals",
-    badgeColor: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+    badgeColor: "bg-teal-500/10 text-teal-400 border-teal-500/20",
     count: "42 Whiteboards · Interactive Flows",
     summary: "Hand-drawn whiteboard architectural diagrams, system design workflows, and end-to-end pipeline SVGs.",
     icon: Sparkles,

@@ -154,7 +154,7 @@ describe("DataOpsClient Component", () => {
     expect(legendMatches[0]).toBeDefined();
 
     expect(
-      screen.getByText(/Red: Schedulers & Compute \(Airflow, Databricks, Spark\)/i)
+      screen.getByText(/Indigo: Schedulers & Compute \(Airflow, Databricks, Spark\)/i)
     ).toBeDefined();
   });
 });

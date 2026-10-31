@@ -135,9 +135,9 @@ export function LakehouseMedallionFlow({
       name: "Consumption",
       subtitle: "BI, RAG & Feature Stores",
       icon: Bot,
-      color: "text-rose-400",
-      bgColor: "bg-rose-500/10",
-      borderColor: "border-rose-500/30",
+      color: "text-indigo-400",
+      bgColor: "bg-indigo-500/10",
+      borderColor: "border-indigo-500/30",
       description:
         "Delivers governed data to diverse enterprise consumers: executive BI dashboards, sub-second operational APIs, real-time ML feature stores, and generative AI RAG embeddings.",
       keyTechniques: [

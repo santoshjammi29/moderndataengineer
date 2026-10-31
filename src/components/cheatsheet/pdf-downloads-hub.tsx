@@ -73,7 +73,7 @@ export const MASTER_PDF_SUITES: PdfDocumentMeta[] = [
     thumbnailUrl: "/cheatsheets/images/databricks_master_page_1.png",
     category: "master",
     badge: "Master A4 Suite",
-    badgeColor: "bg-red-500/15 text-red-400 border-red-500/30",
+    badgeColor: "bg-amber-500/15 text-amber-400 border-amber-500/30",
     highlights: [
       "48 Coding Language Cards across 4 domains",
       "Liquid Clustering & Photon Vector Engine",

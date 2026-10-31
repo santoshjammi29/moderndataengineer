@@ -981,7 +981,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     {completedCount > 0 && (
                       <button
                         onClick={resetTrackProgress}
-                        className="text-[var(--muted-foreground)] hover:text-red-400 flex items-center gap-1 transition-colors"
+                        className="text-[var(--muted-foreground)] hover:text-amber-400 flex items-center gap-1 transition-colors"
                         title="Reset Track"
                       >
                         <RotateCcw size={12} />
@@ -1579,7 +1579,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                   <div className="w-px h-4 bg-[var(--border)] mx-1" />
                   <button
                     onClick={() => setActiveDiagramModal(null)}
-                    className="p-1.5 rounded-md hover:bg-red-500/20 text-[var(--muted-foreground)] hover:text-red-400 transition-colors"
+                    className="p-1.5 rounded-md hover:bg-slate-700/40 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
                     title="Close"
                   >
                     <X size={18} />

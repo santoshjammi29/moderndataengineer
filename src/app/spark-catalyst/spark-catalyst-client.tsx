@@ -352,10 +352,10 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 space-y-4 pb-16">
       {/* ─── Hero Command Center Banner ─── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-500/10 via-amber-500/5 to-purple-500/10 border border-red-500/25 p-4 sm:p-5 shadow-xs isolate">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600/10 via-amber-500/5 to-purple-500/10 border border-blue-500/20 p-4 sm:p-5 shadow-xs isolate">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1.5 max-w-4xl">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-red-500/15 border border-red-500/30 text-[10px] font-bold text-red-400">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-blue-500/15 border border-blue-500/30 text-[10px] font-bold text-blue-400">
               <Zap size={12} />
               <span>Spark 4.0 &amp; Databricks Compute Intelligence</span>
             </div>
@@ -370,7 +370,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
 
           <div className="flex items-center gap-2 shrink-0 flex-wrap">
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] text-center shadow-2xs">
-              <div className="text-xs sm:text-sm font-bold text-red-400 font-mono">5 Phases</div>
+              <div className="text-xs sm:text-sm font-bold text-blue-400 font-mono">5 Phases</div>
               <div className="text-[10px] text-[var(--muted-foreground)] font-medium">Catalyst Pipeline</div>
             </div>
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] text-center shadow-2xs">
@@ -422,7 +422,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
               className={cn(
                 "flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer",
                 isActive
-                  ? "bg-red-600 text-white shadow-xs font-semibold"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
                   : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
               )}
             >
@@ -441,7 +441,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
           <div className="p-4 sm:p-5 rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-red-500 dark:text-red-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400">
                   Interactive Cluster Simulator
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)] mt-0.5">
@@ -473,7 +473,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                   type="button"
                   onClick={runSimulation}
                   disabled={isSimRunning}
-                  className="px-3.5 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition-all shadow-xs disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all shadow-xs disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
                 >
                   <Play size={13} className={cn(isSimRunning && "animate-pulse")} />
                   <span>{isSimRunning ? "Simulating..." : "Run Execution Plan"}</span>
@@ -497,13 +497,13 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
               <div className="lg:col-span-2 rounded-xl bg-[#090d13] border border-white/10 p-4 space-y-3 font-mono text-xs text-slate-300 shadow-inner">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
                     <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
                     <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                     <span className="text-[10px] text-slate-400 ml-1.5">spark-cluster-exec.scala</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-red-400 font-bold px-1.5 py-0.5 rounded bg-red-950/80 border border-red-800">
+                    <span className="text-[9px] text-amber-400 font-bold px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-800">
                       STEP {simStep} OF 3
                     </span>
                     <span className="text-[9px] text-purple-400 font-bold px-1.5 py-0.5 rounded bg-purple-950/80 border border-purple-800">
@@ -599,7 +599,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                 {/* Live Console Output Bar */}
                 <div className="mt-3 p-2.5 rounded-lg bg-black/60 border border-white/5 text-[11px] text-slate-400 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Terminal size={13} className="text-red-400" />
+                    <Terminal size={13} className="text-blue-400" />
                     <span>
                       {simStep === 0 && "Status: Cluster idle. Select a query flow pattern and click Run."}
                       {simStep === 1 && "Status: Stage 0 reading Parquet partitions into memory buffers..."}
@@ -616,7 +616,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
               {/* Metrics & Architectural Blueprint Breakdown */}
               <div className="p-4 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] space-y-3 text-xs">
                 <div>
-                  <span className="text-[10px] font-bold text-red-500 dark:text-red-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-blue-500 dark:text-blue-400 uppercase tracking-wider">
                     Execution Telemetry
                   </span>
                   <h4 className="text-sm font-bold text-[var(--foreground)] mt-0.5">
@@ -628,8 +628,8 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                   {simFlowDetails[flowType].mechanics}
                 </p>
 
-                <div className="p-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300">
-                  <strong className="text-red-200">Catalyst Rule:</strong> {simFlowDetails[flowType].catalystAction}
+                <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300">
+                  <strong className="text-amber-200">Catalyst Rule:</strong> {simFlowDetails[flowType].catalystAction}
                 </div>
 
                 {/* Real-time Stats */}
@@ -691,7 +691,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
               {
                 step: "Phase 4",
                 title: "CodeGen & Photon",
-                color: "text-red-400",
+                color: "text-amber-400",
                 badge: "Bytecode Compilation",
                 desc: "Tungsten compiles whole-stage JVM bytecode using Janino, eliminating virtual function dispatch. Native Photon C++ executes vectorized SIMD instructions.",
                 rules: ["WholeStageCodegen", "UnsafeRow Binary Format", "Photon SIMD"],
@@ -745,7 +745,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer",
                   selectedScenarioId === s.id
-                    ? "bg-red-600 text-white shadow-xs"
+                    ? "bg-blue-600 text-white shadow-xs"
                     : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 )}
               >
@@ -780,7 +780,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                   className={cn(
                     "px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer",
                     inspectorViewMode === m.id
-                      ? "bg-red-500/15 text-red-400 font-bold border border-red-500/30"
+                      ? "bg-blue-500/15 text-blue-400 font-bold border border-blue-500/30"
                       : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                   )}
                 >
@@ -803,7 +803,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                   <ul className="space-y-1.5 text-xs text-[var(--muted-foreground)]">
                     {currentScenario.catalystRulesApplied.map((rule, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <span className="text-red-400 font-bold shrink-0">✔</span>
+                        <span className="text-emerald-400 font-bold shrink-0">✔</span>
                         <span>{rule}</span>
                       </li>
                     ))}
@@ -828,7 +828,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
         <div className="space-y-4 animate-in fade-in duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-red-500 dark:text-red-400">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400">
                 Visual System Blueprint
               </span>
               <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)] mt-0.5">
@@ -878,7 +878,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
             ].map((rule) => (
               <div key={rule.num} className="p-4 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-red-400 px-2 py-0.5 rounded bg-red-500/10 border border-red-500/20">
+                  <span className="text-[10px] font-mono font-bold text-blue-400 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20">
                     Rule {rule.num}
                   </span>
                   <span className="text-[10px] font-mono text-[var(--muted-foreground)]">{rule.flag}</span>

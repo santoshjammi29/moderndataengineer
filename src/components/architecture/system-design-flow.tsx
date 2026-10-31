@@ -136,9 +136,9 @@ export function SystemDesignFlow({
       name: "FinOps Unit Economics",
       subtitle: "Cost Attribution & Right-Sizing",
       icon: Coins,
-      color: "text-rose-400",
-      bgColor: "bg-rose-500/10",
-      borderColor: "border-rose-500/30",
+      color: "text-teal-400",
+      bgColor: "bg-teal-500/10",
+      borderColor: "border-teal-500/30",
       description:
         "Engineer cloud cost guardrails: automated idle cluster termination, spot compute arbitrage for stateless transformations, policy-as-code resource tagging, and per-query cost attribution.",
       keyTechniques: [

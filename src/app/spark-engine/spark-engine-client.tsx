@@ -329,7 +329,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
       <div className="relative overflow-hidden rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 shadow-xs isolate">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="space-y-1 max-w-4xl 2xl:max-w-6xl">
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-red-500/10 border border-red-500/20 text-[10px] font-semibold text-red-400">
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[10px] font-semibold text-blue-400">
               <Zap size={11} />
               <span>Step 3 · Distributed Engine Internals</span>
             </div>
@@ -344,7 +344,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
 
           <div className="flex items-center gap-2 shrink-0">
             <div className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-center">
-              <div className="text-sm sm:text-base font-bold text-red-400 leading-none">Spark 4.0</div>
+              <div className="text-sm sm:text-base font-bold text-blue-400 leading-none">Spark 4.0</div>
               <div className="text-[10px] text-[var(--muted-foreground)] font-medium mt-0.5">Ready Engine</div>
             </div>
             <div className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-center">
@@ -356,9 +356,9 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
       </div>
 
       {/* Dedicated Catalyst Optimizer & Spark Visualizer Portal Banner */}
-      <div className="p-3.5 sm:p-4 rounded-xl border border-red-500/40 bg-gradient-to-r from-red-600/15 via-purple-600/10 to-amber-600/10 flex flex-col sm:flex-row items-center justify-between gap-3.5 shadow-xs">
+      <div className="p-3.5 sm:p-4 rounded-xl border border-blue-500/30 bg-gradient-to-r from-blue-600/15 via-purple-600/10 to-amber-600/10 flex flex-col sm:flex-row items-center justify-between gap-3.5 shadow-xs">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+          <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <Cpu size={18} />
           </div>
           <div className="min-w-0">
@@ -366,7 +366,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
               <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">
                 Catalyst Optimizer &amp; Spark Physical Visualizer
               </h4>
-              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
                 Dedicated Lab Page
               </span>
             </div>
@@ -377,7 +377,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
         </div>
         <Link
           href="/spark-catalyst"
-          className="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-xs transition-colors"
+          className="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors"
         >
           <span>Launch Catalyst Visualizer</span>
           <ArrowRight size={13} />
@@ -385,9 +385,9 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
       </div>
 
       {/* Databricks & Spark Core Cheat Sheet Cross-Link */}
-      <div className="p-3 sm:p-3.5 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-500/10 via-amber-500/5 to-purple-500/5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+      <div className="p-3 sm:p-3.5 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-purple-500/5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-red-500/15 text-red-500 dark:text-red-400 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
             <Flame size={16} />
           </div>
           <div className="min-w-0">
@@ -395,7 +395,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
               <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">
                 Databricks &amp; Spark Core Architecture Cheat Sheets
               </h4>
-              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-red-500/15 text-red-400 border border-red-500/30">
+              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
                 48 Cards &amp; Wall Posters
               </span>
             </div>
@@ -407,7 +407,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
         <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
           <Link
             href="/cheat-sheet?tab=databricks&domain=spark_core"
-            className="flex-1 sm:flex-none text-center px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-xs transition-colors"
+            className="flex-1 sm:flex-none text-center px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors"
           >
             Spark Core Cheat Sheet &rarr;
           </Link>
@@ -416,7 +416,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
             download="databricks_spark_core_cheatsheet.pdf"
             className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-xs font-semibold text-[var(--foreground)] transition-colors"
           >
-            <Download size={13} className="text-red-400" />
+            <Download size={13} className="text-blue-400" />
             <span>PDF (2p)</span>
           </a>
         </div>
@@ -538,10 +538,10 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
           {/* 3 Milestones */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             <div className="p-3 sm:p-3.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] space-y-1.5">
-              <div className="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center font-bold">
+              <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">
                 <GitMerge size={15} />
               </div>
-              <div className="text-[10px] font-bold text-red-400 uppercase tracking-wider">
+              <div className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
                 Unification Breakthrough
               </div>
               <h3 className="text-sm font-bold text-[var(--foreground)]">Unified Data Plane</h3>
@@ -637,7 +637,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                 { num: "03", iconComponent: ShieldCheck, iconColor: "text-amber-400", title: "Avoid Row-by-Row UDFs", desc: "Python/Scala UDFs bypass Catalyst optimization and force row-by-row object instantiation. Use native Spark SQL expressions or vectorized Pandas-UDFs." },
                 { num: "04", iconComponent: Activity, iconColor: "text-emerald-400", title: "Enforce Dynamic Watermarking", desc: "Stateful Structured Streaming applications must enforce retention limits with watermarks. Uncapped state expansion triggers OutOfMemory errors." },
                 { num: "05", iconComponent: GitMerge, iconColor: "text-cyan-400", title: "Truncate Long Lineage DAGs", desc: "Long lineage graphs overwhelm the Driver JVM call stack. Break long DAGs in iterative algorithms by periodically calling .checkpoint() to disk." },
-                { num: "06", iconComponent: Zap, iconColor: "text-red-400", title: "Explicit Storage Unpersist", desc: "DataFrames persisted via .cache() or .persist() remain in memory indefinitely. Always call .unpersist() as soon as downstream stages complete." },
+                { num: "06", iconComponent: Zap, iconColor: "text-amber-400", title: "Explicit Storage Unpersist", desc: "DataFrames persisted via .cache() or .persist() remain in memory indefinitely. Always call .unpersist() as soon as downstream stages complete." },
               ].map((rule) => {
                 const RuleIcon = rule.iconComponent;
                 return (
@@ -703,7 +703,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
             <div className="lg:col-span-2 rounded-xl bg-[#090d13] border border-white/10 p-4 space-y-3 font-mono text-xs text-slate-300">
               <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
                   <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
                   <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                   <span className="text-[10px] text-slate-400 ml-1.5">spark-physical-plan.scala</span>

@@ -120,9 +120,9 @@ export function EnterpriseStackFlow({
       name: "6. Serving & Analytics",
       subtitle: "Power BI Direct Lake & RAG",
       icon: BarChart,
-      color: "text-rose-400",
-      bgColor: "bg-rose-500/10",
-      borderColor: "border-rose-500/30",
+      color: "text-teal-400",
+      bgColor: "bg-teal-500/10",
+      borderColor: "border-teal-500/30",
       description:
         "Low-latency business consumption: Microsoft Fabric Direct Lake semantic models with in-memory VertiPaq caching, operational GraphQL APIs, and GenAI vector search pipelines.",
       keyTechniques: [

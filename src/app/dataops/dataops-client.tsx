@@ -431,7 +431,7 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                           </div>
 
                           <div className="pt-1.5 border-t border-[var(--border)]">
-                            <div className="font-semibold text-rose-400 flex items-center gap-1.5 text-xs">
+                            <div className="font-semibold text-amber-400 flex items-center gap-1.5 text-xs">
                               <AlertTriangle size={14} />
                               Common Traps & Anti-Patterns
                             </div>
@@ -614,7 +614,7 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                         </div>
 
                         <div className="pt-2 border-t border-[var(--border)]">
-                          <span className="font-semibold text-rose-400 flex items-center gap-1.5 text-xs mb-1">
+                          <span className="font-semibold text-amber-400 flex items-center gap-1.5 text-xs mb-1">
                             <AlertTriangle size={13} />
                             Critical Gotchas to Watch For
                           </span>
@@ -832,7 +832,7 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                 </div>
 
                 <div className="pt-2 border-t border-[var(--border)]">
-                  <div className="font-bold text-rose-400 flex items-center gap-1.5 text-xs mb-1.5">
+                  <div className="font-bold text-amber-400 flex items-center gap-1.5 text-xs mb-1.5">
                     <AlertTriangle size={14} />
                     Catastrophic Failure Modes
                   </div>
@@ -879,8 +879,8 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
             </div>
             <div className="flex items-center gap-3 flex-wrap text-[11px]">
               <span className="flex items-center gap-1.5 font-medium">
-                <span className="w-3 h-3 rounded-full bg-red-500 inline-block shadow-xs" />
-                <span className="text-[var(--foreground)]">Red: Schedulers & Compute (Airflow, Databricks, Spark)</span>
+                <span className="w-3 h-3 rounded-full bg-indigo-500 inline-block shadow-xs" />
+                <span className="text-[var(--foreground)]">Indigo: Schedulers & Compute (Airflow, Databricks, Spark)</span>
               </span>
               <span className="flex items-center gap-1.5 font-medium">
                 <span className="w-3 h-3 rounded-full bg-blue-500 inline-block shadow-xs" />
@@ -933,9 +933,9 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                     1. Ingestion & Orchestration
                   </div>
 
-                  {/* Red Card: Airflow */}
-                  <div className="p-3 rounded-xl border-2 border-red-500/50 bg-red-500/5 shadow-xs relative">
-                    <div className="text-[10px] font-bold text-red-500 uppercase tracking-wider">
+                  {/* Indigo Card: Airflow */}
+                  <div className="p-3 rounded-xl border-2 border-indigo-500/50 bg-indigo-500/5 shadow-xs relative">
+                    <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">
                       Master Orchestrator
                     </div>
                     <div className="text-sm font-bold text-[var(--foreground)] mt-0.5">
@@ -944,7 +944,7 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                     <p className="text-[10px] text-[var(--muted-foreground)] mt-1">
                       Cron DAGs, SLA Monitors, Deferrable Operators
                     </p>
-                    <div className="mt-2 text-[9px] font-mono bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded border border-red-500/20">
+                    <div className="mt-2 text-[9px] font-mono bg-indigo-500/10 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/20">
                       Git-Sync Sidecar (30s)
                     </div>
                   </div>
@@ -988,9 +988,9 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                     </div>
                   </div>
 
-                  {/* Red Card: Databricks Auto Loader */}
-                  <div className="p-3 rounded-xl border-2 border-red-500/50 bg-red-500/5 shadow-xs relative">
-                    <div className="text-[10px] font-bold text-red-500 uppercase tracking-wider">
+                  {/* Indigo Card: Databricks Auto Loader */}
+                  <div className="p-3 rounded-xl border-2 border-indigo-500/50 bg-indigo-500/5 shadow-xs relative">
+                    <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">
                       Streaming Ingest
                     </div>
                     <div className="text-sm font-bold text-[var(--foreground)] mt-0.5">
@@ -1008,9 +1008,9 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                     3. Cleansing & Curation (Silver)
                   </div>
 
-                  {/* Red Card: Databricks Spark */}
-                  <div className="p-3 rounded-xl border-2 border-red-500/50 bg-red-500/5 shadow-xs relative">
-                    <div className="text-[10px] font-bold text-red-500 uppercase tracking-wider">
+                  {/* Indigo Card: Databricks Spark */}
+                  <div className="p-3 rounded-xl border-2 border-indigo-500/50 bg-indigo-500/5 shadow-xs relative">
+                    <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">
                       Transformation Engine
                     </div>
                     <div className="text-sm font-bold text-[var(--foreground)] mt-0.5">
@@ -1019,7 +1019,7 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                     <p className="text-[10px] text-[var(--muted-foreground)] mt-1">
                       PySpark MERGE INTO, Deduplication, DLT Expectations
                     </p>
-                    <div className="mt-2 text-[9px] font-mono bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded border border-red-500/20">
+                    <div className="mt-2 text-[9px] font-mono bg-indigo-500/10 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/20">
                       DABs Deployment (databricks.yml)
                     </div>
                   </div>

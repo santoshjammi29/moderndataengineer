@@ -218,16 +218,16 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "code-matrix", label: "Polyglot Code Matrix", shortLabel: "Polyglot Matrix", href: "/modern-stack?tab=matrix", category: "Coding", categoryColor: "cyan", icon: FileCode2, badge: "Matrix" },
   
   // Visual Blueprints & Diagrams (Clubbed)
-  { id: "arch-diagrams", label: "Whiteboard Blueprints", shortLabel: "Blueprints", href: "/architecture?tab=diagrams", category: "Images & Diagrams", categoryColor: "rose", icon: Sparkles, badge: "42" },
-  { id: "dataops-diagram", label: "Whiteboard Architecture Flow", shortLabel: "Architecture Flow", href: "/dataops?tab=diagram", category: "Images & Diagrams", categoryColor: "rose", icon: Layers, badge: "Flow" },
-  { id: "modern-blueprints", label: "Modern Stack Blueprints", shortLabel: "Stack Blueprints", href: "/modern-stack?tab=blueprints", category: "Images & Diagrams", categoryColor: "rose", icon: Cpu, badge: "Blueprints" },
+  { id: "arch-diagrams", label: "Whiteboard Blueprints", shortLabel: "Blueprints", href: "/architecture?tab=diagrams", category: "Images & Diagrams", categoryColor: "teal", icon: Sparkles, badge: "42" },
+  { id: "dataops-diagram", label: "Whiteboard Architecture Flow", shortLabel: "Architecture Flow", href: "/dataops?tab=diagram", category: "Images & Diagrams", categoryColor: "teal", icon: Layers, badge: "Flow" },
+  { id: "modern-blueprints", label: "Modern Stack Blueprints", shortLabel: "Stack Blueprints", href: "/modern-stack?tab=blueprints", category: "Images & Diagrams", categoryColor: "teal", icon: Cpu, badge: "Blueprints" },
   
   // Interview Drill Hub / Q&A (Clubbed) - Target Company Intel at the last
   { id: "qa-prep", label: "Question Drill Bank", shortLabel: "Q&A Drill Bank", href: "/qa-prep", category: "Q&A", categoryColor: "amber", icon: MessageSquare, badge: "6.8k+" },
   { id: "company-research", label: "Target Company Intel", shortLabel: "Company Intel", href: "/company-research", category: "Q&A", categoryColor: "amber", icon: Briefcase, badge: "156" },
   
   // Workspace
-  { id: "studio", label: "My Studio", shortLabel: "My Studio", href: "/studio", category: "Workspace", categoryColor: "rose", icon: User, badge: "Personal" },
+  { id: "studio", label: "My Studio", shortLabel: "My Studio", href: "/studio", category: "Workspace", categoryColor: "indigo", icon: User, badge: "Personal" },
 ];
 
 /**

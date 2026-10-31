@@ -12,14 +12,14 @@ interface StatCardProps {
   suffix: string;
   icon: React.ElementType;
   href: string;
-  accent: "green" | "orange" | "amber" | "red" | "purple" | "sky";
+  accent: "green" | "orange" | "amber" | "indigo" | "purple" | "sky";
 }
 
 const colorMap = {
   green: "text-green-400 bg-green-900/30 border-green-800/50 dark:text-green-400 dark:bg-green-900/30 dark:border-green-800/50 [.light_&]:text-green-600 [.light_&]:bg-green-100 [.light_&]:border-green-200",
   orange: "text-orange-400 bg-orange-900/30 border-orange-800/50 dark:text-orange-400 dark:bg-orange-900/30 dark:border-orange-800/50 [.light_&]:text-orange-600 [.light_&]:bg-orange-100 [.light_&]:border-orange-200",
   amber: "text-amber-400 bg-amber-900/30 border-amber-800/50 dark:text-amber-400 dark:bg-amber-900/30 dark:border-amber-800/50 [.light_&]:text-amber-600 [.light_&]:bg-amber-100 [.light_&]:border-amber-200",
-  red: "text-red-400 bg-red-900/30 border-red-800/50 dark:text-red-400 dark:bg-red-900/30 dark:border-red-800/50 [.light_&]:text-red-600 [.light_&]:bg-red-100 [.light_&]:border-red-200",
+  indigo: "text-indigo-400 bg-indigo-900/30 border-indigo-800/50 dark:text-indigo-400 dark:bg-indigo-900/30 dark:border-indigo-800/50 [.light_&]:text-indigo-600 [.light_&]:bg-indigo-100 [.light_&]:border-indigo-200",
   purple: "text-purple-400 bg-purple-900/30 border-purple-800/50 dark:text-purple-400 dark:bg-purple-900/30 dark:border-purple-800/50 [.light_&]:text-purple-600 [.light_&]:bg-purple-100 [.light_&]:border-purple-200",
   sky: "text-sky-400 bg-sky-900/30 border-sky-800/50 dark:text-sky-400 dark:bg-sky-900/30 dark:border-sky-800/50 [.light_&]:text-sky-600 [.light_&]:bg-sky-100 [.light_&]:border-sky-200",
 };
@@ -66,7 +66,7 @@ export function StatCards() {
     { title: "Core Concepts", value: 679, suffix: "+", icon: BookOpen, href: "/concepts", accent: "green" },
     { title: "Interview Q&As", value: 7080, suffix: "+", icon: MessageSquare, href: "/qa-prep", accent: "orange" },
     { title: "Coding Sheets", value: 178, suffix: "+", icon: FileCode2, href: "/code-practice", accent: "amber" },
-    { title: "Spark Engine", value: 85, suffix: "+", icon: Zap, href: "/spark-engine", accent: "red" },
+    { title: "Spark Engine", value: 85, suffix: "+", icon: Zap, href: "/spark-engine", accent: "indigo" },
     { title: "Arch Scenarios", value: 3206, suffix: "+", icon: Layers, href: "/architecture", accent: "purple" },
     { title: "GCC Firms", value: 156, suffix: "+", icon: Building2, href: "/company-research", accent: "sky" },
   ];

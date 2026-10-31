@@ -475,9 +475,9 @@ export function CodeBlock({
         {/* Left: Window Controls + Filename + Badge */}
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="flex items-center gap-1 shrink-0" aria-hidden="true">
-            <span className="w-2 h-2 rounded-full bg-red-500/70 inline-block" />
-            <span className="w-2 h-2 rounded-full bg-amber-500/70 inline-block" />
-            <span className="w-2 h-2 rounded-full bg-emerald-500/70 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-slate-500/60 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-slate-500/60 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-slate-500/60 inline-block" />
           </div>
 
           <div className="flex items-center gap-1.5 truncate">

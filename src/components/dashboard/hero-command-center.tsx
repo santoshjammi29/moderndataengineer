@@ -113,12 +113,12 @@ const PILLARS: PillarItem[] = [
     id: "visuals",
     title: "4. Visual Blueprints & Diagrams",
     badge: "42 Whiteboards · Interactive Flows",
-    badgeColor: "bg-rose-500/15 text-rose-400 border-rose-500/30",
+    badgeColor: "bg-teal-500/15 text-teal-400 border-teal-500/30",
     icon: Sparkles,
-    iconColor: "text-rose-400",
-    accentBg: "from-rose-600/10 via-rose-500/5 to-transparent",
-    borderColor: "border-rose-500/20",
-    hoverBorder: "hover:border-rose-500/50",
+    iconColor: "text-teal-400",
+    accentBg: "from-teal-600/10 via-teal-500/5 to-transparent",
+    borderColor: "border-teal-500/20",
+    hoverBorder: "hover:border-teal-500/50",
     description:
       "Hand-drawn whiteboard architectural diagrams, system design workflows, and interactive end-to-end data pipeline flow SVGs.",
     features: [

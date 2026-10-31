@@ -18,7 +18,7 @@ export default function GlobalError({
 
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-16 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 flex items-center justify-center mb-6">
+      <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center mb-6">
         <AlertTriangle className="w-8 h-8" />
       </div>
 
@@ -30,7 +30,7 @@ export default function GlobalError({
       </p>
 
       {error?.message && (
-        <div className="max-w-xl w-full p-3 mb-6 rounded-lg bg-[var(--card)] border border-[var(--border)] text-left font-mono text-[11px] text-red-400 overflow-x-auto">
+        <div className="max-w-xl w-full p-3 mb-6 rounded-lg bg-[var(--card)] border border-[var(--border)] text-left font-mono text-[11px] text-amber-400 overflow-x-auto">
           {error.message}
         </div>
       )}

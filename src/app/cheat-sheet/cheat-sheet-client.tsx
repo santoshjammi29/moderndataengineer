@@ -299,13 +299,13 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
           className={cn(
             "flex items-center gap-1.5 px-4 sm:px-5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap",
             activeTab === "databricks"
-              ? "bg-red-600 text-white shadow-xs"
+              ? "bg-amber-600 text-white shadow-xs"
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           )}
         >
-          <Flame size={13} className={activeTab === "databricks" ? "text-white" : "text-red-400"} />
+          <Flame size={13} className={activeTab === "databricks" ? "text-white" : "text-amber-400"} />
           <span>Databricks Cheat Sheets</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded-full font-mono bg-red-500/20 text-red-200">
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full font-mono bg-amber-500/20 text-amber-200">
             {databricksData.cards.length} Cards &amp; PDFs
           </span>
         </button>
@@ -336,23 +336,23 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
         /* --- DATABRICKS ARCHITECTURE & CODING VIEW --- */
         <div className="space-y-4">
           {/* Consolidated Subpage Banner */}
-          <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2.5">
-              <span className="p-2 rounded-lg bg-red-500/20 text-red-400 shrink-0">
+              <span className="p-2 rounded-lg bg-amber-500/20 text-amber-400 shrink-0">
                 <Flame size={16} />
               </span>
               <div>
-                <div className="font-semibold text-red-200">
+                <div className="font-semibold text-amber-200">
                   All Databricks Coding Consolidated Under Single Subpage: /code-practice/databricks
                 </div>
-                <div className="text-[11px] text-red-300/80">
+                <div className="text-[11px] text-amber-300/80">
                   All Databricks coding sheets, DBFS operations, transformations, Catalyst optimizations, and memory bottleneck playbooks now live in the dedicated Databricks Coding subpage under Code Practice.
                 </div>
               </div>
             </div>
             <Link
               href="/code-practice/databricks"
-              className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium text-xs transition-colors flex items-center gap-1.5 shadow-xs shrink-0 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-colors flex items-center gap-1.5 shadow-xs shrink-0 cursor-pointer"
             >
               <span>Go to Databricks Coding Subpage</span>
               <ArrowRight size={13} />
@@ -419,9 +419,9 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
             </section>
 
             {/* Databricks Architecture & Coding Cheat Sheets Promotional Banner */}
-            <div className="p-3 sm:p-4 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-500/10 via-orange-500/5 to-blue-500/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div className="p-3 sm:p-4 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-blue-500/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-lg bg-red-500/15 text-red-500 dark:text-red-400 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/15 text-amber-500 dark:text-amber-400 flex items-center justify-center shrink-0">
                   <Flame size={18} />
                 </div>
                 <div className="min-w-0">
@@ -429,7 +429,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                     <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">
                       Databricks Architecture &amp; Coding Cheat Sheets
                     </h4>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/15 text-red-500 dark:text-red-400 border border-red-500/30">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-500 dark:text-amber-400 border border-amber-500/30">
                       NEW • DBR 15.4/16.0 LTS
                     </span>
                   </div>
@@ -442,7 +442,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                 <button
                   type="button"
                   onClick={() => handleTabChange("databricks")}
-                  className="px-3.5 py-1.5 rounded-lg bg-[#FF3621] hover:bg-[#e0301d] text-white text-xs font-semibold transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>Explore 48 Cards</span>
                   <ArrowRight size={13} />
@@ -468,7 +468,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                   download="databricks_master_cheatsheet.pdf"
                   className="px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-xs font-semibold text-[var(--foreground)] transition-colors flex items-center gap-1.5"
                 >
-                  <Download size={13} className="text-red-400" />
+                  <Download size={13} className="text-amber-400" />
                   <span>Coding PDF (8p)</span>
                 </a>
               </div>

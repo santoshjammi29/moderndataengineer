@@ -344,19 +344,19 @@ export function CodePracticeClient({ initialData }: CodePracticeClientProps) {
       />
 
       {/* Databricks Dedicated Coding Subpage Banner */}
-      <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-red-950/30 via-red-900/10 to-[var(--surface-1)] border border-red-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+      <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-amber-950/20 via-amber-900/10 to-[var(--surface-1)] border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
-          <span className="p-2 rounded-lg bg-red-500/20 text-red-400 shrink-0">
+          <span className="p-2 rounded-lg bg-amber-500/15 text-amber-400 shrink-0">
             <Flame size={16} />
           </span>
           <div>
-            <div className="font-semibold text-red-200 flex items-center gap-1.5">
+            <div className="font-semibold text-amber-200 flex items-center gap-1.5">
               <span>Databricks Polyglot Coding Hub Subpage</span>
-              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-red-500/30 text-red-200">
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-300">
                 148+ Ops &amp; DBFS
               </span>
             </div>
-            <div className="text-[11px] text-red-300/80">
+            <div className="text-[11px] text-amber-300/80">
               Dedicated subpage for all Databricks coding, Spark SQL, PySpark, DBFS &amp; Volumes, Catalyst optimization, and production memory triage (OOM, Spill, Skew).
             </div>
           </div>
@@ -364,7 +364,7 @@ export function CodePracticeClient({ initialData }: CodePracticeClientProps) {
         <div className="flex items-center gap-2 shrink-0 flex-wrap">
           <Link
             href="/code-practice/databricks"
-            className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium text-xs transition-colors flex items-center gap-1.5 shadow-xs shrink-0 cursor-pointer"
+            className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-colors flex items-center gap-1.5 shadow-xs shrink-0 cursor-pointer"
           >
             <span>Databricks Subpage</span>
             <ArrowRight size={13} />

@@ -424,9 +424,9 @@ export function DatabricksCodingClient({
       {/* ────────────────────────────────────────────────────────── */}
       {/* 1. TOP HEADER & HUB BANNER */}
       {/* ────────────────────────────────────────────────────────── */}
-      <div className="relative rounded-2xl bg-gradient-to-br from-red-950/30 via-[var(--surface-1)] to-[var(--surface-1)] border border-red-500/20 p-4 sm:p-5 shadow-xs overflow-hidden">
+      <div className="relative rounded-2xl bg-gradient-to-br from-amber-950/20 via-[var(--surface-1)] to-[var(--surface-1)] border border-amber-500/20 p-4 sm:p-5 shadow-xs overflow-hidden">
         {/* Subtle background glow */}
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
           <div className="space-y-2">
@@ -439,8 +439,8 @@ export function DatabricksCodingClient({
                 <span>Code Practice</span>
               </Link>
               <span className="text-[var(--muted-foreground)]">/</span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/30">
-                <Flame size={12} className="text-red-400" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                <Flame size={12} className="text-amber-400" />
                 <span>Databricks Coding Hub</span>
               </span>
               <span className="text-xs text-[var(--muted-foreground)]">
@@ -480,7 +480,7 @@ export function DatabricksCodingClient({
             <a
               href="/api/download/pdf/databricks_master_cheatsheet.pdf"
               download="databricks_master_cheatsheet.pdf"
-              className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs transition-all flex items-center gap-2 shadow-xs cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all flex items-center gap-2 shadow-xs cursor-pointer"
             >
               <Download size={14} />
               <span>Download Master PDF (8 Pages)</span>
@@ -539,7 +539,7 @@ export function DatabricksCodingClient({
               className={cn(
                 "flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all whitespace-nowrap cursor-pointer",
                 isActive
-                  ? "bg-red-600 text-white shadow-xs"
+                  ? "bg-blue-600 text-white shadow-xs"
                   : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
               )}
             >
@@ -561,7 +561,7 @@ export function DatabricksCodingClient({
             placeholder="Search Databricks operations, SQL, PySpark, DBFS, OOM, spill, or keywords..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20"
           />
         </div>
 
@@ -583,7 +583,7 @@ export function DatabricksCodingClient({
               className={cn(
                 "px-2.5 py-1 text-[11px] font-semibold rounded-lg transition-all whitespace-nowrap cursor-pointer",
                 selectedCategory === cat.id
-                  ? "bg-red-600 text-white shadow-xs"
+                  ? "bg-blue-600 text-white shadow-xs"
                   : "bg-[var(--surface-2)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
               )}
             >
@@ -602,7 +602,7 @@ export function DatabricksCodingClient({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
-              <Bug size={16} className="text-red-400" />
+              <Bug size={16} className="text-amber-400" />
               <span>Production Issues &amp; Memory Bottlenecks Triage ({filteredBottlenecks.length})</span>
             </h2>
             <span className="text-[11px] text-[var(--muted-foreground)]">
@@ -614,7 +614,7 @@ export function DatabricksCodingClient({
             {filteredBottlenecks.map((playbook) => {
               const sevColor =
                 playbook.severity === "CRITICAL"
-                  ? "bg-red-500/10 text-red-400 border-red-500/30"
+                  ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
                   : playbook.severity === "HIGH"
                   ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
                   : "bg-blue-500/10 text-blue-400 border-blue-500/30";
@@ -622,7 +622,7 @@ export function DatabricksCodingClient({
               return (
                 <div
                   key={playbook.id}
-                  className="rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3.5 space-y-3 flex flex-col justify-between hover:border-red-500/40 transition-colors"
+                  className="rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3.5 space-y-3 flex flex-col justify-between hover:border-amber-500/40 transition-colors"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
@@ -640,7 +640,7 @@ export function DatabricksCodingClient({
 
                     <div className="text-xs space-y-1.5 text-[var(--muted-foreground)]">
                       <div>
-                        <strong className="text-red-300">Symptom:</strong> {playbook.symptom}
+                        <strong className="text-amber-300">Symptom:</strong> {playbook.symptom}
                       </div>
                       <div>
                         <strong className="text-amber-300">Root Cause:</strong> {playbook.rootCause}
@@ -747,7 +747,7 @@ export function DatabricksCodingClient({
               const isOpen = openCardId === item.id;
               const diffColor =
                 item.difficulty === "HARD"
-                  ? "bg-red-500/10 text-red-400 border-red-500/20"
+                  ? "bg-purple-500/10 text-purple-300 border-purple-500/20"
                   : item.difficulty === "MEDIUM"
                   ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                   : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";

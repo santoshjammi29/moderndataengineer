@@ -167,18 +167,18 @@ export function DatabricksCheatsheetView({
       )}
 
       {/* Hero Header Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0c1427] via-[#080c15] to-[#120e24] border border-red-500/20 p-4 sm:p-5 shadow-lg isolate">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0c1427] via-[#080c15] to-[#120e24] border border-amber-500/20 p-4 sm:p-5 shadow-lg isolate">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             {/* Databricks Badge */}
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
               <Flame size={13} />
               <span>DBR 15.4 / 16.0 LTS • Production Engineering Suite</span>
             </div>
 
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
               Databricks Architecture &amp;{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-orange-400 to-amber-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-300">
                 Coding Cheat Sheets
               </span>
             </h1>
@@ -190,7 +190,7 @@ export function DatabricksCheatsheetView({
             {/* Quick Metrics Bar */}
             <div className="pt-1 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-400">
               <span className="flex items-center gap-1 text-slate-200 font-semibold bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/60">
-                <CheckCircle2 size={13} className="text-red-400" />
+                <CheckCircle2 size={13} className="text-amber-400" />
                 48 Production Cards
               </span>
               <span className="flex items-center gap-1 text-slate-200 font-semibold bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/60">
@@ -209,7 +209,7 @@ export function DatabricksCheatsheetView({
             <a
               href="/api/download/pdf/databricks_master_cheatsheet.pdf"
               download="databricks_master_cheatsheet.pdf"
-              className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 active:scale-98 text-white text-xs font-semibold shadow-md transition-all cursor-pointer"
+              className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-98 text-white text-xs font-semibold shadow-md transition-all cursor-pointer"
             >
               <Download size={14} />
               <span>Download Master PDF (8 Pages)</span>
@@ -246,7 +246,7 @@ export function DatabricksCheatsheetView({
           className={cn(
             "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer",
             selectedDomain === "ALL"
-              ? "bg-red-600 text-white font-semibold shadow-sm"
+              ? "bg-blue-600 text-white font-semibold shadow-sm"
               : "text-slate-400 hover:text-white hover:bg-slate-800/60"
           )}
         >
@@ -386,7 +386,7 @@ export function DatabricksCheatsheetView({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search all 48 cards by title, tag, code syntax, or engine mechanics..."
-            className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0c1427] border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+            className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0c1427] border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
           />
           {searchQuery && (
             <button
@@ -409,7 +409,7 @@ export function DatabricksCheatsheetView({
             <button
               type="button"
               onClick={handleResetFilters}
-              className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+              className="flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
             >
               <RefreshCw size={11} />
               <span>Reset</span>
@@ -432,7 +432,7 @@ export function DatabricksCheatsheetView({
       ) : (
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-[#0c1427] py-16 px-4 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/10 text-red-400 mb-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 mb-4">
             <Search size={22} />
           </div>
           <h3 className="text-base font-bold text-white">No Databricks Cheat Cards Found</h3>
@@ -442,7 +442,7 @@ export function DatabricksCheatsheetView({
           <button
             type="button"
             onClick={handleResetFilters}
-            className="mt-4 flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 active:scale-95 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            className="mt-4 flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
           >
             <RefreshCw size={13} />
             <span>Reset All Filters</span>

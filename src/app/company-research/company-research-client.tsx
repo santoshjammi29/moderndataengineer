@@ -509,7 +509,7 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
             {hasActiveFilters && (
               <button
                 onClick={handleResetFilters}
-                className="ml-2 text-red-500 hover:text-red-400 font-medium inline-flex items-center gap-0.5 cursor-pointer"
+                className="ml-2 text-amber-400 hover:text-amber-300 font-medium inline-flex items-center gap-0.5 cursor-pointer"
                 title="Reset all filters"
               >
                 <RotateCcw size={10} />

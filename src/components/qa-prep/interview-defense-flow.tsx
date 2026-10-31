@@ -86,9 +86,9 @@ export function InterviewDefenseFlow({
       name: "4. Mitigate Failure Cases",
       subtitle: "Out-of-Order, Skew & Drift",
       icon: ShieldAlert,
-      color: "text-rose-400",
-      bgColor: "bg-rose-500/10",
-      borderColor: "border-rose-500/30",
+      color: "text-amber-400",
+      bgColor: "bg-amber-500/10",
+      borderColor: "border-amber-500/30",
       description:
         "Demonstrate production battle-hardening: handle out-of-order streaming events via watermarking, eliminate skew stragglers with dynamic split tasks, and quarantine schema violations via Dead-Letter Queues.",
       keyTechniques: [

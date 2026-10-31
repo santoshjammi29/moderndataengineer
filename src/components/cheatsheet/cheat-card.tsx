@@ -42,13 +42,13 @@ const CATEGORY_COLORS: Record<CheatCodeCategory, { text: string; bg: string; bor
   "Spark Core": { text: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20" },
   "Spark Optimization": { text: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/20" },
   Orchestration: { text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20" },
-  "Debugging & Observability": { text: "text-rose-400", bg: "bg-rose-500/10", border: "border-rose-500/20" },
+  "Debugging & Observability": { text: "text-sky-400", bg: "bg-sky-500/10", border: "border-sky-500/20" },
   "SQL & Storage": { text: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
   "Production Best Practices": { text: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
 };
 
 const IMPACT_BADGES: Record<CheatCodeImpact, { text: string; bg: string; border: string }> = {
-  Critical: { text: "text-red-400", bg: "bg-red-500/15", border: "border-red-500/30" },
+  Critical: { text: "text-amber-400", bg: "bg-amber-500/15", border: "border-amber-500/30" },
   "High Impact": { text: "text-orange-400", bg: "bg-orange-500/15", border: "border-orange-500/30" },
   "Architect Level": { text: "text-purple-400", bg: "bg-purple-500/15", border: "border-purple-500/30" },
   "Quick Win": { text: "text-emerald-400", bg: "bg-emerald-500/15", border: "border-emerald-500/30" },
@@ -155,7 +155,7 @@ export function CheatCard({
 
       {/* Problem Callout */}
       <div className="mt-2 p-2.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs text-[var(--foreground)] leading-relaxed break-words whitespace-normal">
-        <span className="font-semibold text-rose-400 block mb-0.5">Problem / Challenge:</span>
+        <span className="font-semibold text-amber-400 block mb-0.5">Problem / Challenge:</span>
         {cheat.problem}
       </div>
 

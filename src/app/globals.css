@@ -57,14 +57,14 @@ html.dark {
   --color-architect: #3b82f6;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
-  --color-danger: #ef4444;
+  --color-danger: #f59e0b;
   --color-info: #3b82f6;
   
   /* Stat card accents */
   --stat-green: #16a34a;
   --stat-orange: #ea580c;
   --stat-amber: #d97706;
-  --stat-red: #ef4444;
+  --stat-indigo: #6366f1;
   --stat-purple: #3b82f6;
   --stat-sky: #0284c7;
   
@@ -140,13 +140,13 @@ html.grey {
   --color-architect: #818cf8;
   --color-success: #34d399;
   --color-warning: #fbbf24;
-  --color-danger: #f87171;
+  --color-danger: #fbbf24;
   --color-info: #60a5fa;
 
   --stat-green: #22c55e;
   --stat-orange: #f97316;
   --stat-amber: #f59e0b;
-  --stat-red: #ef4444;
+  --stat-indigo: #818cf8;
   --stat-purple: #818cf8;
   --stat-sky: #38bdf8;
 

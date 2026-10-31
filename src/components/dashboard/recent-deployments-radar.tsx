@@ -112,7 +112,7 @@ const DEPLOYMENT_HIGHLIGHTS: DeploymentHighlight[] = [
   {
     id: "qa-prep-drills",
     badge: "Interview Practice",
-    badgeColor: "bg-rose-500/10 text-rose-500 dark:text-rose-400 border-rose-500/25",
+    badgeColor: "bg-purple-500/10 text-purple-500 dark:text-purple-400 border-purple-500/25",
     title: "6,570+ Verified Q&As & Company Intel",
     subtitle: "SM-2 spaced repetition flashcards & BigTech hiring dossiers",
     description:
@@ -126,7 +126,7 @@ const DEPLOYMENT_HIGHLIGHTS: DeploymentHighlight[] = [
     ctaLabel: "Start Question Drill",
     ctaHref: "/qa-prep",
     icon: MessageSquare,
-    iconBg: "bg-rose-600",
+    iconBg: "bg-purple-600",
   },
 ];
 

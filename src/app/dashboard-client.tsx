@@ -8,7 +8,6 @@ import { TipOfDay } from "@/components/dashboard/tip-of-day";
 import { TrendingSpotlight } from "@/components/dashboard/trending-spotlight";
 import { HomeWhiteboardsShowcase } from "@/components/dashboard/home-whiteboards-showcase";
 import { StatCards } from "@/components/dashboard/stat-cards";
-import { ArchitectDigest } from "@/components/dashboard/architect-digest";
 import { MasteryRoadmapFlow } from "@/components/guided-learning/mastery-roadmap-flow";
 
 export function DashboardClient() {
@@ -69,11 +68,6 @@ export function DashboardClient() {
           </span>
         </div>
         <StatCards />
-      </section>
-
-      {/* 8. Architect Digest Subscription */}
-      <section>
-        <ArchitectDigest />
       </section>
     </div>
   );

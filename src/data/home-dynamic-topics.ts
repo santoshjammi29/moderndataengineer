@@ -20,7 +20,7 @@ export interface FeaturedHeroGuide {
   studiedCount: string;
   href: string;
   buttonLabel: string;
-  themeColor: "purple" | "blue" | "emerald" | "amber" | "rose" | "cyan";
+  themeColor: "purple" | "blue" | "emerald" | "amber" | "indigo" | "cyan";
 }
 
 export interface SecondaryHeroCard {
@@ -107,7 +107,7 @@ export const FEATURED_HERO_GUIDES: FeaturedHeroGuide[] = [
     studiedCount: "5.1k studied",
     href: "/spark-engine",
     buttonLabel: "Explore Engine",
-    themeColor: "rose",
+    themeColor: "indigo",
   },
   {
     id: "iceberg-delta-uniform",
@@ -269,7 +269,7 @@ export const FEATURED_HERO_GUIDES: FeaturedHeroGuide[] = [
     studiedCount: "4.1k studied",
     href: "/modern-stack",
     buttonLabel: "Explore OLAP",
-    themeColor: "rose",
+    themeColor: "indigo",
   },
   {
     id: "adf-databricks-orchestration",
@@ -799,7 +799,7 @@ export const SIMULATORS_OF_THE_DAY: SimulatorOfTheDay[] = [
     description: "Simulate query execution latency across DuckDB (<100ms), Trino (<2s), and Spark (>10s) based on scan volume and SLA constraints.",
     metrics: [
       { label: "Sub-Second SLA Engine", value: "DuckDB / ClickHouse", valueColor: "text-cyan-400" },
-      { label: "Petabyte Batch Engine", value: "Apache Spark 4.0", valueColor: "text-rose-400" },
+      { label: "Petabyte Batch Engine", value: "Apache Spark 4.0", valueColor: "text-indigo-400" },
     ],
     href: "/modern-stack#simulators",
   },

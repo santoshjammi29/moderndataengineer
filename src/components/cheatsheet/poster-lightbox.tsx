@@ -116,7 +116,7 @@ export function PosterLightbox({
           <a
             href={posterUrl}
             download
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
           >
             <Download size={13} />
             <span className="hidden sm:inline">Download Poster</span>

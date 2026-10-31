@@ -87,7 +87,7 @@ export const CURRICULUM_TRACKS: CurriculumTrack[] = [
     level: "Principal & Enterprise Master",
     difficulty: "ARCHITECT",
     difficultyBadge: "Staff & Principal",
-    badgeColor: "text-rose-400 bg-rose-500/10 border-rose-500/20",
+    badgeColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
     description: "Cloud FinOps cost engineering, LLM RAG data engineering pipelines, and 32-week enterprise architecture mastery.",
     slugs: ["serverless-finops", "ai-llm-de", "architecture-mastery"],
   },
