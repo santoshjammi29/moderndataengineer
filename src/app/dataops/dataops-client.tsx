@@ -8,6 +8,7 @@ import {
   CicdAlternativeItem,
   ProjectLifecycleStage,
 } from "@/types/data";
+import { SdlcLifecycleHub } from "@/components/dataops/sdlc-lifecycle-hub";
 import { cn } from "@/lib/utils";
 import {
   Network,
@@ -69,6 +70,7 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
   const [selectedToolFilter, setSelectedToolFilter] = useState<string>("ALL");
   const [selectedCicdCategory, setSelectedCicdCategory] = useState<string>("ALL");
   const [activeStageNumber, setActiveStageNumber] = useState<number>(1);
+  const [lifecycleViewMode, setLifecycleViewMode] = useState<"sdlc152" | "classic">("classic");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({
     "adf-databricks-msi": true,
@@ -652,8 +654,42 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
       {/* ========================================================================= */}
       {currentTab === "lifecycle" && (
         <div className="space-y-4">
-          {/* Horizontal Stepper */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          {/* Mode Switcher: 360° SDLC vs Classic 6-Stage */}
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">
+            <button
+              type="button"
+              onClick={() => setLifecycleViewMode("sdlc152")}
+              className={cn(
+                "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
+                lifecycleViewMode === "sdlc152"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              )}
+            >
+              <Workflow size={13} />
+              <span>360° Enterprise SDLC (19 Phases · 152 Controls · 8 Gates)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setLifecycleViewMode("classic")}
+              className={cn(
+                "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
+                lifecycleViewMode === "classic"
+                  ? "bg-purple-600 text-white shadow-xs font-semibold"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              )}
+            >
+              <Layers size={13} />
+              <span>Classic 6-Stage Delivery Playbook</span>
+            </button>
+          </div>
+
+          {lifecycleViewMode === "sdlc152" ? (
+            <SdlcLifecycleHub />
+          ) : (
+            <div className="space-y-4">
+              {/* Horizontal Stepper */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
             {initialData.lifecycleStages.map((stage) => {
               const isActive = stage.stageNumber === activeStageNumber;
               return (
@@ -824,6 +860,8 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
               </p>
             </div>
           </div>
+            </div>
+          )}
         </div>
       )}
 

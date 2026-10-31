@@ -106,7 +106,7 @@ export const NAV_GROUPS: NavGroup[] = [
         subItems: [
           { label: "Tool Connectivity", href: "/dataops?tab=connectivity" },
           { label: "CI/CD Pipelines", href: "/dataops?tab=cicd" },
-          { label: "Lifecycle Playbook", href: "/dataops?tab=lifecycle" },
+          { label: "360° SDLC Lifecycle", href: "/dataops?tab=lifecycle", badge: "152 Controls" },
           { label: "Architecture Flow", href: "/dataops?tab=diagram" },
         ],
       },
@@ -166,6 +166,7 @@ export const NAV_GROUPS: NavGroup[] = [
         subItems: [
           { label: "Topic Tracks", href: "/guided-learning" },
           { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: "12 Paths" },
+          { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: "130 Deep Dives" },
         ],
       },
       { label: "Target Company Intel", href: "/company-research", icon: Briefcase, pill: { text: "156+", variant: "new" } },
@@ -184,6 +185,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   
   // Learning Journey
   { id: "guided-learning", label: "Guided Topic Tracks", shortLabel: "Topic Tracks", href: "/guided-learning", category: "Journey", categoryColor: "indigo", icon: Route, badge: "Path" },
+  { id: "learning-tree", label: "Master Lab & Topic Tree", shortLabel: "Lab Tree", href: "/guided-learning?tab=tree", category: "Journey", categoryColor: "indigo", icon: GitBranch, badge: "130 Dives" },
   { id: "learn", label: "Learning Portal", shortLabel: "Learn", href: "/learn", category: "Journey", categoryColor: "indigo", icon: Route, badge: "Learn" },
   { id: "learning-paths", label: "Career Curricula", shortLabel: "Career Paths", href: "/learning-paths", category: "Journey", categoryColor: "indigo", icon: GraduationCap, badge: "Curricula" },
   
@@ -202,7 +204,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "modern-compat", label: "Cloud × Table Compatibility", shortLabel: "Cloud Matrix", href: "/modern-stack?tab=compatibility", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "Matrix" },
   { id: "dataops-conn", label: "Tool Connectivity & Secrets", shortLabel: "Tool Secrets", href: "/dataops?tab=connectivity", category: "Architecture", categoryColor: "purple", icon: Network, badge: "Secrets" },
   { id: "dataops-cicd", label: "CI/CD Alternatives & Pipelines", shortLabel: "CI/CD Pipelines", href: "/dataops?tab=cicd", category: "Architecture", categoryColor: "purple", icon: GitBranch, badge: "CI/CD" },
-  { id: "dataops-lifecycle", label: "End-to-End Lifecycle Playbook", shortLabel: "Lifecycle Playbook", href: "/dataops?tab=lifecycle", category: "Architecture", categoryColor: "purple", icon: Workflow, badge: "E2E" },
+  { id: "dataops-lifecycle", label: "360° SDLC Lifecycle Playbook", shortLabel: "SDLC Lifecycle", href: "/dataops?tab=lifecycle", category: "Architecture", categoryColor: "purple", icon: Workflow, badge: "152 Controls" },
   
   // Coding & Runbooks (Clubbed)
   { id: "cheat-sheet", label: "Production Cheat Sheet", shortLabel: "Cheat Sheet", href: "/cheat-sheet", category: "Coding", categoryColor: "cyan", icon: FileCode2, badge: "Runbooks" },
@@ -356,8 +358,9 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         href: "/guided-learning",
         badge: "Tracks & Roadmaps",
         subpages: [
-          { label: "Specialized Topic Tracks", href: "/guided-learning", badge: "13 Tracks" },
+          { label: "Specialized Topic Tracks", href: "/guided-learning", badge: "14 Tracks" },
           { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: "12 Paths" },
+          { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: "130 Deep Dives" },
         ],
       },
       { label: "Question Drill Bank", href: "/qa-prep", badge: "6.8k+ Scenarios" },

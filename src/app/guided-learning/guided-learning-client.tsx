@@ -36,6 +36,7 @@ import { cn } from "@/lib/utils";
 import { LearningPath } from "@/types/data";
 import { learningPathsDb } from "@/data";
 import { CareerCurriculaView } from "@/components/guided-learning/career-curricula-view";
+import { LabTreeView } from "@/components/guided-learning/lab-tree-view";
 import {
   getTopicItems,
   getTopicCounts,
@@ -161,9 +162,10 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     [initialPaths]
   );
 
-  const [activeMainTab, setActiveMainTab] = useState<"topics" | "curricula">(() => {
+  const [activeMainTab, setActiveMainTab] = useState<"topics" | "curricula" | "tree">(() => {
     const tabParam = searchParams.get("tab");
     if (tabParam === "curricula" || defaultTab === "curricula") return "curricula";
+    if (tabParam === "tree") return "tree";
     const idParam = searchParams.get("id") || searchParams.get("card");
     if (idParam && idParam.startsWith("path-")) return "curricula";
     return "topics";
@@ -173,6 +175,8 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     const tabParam = searchParams.get("tab");
     if (tabParam === "curricula") {
       setActiveMainTab("curricula");
+    } else if (tabParam === "tree") {
+      setActiveMainTab("tree");
     } else if (tabParam === "topics") {
       setActiveMainTab("topics");
     } else {
@@ -183,13 +187,18 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     }
   }, [searchParams]);
 
-  const handleMainTabChange = useCallback((tab: "topics" | "curricula") => {
+  const handleMainTabChange = useCallback((tab: "topics" | "curricula" | "tree") => {
     setActiveMainTab(tab);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
       if (tab === "curricula") {
         url.searchParams.set("tab", "curricula");
         url.searchParams.delete("topic");
+      } else if (tab === "tree") {
+        url.searchParams.set("tab", "tree");
+        url.searchParams.delete("topic");
+        url.searchParams.delete("id");
+        url.searchParams.delete("card");
       } else {
         url.searchParams.delete("tab");
         url.searchParams.delete("id");
@@ -572,10 +581,26 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
           <GraduationCap size={13} />
           <span>Revamped Career Curricula ({paths.length} Roadmaps)</span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => handleMainTabChange("tree")}
+          className={cn(
+            "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
+            activeMainTab === "tree"
+              ? "bg-emerald-600 text-white shadow-xs font-semibold"
+              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+          )}
+        >
+          <Sparkles size={13} />
+          <span>Lab &amp; Topic Tree (130 Dives)</span>
+        </button>
       </div>
 
       {activeMainTab === "curricula" ? (
         <CareerCurriculaView paths={paths} />
+      ) : activeMainTab === "tree" ? (
+        <LabTreeView />
       ) : (
         <>
           {/* ── TOP BANNER & TRACK MATRIX ─────────────────────────────────── */}

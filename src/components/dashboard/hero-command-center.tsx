@@ -86,7 +86,7 @@ const PILLARS: PillarItem[] = [
   {
     id: "code",
     title: "3. Coding & Runbooks",
-    badge: "69 Runbooks · 164 Drills",
+    badge: "69 Runbooks · 178 Drills",
     badgeColor: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
     icon: FileCode2,
     iconColor: "text-cyan-400",
@@ -160,7 +160,7 @@ const PILLARS: PillarItem[] = [
   {
     id: "journey",
     title: "6. Learning Journey",
-    badge: "12 Curricula · 13 Tracks",
+    badge: "12 Curricula · 14 Tracks",
     badgeColor: "bg-blue-500/15 text-blue-400 border-blue-500/30",
     icon: Compass,
     iconColor: "text-blue-400",

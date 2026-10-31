@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: "Lakehouse Architecture: The Definitive Systems Guide & Blueprints",
     description:
-      "The definitive guide to Lakehouse Architecture. Master Medallion Architecture (Bronze, Silver, Gold), Delta Lake, Apache Iceberg, Microsoft Fabric OneLake, Databricks, and Apache Spark 4.0 with 10,700+ verified scenarios.",
+      "The definitive guide to Lakehouse Architecture. Master Medallion Architecture (Bronze, Silver, Gold), Delta Lake, Apache Iceberg, Microsoft Fabric OneLake, Databricks, and Apache Spark 4.0 with 11,500+ verified assets, 679 concepts, and 42 whiteboard blueprints.",
     path: "/",
     keywords: [
       "Lakehouse",
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function DashboardPage() {
   const courseSchema = generateCourseSchema(
     "Enterprise Lakehouse Architecture & Modern Data Platform Masterclass",
-    "Comprehensive preparation curriculum featuring 10,700+ technical scenarios, Spark execution simulator, and high-resolution whiteboard blueprints."
+    "Comprehensive preparation curriculum featuring 11,500+ technical assets, Spark execution simulator, and 42 high-resolution whiteboard blueprints."
   );
 
   const techArticleSchema = generateTechArticleSchema({

@@ -52,20 +52,20 @@ export const PLATFORM_CONFIG = {
     concepts: {
       title: "Core Concepts & Foundations",
       path: "/concepts",
-      badge: "660+ Concepts",
-      description: "Interactive architecture lexicon, engine mechanics, and spaced repetition flashcards.",
+      badge: "679 Concepts",
+      description: "Interactive architecture lexicon, 14 topic pillars, engine mechanics, and spaced repetition flashcards.",
     },
     architecture: {
       title: "System Scenarios & Whiteboards",
       path: "/architecture",
       badge: "3,206+ Scenarios",
-      description: "Real-world data platform design challenges, 32 whiteboard blueprints, and distributed Python runbooks.",
+      description: "Real-world data platform design challenges, 42 whiteboard blueprints, and distributed Python runbooks.",
     },
     guidedLearning: {
       title: "Guided Learning Roadmaps",
       path: "/guided-learning",
-      badge: "4-Stage Mastery",
-      description: "Structured progressive learning paths from foundational concepts to principal architect level.",
+      badge: "14 Tracks · 12 Paths",
+      description: "Structured progressive learning paths, 130 production deep dives, and 152 SDLC controls from foundations to principal architect.",
     },
     sparkEngine: {
       title: "Apache Spark Engine Lab",
@@ -76,8 +76,8 @@ export const PLATFORM_CONFIG = {
     cheatSheet: {
       title: "Data Engineering Cheatsheets",
       path: "/cheat-sheet",
-      badge: "Quick Reference",
-      description: "Syntax, patterns, and best practices across PySpark, SQL, Delta Lake, and dbt.",
+      badge: "124 Reference Cards",
+      description: "Syntax, patterns, and best practices across PySpark, SQL, Delta Lake, and dbt with 7 master vector PDFs.",
     },
   },
 

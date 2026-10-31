@@ -406,3 +406,6 @@ export function getDatasetCounts(): DatasetCounts {
 
 export * from './home-dynamic-topics';
 export * from './diagrams';
+export * from './production-deep-dives-data';
+export * from './sdlc-lifecycle-data';
+export * from './learning-tree-data';

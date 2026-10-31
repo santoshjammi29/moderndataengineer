@@ -44,7 +44,7 @@ export function DashboardClient() {
         </div>
       </section>
 
-      {/* 5. Whiteboard Architecture Blueprints Showcase (32 Blueprints) */}
+      {/* 5. Whiteboard Architecture Blueprints Showcase (42 Blueprints) */}
       <section className="space-y-4">
         <HomeWhiteboardsShowcase />
       </section>

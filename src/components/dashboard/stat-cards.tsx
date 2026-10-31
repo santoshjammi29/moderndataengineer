@@ -63,11 +63,11 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 
 export function StatCards() {
   const stats: StatCardProps[] = [
-    { title: "Core Concepts", value: 660, suffix: "+", icon: BookOpen, href: "/concepts", accent: "green" },
+    { title: "Core Concepts", value: 679, suffix: "+", icon: BookOpen, href: "/concepts", accent: "green" },
     { title: "Interview Q&As", value: 7080, suffix: "+", icon: MessageSquare, href: "/qa-prep", accent: "orange" },
-    { title: "Coding Sheets", value: 164, suffix: "+", icon: FileCode2, href: "/code-practice", accent: "amber" },
+    { title: "Coding Sheets", value: 178, suffix: "+", icon: FileCode2, href: "/code-practice", accent: "amber" },
     { title: "Spark Engine", value: 85, suffix: "+", icon: Zap, href: "/spark-engine", accent: "red" },
-    { title: "Arch Scenarios", value: 3200, suffix: "+", icon: Layers, href: "/architecture", accent: "purple" },
+    { title: "Arch Scenarios", value: 3206, suffix: "+", icon: Layers, href: "/architecture", accent: "purple" },
     { title: "GCC Firms", value: 156, suffix: "+", icon: Building2, href: "/company-research", accent: "sky" },
   ];
 

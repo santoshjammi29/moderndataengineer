@@ -51,12 +51,13 @@ describe('StatCards component', () => {
     expect(hrefs).toContain('/company-research')
   })
 
-  it('renders consistent metric values (660+ concepts, 7,080+ Q&As) without getting stuck on 0+', () => {
+  it('renders consistent metric values (679+ concepts, 7,080+ Q&As, 3,206+ scenarios, 178+ drills) without getting stuck on 0+', () => {
     render(<StatCards />)
     // Must render the actual numbers, not 0+
-    expect(screen.getByText('660+')).toBeDefined()
+    expect(screen.getByText('679+')).toBeDefined()
     expect(screen.getByText('7,080+')).toBeDefined()
-    expect(screen.getByText('3,200+')).toBeDefined()
+    expect(screen.getByText('3,206+')).toBeDefined()
+    expect(screen.getByText('178+')).toBeDefined()
     expect(screen.queryByText('0+')).toBeNull()
   })
 })

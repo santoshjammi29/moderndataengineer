@@ -61,6 +61,29 @@ export async function GET() {
     <pubDate>${new Date().toUTCString()}</pubDate>
     <description>Interactive visual runtime simulator of Apache Spark 4.0 Catalyst Optimizer, Tungsten memory allocator, and shuffle stage mechanics.</description>
   </item>
+  <item>
+    <title>42 Enterprise Whiteboard Blueprints Mastery Hub</title>
+    <link>${BASE_URL}/whiteboards</link>
+    <guid>${BASE_URL}/whiteboards</guid>
+    <pubDate>${new Date().toUTCString()}</pubDate>
+    <description>42 architect-grade digital whiteboard diagrams covering 5 persona viewpoints, engine mechanisms, incident runbooks, and governance guardrails.</description>
+  </item>
+
+  <item>
+    <title>360° Data Engineering SDLC Lifecycle (19 Phases · 152 Controls · 8 Gates)</title>
+    <link>${BASE_URL}/dataops?tab=lifecycle</link>
+    <guid>${BASE_URL}/dataops?tab=lifecycle</guid>
+    <pubDate>${new Date().toUTCString()}</pubDate>
+    <description>End-to-end data platform software development lifecycle mapping product discovery to retirement across 152 controls and 8 evidence-based quality gates.</description>
+  </item>
+
+  <item>
+    <title>130 Production Deep-Dive Topics &amp; Complete Lab Tree</title>
+    <link>${BASE_URL}/guided-learning?tab=tree</link>
+    <guid>${BASE_URL}/guided-learning?tab=tree</guid>
+    <pubDate>${new Date().toUTCString()}</pubDate>
+    <description>Web-researched production engineering deep dives across Spark runtime, Structured Streaming, Delta Lake, Iceberg, Kafka KRaft, dbt Mesh, Fabric, and RAG.</description>
+  </item>
 </channel>
 </rss>`;
 
