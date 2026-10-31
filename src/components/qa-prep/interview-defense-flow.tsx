@@ -128,7 +128,7 @@ export function InterviewDefenseFlow({
       subtitle="How Principal Engineers structure high-stakes Lakehouse System Design and Technical Interview solutions."
       icon={MessageSquare}
       stages={stages}
-      defaultStageId="bottlenecks"
+      defaultStageId="scope"
       className={className}
     />
   );

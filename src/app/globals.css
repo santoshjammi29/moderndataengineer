@@ -319,8 +319,14 @@ html.text-size-5xl {
 }
 
 
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 body {
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -1574,11 +1580,6 @@ code:not(pre code) {
 .whiteboard-container-light {
   background-color: #FFFFFF !important;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Prevent layout shift and jumpy scrolling on card expansion */
-[data-virtual-container] {
-  overflow-anchor: none;
 }
 
 [id^="question-"],

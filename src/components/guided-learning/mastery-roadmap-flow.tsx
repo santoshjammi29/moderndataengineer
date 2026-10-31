@@ -142,7 +142,7 @@ export function MasteryRoadmapFlow({
       subtitle="The 6 developmental milestones from Senior Data Engineer to Principal Enterprise Lakehouse Architect."
       icon={GraduationCap}
       stages={stages}
-      defaultStageId="governance"
+      defaultStageId="compute"
       className={className}
     />
   );

@@ -142,7 +142,7 @@ export function EnterpriseStackFlow({
       subtitle="The standardized 6-tier architecture powering Global Capability Centers (GCCs) and Fortune 500 data platforms."
       icon={Building2}
       stages={stages}
-      defaultStageId="compute"
+      defaultStageId="sources"
       className={className}
     />
   );

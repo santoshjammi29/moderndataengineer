@@ -119,8 +119,8 @@ describe("Domain-Specific Flow Diagram Components", () => {
   it("renders SystemDesignFlow with 6 system design stages", () => {
     render(<SystemDesignFlow />);
     expect(screen.getByText("Staff & Principal System Design Architecture Framework")).toBeDefined();
-    expect(screen.getByText("Requirements & SLOs")).toBeDefined();
-    expect(screen.getAllByText("Storage & Table Format").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Requirements & SLOs").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("Storage & Table Format")).toBeDefined();
     expect(screen.getByText("Compute & Engine")).toBeDefined();
     expect(screen.getByText("Resilience & DR")).toBeDefined();
     expect(screen.getByText("Security & Governance")).toBeDefined();

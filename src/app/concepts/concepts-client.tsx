@@ -3,7 +3,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useDeferredValue, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import {
   Search,
   BookOpen,
@@ -332,25 +331,40 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
     return result;
   }, [initialConcepts, selectedCategory, selectedDifficulty, deferredSearch, isShuffled, shuffleSeed]);
 
-  // Window Virtualization for concepts list
-  const virtualizer = useWindowVirtualizer({
-    count: filteredConcepts.length,
-    estimateSize: () => 120,
-    overscan: 4,
-    scrollToFn: (offset, options) => {
-      if (options.adjustments !== undefined && options.adjustments !== 0) {
-        return;
-      }
-      window.scrollTo({
-        top: offset,
-        behavior: options.behavior,
-      });
-    },
-  });
+  // Progressive batch rendering with IntersectionObserver (zero blank space, rock-solid native scrolling)
+  const BATCH_SIZE = 40;
+  const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
+  const loadMoreSentinelRef = useRef<HTMLDivElement | null>(null);
 
+  // Reset visibleCount when filters change
   useEffect(() => {
-    virtualizer.shouldAdjustScrollPositionOnItemSizeChange = () => false;
-  }, [virtualizer]);
+    setVisibleCount(BATCH_SIZE);
+  }, [selectedCategory, selectedDifficulty, deferredSearch, isShuffled, shuffleSeed, initialConcepts.length]);
+
+  const displayedConcepts = useMemo(() => {
+    if (isReadAllMode) return filteredConcepts;
+    return filteredConcepts.slice(0, visibleCount);
+  }, [filteredConcepts, visibleCount, isReadAllMode]);
+
+  // IntersectionObserver to auto-load more concepts smoothly as user scrolls
+  useEffect(() => {
+    if (isReadAllMode || visibleCount >= filteredConcepts.length) return;
+
+    const sentinel = loadMoreSentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredConcepts.length));
+        }
+      },
+      { rootMargin: "600px" } // Preload 600px ahead before user hits bottom for zero blank space
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [isReadAllMode, visibleCount, filteredConcepts.length]);
 
   const toggleBookmark = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -799,18 +813,8 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
               <p className="text-xs text-[var(--muted-foreground)] mt-1">Try another keyword or category filter.</p>
             </div>
           ) : (
-            <div
-              data-virtual-container="true"
-              style={{
-                height: `${virtualizer.getTotalSize()}px`,
-                width: "100%",
-                position: "relative",
-                overflowAnchor: "none",
-              }}
-            >
-              {virtualizer.getVirtualItems().map((virtualRow) => {
-                const concept = filteredConcepts[virtualRow.index];
-                if (!concept) return null;
+            <div className="space-y-2">
+              {displayedConcepts.map((concept) => {
                 const isExpanded = isReadAllMode ? !collapsedInReadMode.has(concept.id) : expandedIds.has(concept.id);
                 const isBookmarked = bookmarks.includes(concept.id);
                 const diffStyle = difficultyColors[concept.difficulty] || difficultyColors.MEDIUM;
@@ -819,20 +823,8 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                   return (
                     <div
                       key={concept.id}
-                      data-index={virtualRow.index}
-                      ref={virtualizer.measureElement}
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        transform: `translateY(${virtualRow.start}px)`,
-                      }}
-                      className="pb-1"
-                    >
-                      <div
-                        id={`concept-${concept.id}`}
-                        className={cn(
+                      id={`concept-${concept.id}`}
+                      className={cn(
                           "rounded-lg border transition-all duration-150 overflow-hidden bg-[var(--surface-1)] scroll-mt-20",
                           isExpanded
                             ? "border-blue-500/50 shadow-xs"
@@ -964,25 +956,12 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                           </div>
                         )}
                       </div>
-                    </div>
-                  );
-                }
+                    );
+                  }
 
-                return (
-                  <div
-                    key={concept.id}
-                    data-index={virtualRow.index}
-                    ref={virtualizer.measureElement}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      transform: `translateY(${virtualRow.start}px)`,
-                    }}
-                    className="pb-2"
-                  >
+                  return (
                     <div
+                      key={concept.id}
                       id={`concept-${concept.id}`}
                       className={cn(
                         "rounded-xl border transition-all duration-200 overflow-hidden bg-[var(--surface-1)] scroll-mt-20",
@@ -1099,11 +1078,36 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                         </div>
                       )}
                     </div>
+                  );
+                })}
+
+                {/* Load More Sentinel & Pagination Controls */}
+                {!isReadAllMode && displayedConcepts.length < filteredConcepts.length && (
+                  <div ref={loadMoreSentinelRef} className="pt-4 pb-2 text-center space-y-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredConcepts.length))}
+                        className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer inline-flex items-center gap-1.5"
+                      >
+                        <ChevronDown size={14} />
+                        <span>Load More (+{Math.min(BATCH_SIZE, filteredConcepts.length - displayedConcepts.length)})</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setVisibleCount(filteredConcepts.length)}
+                        className="px-3.5 py-1.5 rounded-xl bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--foreground)] border border-[var(--border)] text-xs font-semibold transition-all cursor-pointer"
+                      >
+                        Show All ({filteredConcepts.length})
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-[var(--muted-foreground)]">
+                      Showing {displayedConcepts.length} of {filteredConcepts.length} concepts
+                    </p>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                )}
+              </div>
+            )}
         </div>
       )}
         </>

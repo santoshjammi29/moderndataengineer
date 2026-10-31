@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { AllPagesNav } from "@/components/layout/all-pages-nav";
 import { AllPagesFooter } from "@/components/layout/all-pages-footer";
@@ -75,13 +75,35 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
     expect(sparkItem?.subItems?.map((s) => s.label)).toContain("Catalyst & Visualizer");
   });
 
-  it("renders AllPagesNav with only the universal search bar at the top", () => {
+  it("renders AllPagesNav with the universal search bar and horizontal subpage navigation", () => {
     render(<AllPagesNav />);
 
     // Search bar is rendered prominently with ⌘K badge
     expect(screen.getByRole("search")).toBeDefined();
     expect(screen.getByText(/Search (?:10,700\+|11,500\+) Q&As, concepts/i)).toBeDefined();
     expect(screen.getByText("⌘K")).toBeDefined();
+
+    // Horizontal navigation with all sections is rendered
+    expect(screen.getByRole("navigation", { name: /All Sections and Subpages Navigation/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Home/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Guided Learning/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Concepts/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Architecture/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Spark Lab/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Modern Stack & DataOps/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Code Practice/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Cheat Sheets/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /Interview Bank/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /My Studio/i })).toBeDefined();
+
+    // Clicking a section's dropdown toggle reveals its subsections and subpages
+    const sparkLabToggle = screen.getByRole("button", { name: /Show subsections for Spark Lab/i });
+    act(() => {
+      fireEvent.click(sparkLabToggle);
+    });
+    expect(screen.getByText("Spark Lab Subsections")).toBeDefined();
+    expect(screen.getByRole("menuitem", { name: /Catalyst Optimizer/i })).toBeDefined();
+    expect(screen.getByRole("menuitem", { name: /Execution Visualizer/i })).toBeDefined();
   });
 
   it("renders AllPagesFooter with revamped, simple, and meaningful platform notes and metrics", () => {

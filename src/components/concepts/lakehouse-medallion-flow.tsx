@@ -160,7 +160,7 @@ export function LakehouseMedallionFlow({
       subtitle="How streaming events and batch datasets flow through Bronze, Silver, and Gold layers into enterprise semantic models."
       icon={Layers}
       stages={stages}
-      defaultStageId="silver"
+      defaultStageId="ingestion"
       className={className}
     />
   );

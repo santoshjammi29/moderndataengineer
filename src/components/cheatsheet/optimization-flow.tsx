@@ -107,10 +107,10 @@ interface OptimizationFlowProps {
 }
 
 export function OptimizationFlow({ onSelectCheatCode }: OptimizationFlowProps) {
-  const [selectedStageId, setSelectedStageId] = useState<string>("aqe");
+  const [selectedStageId, setSelectedStageId] = useState<string>("input");
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
-  const activeStage = FLOW_STAGES.find((s) => s.id === selectedStageId) || FLOW_STAGES[4];
+  const activeStage = FLOW_STAGES.find((s) => s.id === selectedStageId) || FLOW_STAGES[0];
 
   return (
     <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-lg backdrop-blur-xl transition-all">

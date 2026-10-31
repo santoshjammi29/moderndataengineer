@@ -128,7 +128,7 @@ export function PipelineExecutionFlow({
       subtitle="How distributed PySpark code transforms, shuffles, and commits ACID transactions into Delta Lake."
       icon={Terminal}
       stages={stages}
-      defaultStageId="transform"
+      defaultStageId="read"
       className={className}
     />
   );

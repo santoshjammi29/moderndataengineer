@@ -1,5 +1,38 @@
 # Changelog
 
+## v1.6 — Progressive Batch Rendering, Global Scroll Stabilization, Stage 1 Default Flows & Universal Navigation Bar (2026-11-01)
+
+### 🚀 Progressive Batch Rendering & Zero Blank Space (`/qa-prep`, `/concepts`)
+- **Eliminated Window Virtualizer Blank Spots**: Replaced `@tanstack/react-virtual` absolute-positioning virtualization (`translateY`) in `/qa-prep` and `/concepts` with progressive batch rendering (`visibleCount = 40`, `BATCH_SIZE = 40`) and an `IntersectionObserver` sentinel (`rootMargin: "600px"`).
+- **Natural Document Flow**: Renders cards in native document flow, eliminating scroll desynchronization, layout popping, and blank spaces during fast scrolling or card expansions.
+- **Accessible Progressive Controls**: Added "Load More (+40)" and "Show All ({total})" buttons as robust fallbacks, preserving question anchors (`#question-${id}`) and keyboard navigation.
+
+### 📜 Global Smooth Scrolling & Layout Stabilization
+- **Restored Native Momentum Scrolling**: Replaced `overscroll-behavior-y: none;` on `body` in `src/app/globals.css` with `overscroll-behavior-y: auto; overflow-x: hidden;` to re-enable native trackpad and touchscreen inertia chaining across all pages and layouts.
+- **Smooth Viewport Traversal**: Added `html { scroll-behavior: smooth; overflow-x: hidden; }` and updated `src/app/layout.tsx` to `min-h-dvh overflow-x-hidden`.
+- **Anchor Stability**: Removed `[data-virtual-container] { overflow-anchor: none; }` to restore browser scroll-anchoring stability.
+
+### 🧭 Stage 1 Default Initialization Across All Flow Diagrams
+- **Consistent Stage 1 Entry Point**: Updated all 8 interactive flow diagram components across the entire platform to default to Stage 1 on load:
+  1. `MasteryRoadmapFlow` (`/guided-learning`): defaults to Stage 1 ("Compute & Engine Foundations").
+  2. `EnterpriseStackFlow` (`/company-research`): defaults to Stage 1 ("Source Systems & CDC Ingestion").
+  3. `SdlcPipelineFlow` (`/dataops`): defaults to Stage 1 ("Product Discovery & Work Shaping").
+  4. `PipelineExecutionFlow` (`/code-practice`): defaults to Stage 1 ("Read & Schema Ingestion").
+  5. `SystemDesignFlow` (`/architecture`): defaults to Stage 1 ("Requirements & SLO Definition").
+  6. `LakehouseMedallionFlow` (`/concepts`): defaults to Stage 1 ("Raw Bronze Ingestion").
+  7. `InterviewDefenseFlow` (`/qa-prep`): defaults to Stage 1 ("Scope & Requirements Clarification").
+  8. `OptimizationFlow` (`/cheat-sheet`): defaults to Stage 1 ("Raw Input / Unoptimized Execution").
+
+### 🗺️ Universal Navigation Bar with All Subsections & Subpages (`AllPagesNav`)
+- **Comprehensive 1-Click Navigation**: Added a unified navigation bar with all 10 platform categories and interactive dropdown menus revealing all 27+ subsections and subpages with real-time active indicators and counts.
+- **Universal Search Integration**: Retained the primary search bar with `role="search"`, search input trigger, and `⌘K` shortcut.
+- **Dropdown Stability**: Fixed search params object dependency to prevent dropdown close flickers on client re-renders.
+
+### 🧪 Automated Test Suite Passing (55 Files, 444 Tests)
+- **100% Quality Gates**: All 55 test files and 444 unit tests passing, validating interactive flows, navigation links, and batch rendering resilience.
+
+---
+
 ## v1.5 — Target Company Intel Revamp, 42 Architect-Grade Whiteboard Blueprints & 5-Role Multi-Perspective Breakdowns (2026-10-29)
 
 ### 🏢 Ultra-Dense Target Company Intel Revamp (`/company-research`)

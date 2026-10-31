@@ -147,7 +147,7 @@ export function SdlcPipelineFlow({
       subtitle="How mission-critical lakehouse pipelines progress from intake to safe retirement grounded in NIST SSDF and Google SRE."
       icon={GitBranch}
       stages={stages}
-      defaultStageId="release"
+      defaultStageId="discovery"
       className={className}
     />
   );

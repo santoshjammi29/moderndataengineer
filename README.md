@@ -8,7 +8,7 @@
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js" alt="Next.js 16"></a>
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19_Server_Components-61DAFB?style=flat-square&logo=react" alt="React 19"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.x_Strict-3178C6?style=flat-square&logo=typescript" alt="TypeScript"></a>
-  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-53_Files_%E2%80%A2_424_Passed-green?style=flat-square&logo=vitest" alt="Vitest"></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-55_Files_%E2%80%A2_444_Passed-green?style=flat-square&logo=vitest" alt="Vitest"></a>
   <a href="https://developers.cloudflare.com/workers/"><img src="https://img.shields.io/badge/Deployment-Cloudflare_OpenNext-F38020?style=flat-square&logo=cloudflare" alt="Edge Architecture"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="MIT License"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/Security-Policy_Active-blue?style=flat-square&logo=securityscorecard" alt="Security Policy"></a>

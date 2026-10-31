@@ -3,7 +3,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useDeferredValue, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import {
   Search,
   MessageSquare,
@@ -420,25 +419,40 @@ export function QaPrepClient({
     }
   }, [filteredQuestions.length, studyIndex]);
 
-  // Window Virtualization for Questions List
-  const virtualizer = useWindowVirtualizer({
-    count: filteredQuestions.length,
-    estimateSize: () => 110,
-    overscan: 5,
-    scrollToFn: (offset, options) => {
-      if (options.adjustments !== undefined && options.adjustments !== 0) {
-        return;
-      }
-      window.scrollTo({
-        top: offset,
-        behavior: options.behavior,
-      });
-    },
-  });
+  // Progressive batch rendering with IntersectionObserver (zero blank space, rock-solid native scrolling)
+  const BATCH_SIZE = 40;
+  const [visibleCount, setVisibleCount] = useState<number>(BATCH_SIZE);
+  const loadMoreSentinelRef = useRef<HTMLDivElement | null>(null);
 
+  // Reset visibleCount when filters change
   useEffect(() => {
-    virtualizer.shouldAdjustScrollPositionOnItemSizeChange = () => false;
-  }, [virtualizer]);
+    setVisibleCount(BATCH_SIZE);
+  }, [selectedDifficulty, selectedDomain, selectedTech, selectedArchetype, deferredSearch, isShuffled, shuffleSeed, questions.length]);
+
+  const displayedQuestions = useMemo(() => {
+    if (isReadAllMode) return filteredQuestions;
+    return filteredQuestions.slice(0, visibleCount);
+  }, [filteredQuestions, visibleCount, isReadAllMode]);
+
+  // IntersectionObserver to auto-load more questions smoothly as user scrolls
+  useEffect(() => {
+    if (isReadAllMode || visibleCount >= filteredQuestions.length) return;
+
+    const sentinel = loadMoreSentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredQuestions.length));
+        }
+      },
+      { rootMargin: "600px" } // Preload 600px ahead before user hits bottom for zero blank space
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [isReadAllMode, visibleCount, filteredQuestions.length]);
 
   const toggleBookmark = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -765,18 +779,8 @@ export function QaPrepClient({
               )}
             </div>
           ) : (
-            <div
-              data-virtual-container="true"
-              style={{
-                height: `${virtualizer.getTotalSize()}px`,
-                width: "100%",
-                position: "relative",
-                overflowAnchor: "none",
-              }}
-            >
-              {virtualizer.getVirtualItems().map((virtualRow) => {
-                const q = filteredQuestions[virtualRow.index];
-                if (!q) return null;
+            <div className="space-y-3">
+              {displayedQuestions.map((q) => {
                 const isExpanded = isReadAllMode ? !collapsedInReadMode.has(q.id) : expandedIds.has(q.id);
                 const isBookmarked = bookmarks.includes(q.id);
                 const diffStyle = difficultyColors[q.difficulty] || difficultyColors.MEDIUM;
@@ -785,110 +789,123 @@ export function QaPrepClient({
                 return (
                   <div
                     key={q.id}
-                    data-index={virtualRow.index}
-                    ref={virtualizer.measureElement}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      transform: `translateY(${virtualRow.start}px)`,
-                    }}
-                    className="pb-3"
+                    id={`question-${q.id}`}
+                    className={cn(
+                      "rounded-xl border transition-all duration-200 overflow-hidden bg-[var(--surface-1)] scroll-mt-20",
+                      isExpanded ? "border-blue-500/40 shadow-xs" : "border-[var(--border)] hover:border-[var(--border-hover)]"
+                    )}
                   >
                     <div
-                      id={`question-${q.id}`}
-                      className={cn(
-                        "rounded-xl border transition-all duration-200 overflow-hidden bg-[var(--surface-1)] scroll-mt-20",
-                        isExpanded ? "border-blue-500/40 shadow-xs" : "border-[var(--border)] hover:border-[var(--border-hover)]"
-                      )}
+                      onClick={() => toggleExpand(q.id)}
+                      className="p-3 sm:p-3.5 cursor-pointer select-none space-y-1.5"
                     >
-                      <div
-                        onClick={() => toggleExpand(q.id)}
-                        className="p-3 sm:p-3.5 cursor-pointer select-none space-y-1.5"
-                      >
-                        <div className="flex items-start justify-between gap-2.5">
-                          <div className="space-y-0.5 min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 tracking-wider uppercase">
-                                {q.category || "Data Engineering"}
-                              </span>
-                              {q.niche && (
-                                <span className="text-[9px] text-[var(--muted-foreground)] font-mono">
-                                  · {q.niche}
-                                </span>
-                              )}
-                              <span className={cn("text-[9px] font-semibold px-1.5 py-0.5 rounded border", diffStyle.bg, diffStyle.text, diffStyle.border)}>
-                                {q.difficulty}
-                              </span>
-                              {hasCode && (
-                                <span className="inline-flex items-center gap-0.5 text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                  <Code2 size={10} /> Code
-                                </span>
-                              )}
-                            </div>
-                            <h3 className="text-sm sm:text-[15px] font-bold text-[var(--foreground)] leading-snug break-words whitespace-normal">
-                              {q.question}
-                            </h3>
-                          </div>
-
-                          <div className="flex items-center gap-1 shrink-0">
-                            <button
-                              type="button"
-                              onClick={(e) => toggleBookmark(q.id, e)}
-                              className={cn(
-                                "p-1.5 rounded-lg border transition-colors cursor-pointer",
-                                isBookmarked
-                                  ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
-                                  : "bg-[var(--surface-2)] text-[var(--muted-foreground)] border-[var(--border)] hover:text-[var(--foreground)]"
-                              )}
-                              title={isBookmarked ? "Bookmarked" : "Bookmark"}
-                            >
-                              {isBookmarked ? <BookmarkCheck size={13} /> : <Bookmark size={13} />}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => copyToClipboard(q.question, q.id, e)}
-                              className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
-                              title="Copy Question"
-                            >
-                              {copiedId === q.id ? <Check size={13} className="text-green-400" /> : <Copy size={13} />}
-                            </button>
-                            <span className="p-1 text-[var(--muted-foreground)]">
-                              <ChevronDown size={15} className={cn("transition-transform duration-200", isExpanded && "rotate-180")} />
+                      <div className="flex items-start justify-between gap-2.5">
+                        <div className="space-y-0.5 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 tracking-wider uppercase">
+                              {q.category || "Data Engineering"}
                             </span>
+                            {q.niche && (
+                              <span className="text-[9px] text-[var(--muted-foreground)] font-mono">
+                                · {q.niche}
+                              </span>
+                            )}
+                            <span className={cn("text-[9px] font-semibold px-1.5 py-0.5 rounded border", diffStyle.bg, diffStyle.text, diffStyle.border)}>
+                              {q.difficulty}
+                            </span>
+                            {hasCode && (
+                              <span className="inline-flex items-center gap-0.5 text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <Code2 size={10} /> Code
+                              </span>
+                            )}
                           </div>
+                          <h3 className="text-sm sm:text-[15px] font-bold text-[var(--foreground)] leading-snug break-words whitespace-normal">
+                            {q.question}
+                          </h3>
+                        </div>
+
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            type="button"
+                            onClick={(e) => toggleBookmark(q.id, e)}
+                            className={cn(
+                              "p-1.5 rounded-lg border transition-colors cursor-pointer",
+                              isBookmarked
+                                ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                                : "bg-[var(--surface-2)] text-[var(--muted-foreground)] border-[var(--border)] hover:text-[var(--foreground)]"
+                            )}
+                            title={isBookmarked ? "Bookmarked" : "Bookmark"}
+                          >
+                            {isBookmarked ? <BookmarkCheck size={13} /> : <Bookmark size={13} />}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => copyToClipboard(q.question, q.id, e)}
+                            className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+                            title="Copy Question"
+                          >
+                            {copiedId === q.id ? <Check size={13} className="text-green-400" /> : <Copy size={13} />}
+                          </button>
+                          <span className="p-1 text-[var(--muted-foreground)]">
+                            <ChevronDown size={15} className={cn("transition-transform duration-200", isExpanded && "rotate-180")} />
+                          </span>
                         </div>
                       </div>
-
-                      {/* Expanded Answer */}
-                      {isExpanded && (
-                        <div className="px-3.5 pb-3.5 sm:px-4 sm:pb-4 pt-1 border-t border-[var(--border)]/60 bg-[var(--surface-2)]/30 space-y-2">
-                          <div className="pt-1 text-xs sm:text-[13px] text-[var(--foreground)] leading-relaxed break-words whitespace-normal">
-                            <AnswerRenderer text={q.answer} />
-                          </div>
-
-                          {(() => {
-                            const matchingDiagram = getQuestionMatchingDiagram(q, diagrams);
-                            if (!matchingDiagram) return null;
-                            return (
-                              <div className="pt-2 border-t border-[var(--border)]/40 flex items-center justify-between">
-                                <Link
-                                  href={`/architecture?tab=diagrams&id=${matchingDiagram.id}`}
-                                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-500 transition-colors"
-                                >
-                                  <span>📐 Architecture Blueprint: {matchingDiagram.title}</span>
-                                  <ArrowRight size={12} />
-                                </Link>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      )}
                     </div>
+
+                    {/* Expanded Answer */}
+                    {isExpanded && (
+                      <div className="px-3.5 pb-3.5 sm:px-4 sm:pb-4 pt-1 border-t border-[var(--border)]/60 bg-[var(--surface-2)]/30 space-y-2">
+                        <div className="pt-1 text-xs sm:text-[13px] text-[var(--foreground)] leading-relaxed break-words whitespace-normal">
+                          <AnswerRenderer text={q.answer} />
+                        </div>
+
+                        {(() => {
+                          const matchingDiagram = getQuestionMatchingDiagram(q, diagrams);
+                          if (!matchingDiagram) return null;
+                          return (
+                            <div className="pt-2 border-t border-[var(--border)]/40 flex items-center justify-between">
+                              <Link
+                                href={`/architecture?tab=diagrams&id=${matchingDiagram.id}`}
+                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-500 transition-colors"
+                              >
+                                <span>📐 Architecture Blueprint: {matchingDiagram.title}</span>
+                                <ArrowRight size={12} />
+                              </Link>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    )}
                   </div>
                 );
               })}
+
+              {/* Load More Sentinel & Pagination Controls */}
+              {!isReadAllMode && displayedQuestions.length < filteredQuestions.length && (
+                <div ref={loadMoreSentinelRef} className="pt-4 pb-2 text-center space-y-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount((prev) => Math.min(prev + BATCH_SIZE, filteredQuestions.length))}
+                      className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer inline-flex items-center gap-1.5"
+                    >
+                      <ChevronDown size={14} />
+                      <span>Load More (+{Math.min(BATCH_SIZE, filteredQuestions.length - displayedQuestions.length)})</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount(filteredQuestions.length)}
+                      className="px-3.5 py-1.5 rounded-xl bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--foreground)] border border-[var(--border)] text-xs font-semibold transition-all cursor-pointer"
+                    >
+                      Show All ({filteredQuestions.length})
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-[var(--muted-foreground)]">
+                    Showing {displayedQuestions.length} of {filteredQuestions.length} questions
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -161,7 +161,7 @@ export function SystemDesignFlow({
       subtitle="The 6-stage enterprise methodology for evaluating trade-offs, storage engines, distributed compute, and failure domains."
       icon={Compass}
       stages={stages}
-      defaultStageId="storage"
+      defaultStageId="requirements"
       className={className}
     />
   );

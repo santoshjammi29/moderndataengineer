@@ -241,3 +241,22 @@ Combines 679 concepts and the 14-pillar mind map into a single roof with a 3-way
   - **Master-Detail Split Workbench**: Left directory rail with company logos, tier dots, and quick salary indicators + sticky right full dossier pane.
   - **Dense Comparison Table**: Bloomberg-style matrix with sortable columns (name, tier, salary) and 1-click modal dossier action.
 - Real interview loops with 1-click prompt copying and direct simulator links.
+
+### 7. Progressive Batch Rendering & Zero-Blank-Space Scrolling
+- **Never use absolute-positioned window virtualization** (`useWindowVirtualizer` with `position: absolute; translateY`) for content feeds where items dynamically expand, contain code blocks, or sit below variable-height headers/filters.
+- **Pattern**: Progressive batch rendering with standard document flow:
+  - Initialize with `visibleCount = 40`.
+  - Connect an invisible bottom sentinel via `IntersectionObserver` with `rootMargin: "600px"` to seamlessly load the next batch before the user reaches the bottom.
+  - Provide fallback "Load More (+40)" and "Show All ({total})" buttons.
+  - Guarantees zero blank gaps, zero layout shift on card expansion, and native browser Ctrl+F search.
+
+### 8. Stage 1 Default Rule Across All Diagrams & Lifecycles
+- All interactive flow diagrams and multi-stage steppers (`InteractiveFlowDiagram`, `OptimizationFlow`, `MasteryRoadmapFlow`, `EnterpriseStackFlow`, `SdlcPipelineFlow`, `PipelineExecutionFlow`, `SystemDesignFlow`, `LakehouseMedallionFlow`, `InterviewDefenseFlow`) **MUST ALWAYS default to Stage 1** (`defaultStageId` set to the first stage ID or `stages[0].id`).
+
+### 9. Always-Visible Horizontal Navigation Bar (`AllPagesNav`)
+- Located in `src/components/layout/all-pages-nav.tsx`.
+- Houses both the prominent Universal ⌘K Search bar and a responsive, horizontal category bar with dropdown menus exposing all subsections, subpages, live badges, and descriptions for clean 1-click navigation.
+
+### 10. Global Scrolling & Layout Resilience
+- `html` and `body` styles: `scroll-behavior: smooth; overflow-x: hidden; overscroll-behavior-y: auto;`
+- Preserves native touch/trackpad inertia, rubber-banding, and scroll anchoring across macOS, iOS, Android, and Windows.
