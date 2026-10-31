@@ -9124,5 +9124,507 @@
       "Apache Arrow C Data Interface enables zero-copy dataframe transfer between Polars, DuckDB, and PySpark.",
       "Vectorized execution engines maximize multi-core CPU and memory bandwidth with SIMD acceleration."
     ]
+  },
+  {
+    "id": "sdlc-concept-project-intake",
+    "term": "Data Product Intake & Problem Framing",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A formal engineering discovery gate that captures business problem statements, baseline metrics, downstream decision cycles, and platform risk tiering before technical design commences.",
+    "explanation": "Rooted in NIST SSDF PO.1, structured project intake ensures that engineering teams only build pipelines backed by clear business justification, an identified executive sponsor, and measurable ROI. It defines the initial product boundary, operational dependencies, and expected sunset review criteria to prevent zombie pipeline accumulation.",
+    "keyPoints": [
+      "Documents the quantified cost of existing workarounds (manual spreadsheets, stale queries).",
+      "Assigns an authoritative data product owner and explicit consumer stakeholder contacts.",
+      "Classifies platform risk tier (Tier 1 mission-critical vs Tier 3 experimental).",
+      "Acts as the prerequisite gate before provisioning cloud infrastructure or computing resources."
+    ],
+    "relatedTerms": [
+      "Data Product",
+      "NIST SSDF",
+      "Stakeholder Mapping",
+      "Risk Tiering"
+    ]
+  },
+  {
+    "id": "sdlc-concept-data-contracts",
+    "term": "Data Contract Specification & Drift Prevention",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "An explicit, version-controlled agreement between data producers and consumers specifying schema definitions, business semantics, SLA guarantees, and change management protocols.",
+    "explanation": "Data contracts decouple upstream transactional schema migrations from downstream analytical models. Implemented via declarative YAML or OpenDataContract standards, contracts are enforced at CI/CD merge time and during ingestion runtime to prevent silent column drops or datatype mutations from corrupting production lakehouses.",
+    "keyPoints": [
+      "Enforces strict schema validation including column types, nullability, and primary keys.",
+      "Defines freshness, availability, and latency Service Level Objectives (SLOs).",
+      "Requires semantic versioning (SemVer) with deprecation notices for breaking changes.",
+      "Integrates with CI/CD to block producer PRs that break consumer contract requirements."
+    ],
+    "relatedTerms": [
+      "Data Contract",
+      "Schema Evolution",
+      "OpenLineage",
+      "dbt Contracts"
+    ]
+  },
+  {
+    "id": "sdlc-concept-adrs",
+    "term": "Architectural Decision Records (ADRs) for Data Platforms",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A lightweight, immutable document capturing significant technical architecture decisions, the historical context, explored alternatives, and accepted long-term trade-offs.",
+    "explanation": "ADRs provide persistent historical reasoning for major data architecture choices (e.g., selecting Iceberg over Delta Lake, adopting push vs pull ingestion, or standardizing on Kafka). Stored alongside codebase repositories in Git, ADRs prevent organizational amnesia and recurring debates over settled design trade-offs.",
+    "keyPoints": [
+      "Standardized structure: Title, Context, Decision, Consequences, and Revisit Criteria.",
+      "Committed directly to Git repositories for peer review and version control.",
+      "Documents deliberate trade-offs such as latency vs compute cost or consistency vs availability.",
+      "Must be revisited only when underlying assumptions (data volume, cloud pricing, engine features) change."
+    ],
+    "relatedTerms": [
+      "System Design",
+      "Architecture Governance",
+      "Design Patterns",
+      "GitOps"
+    ]
+  },
+  {
+    "id": "sdlc-concept-zero-downtime-migration",
+    "term": "Zero-Downtime Expand/Contract Data Migration",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A phased database and schema refactoring pattern that guarantees 100% continuous uptime and compatibility across active producers and consumers during major table schema evolutions.",
+    "explanation": "The Expand/Contract (or Parallel Run) pattern splits breaking changes into discrete steps: (1) Expand by adding the new column/table alongside the legacy one, (2) Dual-writing or backfilling data asynchronously, (3) Migrating consumers progressively to the new schema, and (4) Contracting by decommissioning and dropping the legacy asset after verification.",
+    "keyPoints": [
+      "Eliminates maintenance windows and downstream query outages during major migrations.",
+      "Maintains dual-write or view-based backwards compatibility during the transition period.",
+      "Enables rapid, risk-free rollbacks by keeping legacy data assets active until full cutover.",
+      "Essential for petabyte-scale lakehouse tables powering 24/7 business applications."
+    ],
+    "relatedTerms": [
+      "Schema Evolution",
+      "Database Refactoring",
+      "Blue/Green Deployment",
+      "Data Migration"
+    ]
+  },
+  {
+    "id": "sdlc-concept-slsa-provenance",
+    "term": "Supply Chain Levels for Software Artifacts (SLSA) in Data",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A security framework of standards and verifiable build attestations that protect data pipeline packages, container images, and ML models from tampering throughout the software supply chain.",
+    "explanation": "SLSA (Supply-chain Levels for Software Artifacts) enforces build integrity. In data engineering, SLSA Level 3 guarantees that PySpark job packages, dbt wheel files, and Docker base images are generated on isolated, ephemeral build runners with cryptographically signed provenance linking the final artifact to its exact source Git commit SHA.",
+    "keyPoints": [
+      "Prevents untracked code modifications and compromised dependencies from entering production.",
+      "Cryptographically binds binary artifacts to source commits using Sigstore/Cosign attestations.",
+      "Mandates hermetic, ephemeral build environments that prevent artifact tampering.",
+      "Enables automated auditability for strict regulatory compliance (SOC 2, ISO 27001, HIPAA)."
+    ],
+    "relatedTerms": [
+      "SLSA",
+      "Software Supply Chain",
+      "SBOM",
+      "Sigstore",
+      "CI/CD Security"
+    ]
+  },
+  {
+    "id": "sdlc-concept-canary-data-deployment",
+    "term": "Canary Data Pipeline Deployment & Abort Circuit",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A release strategy where new pipeline code or transformation logic processes a small fraction of live data or runs in parallel shadow mode before full production cutover.",
+    "explanation": "Canary deployments in data pipelines mitigate catastrophic silent regressions. By routing a small partition slice or shadow-running new transformation logic alongside current production runs, teams compare output distributions, null rates, and execution runtimes. If automated quality assertions detect divergence, an automated abort circuit halts execution before corrupted data reaches gold-layer tables.",
+    "keyPoints": [
+      "Executes shadow transformations on live input streams to verify output consistency.",
+      "Automated abort circuits stop promotion immediately if data quality assertions fail.",
+      "Protects gold-layer BI dashboards and production ML feature stores from silent corruption.",
+      "Reduces rollback complexity to a simple routing configuration change."
+    ],
+    "relatedTerms": [
+      "Canary Deployment",
+      "Shadow Pipeline",
+      "Circuit Breaker",
+      "Continuous Delivery"
+    ]
+  },
+  {
+    "id": "sdlc-concept-data-observability-slo",
+    "term": "Multi-Signal Data Observability & SLO Management",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A comprehensive operational framework that continuously monitors the five pillars of data health (freshness, volume, schema, quality, and lineage) against defined Service Level Objectives (SLOs).",
+    "explanation": "Data observability moves beyond infrastructure monitoring (CPU/RAM) into semantic pipeline health. By combining OpenTelemetry metrics/traces with OpenLineage run events, teams track end-to-end data lineage, detect anomaly spikes in record volume, and enforce error budgets. When an SLO is breached, automated alerts page on-call engineers before business stakeholders encounter stale reports.",
+    "keyPoints": [
+      "Covers 5 core data pillars: Freshness, Volume Distribution, Schema Stability, Quality, and Lineage.",
+      "Calculates SLI/SLO metrics to manage data reliability error budgets objectively.",
+      "Integrates OpenLineage to map end-to-end upstream impact and downstream blast radius.",
+      "Drives automated remediation scripts or alerts to reduce Mean Time to Resolution (MTTR)."
+    ],
+    "relatedTerms": [
+      "Data Observability",
+      "OpenTelemetry",
+      "OpenLineage",
+      "SLO & Error Budgets"
+    ]
+  },
+  {
+    "id": "sdlc-concept-blameless-postmortems",
+    "term": "Blameless Data Incident Postmortems & Cost of Downtime",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A structured, blameless retrospective methodology for analyzing production data outages, identifying systemic root causes, quantifying financial impact, and implementing permanent safeguards.",
+    "explanation": "Adopted from Google SRE principles, blameless postmortems treat failures as learning opportunities rather than personal faults. Teams dissect the timeline of events, employ the 5 Whys to uncover systemic process or architectural gaps, calculate the Cost of Data Downtime (wasted compute + affected business decisions), and commit to prioritized Jira action items that prevent recurrence.",
+    "keyPoints": [
+      "Focuses on systemic technical vulnerabilities, missing tests, and alerting blind spots rather than human error.",
+      "Generates a minute-by-minute timeline from incident detection to mitigation and full recovery.",
+      "Quantifies total business impact, wasted cluster compute, and downstream SLA breach penalties.",
+      "Mandates tracked preventive action items reviewed during weekly architectural engineering syncs."
+    ],
+    "relatedTerms": [
+      "Google SRE",
+      "Incident Management",
+      "Root Cause Analysis",
+      "Postmortem"
+    ]
+  },
+  {
+    "id": "sdlc-concept-finops-unit-economics",
+    "term": "Data FinOps Unit Economics & Workload Right-Sizing",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "The practice of measuring and optimizing cloud data platform expenditures by attributing costs to granular business units, product features, and computational workloads.",
+    "explanation": "Data FinOps bridges engineering choices with financial accountability. By enforcing rigorous resource tagging, monitoring per-query memory and slot consumption, and identifying zombie tables or over-provisioned idle clusters, organizations transform raw cloud invoices into actionable business metrics such as Cost per ETL Job, Cost per Daily Active User, and Cost per Report View.",
+    "keyPoints": [
+      "Enforces mandatory resource tags (cost-center, pipeline-id, owner) via IaC policies.",
+      "Correlates raw cloud billing data with platform query history (Databricks system tables, BigQuery INFORMATION_SCHEMA).",
+      "Identifies idle compute waste, abandoned staging partitions, and non-performing clusters.",
+      "Establishes automated scaling policies and spot/preemptible instance arbitrage to maximize ROI."
+    ],
+    "relatedTerms": [
+      "FinOps",
+      "Cost Attribution",
+      "Unit Economics",
+      "Capacity Planning"
+    ]
+  },
+  {
+    "id": "sdlc-concept-lakehouse-disaster-recovery",
+    "term": "Dual-Region Lakehouse Disaster Recovery & RPO/RTO",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "An enterprise business continuity architecture featuring automated metadata synchronization, cross-region object storage replication, and rehearsed failover procedures.",
+    "explanation": "Disaster recovery for modern lakehouses requires coordinating data files, transactional table logs, and centralized catalogs. Architectures define explicit Recovery Point Objectives (RPO - maximum acceptable data loss) and Recovery Time Objectives (RTO - maximum allowable downtime). Solutions leverage cloud-native cross-region replication (CRR), catalog federation, and periodic unannounced game-day drills to validate operational readiness.",
+    "keyPoints": [
+      "Establishes tier-based RPO and RTO thresholds (Tier 1: RPO < 15 min, RTO < 1 hour).",
+      "Coordinates dual-region object storage replication with transactional catalog synchronization (Unity, Polaris, Glue).",
+      "Automates DNS cutover and pipeline orchestrator failover scripts for rapid service recovery.",
+      "Validates recovery capabilities through semi-annual chaos engineering and game-day drills."
+    ],
+    "relatedTerms": [
+      "Disaster Recovery",
+      "Business Continuity",
+      "RPO & RTO",
+      "Cross-Region Replication"
+    ]
+  },
+  {
+    "id": "sdlc-concept-data-sunsetting-graveyard",
+    "term": "Data Asset Sunsetting & Graveyard Archiving",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A formal decommission and archival lifecycle process that safely retires obsolete data assets, reclaims storage costs, and satisfies legal record retention compliance.",
+    "explanation": "Unchecked data platforms accumulate petabytes of obsolete, abandoned tables that create security risks and inflate cloud storage bills. A compliant sunsetting policy defines clear criteria for deprecation (zero query activity in 90 days), automated tombstone notifications to historical owners, schema snapshot preservation in cold archival tiers (e.g. S3 Glacier Deep Archive), and irreversible purge following legal retention windows.",
+    "keyPoints": [
+      "Identifies dormant tables using query access logs and catalog lineage metadata.",
+      "Executes a phased deprecation schedule: Soft Deprecation Warning -> Read-Only Freeze -> Cold Archival -> Purge.",
+      "Migrates data files to lowest-cost cold storage tiers while preserving schema definitions.",
+      "Enforces regulatory compliance requirements (GDPR Right to Erasure, financial retention rules)."
+    ],
+    "relatedTerms": [
+      "Data Lifecycle",
+      "Data Archiving",
+      "Tombstoning",
+      "Storage Tiering"
+    ]
+  },
+  {
+    "id": "prod-concept-aqe-boundaries",
+    "term": "AQE Query Stage Re-Optimization Boundaries",
+    "category": "SPARK & DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "The runtime execution boundaries in Apache Spark where completed shuffle stages materialize partition statistics, enabling the catalyst optimizer to dynamically alter downstream physical plans.",
+    "explanation": "Adaptive Query Execution (AQE) relies on intermediate shuffle boundaries (ShuffleExchangeExec) as synchronization checkpoints. Once all mapper tasks write their partition blocks, Spark drivers inspect real-time row counts and byte distributions. This runtime feedback loop triggers dynamic partition coalescing, join strategy pivots (SortMerge to BroadcastHash), and skewed task splitting.",
+    "keyPoints": [
+      "Shuffle exchanges act as the execution barrier where runtime statistics are gathered.",
+      "Enables plan changes that were impossible during static cost-based optimization (CBO).",
+      "Prevents cluster thrashing by eliminating static guesswork for partition counts.",
+      "Cannot re-optimize intra-stage operators within the same pipelined whole-stage codegen."
+    ],
+    "relatedTerms": [
+      "Spark AQE",
+      "Catalyst Optimizer",
+      "Shuffle Exchange",
+      "Query Optimization"
+    ]
+  },
+  {
+    "id": "prod-concept-post-shuffle-coalescing",
+    "term": "Post-Shuffle Partition Coalescing",
+    "category": "SPARK & DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "An automated runtime optimization in Spark AQE that aggregates small contiguous shuffle partitions into larger logical partitions to minimize driver scheduling overhead.",
+    "explanation": "Setting a static spark.sql.shuffle.partitions value (e.g. 200 or 2000) frequently leads to either massive task overhead for small queries or memory spillage for large workloads. Post-shuffle coalescing inspects actual output sizes and dynamically merges small adjacent partition blocks into target-sized chunks (controlled by advisoryPartitionSizeInBytes), keeping executor cores busy without excessive task metadata creation.",
+    "keyPoints": [
+      "Eliminates the need for manual spark.sql.shuffle.partitions tuning across varied workloads.",
+      "Governed by spark.sql.adaptive.advisoryPartitionSizeInBytes (default 64MB).",
+      "Drastically reduces task dispatch serialization overhead on the Spark driver.",
+      "Ensures optimal hardware utilization for multi-tenant analytical clusters."
+    ],
+    "relatedTerms": [
+      "Spark AQE",
+      "Partition Sizing",
+      "Shuffle Tuning",
+      "Driver Overhead"
+    ]
+  },
+  {
+    "id": "prod-concept-skew-join-splitting",
+    "term": "Skewed Shuffle Partition Splitting",
+    "category": "SPARK & DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A dynamic AQE mechanism that identifies disproportionately large shuffle partitions and divides them into parallel sub-tasks while duplicating opposing join data.",
+    "explanation": "Data skew causes solitary straggler tasks that prolong overall stage execution. Spark AQE detects skew at runtime when a partition exceeds both a raw byte threshold and a multiple of the median partition size. AQE splits the skewed partition across multiple worker tasks, while reading the corresponding slice of the un-skewed opposing table repeatedly, achieving balanced cluster concurrency without code refactoring.",
+    "keyPoints": [
+      "Detects skew based on relative median size factor and absolute byte thresholds.",
+      "Divides giant partitions into smaller sub-tasks to run in parallel across available cores.",
+      "Duplicates the un-skewed join side partition in memory/disk to complete the partial join.",
+      "Eliminates the legacy requirement for manual salt keys in the majority of skew scenarios."
+    ],
+    "relatedTerms": [
+      "Data Skew",
+      "Straggler Tasks",
+      "Spark AQE",
+      "Join Optimization"
+    ]
+  },
+  {
+    "id": "prod-concept-delta-liquid-clustering",
+    "term": "Delta Lake Liquid Clustering Architecture",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A modern, dynamic data layout architecture that organizes Delta Lake Parquet files along a space-filling Hilbert curve without rigid Hive directory hierarchies.",
+    "explanation": "Traditional physical partitioning (/date=2024/region=us/) suffers from rigid small file problems, partition skew, and immutable key layouts. Liquid Clustering decouples clustering keys from physical folder structures, using multi-dimensional Hilbert curves to cluster data incrementally. Clustering columns can be altered on-the-fly via zero-byte DDL operations without costly full-table rewrites.",
+    "keyPoints": [
+      "Replaces both legacy Hive partitioning and static Z-ordering with flexible Hilbert curves.",
+      "Supports altering clustering keys instantly via ALTER TABLE CLUSTER BY without data rewrites.",
+      "Executes incremental clustering during OPTIMIZE, processing only newly written files.",
+      "Integrates seamlessly with Databricks Predictive I/O for intelligent data skipping."
+    ],
+    "relatedTerms": [
+      "Delta Lake",
+      "Hilbert Curve",
+      "Z-Order",
+      "Data Skipping",
+      "Databricks"
+    ]
+  },
+  {
+    "id": "sdlc-concept-sla-slo-error-budget",
+    "term": "Data SLA, SLO & Error Budget Specification",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A quantifiable framework translating business expectations into measurable pipeline metrics: Service Level Indicators (SLIs), Service Level Objectives (SLOs), and enforceable Service Level Agreements (SLAs).",
+    "explanation": "Inspired by Google SRE principles, data teams define SLIs (e.g., pipeline delivery time, row completeness percentage). SLOs establish target reliability goals (e.g., 99.5% of batches complete within 30 minutes). The remaining 0.5% forms an Error Budget, which determines whether teams prioritize new feature development or reliability engineering.",
+    "keyPoints": [
+      "Establishes objective, measurable indicators (SLIs) for freshness, completeness, and latency.",
+      "Calculates consumable Error Budgets to balance velocity against platform stability.",
+      "Automates incident alerting before contractual SLA breach thresholds are crossed.",
+      "Empowers engineering leadership to halt risky releases when error budgets are exhausted."
+    ],
+    "relatedTerms": [
+      "Google SRE",
+      "Error Budget",
+      "Service Level Objective",
+      "Data Observability"
+    ]
+  },
+  {
+    "id": "sdlc-concept-trunk-based-development",
+    "term": "Trunk-Based Development for Data Platforms",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A source-control branching strategy where data engineers merge small, frequent commits into a single core branch (trunk/main), avoiding long-lived feature branches and merge hell.",
+    "explanation": "Trunk-based development prevents painful schema and DAG merge conflicts across distributed data teams. Combined with automated CI/CD testing, short-lived branches (living less than a day) and feature toggles, it ensures continuous code integration and enables rapid pipeline releases.",
+    "keyPoints": [
+      "Limits branch lifetimes to under 24 hours, dramatically decreasing merge conflicts.",
+      "Requires automated CI pipelines with robust unit, integration, and linting checks.",
+      "Employs feature flags and branch-by-abstraction to deploy incomplete transformations safely.",
+      "Correlates with high DORA deployment frequency and low Change Failure Rate."
+    ],
+    "relatedTerms": [
+      "GitOps",
+      "CI/CD",
+      "Branching Strategy",
+      "DORA Metrics"
+    ]
+  },
+  {
+    "id": "sdlc-concept-ephemeral-data-sandboxes",
+    "term": "Devcontainers & Ephemeral Data Sandboxes",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "Containerized, reproducible local and cloud-based development environments that allow data engineers to spin up identical toolchains and isolated test databases in seconds.",
+    "explanation": "Developing data pipelines on local developer workstations often suffers from dependency drift and \"works on my machine\" bugs. Ephemeral sandboxes utilize Docker, devcontainers, or Cloud Workstations with pre-configured Spark, DuckDB, dbt, and local object stores (e.g. MinIO), isolating development work and protecting production credentials.",
+    "keyPoints": [
+      "Packages exact Python runtime, Spark dependencies, and CLI tools in version-controlled Dockerfiles.",
+      "Eliminates environment setup friction for newly onboarded data engineers.",
+      "Embeds lightweight local databases (DuckDB, SQLite, LocalStack) with synthetic sample data.",
+      "Prevents inadvertent leakage of production credentials to local development disks."
+    ],
+    "relatedTerms": [
+      "DevContainers",
+      "Docker",
+      "LocalStack",
+      "Developer Experience"
+    ]
+  },
+  {
+    "id": "sdlc-concept-idempotent-pipelines",
+    "term": "Idempotent Pipeline Patterns & Replay Safety",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A pipeline architectural design ensuring that executing a data transformation multiple times with identical inputs produces the exact same output without duplicates or data corruption.",
+    "explanation": "Network glitches, transient timeouts, and orchestrator retries are inevitable in distributed systems. Idempotency guarantees that retrying a failed task or re-running a historical partition yields deterministic results. This is implemented via atomic partition overwrites, MERGE operations on unique business keys, and deterministic surrogate key hashing.",
+    "keyPoints": [
+      "Eliminates duplicate records caused by network retries and orchestrator task re-executions.",
+      "Replaces dangerous blind APPEND operations with partition OVERWRITE or MERGE statements.",
+      "Leverages deterministic hashing (MD5/SHA256 of natural keys) for surrogate key generation.",
+      "Fundamental prerequisite for safe backfilling and automated failure recovery."
+    ],
+    "relatedTerms": [
+      "Idempotency",
+      "Delta Lake MERGE",
+      "Partition Overwrite",
+      "Pipeline Resilience"
+    ]
+  },
+  {
+    "id": "sdlc-concept-dead-letter-queues",
+    "term": "Dead-Letter Queue (DLQ) Quarantine Architecture",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "An isolation mechanism that routes malformed, corrupted, or non-conforming data records to a quarantined storage queue without halting primary pipeline execution.",
+    "explanation": "In high-throughput streaming and micro-batch pipelines, a single malformed payload (e.g. unparseable JSON or schema type mismatch) can crash the entire pipeline if not isolated. A Dead-Letter Queue (DLQ) captures the corrupted record, attaches error metadata (failure reason, timestamp, source offset), and stores it in a quarantine table for investigation and replay.",
+    "keyPoints": [
+      "Prevents corrupted \"poison pill\" records from blocking continuous streaming pipelines.",
+      "Captures full error context: raw payload, exception trace, and ingestion timestamp.",
+      "Emits alerts when DLQ volume exceeds predefined error thresholds.",
+      "Provides operational tooling to replay quarantined records once bugs or schemas are patched."
+    ],
+    "relatedTerms": [
+      "DLQ",
+      "Poison Pill",
+      "Streaming Fault Tolerance",
+      "Data Quarantine"
+    ]
+  },
+  {
+    "id": "sdlc-concept-data-testing-pyramid",
+    "term": "DataOps Testing Pyramid & Quality Assertions",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A structured testing hierarchy spanning unit tests, integration tests, contract verification, and production data quality assertions (Great Expectations, Soda).",
+    "explanation": "Adopting the software engineering test pyramid for data systems establishes fast, cheap tests at the base and expensive system tests at the top. Layer 1: Unit tests on pure SQL/Python functions using mocked DataFrames. Layer 2: Integration tests verifying DAG connectivity. Layer 3: Data contract validations. Layer 4: Production data quality assertions on live tables checking row counts, null rates, and distribution boundaries.",
+    "keyPoints": [
+      "Unit tests validate business logic in seconds using in-memory synthetic DataFrames (Chispa, pytest).",
+      "Integration tests verify schema compatibility and database connectivity in staging environments.",
+      "Contract tests prevent producer-consumer schema regressions in CI/CD.",
+      "Production assertions (Soda, Great Expectations) continuously monitor live data drift."
+    ],
+    "relatedTerms": [
+      "Great Expectations",
+      "Soda Core",
+      "DataOps",
+      "Automated Testing"
+    ]
+  },
+  {
+    "id": "sdlc-concept-column-encryption-tokenization",
+    "term": "Column-Level Encryption & Tokenization (FPE)",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "Cryptographic data protection mechanisms that encrypt or tokenize sensitive PII attributes while preserving original data formats and enabling analytical queries.",
+    "explanation": "To satisfy strict data privacy regulations (GDPR, HIPAA, PCI-DSS), raw Personally Identifiable Information (PII) must not be stored in plaintext. Format-Preserving Encryption (FPE) and deterministic tokenization replace sensitive fields (SSNs, credit cards, emails) with encrypted ciphertext matching the original length and format, permitting joins and groupings without exposing raw data.",
+    "keyPoints": [
+      "Encrypts sensitive attributes before data lands in lakehouse storage.",
+      "Format-Preserving Encryption (FPE) maintains schema types and field lengths.",
+      "Supports deterministic hashing to enable analytical JOIN and GROUP BY operations on encrypted keys.",
+      "Integrates with cloud KMS (Key Management Service) for automated key rotation and auditing."
+    ],
+    "relatedTerms": [
+      "PII Masking",
+      "Tokenization",
+      "Format-Preserving Encryption",
+      "KMS Security"
+    ]
+  },
+  {
+    "id": "sdlc-concept-policy-as-code",
+    "term": "Policy-as-Code Guardrails for Data Infrastructure",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "The automated enforcement of organizational security, compliance, and FinOps policies through code-defined rules evaluated during CI/CD infrastructure deployments.",
+    "explanation": "Policy-as-Code (using Open Policy Agent / Rego or HashiCorp Sentinel) automatically inspects Terraform and Kubernetes manifests before provisioning. Rules enforce mandatory encryption-at-rest, private networking, required cost tags, and cluster sizing guardrails, eliminating manual compliance reviews and stopping insecure infrastructure from deploying.",
+    "keyPoints": [
+      "Evaluates declarative security and cost policies directly in CI/CD pipelines.",
+      "Blocks unencrypted storage buckets, public endpoints, and untagged compute clusters automatically.",
+      "Enforces FinOps cluster sizing guardrails (e.g. banning massive GPU instances in dev).",
+      "Provides auditable compliance logs demonstrating continuous regulatory adherence."
+    ],
+    "relatedTerms": [
+      "Open Policy Agent",
+      "Rego",
+      "Terraform",
+      "FinOps Guardrails"
+    ]
+  },
+  {
+    "id": "sdlc-concept-production-readiness-review",
+    "term": "Production Readiness Review (PRR) for Data Products",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A structured architectural review checklist conducted before promoting a data product to production, verifying operational readiness across security, reliability, observability, and support.",
+    "explanation": "Pioneered by Google SRE, the PRR prevents unstable or unmaintainable pipelines from being thrown over the wall to operations. The review inspects: (1) Architecture diagrams and ADRs, (2) Documented SLOs and configured alerts, (3) Automated CI/CD test coverage, (4) Operational runbooks and escalation paths, and (5) Disaster recovery and backfill procedures.",
+    "keyPoints": [
+      "Serves as the mandatory quality gate between staging validation and full production promotion.",
+      "Verifies presence of on-call runbooks, alerting thresholds, and escalation matrices.",
+      "Validates that data contracts are signed and registered in the enterprise data catalog.",
+      "Eliminates late-night production fires caused by missing operational configurations."
+    ],
+    "relatedTerms": [
+      "Google SRE",
+      "Production Readiness",
+      "Operational Excellence",
+      "Service Handover"
+    ]
+  },
+  {
+    "id": "sdlc-concept-incident-severity-matrix",
+    "term": "Data Incident Severity Matrix & Escalation Routing",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A standardized taxonomy defining incident severity levels (SEV-1 to SEV-4) based on consumer impact, with automated paging and response time service levels.",
+    "explanation": "Not all pipeline failures warrant waking an engineer at 2 AM. A clear Data Incident Severity Matrix categorizes outages: SEV-1 (mission-critical real-time billing or fraud pipeline down; 15-min response), SEV-2 (daily executive dashboard delayed; 1-hour response), SEV-3 (internal ad-hoc dataset stale; next business day). Clear routing avoids alert fatigue and focuses engineering resources where business risk is highest.",
+    "keyPoints": [
+      "Categorizes incidents objectively by business criticality and downstream blast radius.",
+      "Sets explicit Target Response Times (MTTA) and Target Resolution Times (MTTR) per severity.",
+      "Integrates with PagerDuty / Opsgenie to page designated on-call primary and secondary rotations.",
+      "Triggers mandatory blameless postmortems for all SEV-1 and recurring SEV-2 incidents."
+    ],
+    "relatedTerms": [
+      "Incident Management",
+      "PagerDuty",
+      "Severity Matrix",
+      "On-Call Routing"
+    ]
   }
 ]

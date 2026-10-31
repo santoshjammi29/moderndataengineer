@@ -300,14 +300,24 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
 
     if (deferredSearch.trim()) {
       const q = deferredSearch.toLowerCase().trim();
-      result = result.filter(
-        (c) =>
-          c.term.toLowerCase().includes(q) ||
-          c.definition.toLowerCase().includes(q) ||
-          c.explanation.toLowerCase().includes(q) ||
-          c.category.toLowerCase().includes(q) ||
-          c.keyPoints.some((p) => p.toLowerCase().includes(q))
-      );
+      const tokens = q
+        .split(/\s+/)
+        .map((t) => t.replace(/[^\w-]/g, ""))
+        .filter((t) => t.length > 2 && !["and", "the", "for", "with", "from", "into"].includes(t));
+
+      result = result.filter((c) => {
+        const inTerm = c.term.toLowerCase().includes(q);
+        const inDef = c.definition.toLowerCase().includes(q);
+        const inExp = c.explanation.toLowerCase().includes(q);
+        const inCat = c.category.toLowerCase().includes(q);
+        const inPoints = c.keyPoints.some((p) => p.toLowerCase().includes(q));
+        if (inTerm || inDef || inExp || inCat || inPoints) return true;
+
+        const combined = `${c.term} ${c.definition} ${c.explanation} ${c.category} ${c.keyPoints.join(" ")}`.toLowerCase();
+        if (tokens.length > 0 && tokens.every((t) => combined.includes(t))) return true;
+        if (tokens.length >= 2 && tokens.filter((t) => combined.includes(t)).length >= Math.ceil(tokens.length * 0.6)) return true;
+        return false;
+      });
     }
 
     if (isShuffled) {

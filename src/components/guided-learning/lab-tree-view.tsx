@@ -281,18 +281,35 @@ export function LabTreeView() {
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]/60 text-[10px]">
-                        <span className="text-[var(--muted-foreground)] flex items-center gap-1">
-                          <Folder size={11} className="text-amber-400" />
-                          <span>labs/14-production-deep-dives/{topic.labFolder}</span>
+                      <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]/60 text-[10px] gap-2">
+                        <span className="text-[var(--muted-foreground)] flex items-center gap-1 min-w-0 truncate">
+                          <Folder size={11} className="text-amber-400 shrink-0" />
+                          <span className="truncate">labs/14-production-deep-dives/{topic.labFolder}</span>
                         </span>
-                        <Link
-                          href={`/architecture?search=${encodeURIComponent(topic.title)}`}
-                          className="text-blue-400 hover:underline flex items-center gap-0.5 font-medium shrink-0"
-                        >
-                          <span>Explore Scenarios</span>
-                          <ArrowRight size={10} />
-                        </Link>
+                        <div className="flex items-center gap-2 shrink-0 font-medium">
+                          <Link
+                            href={`/concepts?q=${encodeURIComponent(topic.title)}`}
+                            className="text-emerald-400 hover:underline"
+                            title="View Related Concepts"
+                          >
+                            Concept
+                          </Link>
+                          <Link
+                            href={`/qa-prep?q=${encodeURIComponent(topic.title)}`}
+                            className="text-blue-400 hover:underline"
+                            title="Drill Interview Q&A"
+                          >
+                            Drill QA
+                          </Link>
+                          <Link
+                            href={`/architecture?search=${encodeURIComponent(topic.title)}`}
+                            className="text-purple-400 hover:underline flex items-center gap-0.5"
+                            title="Explore Scenarios"
+                          >
+                            <span>Scenarios</span>
+                            <ArrowRight size={10} />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   ))}

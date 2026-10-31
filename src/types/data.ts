@@ -287,6 +287,10 @@ export interface UnifiedQuestion {
   level?: CodeLevel | number;
   mergedFrom?: string[];
   linked_concept_id?: string;
+  tags?: string[];
+  topic?: string;
+  rubricPoints?: string[];
+  companyTargets?: string[];
 }
 
 // ==========================================

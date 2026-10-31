@@ -482,7 +482,8 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
   const [activeTab, setActiveTab] = useState<ArchHubTab>("scenarios");
 
   // Scenarios filter states
-  const [searchQuery, setSearchQuery] = useState("");
+  const initialSearch = searchParams.get("search") || searchParams.get("q") || "";
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const deferredSearch = useDeferredValue(searchQuery);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("ALL");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
@@ -756,12 +757,20 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
         }
       }
       if (deferredSearch.trim()) {
-        const q = deferredSearch.toLowerCase();
+        const q = deferredSearch.toLowerCase().trim();
+        const tokens = q
+          .split(/\s+/)
+          .map((t) => t.replace(/[^\w-]/g, ""))
+          .filter((t) => t.length > 2 && !["and", "the", "for", "with", "from", "into"].includes(t));
         const inQuestion = item.question.toLowerCase().includes(q);
-        const inAnswer = item.answer.toLowerCase().includes(q);
+        const inAnswer = item.answer?.toLowerCase().includes(q) ?? false;
         const inCategory = item.category?.toLowerCase().includes(q) ?? false;
         const inNiche = item.niche?.toLowerCase().includes(q) ?? false;
-        return inQuestion || inAnswer || inCategory || inNiche;
+        if (inQuestion || inAnswer || inCategory || inNiche) return true;
+        const combined = `${item.question} ${item.answer || ""} ${item.category || ""} ${item.niche || ""}`.toLowerCase();
+        if (tokens.length > 0 && tokens.every((t) => combined.includes(t))) return true;
+        if (tokens.length >= 2 && tokens.filter((t) => combined.includes(t)).length >= Math.ceil(tokens.length * 0.6)) return true;
+        return false;
       }
       return true;
     });

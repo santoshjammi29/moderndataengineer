@@ -1,8 +1,408 @@
 // Auto-generated lean initial datasets for sub-50ms SSR without loading multi-megabyte JSONs
 import type { UnifiedQuestion, ArchitectureQuestion, Concept } from '@/types/data';
 
-export const TOTAL_QA_COUNT = 6829;
+export const TOTAL_QA_COUNT = 7011;
 export const INITIAL_QA_ITEMS: UnifiedQuestion[] = ([
+  {
+    "id": "sdlc-qa-001",
+    "question": "How do you implement and enforce project intake and problem statement in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Project intake and problem statement\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Record the user or business problem, current workaround, affected decisions, and why the work matters now. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Project intake and problem statement\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Project intake and problem statement",
+      "Control 001",
+      "sdlc-001",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Project intake and problem statement.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Project intake and problem statement"
+  },
+  {
+    "id": "sdlc-qa-002",
+    "question": "How do you implement and enforce stakeholder and data-consumer map in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Stakeholder and data-consumer map\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Name producer, owner, steward, operators, downstream consumers, approvers, and support contacts. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Stakeholder and data-consumer map\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Stakeholder and data-consumer map",
+      "Control 002",
+      "sdlc-002",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Stakeholder and data-consumer map.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Stakeholder and data-consumer map"
+  },
+  {
+    "id": "sdlc-qa-003",
+    "question": "How do you implement and enforce value hypothesis and baseline in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Value hypothesis and baseline\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Define the expected outcome and measure the current state before implementation. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Value hypothesis and baseline\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Value hypothesis and baseline",
+      "Control 003",
+      "sdlc-003",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Value hypothesis and baseline.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Value hypothesis and baseline"
+  },
+  {
+    "id": "sdlc-qa-004",
+    "question": "How do you implement and enforce prioritization and dependency map in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Prioritization and dependency map\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Rank work against value, risk, cost of delay, platform dependencies, and team capacity. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Prioritization and dependency map\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Prioritization and dependency map",
+      "Control 004",
+      "sdlc-004",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Prioritization and dependency map.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Prioritization and dependency map"
+  },
+  {
+    "id": "sdlc-qa-005",
+    "question": "How do you implement and enforce data product scope and boundaries in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Data product scope and boundaries\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, State included sources, outputs, transformations, consumers, exclusions, and explicit ownership boundaries. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Data product scope and boundaries\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Data product scope and boundaries",
+      "Control 005",
+      "sdlc-005",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Data product scope and boundaries.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Data product scope and boundaries"
+  },
+  {
+    "id": "sdlc-qa-006",
+    "question": "How do you implement and enforce source authority and usage rights in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Source authority and usage rights\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Confirm source owner, access permission, licensing, permitted purpose, and operational contact. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Source authority and usage rights\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Source authority and usage rights",
+      "Control 006",
+      "sdlc-006",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Source authority and usage rights.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Source authority and usage rights"
+  },
+  {
+    "id": "sdlc-qa-007",
+    "question": "How do you implement and enforce assumptions, constraints, and risk tier in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Assumptions, constraints, and risk tier\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Make volume, residency, compliance, availability, and vendor constraints visible before design. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Assumptions, constraints, and risk tier\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Assumptions, constraints, and risk tier",
+      "Control 007",
+      "sdlc-007",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Assumptions, constraints, and risk tier.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Assumptions, constraints, and risk tier"
+  },
+  {
+    "id": "sdlc-qa-008",
+    "question": "How do you implement and enforce incremental release and acceptance outcome in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Incremental release and acceptance outcome\" serves as a mission-critical control within the Product Discovery & Work Shaping phase. Grounded in NIST SSDF PO.1 & Google Cloud Well-Architected Framework (Operational Excellence), this control establishes rigorous guardrails for problem framing, baseline measurement, stakeholder mapping, and scoping boundaries.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Break work into releasable slices with observable user or data outcomes. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Incremental release and acceptance outcome\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Product Discovery & Work Shaping",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Discovery",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Discovery",
+      "Incremental release and acceptance outcome",
+      "Control 008",
+      "sdlc-008",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Incremental release and acceptance outcome.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Incremental release and acceptance outcome"
+  },
+  {
+    "id": "sdlc-qa-009",
+    "question": "How do you implement and enforce functional and transformation rules in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Functional and transformation rules\" serves as a mission-critical control within the Requirements, Contracts & Acceptance phase. Grounded in NIST SSDF PO.2 & Enterprise Data Mesh Architectural Governance, this control establishes rigorous guardrails for data contracts, schema compatibility policies, SLA/SLO definition, and access governance.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Specify filters, joins, deduplication, calculations, edge cases, and authoritative business definitions. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Functional and transformation rules\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Requirements, Contracts & Acceptance",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Contracts",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Contracts",
+      "Functional and transformation rules",
+      "Control 009",
+      "sdlc-009",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Functional and transformation rules.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Functional and transformation rules"
+  },
+  {
+    "id": "sdlc-qa-010",
+    "question": "How do you implement and enforce testable acceptance criteria in an enterprise data engineering lifecycle? Explain the architecture, failure modes, and governance controls.",
+    "answer": "In enterprise data engineering, \"Testable acceptance criteria\" serves as a mission-critical control within the Requirements, Contracts & Acceptance phase. Grounded in NIST SSDF PO.2 & Enterprise Data Mesh Architectural Governance, this control establishes rigorous guardrails for data contracts, schema compatibility policies, SLA/SLO definition, and access governance.\n\n### 1. Architecture & Implementation Mechanics\nAt an architectural level, Express expected output with examples, boundary cases, and a clear pass/fail condition. Teams establish this control by standardizing operational workflows across the platform stack. This includes integrating automated checks into pipeline orchestration, defining clear interface specifications, and binding data assets to verifiable metadata records. For example, during execution, metadata is captured directly into the platform catalog (e.g., Unity Catalog, Purview, or Data Catalog) to verify that ownership, schemas, and operational boundaries conform to enterprise standards.\n\n### 2. Failure Modes & Blast Radius\nNeglecting this control introduces significant systemic risk: pipelines suffer from uncoordinated breaking changes, unmonitored schema drift, orphan compute resources, or compliance exposure. When upstream or downstream dependencies fail to adhere to \"Testable acceptance criteria\", failure blast radius expands across downstream analytical models, dashboard consumers, and machine learning feature stores, leading to costly data contamination or silent pipeline degradation.\n\n### 3. Production Verification & Metrics\nTo ensure continuous enforcement, production teams institute automated quality gates: (a) CI/CD pre-merge validation, (b) continuous monitoring with explicit SLO thresholds, and (c) quarterly governance audits. Success is quantified through measurable key performance indicators including mean time to detect (MTTD), zero unmanaged breaking changes, adherence to data contract specifications, and strict compliance with the platform SLA.",
+    "difficulty": "Staff",
+    "category": "DataOps & SDLC",
+    "categoryLabel": "DataOps & SDLC",
+    "niche": "Requirements, Contracts & Acceptance",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Contracts",
+    "source": "Enterprise SDLC 360°",
+    "sourceDb": "fabric_pbi",
+    "sourceLabel": "Enterprise SDLC",
+    "code": "",
+    "tags": [
+      "SDLC",
+      "Contracts",
+      "Testable acceptance criteria",
+      "Control 010",
+      "sdlc-010",
+      "NIST SSDF",
+      "DataOps",
+      "Architecture Governance"
+    ],
+    "rubricPoints": [
+      "Explains the core architectural purpose and implementation pattern for Testable acceptance criteria.",
+      "Identifies concrete failure modes, root causes, and blast radius of omitting this control.",
+      "Defines quantifiable production verification metrics, SLO targets, and automated audit mechanisms."
+    ],
+    "companyTargets": [
+      "Google",
+      "Netflix",
+      "Databricks",
+      "Snowflake",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ],
+    "topic": "Testable acceptance criteria"
+  },
   {
     "id": "adf-ir-1",
     "question": "How do you design a zero-trust network perimeter for ADF accessing an isolated Azure SQL Database using a Self-Hosted Integration Runtime (SHIR) and private endpoints?",
@@ -635,7 +1035,7 @@ export const INITIAL_QA_ITEMS: UnifiedQuestion[] = ([
   }
 ]) as unknown as UnifiedQuestion[];
 
-export const TOTAL_SCENARIO_COUNT = 3206;
+export const TOTAL_SCENARIO_COUNT = 3214;
 export const INITIAL_SCENARIO_ITEMS: ArchitectureQuestion[] = ([
   {
     "id": "arch-spec-0001",
@@ -1059,7 +1459,7 @@ export const INITIAL_SCENARIO_ITEMS: ArchitectureQuestion[] = ([
   }
 ]) as unknown as ArchitectureQuestion[];
 
-export const TOTAL_CONCEPT_COUNT = 660;
+export const TOTAL_CONCEPT_COUNT = 704;
 export const INITIAL_CONCEPT_ITEMS: Concept[] = ([
   {
     "id": "fabric-onelake",

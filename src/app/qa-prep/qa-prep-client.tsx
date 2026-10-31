@@ -370,13 +370,23 @@ export function QaPrepClient({
     // 5. Full-text search
     if (deferredSearch.trim()) {
       const q = deferredSearch.toLowerCase().trim();
+      const tokens = q
+        .split(/\s+/)
+        .map((t) => t.replace(/[^\w-]/g, ""))
+        .filter((t) => t.length > 2 && !["and", "the", "for", "with", "from", "into"].includes(t));
+
       result = result.filter((item) => {
         const text = getQuestionSearchCorpus(item);
-        return (
-          text.includes(q) ||
-          (item.answer && item.answer.toLowerCase().includes(q)) ||
-          (item.code && item.code.toLowerCase().includes(q))
-        );
+        const ans = item.answer ? item.answer.toLowerCase() : "";
+        const code = item.code ? item.code.toLowerCase() : "";
+        const tags = Array.isArray(item.tags) ? item.tags.join(" ").toLowerCase() : "";
+        const topic = item.topic ? item.topic.toLowerCase() : "";
+        const combined = `${text} ${ans} ${code} ${tags} ${topic}`;
+
+        if (combined.includes(q)) return true;
+        if (tokens.length > 0 && tokens.every((t) => combined.includes(t))) return true;
+        if (tokens.length >= 2 && tokens.filter((t) => combined.includes(t)).length >= Math.ceil(tokens.length * 0.6)) return true;
+        return false;
       });
     }
 

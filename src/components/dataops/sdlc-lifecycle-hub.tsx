@@ -176,6 +176,36 @@ export function SdlcLifecycleHub() {
                 <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
                   {topic.summary}
                 </p>
+
+                <div className="flex items-center justify-between pt-1.5 border-t border-[var(--border)]/60 text-[10px] gap-2">
+                  <span className="text-blue-400 font-medium">
+                    View Phase {phase.phaseNumber} Controls →
+                  </span>
+                  <div className="flex items-center gap-2 shrink-0 font-medium">
+                    <Link
+                      href={`/concepts?q=${encodeURIComponent(topic.title)}`}
+                      className="text-emerald-400 hover:underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Concept
+                    </Link>
+                    <Link
+                      href={`/architecture?search=${encodeURIComponent(topic.title)}`}
+                      className="text-purple-400 hover:underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Design
+                    </Link>
+                    <Link
+                      href={`/qa-prep?q=${encodeURIComponent(topic.title)}`}
+                      className="text-blue-400 hover:underline flex items-center gap-0.5"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <span>Drill QA</span>
+                      <ArrowRight size={10} />
+                    </Link>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -336,18 +366,35 @@ export function SdlcLifecycleHub() {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]/60 text-[10px]">
-                    <span className="text-[var(--muted-foreground)] flex items-center gap-1">
-                      <Folder size={11} className="text-amber-400" />
-                      <span>labs/15-end-to-end-sdlc/{topic.labFolder}</span>
+                  <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]/60 text-[10px] gap-2">
+                    <span className="text-[var(--muted-foreground)] flex items-center gap-1 min-w-0 truncate">
+                      <Folder size={11} className="text-amber-400 shrink-0" />
+                      <span className="truncate">labs/15-end-to-end-sdlc/{topic.labFolder}</span>
                     </span>
-                    <Link
-                      href={`/qa-prep?q=${encodeURIComponent(topic.title)}`}
-                      className="text-blue-400 hover:underline flex items-center gap-0.5 font-medium shrink-0"
-                    >
-                      <span>Drill QA</span>
-                      <ArrowRight size={10} />
-                    </Link>
+                    <div className="flex items-center gap-2 shrink-0 font-medium">
+                      <Link
+                        href={`/concepts?q=${encodeURIComponent(topic.title)}`}
+                        className="text-emerald-400 hover:underline"
+                        title="View Related Concepts"
+                      >
+                        Concept
+                      </Link>
+                      <Link
+                        href={`/architecture?search=${encodeURIComponent(topic.title)}`}
+                        className="text-purple-400 hover:underline"
+                        title="Explore System Design"
+                      >
+                        Design
+                      </Link>
+                      <Link
+                        href={`/qa-prep?q=${encodeURIComponent(topic.title)}`}
+                        className="text-blue-400 hover:underline flex items-center gap-0.5"
+                        title="Launch Interview Drill"
+                      >
+                        <span>Drill QA</span>
+                        <ArrowRight size={10} />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}

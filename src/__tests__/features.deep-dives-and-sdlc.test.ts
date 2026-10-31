@@ -108,4 +108,44 @@ describe("Platform Metadata & Hubs Alignment", () => {
     expect(PLATFORM_CONFIG.hubs.concepts.badge).toContain("679");
     expect(PLATFORM_CONFIG.hubs.architecture.description).toContain("42 whiteboard blueprints");
   });
+
+  it("verifies every SDLC control has a corresponding Drill QA in questions.json", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const questionsPath = path.join(process.cwd(), "src", "data", "json", "questions.json");
+    const questions = JSON.parse(fs.readFileSync(questionsPath, "utf-8"));
+
+    SDLC_PHASES.forEach((phase) => {
+      phase.topics.forEach((topic) => {
+        const found = questions.some(
+          (q: any) =>
+            q.id === `sdlc-qa-${topic.code}` ||
+            (q.tags && q.tags.includes(`Control ${topic.code}`)) ||
+            (q.topic && q.topic.toLowerCase() === topic.title.toLowerCase())
+        );
+        expect(found).toBe(true);
+      });
+    });
+  });
+
+  it("verifies concepts and architecture scenarios exist for key SDLC lifecycle phases", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const concepts = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "json", "data_concepts.json"), "utf-8"));
+    const arch = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "json", "data_architecture.json"), "utf-8"));
+
+    // Check SDLC concepts
+    const intakeConcept = concepts.find((c: any) => c.id === "sdlc-concept-project-intake");
+    const contractConcept = concepts.find((c: any) => c.id === "sdlc-concept-data-contracts");
+    const canaryConcept = concepts.find((c: any) => c.id === "sdlc-concept-canary-data-deployment");
+    expect(intakeConcept).toBeDefined();
+    expect(contractConcept).toBeDefined();
+    expect(canaryConcept).toBeDefined();
+
+    // Check SDLC scenarios
+    const contractMeshArch = arch.find((a: any) => a.id === "arch-sdlc-data-contract-mesh");
+    const zeroDowntimeArch = arch.find((a: any) => a.id === "arch-sdlc-zero-downtime-lakehouse-migration");
+    expect(contractMeshArch).toBeDefined();
+    expect(zeroDowntimeArch).toBeDefined();
+  });
 });
