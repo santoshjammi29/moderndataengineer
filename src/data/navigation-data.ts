@@ -23,6 +23,7 @@ import {
   Briefcase,
   Zap,
   Cloud,
+  Search,
 } from "lucide-react";
 
 export interface SubNavItem {
@@ -115,6 +116,12 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     title: "Knowledge & Drills",
     items: [
+      {
+        label: "Search Topics",
+        href: "/search-topics",
+        icon: Search,
+        pill: { text: "New", variant: "new" },
+      },
       {
         label: "Concepts Glossary",
         href: "/concepts",

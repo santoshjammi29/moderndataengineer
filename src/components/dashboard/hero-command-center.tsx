@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Compass,
   BookOpen,
@@ -11,179 +12,33 @@ import {
   ArrowRight,
   Search,
   CheckCircle2,
-  FileCode2,
-  Workflow,
+  Zap,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { KbdShortcut } from "@/components/ui/kbd-shortcut";
 
-interface PillarItem {
-  id: string;
-  title: string;
-  badge: string;
-  badgeColor: string;
-  icon: React.ElementType;
-  iconColor: string;
-  accentBg: string;
-  borderColor: string;
-  hoverBorder: string;
-  description: string;
-  features: string[];
-  primaryLink: { label: string; href: string };
-  secondaryLinks: { label: string; href: string }[];
-}
-
-const PILLARS: PillarItem[] = [
-  {
-    id: "concepts",
-    title: "1. Concepts & Foundations",
-    badge: "679 Concepts · Mind Map",
-    badgeColor: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-    icon: BookOpen,
-    iconColor: "text-emerald-400",
-    accentBg: "from-emerald-600/10 via-emerald-500/5 to-transparent",
-    borderColor: "border-emerald-500/20",
-    hoverBorder: "hover:border-emerald-500/50",
-    description:
-      "Comprehensive architectural glossaries, visual hierarchy taxonomy depth tree, and core lakehouse engine concepts.",
-    features: [
-      "Concepts Glossary (679 Terms)",
-      "Interactive Mind Map Tree",
-      "Delta Lake vs Iceberg Internals",
-      "Modern Stack Core Concepts",
-    ],
-    primaryLink: { label: "Explore Key Concepts", href: "/concepts" },
-    secondaryLinks: [
-      { label: "Concepts Glossary", href: "/concepts" },
-      { label: "Concepts Mind Map", href: "/mindmap" },
-    ],
-  },
-  {
-    id: "architecture",
-    title: "2. Architecture & Systems",
-    badge: "3,206+ Scenarios · Spark Lab",
-    badgeColor: "bg-purple-500/15 text-purple-400 border-purple-500/30",
-    icon: Layers,
-    iconColor: "text-purple-400",
-    accentBg: "from-purple-600/10 via-purple-500/5 to-transparent",
-    borderColor: "border-purple-500/20",
-    hoverBorder: "hover:border-purple-500/50",
-    description:
-      "Real-world enterprise system design problems, Spark physical execution & Tungsten lab, DataOps lifecycle, and Cloud × Table Matrix.",
-    features: [
-      "System Design Scenarios",
-      "Spark Engine & Tungsten Lab",
-      "DataOps Lifecycle Playbook",
-      "Cloud × Table Matrix",
-    ],
-    primaryLink: { label: "View Architecture & Systems", href: "/architecture" },
-    secondaryLinks: [
-      { label: "System Scenarios", href: "/architecture?tab=scenarios" },
-      { label: "Spark Engine Lab", href: "/spark-engine" },
-      { label: "Cloud × Table Matrix", href: "/modern-stack?tab=compatibility" },
-    ],
-  },
-  {
-    id: "code",
-    title: "3. Coding & Runbooks",
-    badge: "69 Runbooks · 178 Drills",
-    badgeColor: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
-    icon: FileCode2,
-    iconColor: "text-cyan-400",
-    accentBg: "from-cyan-600/10 via-cyan-500/5 to-transparent",
-    borderColor: "border-cyan-500/20",
-    hoverBorder: "hover:border-cyan-500/50",
-    description:
-      "Production incident playbooks, Databricks cheat sheets, P0 outage cheat codes, and runnable PySpark, SQL, and Polars drills.",
-    features: [
-      "Sev-1 Incident Runbooks",
-      "Databricks Cheat Sheets & PDFs",
-      "PySpark & Spark SQL Drills",
-      "Polars Rust Vectorized Code",
-    ],
-    primaryLink: { label: "Open Code & Runbooks", href: "/code-practice" },
-    secondaryLinks: [
-      { label: "Production Cheat Sheet", href: "/cheat-sheet" },
-      { label: "Databricks Cheat Sheets", href: "/cheat-sheet?tab=databricks" },
-      { label: "A4 PDF Library", href: "/cheat-sheet?tab=pdf_hub" },
-      { label: "PySpark Drills", href: "/code-practice?db=pyspark" },
-    ],
-  },
-  {
-    id: "visuals",
-    title: "4. Visual Blueprints & Diagrams",
-    badge: "42 Whiteboards · Interactive Flows",
-    badgeColor: "bg-teal-500/15 text-teal-400 border-teal-500/30",
-    icon: Sparkles,
-    iconColor: "text-teal-400",
-    accentBg: "from-teal-600/10 via-teal-500/5 to-transparent",
-    borderColor: "border-teal-500/20",
-    hoverBorder: "hover:border-teal-500/50",
-    description:
-      "Hand-drawn whiteboard architectural diagrams, system design workflows, and interactive end-to-end data pipeline flow SVGs.",
-    features: [
-      "42 Whiteboard Architecture Blueprints",
-      "Interactive DataOps Pipeline SVG",
-      "Modern Stack Visual Flow Canvas",
-      "Spark Memory & Shuffling Sketches",
-    ],
-    primaryLink: { label: "Inspect Whiteboard Blueprints", href: "/architecture?tab=diagrams" },
-    secondaryLinks: [
-      { label: "Whiteboard Blueprints", href: "/architecture?tab=diagrams" },
-      { label: "DataOps Architecture Flow", href: "/dataops?tab=diagram" },
-    ],
-  },
-  {
-    id: "interview",
-    title: "5. Interview Drill Hub",
-    badge: "7,080+ Qs · 156 Targets",
-    badgeColor: "bg-orange-500/15 text-orange-400 border-orange-500/30",
-    icon: MessageSquare,
-    iconColor: "text-orange-400",
-    accentBg: "from-orange-600/10 via-orange-500/5 to-transparent",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
-    description:
-      "Interactive SM-2 spaced repetition question drill, domain question banks, and verified Tier-1 GCC / BigTech hiring playbooks.",
-    features: [
-      "7,080+ Vetted Interview Q&As",
-      "156+ Target Enterprise Profiles",
-      "Interactive SM-2 Flashcards",
-      "Architect Scenario Defenses",
-    ],
-    primaryLink: { label: "Launch Interview Drill", href: "/qa-prep" },
-    secondaryLinks: [
-      { label: "Question Drill Bank", href: "/qa-prep" },
-      { label: "Target Company Intel", href: "/company-research" },
-    ],
-  },
-  {
-    id: "journey",
-    title: "6. Learning Journey",
-    badge: "12 Curricula · 14 Tracks",
-    badgeColor: "bg-blue-500/15 text-blue-400 border-blue-500/30",
-    icon: Compass,
-    iconColor: "text-blue-400",
-    accentBg: "from-blue-600/10 via-blue-500/5 to-transparent",
-    borderColor: "border-blue-500/20",
-    hoverBorder: "hover:border-blue-500/50",
-    description:
-      "Structured tech tracks and week-by-week role curricula from Fabric DP-600 to 32-Week Principal Lakehouse Mastery.",
-    features: [
-      "Guided Tech Topics",
-      "12 Career Roadmaps",
-      "Milestone Checklists",
-      "Multi-Hop Learning Plan",
-    ],
-    primaryLink: { label: "Launch Learning Journey", href: "/guided-learning" },
-    secondaryLinks: [
-      { label: "Guided Tracks", href: "/guided-learning" },
-      { label: "Career Curricula", href: "/learning-paths" },
-    ],
-  },
+const HERO_SUGGESTIONS = [
+  "Data Skew in Spark",
+  "Delta Lake ACID",
+  "Direct Lake VertiPaq",
+  "Liquid Clustering",
+  "Kafka CDC Debezium",
+  "Kimball Star Schema",
 ];
 
 export function HeroCommandCenter() {
+  const [heroSearch, setHeroSearch] = useState("");
+  const router = useRouter();
+
+  const handleHeroSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = heroSearch.trim();
+    if (trimmed) {
+      router.push(`/search-topics?q=${encodeURIComponent(trimmed)}`);
+    } else {
+      router.push("/search-topics");
+    }
+  };
+
   const openSearch = () => {
     window.dispatchEvent(new CustomEvent("open-command-palette"));
   };
@@ -191,198 +46,145 @@ export function HeroCommandCenter() {
   return (
     <div className="space-y-4 sm:space-y-5 animate-in fade-in duration-300">
       {/* ── 1. FOCUSED, MOTIVATIONAL HERO BANNER ───────────────────────────── */}
-      <section className="relative overflow-hidden rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 isolate shadow-xs">
+      <section className="relative overflow-hidden rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] p-4 sm:p-6 lg:p-8 isolate shadow-sm">
         {/* Ambient atmospheric lighting */}
-        <div className="absolute top-0 right-0 -mt-16 -mr-16 w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.12)_0%,transparent_70%)] blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 -mb-20 w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,rgba(37,99,235,0.08)_0%,transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -mt-16 -mr-16 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.14)_0%,transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 -mb-20 w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.1)_0%,transparent_70%)] blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-4xl space-y-2.5">
+        <div className="relative z-10 max-w-4xl space-y-4">
           {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/25 text-[10px] font-semibold text-blue-600 dark:text-blue-300 backdrop-blur-md">
-            <Sparkles size={11} className="text-blue-500 dark:text-blue-400 animate-pulse" />
-            <span className="tracking-wide">2026 ARCHITECT PREPARATION PLATFORM</span>
-            <span className="w-1 h-1 rounded-full bg-blue-400" />
-            <span className="text-[10px] text-blue-500/80 font-mono">6,570+ SCENARIOS</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[11px] font-semibold text-blue-600 dark:text-blue-300 backdrop-blur-md">
+            <Sparkles size={12} className="text-blue-500 dark:text-blue-400 animate-pulse" />
+            <span className="tracking-wide">2026 LAKEHOUSE ARCHITECT &amp; SYSTEMS MASTERCLASS</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+            <span className="text-[11px] text-blue-500/90 font-mono font-bold">11,507 ASSETS</span>
           </div>
 
           {/* Main motivational title */}
-          <div className="space-y-1">
-            <h1 className="text-base sm:text-lg lg:text-2xl font-extrabold tracking-tight text-[var(--foreground)] leading-snug break-words">
+          <div className="space-y-1.5">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[var(--foreground)] leading-tight break-words">
               Lakehouse Architecture &amp; Systems Mastery
-              <span className="block mt-0.5 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400">
+              <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400">
                 Enterprise Blueprints, Medallion Patterns &amp; Principal Systems Practice
               </span>
             </h1>
-            <p className="text-xs sm:text-sm text-[var(--muted-foreground)] leading-relaxed max-w-3xl break-words">
+            <p className="text-xs sm:text-sm text-[var(--muted-foreground)] leading-relaxed max-w-3xl">
               The premier open-access knowledge base for Lakehouse Architects and Lead Data Engineers.
-              Master modern Lakehouse Architecture, Medallion patterns, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Spark 4.0, Iceberg, and distributed systems design.
+              Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Spark 4.0, Iceberg, and distributed system design.
             </p>
           </div>
 
+          {/* Prominent Search Topics Bar */}
+          <form onSubmit={handleHeroSubmit} className="pt-1 max-w-2xl">
+            <div className="relative flex items-center">
+              <Search size={16} className="absolute left-3.5 text-blue-500 pointer-events-none" />
+              <input
+                type="text"
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
+                placeholder="Ask any question or topic (e.g. data skew in Spark, delta lake ACID, direct lake)..."
+                className="w-full pl-10 pr-28 py-2.5 sm:py-3 text-xs sm:text-sm bg-[var(--card)] border border-[var(--border)] rounded-xl text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 shadow-xs transition-all"
+              />
+              <button
+                type="submit"
+                className="absolute right-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors flex items-center gap-1"
+              >
+                <span>Search</span>
+                <ArrowRight size={12} />
+              </button>
+            </div>
+
+            {/* Quick search suggestions */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pt-2 no-scrollbar text-xs">
+              <span className="text-[11px] font-semibold text-[var(--muted-foreground)] whitespace-nowrap flex items-center gap-1">
+                <Zap size={11} className="text-amber-400" /> Popular:
+              </span>
+              {HERO_SUGGESTIONS.map((sug) => (
+                <button
+                  type="button"
+                  key={sug}
+                  onClick={() => router.push(`/search-topics?q=${encodeURIComponent(sug)}`)}
+                  className="px-2 py-0.5 text-[11px] rounded-md bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors whitespace-nowrap"
+                >
+                  {sug}
+                </button>
+              ))}
+            </div>
+          </form>
+
           {/* High-Intent Motivational Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2 pt-0.5">
+          <div className="flex flex-wrap items-center gap-2 pt-1">
             <Link
-              href="/learning-paths"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+              href="/search-topics"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-all"
             >
-              <Compass size={14} />
-              <span>Explore Career Curricula</span>
-              <ArrowRight size={12} />
+              <Search size={13} />
+              <span>Search Topics</span>
+              <span className="px-1.5 py-0.2 rounded bg-white/20 text-[9px] uppercase tracking-wider font-extrabold">New</span>
             </Link>
 
             <Link
               href="/guided-learning"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] border border-[var(--border)] hover:border-blue-500/40 text-[var(--foreground)] text-xs font-semibold transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] border border-[var(--border)] hover:border-blue-500/40 text-[var(--foreground)] text-xs font-semibold transition-all"
             >
-              <Compass size={14} className="text-blue-500 dark:text-blue-400" />
-              <span>Guided Tech Tracks</span>
+              <Compass size={13} className="text-blue-500 dark:text-blue-400" />
+              <span>Guided Learning Tracks</span>
+            </Link>
+
+            <Link
+              href="/concepts"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] border border-[var(--border)] hover:border-blue-500/40 text-[var(--foreground)] text-xs font-semibold transition-all"
+            >
+              <BookOpen size={13} className="text-emerald-500 dark:text-emerald-400" />
+              <span>Concepts &amp; Mind Map</span>
+            </Link>
+
+            <Link
+              href="/qa-prep"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] border border-[var(--border)] hover:border-blue-500/40 text-[var(--foreground)] text-xs font-semibold transition-all"
+            >
+              <MessageSquare size={13} className="text-amber-500 dark:text-amber-400" />
+              <span>Interview Q&amp;A Bank</span>
             </Link>
 
             <button
               type="button"
               onClick={openSearch}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-2)]/80 hover:bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
-              aria-label="Universal search across all topics, questions, architecture and concepts (Cmd/Ctrl+K)"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[var(--surface-2)]/80 hover:bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+              aria-label="Universal command palette (Cmd/Ctrl+K)"
             >
-              <Search size={13} />
-              <span>Universal Search</span>
+              <span>Command Palette</span>
               <KbdShortcut shortcutKey="k" className="hidden sm:inline-flex bg-[var(--surface-3)]" />
             </button>
           </div>
 
-          {/* Proof of Value Badges */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 pt-2 border-t border-[var(--border)]/60 text-xs text-[var(--muted-foreground)]">
+          {/* Proof of Value Metrics Badges */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 pt-3 border-t border-[var(--border)]/60 text-xs text-[var(--muted-foreground)]">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">7,080+</strong> Questions</span>
+              <span><strong className="text-[var(--foreground)]">679</strong> Concepts</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">3,206+</strong> Scenarios</span>
+              <span><strong className="text-[var(--foreground)]">3,214</strong> Scenarios</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">42</strong> Blueprints</span>
+              <span><strong className="text-[var(--foreground)]">7,080+</strong> Q&amp;As</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">21</strong> Subpages Across 8 Hubs</span>
+              <span><strong className="text-[var(--foreground)]">42</strong> Whiteboard Blueprints</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">100%</strong> Free &amp; Open Access</span>
+              <span><strong className="text-[var(--foreground)]">156</strong> GCC Profiles</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── 2. THE 6 PILLARS OF MASTERY (CLEAN GATEWAY CARDS) ──────────────── */}
-      <section className="space-y-2.5">
-        <div className="flex items-center justify-between px-1">
-          <div>
-            <div className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-              Core Study Pillars
-            </div>
-            <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)] tracking-tight">
-              Choose Your Architectural Focus
-            </h2>
-          </div>
-          <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">
-            6 unified learning gateways
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
-          {PILLARS.map((pillar) => {
-            const Icon = pillar.icon;
-            return (
-              <div
-                key={pillar.id}
-                className={cn(
-                  "relative rounded-xl bg-[var(--surface-1)] border p-3.5 sm:p-4 flex flex-col justify-between transition-all duration-200 group overflow-hidden shadow-xs",
-                  pillar.borderColor,
-                  pillar.hoverBorder
-                )}
-              >
-                {/* Subtle top gradient accent */}
-                <div
-                  className={cn(
-                    "absolute inset-x-0 top-0 h-20 bg-gradient-to-b opacity-40 pointer-events-none transition-opacity group-hover:opacity-75",
-                    pillar.accentBg
-                  )}
-                />
-
-                <div className="relative space-y-2.5">
-                  {/* Card Header */}
-                  <div className="flex items-start justify-between gap-2.5">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                        <Icon size={16} className={pillar.iconColor} />
-                      </div>
-                      <div>
-                        <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] group-hover:text-blue-500 transition-colors break-words">
-                          {pillar.title}
-                        </h3>
-                        <span
-                          className={cn(
-                            "inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border mt-0.5 leading-tight",
-                            pillar.badgeColor
-                          )}
-                        >
-                          {pillar.badge}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed break-words">
-                    {pillar.description}
-                  </p>
-
-                  {/* Bullet Highlights */}
-                  <div className="grid grid-cols-2 gap-1 pt-0.5">
-                    {pillar.features.map((feature) => (
-                      <div
-                        key={feature}
-                        className="flex items-center gap-1.5 text-[11px] text-[var(--muted-foreground)]"
-                      >
-                        <span className="w-1 h-1 rounded-full bg-blue-500 shrink-0" />
-                        <span className="break-words leading-tight">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Card Footer Actions */}
-                <div className="relative pt-3 mt-3 border-t border-[var(--border)]/60 flex flex-wrap items-center justify-between gap-2">
-                  <Link
-                    href={pillar.primaryLink.href}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors group-hover:translate-x-0.5 transition-transform"
-                  >
-                    <span>{pillar.primaryLink.label}</span>
-                    <ArrowRight size={13} />
-                  </Link>
-
-                  <div className="flex items-center gap-1">
-                    {pillar.secondaryLinks.map((sec) => (
-                      <Link
-                        key={sec.href}
-                        href={sec.href}
-                        className="px-2 py-0.5 rounded-md text-[10px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)] transition-colors"
-                      >
-                        {sec.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </section>
     </div>

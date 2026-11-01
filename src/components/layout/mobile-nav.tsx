@@ -16,6 +16,7 @@ import {
   BookMarked,
   Terminal,
   Workflow,
+  Search,
 } from "lucide-react";
 
 import { Compass } from "lucide-react";
@@ -39,12 +40,13 @@ const mobileCoreTabs: MobileTabItem[] = [
 // Extended tabs on tablet screens (640px - 1023px) — All Primary Hubs + Home & Studio
 const tabletTabs: MobileTabItem[] = [
   { label: "Home", href: "/", icon: Home },
+  { label: "Search", href: "/search-topics", icon: Search, isNew: true },
   { label: "Journey", href: "/guided-learning", icon: Compass },
   { label: "Concepts", href: "/concepts", icon: BookOpen },
   { label: "Arch", href: "/architecture", icon: Layers },
   { label: "Code", href: "/code-practice", icon: FileCode2 },
   { label: "DataOps", href: "/dataops", icon: Workflow },
-  { label: "Q&A", href: "/qa-prep", icon: MessageSquare, badge: "6.8k" },
+  { label: "Q&A", href: "/qa-prep", icon: MessageSquare, badge: "7.1k" },
   { label: "Studio", href: "/studio", icon: User },
 ];
 

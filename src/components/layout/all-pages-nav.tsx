@@ -45,6 +45,13 @@ const NAV_SECTIONS: NavSection[] = [
     icon: Home,
   },
   {
+    id: "search-topics",
+    label: "Search Topics",
+    href: "/search-topics",
+    icon: Search,
+    badge: "New",
+  },
+  {
     id: "guided-learning",
     label: "Guided Learning",
     href: "/guided-learning",

@@ -14,6 +14,8 @@ import {
   CheckCircle2,
   ExternalLink,
   BookOpen,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 export function LakehouseArchitectureGuide() {
@@ -60,8 +62,35 @@ export function LakehouseArchitectureGuide() {
         </p>
       </header>
 
-      {/* ── 2. THE 5 CORE LAYERS OF LAKEHOUSE ARCHITECTURE ───────────── */}
-      <section className="space-y-6" id="lakehouse-layers">
+      {/* ── 2. COLLAPSIBLE SYSTEMS DEEP-DIVE ENCYCLOPEDIA ───────────── */}
+      <details className="group border border-[var(--border)] rounded-2xl bg-[var(--surface-1)] p-4 sm:p-6 transition-all shadow-xs" open>
+        <summary className="flex items-center justify-between cursor-pointer list-none select-none text-sm sm:text-base font-bold text-[var(--foreground)] hover:text-blue-500 transition-colors">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-500">
+              <BookOpen size={16} />
+            </div>
+            <div>
+              <span>Lakehouse Architecture Deep-Dive Blueprint</span>
+              <span className="block text-[11px] font-normal text-[var(--muted-foreground)]">
+                5 architectural tiers, Delta vs Iceberg mechanics, Medallion flow, and enterprise certification alignment
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-xs font-semibold text-blue-500 dark:text-blue-400">
+            <span className="group-open:hidden flex items-center gap-1">
+              <span>Read Guide</span>
+              <ChevronDown size={14} />
+            </span>
+            <span className="hidden group-open:flex items-center gap-1">
+              <span>Collapse Guide</span>
+              <ChevronUp size={14} />
+            </span>
+          </div>
+        </summary>
+
+        <div className="pt-8 space-y-12 border-t border-[var(--border)] mt-6">
+          {/* ── 2. THE 5 CORE LAYERS OF LAKEHOUSE ARCHITECTURE ───────────── */}
+          <section className="space-y-6" id="lakehouse-layers">
         <div className="space-y-1">
           <div className="text-xs font-bold text-blue-500 uppercase tracking-wider">System Decomposition</div>
           <h3 className="text-xl sm:text-2xl font-bold text-[var(--foreground)] tracking-tight">
@@ -433,6 +462,8 @@ export function LakehouseArchitectureGuide() {
           </Link>
         </div>
       </footer>
+        </div>
+      </details>
     </article>
   );
 }

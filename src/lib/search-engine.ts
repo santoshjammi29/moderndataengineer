@@ -151,16 +151,20 @@ const STOP_WORDS = new Set([
   "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
   "has", "he", "in", "is", "it", "its", "of", "on", "that", "the",
   "to", "was", "were", "will", "with", "how", "what", "why", "when",
-  "which", "where", "can", "do", "does"
+  "which", "where", "can", "do", "does", "you", "your", "tell", "me",
+  "explain", "difference", "between", "vs", "versus", "or", "about"
 ]);
 
 /**
  * Tokenize a search query into clean, lower-cased keyword tokens.
  */
 export function tokenizeQuery(query: string): string[] {
-  const rawTokens = query
+  const cleaned = query
     .toLowerCase()
     .trim()
+    .replace(/[?!.,;:()'"[\]{}]/g, " ");
+
+  const rawTokens = cleaned
     .split(/[\s,+/_\-:]+/)
     .map((t) => t.trim())
     .filter((t) => t.length > 0);
@@ -341,44 +345,57 @@ export function detectNavigationalIntent(query: string): NavigationalJump | null
 }
 
 /**
- * Identify topics from user search query tokens.
+ * Identify topics from user search query tokens, ranked by relevance score.
  */
-export function identifyTopicsFromTokens(tokens: string[]): TopicIdentification[] {
+export function identifyTopicsFromTokens(tokens: string[], fullQuery?: string): TopicIdentification[] {
   if (tokens.length === 0) return [];
-  const matchedTopics: TopicIdentification[] = [];
+  const scoredTopics: Array<{ topic: TopicIdentification; score: number }> = [];
   const seenKeys = new Set<string>();
+  const qClean = (fullQuery || tokens.join(" ")).toLowerCase();
 
   for (const topic of GUIDED_TOPICS) {
     const key = topic.key.toLowerCase();
     const labelLower = topic.label.toLowerCase();
     const synonyms = TOPIC_SYNONYMS[key] || [key];
 
-    const isMatch = tokens.some((token) => {
-      if (token === key || labelLower.includes(token)) return true;
-      return synonyms.some((syn) => {
-        if (syn === token) return true;
-        // Word boundary match inside multi-word synonym
-        if (syn.includes(" ") && syn.split(" ").includes(token)) return true;
-        if (syn.includes(token) && token.length >= 4) return true;
-        return false;
-      });
-    });
+    let score = 0;
 
-    if (isMatch && !seenKeys.has(key)) {
+    for (const token of tokens) {
+      if (token === "data") continue; // generic token across all domains
+      if (token === key) score += 120;
+      if (labelLower === token || labelLower.split(" ").includes(token)) score += 90;
+      if (synonyms.includes(token)) score += 70;
+
+      for (const syn of synonyms) {
+        if (syn.includes(" ") && qClean.includes(syn)) {
+          score += 110;
+        } else if (syn.includes(" ") && syn.split(" ").includes(token) && token.length >= 4) {
+          score += 40;
+        } else if (syn.includes(token) && token.length >= 4 && syn !== "data") {
+          score += 20;
+        }
+      }
+    }
+
+    if (score > 0 && !seenKeys.has(key)) {
       seenKeys.add(key);
-      matchedTopics.push({
-        key: topic.key,
-        label: topic.label,
-        icon: topic.icon,
-        domain: topic.domain,
-        href: `/guided-learning?topic=${topic.key}`,
-        description: topic.description,
-        executiveSummary: topic.executiveSummary,
+      scoredTopics.push({
+        topic: {
+          key: topic.key,
+          label: topic.label,
+          icon: topic.icon,
+          domain: topic.domain,
+          href: `/guided-learning?topic=${topic.key}`,
+          description: topic.description,
+          executiveSummary: topic.executiveSummary,
+        },
+        score,
       });
     }
   }
 
-  return matchedTopics;
+  scoredTopics.sort((a, b) => b.score - a.score);
+  return scoredTopics.map((s) => s.topic);
 }
 
 /**
@@ -558,10 +575,15 @@ export class InvertedSearchIndex {
 
       if (score === 0) continue;
 
-      // Multi-word rigor: for queries with 2+ tokens, require at least 50% match coverage (unless primary topic)
+      // Multi-word rigor: for queries with 2+ tokens, require sufficient match coverage (unless primary topic)
       const matchCoverage = hitCount / rawTokens.length;
       if (rawTokens.length >= 2 && matchCoverage < 0.5 && !isPrimaryTopic) {
-        continue;
+        // If 3+ tokens, allow through if at least 2 distinct tokens matched
+        if (rawTokens.length >= 3 && hitCount >= 2) {
+          // let natural questions pass through
+        } else {
+          continue;
+        }
       }
 
       // 3. All tokens in title bonus
@@ -667,7 +689,7 @@ export function executePortalSearch(
   globalIndex.init();
 
   const tokens = tokenizeQuery(trimmed);
-  const identifiedTopics = identifyTopicsFromTokens(tokens);
+  const identifiedTopics = identifyTopicsFromTokens(tokens, trimmed);
   const navigationalJump = detectNavigationalIntent(trimmed);
 
   const items = globalIndex.search(trimmed, maxResults, categoryFilter, identifiedTopics);
