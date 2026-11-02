@@ -109,4 +109,15 @@ How a high-growth data organization can run a massive 10TB/day data platform on 
 
 ---
 
+## 5. 2026 FinOps Levers: Databricks Serverless & Instant Auto-Suspension
+
+Modern cloud data platforms offer sub-minute auto-suspend and warm-pool compute:
+1. **Databricks SQL Serverless**:
+   - Zero infrastructure management; spinning up queries in $<10\text{ seconds}$ from shared warm pools.
+   - **2-Minute Auto-Stop**: Default idle shutdown drops compute billing to zero immediately after peak user concurrency periods.
+2. **Spot Instance Arbitrage for Ephemeral Jobs**:
+   - Production batch workloads run on ephemeral Single-Node or Spot Worker clusters (`spark.databricks.cluster.profile singleNode`), yielding up to **80% cost savings** compared to interactive all-purpose clusters.
+
+---
+
 [← Back to Architecture Library](./README.md) • [Documentation Hub](../README.md)

@@ -14,7 +14,7 @@
       "Uses Optimistic Concurrency Control (OCC) to detect write-write conflicts at commit time.",
       "Eliminates dirty reads and partial failures by committing changes atomically to the transaction log."
     ],
-    "codeSnippet": "-- ACID guarantees via optimistic concurrency control\nBEGIN TRANSACTION;\nINSERT INTO delta.`/mnt/gold/sales` VALUES (101, 'Widget', 29.99, current_timestamp());\nCOMMIT;",
+    "codeSnippet": "-- ACID guarantees via optimistic concurrency control in Unity Catalog\nBEGIN TRANSACTION;\nINSERT INTO prod_catalog.gold.sales VALUES (101, 'Widget', 29.99, current_timestamp());\nCOMMIT;",
     "certificationMapping": "Databricks Associate / Professional Data Engineer"
   },
   {
@@ -32,7 +32,7 @@
       "Every 10 commits, Delta automatically writes a multi-part Parquet checkpoint file for fast state reconstruction.",
       "Snapshot isolation allows concurrent readers to query consistent states without acquiring file locks."
     ],
-    "codeSnippet": "-- Inspecting the transaction log commits\nDESCRIBE HISTORY delta.`/mnt/gold/sales`;\n-- Reading raw log metadata JSON\n-- dbfs:/mnt/gold/sales/_delta_log/00000000000000000000.json",
+    "codeSnippet": "-- Inspecting the transaction log commits in Unity Catalog\nDESCRIBE HISTORY prod_catalog.gold.sales;\n-- Reading raw log metadata via Unity Catalog Volumes\n-- /Volumes/prod_catalog/gold/sales_volume/_delta_log/00000000000000000000.json",
     "certificationMapping": "Databricks Associate / Professional Data Engineer"
   },
   {
@@ -1605,18 +1605,18 @@
     "id": "db100-090-databricks-asset-bundles-dabs",
     "num": 90,
     "day": 90,
-    "concept": "Databricks Asset Bundles (DABs)",
+    "concept": "Declarative Automation Bundles (DABs)",
     "category": "Workflows, CI/CD & Operations",
     "categoryId": 9,
     "difficulty": "HARD",
-    "summary": "The `databricks.yml` configuration file. Defining jobs, pipelines, and models as code. Environment targets (dev/staging/prod). `databricks bundle validate/deploy/destroy`. GitHub Actions integration.",
-    "explanation": "In enterprise Databricks lakehouses, Databricks Asset Bundles (DABs) is an essential mechanism under Workflows, CI/CD & Operations. The `databricks.yml` configuration file. Defining jobs, pipelines, and models as code. Environment targets (dev/staging/prod). `databricks bundle validate/deploy/destroy`. GitHub Actions integration.",
+    "summary": "Databricks Declarative Automation Bundles (formerly Asset Bundles). Defining jobs, DLT pipelines, and Unity Catalog assets as declarative YAML code. Target environments (dev/staging/prod), CI/CD validation, and deployment.",
+    "explanation": "In enterprise Databricks lakehouses, Declarative Automation Bundles (DABs) are the software engineering standard for CI/CD automation. Using databricks.yml, engineers manage parameterized jobs, cluster policies, and permissions as code, deployed via GitHub Actions using keyless Azure/AWS OIDC authentication.",
     "keyPoints": [
-      "Core production concept in Databricks Workflows, CI/CD & Operations.",
-      "The `databricks.yml` configuration file. Defining jobs, pipelines, and models as code. Environment targets (dev/staging/prod). `databricks bundle validate/deploy/destroy`. GitHub Actions integration.",
-      "Essential architectural pattern for enterprise lakehouse systems."
+      "Declarative YAML specification (databricks.yml) for orchestrating jobs, DLT pipelines, and Unity Catalog assets.",
+      "Multi-target environment deployment (dev, staging, prod) with isolated workspace hosts and service principal run_as identities.",
+      "Automated CI/CD integration using 'databricks bundle validate', topological DAG dependency checks, and keyless OIDC authentication."
     ],
-    "codeSnippet": "-- Example for Databricks Asset Bundles (DABs)\nSELECT 1;",
+    "codeSnippet": "# databricks.yml: Production Declarative Automation Bundle\nbundle:\n  name: lakehouse_daily_etl\n\ntargets:\n  dev:\n    mode: development\n    default: true\n  prod:\n    mode: production\n    workspace:\n      host: https://adb-prod.azuredatabricks.net\n    run_as:\n      service_principal_name: 11111111-2222-3333-4444-555555555555",
     "certificationMapping": "Databricks Certified Data Engineer Associate / Professional"
   },
   {

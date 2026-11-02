@@ -24,7 +24,7 @@ export const dataOpsData: DataOpsDataset = {
       "workspaceResourceId": "/subscriptions/sub-id/resourceGroups/rg-data-prod/providers/Microsoft.Databricks/workspaces/adb-workspace-prod",
       "newClusterNodeType": "Standard_E4ds_v5",
       "newClusterNumOfWorkers": "2:8",
-      "newClusterSparkVersion": "14.3.x-scala2.12",
+      "newClusterSparkVersion": "15.4.x-scala2.12",
       "newClusterInitScripts": [],
       "newClusterSparkConf": {
         "spark.databricks.delta.preview.enabled": "true"
@@ -319,11 +319,11 @@ jobs:
   cicdAlternatives: [
     {
       id: "dab-vs-repos",
-      name: "Databricks CI/CD: Databricks Asset Bundles (DABs) vs Workspace Repos",
+      name: "Databricks CI/CD: Declarative Automation Bundles (DABs) vs Workspace Repos",
       category: "Databricks",
-      recommendedApproach: "Databricks Asset Bundles (DABs) via CLI v0.200+",
+      recommendedApproach: "Declarative Automation Bundles (DABs) via CLI v0.220+",
       legacyOrAlternative: "Databricks Repos UI / Git-Sync REST API Scripts",
-      tradeOffSummary: "DABs provides declarative infrastructure-as-code for jobs, DLT pipelines, and ML experiments with built-in multi-target environment isolation (`dev`, `staging`, `prod`). Workspace Repos requires manual git pulls and risks developers editing production notebooks directly in the workspace.",
+      tradeOffSummary: "Declarative Automation Bundles (DABs) provide declarative infrastructure-as-code for jobs, DLT pipelines, and ML experiments with built-in multi-target environment isolation (`dev`, `staging`, `prod`). Workspace Repos requires manual git pulls and risks developers editing production notebooks directly in the workspace.",
       pros: [
         "Declarative YAML specification (`databricks.yml`) versioned in Git",
         "Built-in environment targeting (`-t dev`, `-t staging`, `-t prod`) with parameter substitution",
@@ -409,7 +409,7 @@ jobs:
         "In `mode: development`, Databricks prefixes all job names with `[dev <username>]` and pauses schedules by default — never deploy dev bundles into production workspaces!",
         "Always specify `run_as` with Service Principal in production targets to avoid job ownership invalidation when employees depart."
       ],
-      interviewSoundbite: "In an interview, say: 'We modernized from legacy workspace git repos to Databricks Asset Bundles (DABs). DABs gives us true IaC for Databricks workflows and DLT pipelines: developers test locally with personal prefixes, while GitHub Actions validates bundles in PRs and atomically deploys to production under a dedicated Service Principal.'"
+      interviewSoundbite: "In an interview, say: 'We modernized from legacy workspace git repos to Declarative Automation Bundles (DABs). DABs gives us true IaC for Databricks workflows and DLT pipelines: developers test locally with personal prefixes, while GitHub Actions validates bundles in PRs and atomically deploys to production under a dedicated Service Principal.'"
     },
     {
       id: "airflow-gitsync-vs-container",
@@ -851,7 +851,7 @@ spark.sql("ALTER TABLE sales.fct_orders_staging RENAME TO sales.fct_orders")`,
         "Environment Isolation: Distinct Azure resource groups and storage accounts (`dev`, `staging`, `prod`) with separate Entra ID Service Principals.",
         "Staging Validation: Zero-copy Delta Shallow Clone of production tables into staging environment to test transformations on real data scale."
       ],
-      primaryTools: ["GitHub Actions / Azure DevOps", "dbt Slim CI", "SQLFluff", "pytest-spark / chispa", "Databricks Asset Bundles"],
+      primaryTools: ["GitHub Actions / Azure DevOps", "dbt Slim CI", "SQLFluff", "pytest-spark / chispa", "Declarative Automation Bundles (DABs)"],
       concreteDeliverables: [
         {
           name: "CI/CD Pipeline Definition",
@@ -870,7 +870,7 @@ spark.sql("ALTER TABLE sales.fct_orders_staging RENAME TO sales.fct_orders")`,
         "Unit test coverage > 85% on custom PySpark / Python transformation functions",
         "Production deployment requires designated Data Lead manual approval gate"
       ],
-      interviewExplanationScript: "Our promotion strategy follows strict Trunk-Based DataOps. Developers create short-lived feature branches. On PR creation, GitHub Actions runs SQLFluff, PyTest unit tests, and dbt Slim CI against an ephemeral schema. Once merged to main, Databricks Asset Bundles deploys jobs and schedules atomically using our production Service Principal.",
+      interviewExplanationScript: "Our promotion strategy follows strict Trunk-Based DataOps. Developers create short-lived feature branches. On PR creation, GitHub Actions runs SQLFluff, PyTest unit tests, and dbt Slim CI against an ephemeral schema. Once merged to main, Declarative Automation Bundles (DABs) deploys jobs and schedules atomically using our production Service Principal.",
       commonFailureModes: [
         "Long-lived feature branches: Merging a 3-week-old branch creates catastrophic schema merge conflicts.",
         "Testing with fake 5-row mocks only: Code succeeds in test but explodes in production due to data skew on a 500-million row customer table."

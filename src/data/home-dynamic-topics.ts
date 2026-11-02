@@ -76,7 +76,7 @@ export const FEATURED_HERO_GUIDES: FeaturedHeroGuide[] = [
   {
     id: "fabric-direct-lake",
     badge: "Featured Architect Guide",
-    categoryTag: "DP-600 & DP-203",
+    categoryTag: "DP-700 & DP-600",
     title: "Microsoft Fabric Direct Lake vs Import Mode: The 2026 Production Deep Dive",
     description:
       "Understand VertiPaq memory mapping over OneLake Parquet, dynamic DAX fallback triggers, partition boundaries, and how to architect sub-second enterprise semantic models without data copying.",

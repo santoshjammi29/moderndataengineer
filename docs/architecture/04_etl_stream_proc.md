@@ -146,4 +146,24 @@ In large organizations, monolithic dbt repositories become unmanageable (1,500+ 
 
 ---
 
+## 6. Cloud Orchestration: Azure Data Factory (ADF) Production Patterns & Reliability
+
+Azure Data Factory (ADF) remains the enterprise backbone for hybrid cloud ingestion across Azure SQL, on-premises databases, and SaaS APIs into ADLS Gen2 and Databricks.
+
+### 6.1 Two-Phase Watermark Commit Protocol
+A common production failure in incremental ETL pipelines is advancing the high-watermark before downstream processing completes. If the Databricks cluster crashes during Bronze-to-Silver transformation, the next scheduled run skips the failed batch permanently.
+
+**The Solution: Two-Phase Commit**:
+1. **Extract**: ADF extracts delta records using `WHERE LastModifiedDate > @CurrentWatermark AND LastModifiedDate <= @NewWatermark`.
+2. **Transform & Commit**: Databricks processes the batch and commits to Delta Lake with ACID verification.
+3. **Advance**: The high-watermark in the SQL Control Table is updated **only** when Databricks returns an explicit `"status": "SUCCESS"` exit code and row count reconciliation passes.
+
+### 6.2 Preventing Multi-Layer Retry Multiplication Storms
+When ADF executes a Databricks Job activity:
+- If ADF activity has `retryCount = 3` and Databricks workflow task has `max_retries = 3`, a transient error can trigger:
+  $$(1 + R_{\text{ADF}}) \times (1 + R_{\text{DB}}) = 4 \times 4 = 16 \text{ attempts}$$
+- **Remediation**: Set Databricks task `max_retries = 0` when orchestrated by ADF; centralize retry scheduling in ADF with exponential backoff, and enforce idempotency using `@pipeline().RunId`.
+
+---
+
 [← Back to Architecture Library](./README.md) • [Documentation Hub](../README.md)

@@ -88,9 +88,9 @@ export default function DashboardPage() {
         "The three dominant open table formats are Delta Lake (pioneered by Databricks and native to Microsoft Fabric), Apache Iceberg (originated by Netflix and widely adopted across Snowflake, AWS, and GCP), and Apache Hudi (optimized for streaming updates and CDC ingestion).",
     },
     {
-      question: "How does Lakehouse Architect prepare engineers for DP-600 and Databricks certifications?",
+      question: "How does Lakehouse Architect prepare engineers for DP-700, DP-600, and Databricks certifications?",
       answer:
-        "Lakehouse Architect provides over 11,500 verified interview scenarios, 679 architectural concepts, 42 digital whiteboard blueprints, and dedicated Spark execution labs covering Microsoft Fabric Analytics Engineer (DP-600), Azure Data Engineer (DP-203), and Databricks Certified Data Engineer Professional.",
+        "Lakehouse Architect provides over 11,600 verified interview scenarios, 704 architectural concepts, 42 digital whiteboard blueprints, and dedicated Spark execution labs covering Microsoft Fabric Data Engineer (DP-700), Fabric Analytics Engineer (DP-600), and Databricks Certified Data Engineer Professional.",
     },
   ]);
 

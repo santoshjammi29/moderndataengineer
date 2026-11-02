@@ -120,7 +120,7 @@ describe("DataOpsClient Component", () => {
     const cicdTabButton = screen.getByText(/2\. CI\/CD Alternatives & Pipelines/i);
     fireEvent.click(cicdTabButton);
 
-    const matches = screen.getAllByText(/Databricks Asset Bundles/i);
+    const matches = screen.getAllByText(/Declarative Automation Bundles|Databricks Asset Bundles/i);
     expect(matches.length).toBeGreaterThan(0);
     expect(matches[0]).toBeDefined();
   });

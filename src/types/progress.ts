@@ -52,7 +52,7 @@ export const EXPERIENCE_TIERS: Record<ExperienceTier, TierConfig> = {
     label: "Associate",
     badge: "Tier 2 · Core DE",
     role: "Core Data Engineer",
-    certs: ["DP-600", "DP-203"],
+    certs: ["DP-700", "DP-600"],
     description:
       "Build production pipelines with PySpark DataFrame APIs, Medallion Architecture (Bronze/Silver/Gold), Delta Lake ACID transactions, and Data Factory orchestration.",
     color: {

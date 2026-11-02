@@ -103,11 +103,27 @@ Functional emojis are replaced with standardized Lucide SVG icons across UI comp
 
 ---
 
-## 4. Breakpoint Layout Matrix
+## 4. Breakpoint Layout Matrix & Ultrawide Display Scaling
 
 - `375px` & `414px` (Mobile): Single-column stacked cards, full-width inputs, horizontal scroll tabs, 2-col stat tiles.
 - `768px` (Tablet): 2-col card grids, stacked mobile GCC tables, 3-col stat tiles.
-- `1024px`, `1440px`, `1920px` (Desktop): Multi-column grids (3–5 columns), sticky headers, full data tables, persistent sidebar navigation.
+- `1024px` & `1440px` (Desktop): Multi-column grids (3–4 columns), sticky headers, full data tables, persistent sidebar navigation.
+- `1920px`, `2560px`, `3440px` (2K, 4K & Ultrawide): Fluid layout scaling via `w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto` enabling 4 to 6-column responsive card grids with zero clipped text.
+
+---
+
+## 5. Universal Typography & Dynamic Font Scaling System (v1.8+)
+
+- **Dynamic Font Selector**:
+  - `inter`: Clean modern geometric sans-serif (UI default).
+  - `jetbrains`: Developer monospace applied across headings, code, and text.
+  - `fira`: Code-optimized typeface with programming ligatures.
+  - `system`: Native OS font (SF Pro, Segoe UI, Roboto).
+  - `serif`: Distraction-free editorial typography (Charter / Georgia).
+  - `dyslexic`: High-legibility letterforms (OpenDyslexic).
+- **CSS Custom Property Multiplier**:
+  - `--font-scale-multiplier`: Scales all webpage elements (`[class*="card"]`, headings, arbitrary utilities `text-[8px]`–`text-[15px]`, `pre`, `code`, `.token-line`) proportionally.
+  - Steppers `[ A− ]` `[ Reset ]` `[ A+ ]` with instant hotkeys `Alt +` / `Alt -` / `Alt 0`.
 
 ---
 

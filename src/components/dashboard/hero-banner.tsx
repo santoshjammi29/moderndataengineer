@@ -24,13 +24,13 @@ export function HeroBanner() {
         </h1>
 
         <p className="text-sm sm:text-base text-slate-400 max-w-2xl leading-relaxed">
-          Fabric DP-600, Azure DP-203, Databricks, Delta Lake, 7,080+ Q&As
+          Fabric DP-700 / DP-600, Databricks, Delta Lake, 7,084+ Q&As
         </p>
 
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2">
           {[
-            { topicKey: "fabric", label: "Fabric DP-600" },
-            { topicKey: "azure", label: "Azure DP-203" },
+            { topicKey: "fabric", label: "Fabric DP-700 / DP-600" },
+            { topicKey: "azure", label: "Azure & Lakehouse" },
             { topicKey: "powerbi", label: "Power BI PL-300" },
             { topicKey: "databricks", label: "Databricks Lakehouse" },
             { topicKey: "ai", label: "AI & RAG Pipelines" },

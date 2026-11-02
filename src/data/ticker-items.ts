@@ -162,7 +162,12 @@ export const STATIC_TICKER_ITEMS: TickerItem[] = [
     "color": "rgba(249,115,22,0.18)|#fdba74"
   },
   {
-    "label": "2. Azure Data Engineer Associate (DP-203)",
+    "label": "13. Production Lakehouse Engineer: ADF, Databricks & SQL",
+    "href": "/learning-paths?id=path-13-production-lakehouse-engineer",
+    "color": "rgba(59,130,246,0.18)|#93c5fd"
+  },
+  {
+    "label": "2. Azure Data Engineer Associate (DP-700 / DP-203 Legacy)",
     "href": "/learning-paths?id=path-azure-dp203",
     "color": "rgba(239,68,68,0.18)|#fca5a5"
   },
