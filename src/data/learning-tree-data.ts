@@ -47,12 +47,12 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
           id: "career-paths",
           name: "paths",
           type: "folder",
-          badge: "12 Paths",
-          description: "12 structured certification and role-specific roadmaps",
+          badge: "13 Paths",
+          description: "13 structured certification and role-specific roadmaps",
           children: [
             { id: "p-01", name: "01-power-bi-pl300.md", type: "file", description: "Microsoft Power BI Data Analyst (PL-300)", href: "/learning-paths" },
             { id: "p-02", name: "02-fabric-dp600.md", type: "file", description: "Microsoft Fabric Analytics Engineer (DP-600)", href: "/learning-paths" },
-            { id: "p-03", name: "03-azure-data-engineering.md", type: "file", description: "Azure Data Engineer Associate (DP-203)", href: "/learning-paths" },
+            { id: "p-03", name: "03-azure-data-engineering.md", type: "file", description: "Azure Data Engineer Associate (DP-203 - Legacy Reference)", href: "/learning-paths" },
             { id: "p-04", name: "04-google-bigquery-gcp.md", type: "file", description: "Google Cloud Professional Data Engineer", href: "/learning-paths" },
             { id: "p-05", name: "05-spark-3-to-4.md", type: "file", description: "Spark 3 to 4 Distributed Compute Architecture", href: "/learning-paths" },
             { id: "p-06", name: "06-streaming-and-cdc.md", type: "file", description: "Real-Time Streaming, Kafka & Debezium CDC", href: "/learning-paths" },
@@ -62,6 +62,7 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
             { id: "p-10", name: "10-serverless-finops.md", type: "file", description: "Serverless Data Architect & FinOps Engineering", href: "/learning-paths" },
             { id: "p-11", name: "11-ai-llm-and-rag.md", type: "file", description: "Enterprise AI, LLM Pipelines & Vector Search", href: "/learning-paths" },
             { id: "p-12", name: "12-enterprise-architecture.md", type: "file", description: "Principal Data Platform & Lakehouse Architect", href: "/learning-paths" },
+            { id: "p-13", name: "13-production-lakehouse-engineer.md", type: "file", description: "Production Lakehouse Engineer: ADF, Databricks & SQL (16-Week Applied Track)", href: "/learning-paths" },
           ],
         },
         {

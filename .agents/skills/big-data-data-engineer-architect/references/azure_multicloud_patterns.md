@@ -197,3 +197,75 @@ Role: Data Architect     → All environments, schema management
 Role: DataOps/Platform   → Infrastructure, monitoring, no data access
 Role: Business Owner     → Read semantic model / Power BI datasets only
 ```
+
+---
+
+## Azure Data Factory (ADF) Production Pipeline Patterns & Triage
+
+### 1. Metadata-Driven Dynamic Ingestion Framework
+Instead of creating dozens of hardcoded copy pipelines, implement a single parameterized metadata-driven pipeline driven by an Azure SQL Control Table:
+
+```sql
+-- Control Table Schema: etl_metadata.control.pipeline_registry
+CREATE TABLE etl_metadata.control.pipeline_registry (
+    table_id INT IDENTITY(1,1) PRIMARY KEY,
+    source_schema NVARCHAR(100) NOT NULL,
+    source_table NVARCHAR(100) NOT NULL,
+    target_catalog NVARCHAR(100) NOT NULL,
+    target_schema NVARCHAR(100) NOT NULL,
+    target_table NVARCHAR(100) NOT NULL,
+    watermark_column NVARCHAR(100) NULL,
+    current_watermark_val DATETIME2(3) NULL,
+    load_type NVARCHAR(20) DEFAULT 'INCREMENTAL', -- 'FULL' or 'INCREMENTAL'
+    batch_concurrency_group INT DEFAULT 1,
+    is_active BIT DEFAULT 1,
+    last_run_status NVARCHAR(50) NULL,
+    last_success_timestamp DATETIME2(3) NULL
+);
+```
+
+**Pipeline Flow:**
+1. **Lookup Activity**: `SELECT * FROM etl_metadata.control.pipeline_registry WHERE is_active = 1`.
+2. **ForEach Activity (Sequential = False, BatchCount = 8)**:
+   - Bounded concurrency prevents flooding on-premises SQL Server connection pools.
+   - Child pipeline parameter pass: `@item().source_schema`, `@item().source_table`, `@item().current_watermark_val`.
+
+### 2. High-Watermark Incremental Load with Two-Phase Commit
+A common production failure is advancing the watermark *before* or *during* Databricks processing. If Databricks fails mid-stream, data is permanently lost from future scheduled loads.
+
+**Correct Two-Phase Watermark Protocol:**
+```
+[1. Lookup Old Watermark] ──> [2. Query Source Max(ModifiedDate)]
+                                          │
+                                          ▼
+                               [3. Extract Source Batch]
+                               (WHERE Date > Old AND Date <= New)
+                                          │
+                                          ▼
+                            [4. Databricks Notebook Run]
+                            (ACID Delta Merge + Row Count Assert)
+                                          │
+                        ┌─────────────────┴─────────────────┐
+                        ▼                                   ▼
+                   [On Success]                        [On Failure]
+           [5. Update Control Table]             [Alert On-Call Pager]
+         (Watermark = New Watermark)          (Watermark Remains at Old)
+```
+
+### 3. Cross-System Retry Multipliers (ADF × Databricks)
+When ADF executes a Databricks Job activity, both systems offer native retry mechanisms:
+- **ADF Activity**: `retry`: 3, `retryIntervalInSeconds`: 30
+- **Databricks Workflow Task**: `max_retries`: 3, `min_retry_interval_millis`: 30000
+
+**The Disaster**: If an unhandled transient failure occurs, total executions = $(1 + 3) \times (1 + 3) = 16$ attempts! This causes database connection pool exhaustion, duplicate chargebacks, OCC commit conflicts in Delta, and uncontrolled cost explosion.
+
+**Production Standard**:
+1. **Centralize Retry Ownership**: Set Databricks task `max_retries: 0`. Let ADF act as the single source of truth for retry scheduling and backoff.
+2. **Mandatory Idempotency**: Pass `@pipeline().RunId` to the Databricks notebook. Write logic must execute an idempotent `MERGE` or partition overwrite scoped to the execution run ID.
+
+### 4. Self-Hosted Integration Runtime (SHIR) High Availability
+For secure on-premises or private VNet data extraction:
+- **HA Clustering**: Deploy 2 to 4 nodes in a single SHIR gateway cluster. High Availability automatically switches master role if Node 1 crashes.
+- **Concurrent Job Throttling**: Configure concurrent jobs per node:
+  $$\text{Concurrent Jobs} = \text{CPU Cores} \times 4$$
+- **Network Security**: Enforce TLS 1.3 and outbound-only traffic on port 443 to Azure Service Bus endpoints; no inbound firewall ports required.

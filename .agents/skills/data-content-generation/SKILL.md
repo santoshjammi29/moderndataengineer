@@ -94,7 +94,7 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
 
 ## 3. Supported Target Schemas
 
-### Concept (`src/data/json/data_concepts.json` — 679 items)
+### Concept (`src/data/json/data_concepts.json` — 704 items)
 ```json
 {
   "id": "unique-kebab-slug",
@@ -112,7 +112,7 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
 }
 ```
 
-### Question (`src/data/json/questions.json` & `data_de.json` — 6,847 items)
+### Question (`src/data/json/questions.json` & `data_de.json` — 7,029 items)
 ```json
 {
   "id": "airflow-q-089",
@@ -127,7 +127,7 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
 }
 ```
 
-### Architecture Scenario (`src/data/json/data_architecture.json` — 3,206 items)
+### Architecture Scenario (`src/data/json/data_architecture.json` — 3,214 items)
 ```json
 {
   "id": "arch-fabric-045",
@@ -181,4 +181,4 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
 - [ ] **Enums**: Check difficulty matches exact uppercase values (`EASY`, `MEDIUM`, `HARD`, `ARCHITECT`).
 - [ ] **No Placeholders**: Never use `TODO`, `TBD`, or lorem ipsum text in answers or explanations.
 - [ ] **Encoding**: Always open with `encoding='utf-8'` and write with `ensure_ascii=False`.
-- [ ] **Automated Test Run**: Run `npm test` immediately after modifying datasets to verify all 53 test files (424 tests) pass.
+- [ ] **Automated Test Run**: Run `npm test` immediately after modifying datasets to verify all 58 test files (472 tests) pass.

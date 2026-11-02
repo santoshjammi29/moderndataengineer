@@ -13,7 +13,7 @@ interface MindmapClientProps {
 
 export function MindmapClient({ concepts }: MindmapClientProps) {
   return (
-    <div className="space-y-4 pb-16 max-w-7xl mx-auto px-2 sm:px-4">
+    <div className="space-y-4 pb-16 w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6">
 
       {/* Hero Header */}
       <div className="relative rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 overflow-hidden shadow-xs isolate">

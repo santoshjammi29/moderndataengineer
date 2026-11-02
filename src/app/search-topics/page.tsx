@@ -60,7 +60,7 @@ export default function SearchTopicsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
+      <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 py-4 sm:py-6">
         <Suspense
           fallback={
             <div className="p-12 text-center text-sm text-[var(--muted-foreground)]">

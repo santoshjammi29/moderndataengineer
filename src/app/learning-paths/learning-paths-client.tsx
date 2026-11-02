@@ -65,11 +65,11 @@ export function LearningPathsClient({ initialPaths }: { initialPaths: LearningPa
   }, [selectedPathId, filteredPaths, learningPathsDb]);
 
   return (
-    <div className="space-y-3 pb-16 max-w-7xl mx-auto px-2 sm:px-4">
+    <div className="space-y-3 pb-16 w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6">
       {/* Header Banner - Compact Reference Style */}
       <div className="relative overflow-hidden rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 shadow-xs isolate">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div className="space-y-1 max-w-4xl 2xl:max-w-6xl">
+          <div className="space-y-1 max-w-4xl 2xl:max-w-6xl 3xl:max-w-none">
             <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[10px] font-semibold text-blue-400">
               <Compass size={12} />
               <span>Structured Career Curricula</span>

@@ -312,7 +312,7 @@ export function WhiteboardsClient() {
         <div className="absolute top-0 right-1/4 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto space-y-6 relative z-10">
+        <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto space-y-6 relative z-10">
           {/* Badge & Breadcrumb */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -408,7 +408,7 @@ export function WhiteboardsClient() {
 
       {/* ── STICKY CATEGORY NAVIGATION DECK ───────────────────────────────── */}
       <section className="sticky top-0 z-30 bg-[var(--background)]/90 backdrop-blur-md border-b border-[var(--border)] py-3 px-4 sm:px-6 lg:px-8 shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Scrollable Categories List */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             {WHITEBOARD_CATEGORIES.map((cat, idx) => {
@@ -495,7 +495,7 @@ export function WhiteboardsClient() {
       </section>
 
       {/* ── ACTIVE CATEGORY CONTENT CONTAINER ─────────────────────────────── */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+      <main className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-4 sm:px-6 lg:px-8 2xl:px-10 pt-6 space-y-6">
         {/* Interactive Architecture System Design Flow */}
         <SystemDesignFlow />
 

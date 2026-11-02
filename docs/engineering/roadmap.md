@@ -4,8 +4,16 @@ This roadmap outlines achieved milestones and future planned expansions for **Ve
 
 ---
 
-## 🏆 Recently Completed Architectural Initiatives (v1.0 – v1.5)
+## 🏆 Recently Completed Architectural Initiatives (v1.0 – v1.9)
 
+- [x] **Production Lakehouse Engineering & Day-Two Incident Triage (v1.9)**: Added 16-Week applied enterprise curriculum (Path 13 under `/learning-paths`), Triage Runbooks 5–7 for multi-layer retry storms (ADF $\times$ Databricks), Structured Streaming checkpoint recovery, two-phase watermark commit boundaries, +120 new Q&As/scenarios/cheatsheets (totaling 7,084 Q&As, 3,269 architecture scenarios, 86 cheatsheets), and BM25F catalog re-sharded to 11,627 assets.
+- [x] **Universal Typography & Font Scaling System (v1.8)**: Dynamic font switcher (Inter, JetBrains Mono, Fira Code, System, Editorial Serif, OpenDyslexic), CSS custom property multiplier (`--font-scale-multiplier`), and instant propagation to code blocks, cards, and text across all viewports.
+- [x] **Unified Stages & Lifecycles Hub (v1.7)**: Consolidated 5 enterprise lifecycle systems under `/stages` with interactive 5-tab switcher (4-Stage Mastery, 7-Stage Lakehouse Flow, 6-Stage Delivery Playbook with 152 controls, 5-Stage Spark Catalyst Engine, and 12-Factor Data Delivery Playbook).
+- [x] **Consolidated Code Practice & Multi-Engine Runbooks (v1.7)**: Merged all coding workbenches under `/code-practice` spanning 326+ operations across 4 interactive tabs (`drills`, `databricks`, `matrix`, `runbooks`) with subpage `/code-practice/databricks`.
+- [x] **Reorganized Cloud Platforms & Engine Matrix (v1.7)**: Reorganized `/modern-stack` into a structured 10-engine matrix, 15 FinOps cost playbooks, 6 interactive data platform simulators, and cloud primitives.
+- [x] **Dynamic Ultrawide & High-Resolution Display Scaling (v1.7)**: Replaced fixed max-width caps with fluid multi-tier containers (`w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none`) across all 16 client pages and navigation layouts for seamless 2K, 4K, and 3440px ultrawide support.
+- [x] **Direct Routing Shortcuts & Permanent 301 Redirects (v1.7)**: Direct shortcuts `/plan` -> `/stages`, `/goal` -> `/learning-paths`, `/learn` -> `/guided-learning`, `/boost` -> `/spark-engine`, and `/browser` -> `/company-research`.
+- [x] **Vitest Test Suite Scale (v1.7)**: Expanded automated test gates to 57 test files and 464 unit/integration tests with 100% pass rate.
 - [x] **Target Company Intel Hub Revamp (v1.5)**: High-density, space-efficient multi-view workbench (Compact Grid, Master-Detail Split, Dense Comparison Matrix) with GCC Hub selector, in-card drawers, and 1-click prompt copying.
 - [x] **Architect-Grade Whiteboard Blueprints & 5-Role Breakdown (v1.5)**: All 42 blueprints elevated with 5 persona perspectives (Architect, Senior DE, DE, Data Steward, Business Analyst), technical mechanisms, failure triage runbooks, governance compliance, and interactive 4-tab inspector.
 - [x] **Master Vector PDF Suite & Streaming API (v1.4)**: 7 production vector PDFs compiled with direct edge streaming API (`/api/download/pdf/[filename]`), attachment headers, and in-modal interactive preview.

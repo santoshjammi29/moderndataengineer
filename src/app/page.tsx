@@ -144,7 +144,7 @@ export default function DashboardPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
       />
       <DashboardClient />
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 pb-12">
+      <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 pb-12">
         <LakehouseArchitectureGuide />
       </div>
     </>

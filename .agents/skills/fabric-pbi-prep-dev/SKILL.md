@@ -28,26 +28,44 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 ├── src/
 │   ├── app/                               # Next.js 16 App Router routes
 │   │   ├── page.tsx                       # Home / Hero Command Center, rolling ticker, recent deployments
+│   │   ├── stages/                        # Unified Stages Hub: 4-Stage Mastery, 7-Stage Lakehouse Flow, 6-Stage SDLC, 5-Stage Catalyst, 8 Production Flows
 │   │   ├── guided-learning/               # 4-tier progressive cross-section learning journey
-│   │   ├── concepts/                      # 679 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
+│   │   ├── concepts/                      # 704 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
 │   │   ├── mindmap/                       # Standalone route (cross-links to /concepts single-roof view)
-│   │   ├── qa-prep/                       # 6,847 Q&A scenarios (questions.json + data_de.json)
-│   │   ├── architecture/                  # 3,206 architecture scenarios + 36-keyword filter bar + 42 whiteboard blueprints
-│   │   ├── code-practice/                 # 178 practical code cards (PySpark 51, Spark SQL 50, Python 42, MSSQL 35)
-│   │   │   └── databricks/                # Unified Databricks Coding Hub (148+ operations & memory triage)
-│   │   ├── learning-paths/                # 12 structured career paths (Fabric, Databricks, Azure)
+│   │   ├── qa-prep/                       # 7,084 Q&A scenarios (questions.json [3,414] + data_de.json [3,670])
+│   │   ├── architecture/                  # 3,269 architecture scenarios + 36-keyword filter bar + 42 whiteboard blueprints
+│   │   ├── code-practice/                 # Unified Code Practice Hub: 178 Drills, 148+ Databricks Operations & Triage, 15 Polyglot Matrix, 62 Python Runbooks
+│   │   │   └── databricks/                # Dedicated Databricks Coding Hub (148+ operations & memory triage)
+│   │   ├── learning-paths/                # 13 structured career paths (Fabric, Databricks, Azure, AWS, GCP, Snowflake, and 16-Week Production Lakehouse Track)
 │   │   ├── company-research/              # 156 GCC company profiles (BigTech, FinTech, GCCs)
-│   │   ├── modern-stack/                  # Modern stack Q&As, badges, 15 cost playbooks, 15 polyglot code matrix items
+│   │   ├── modern-stack/                  # Cloud Platforms & Engine Matrix (10 engines, 15 FinOps playbooks, 32 primitives, 6 simulators, AI/RAG)
 │   │   ├── spark-engine/                  # Spark engine internals, memory model, and AQE
+│   │   │   └── catalyst/                  # Catalyst redirect to /spark-catalyst
+│   │   ├── spark-catalyst/                # Spark Catalyst Optimizer & Execution Visualizer
+│   │   ├── visualizer/                    # Spark Execution Visualizer
+│   │   ├── whiteboards/                   # Dedicated Whiteboard Architecture Mastery Hub (42 hand-drawn blueprints)
 │   │   ├── dataops/                       # DataOps, DABs, and CI/CD automation
-│   │   ├── cheat-sheet/                   # Cheatsheets hub + PDF downloads hub (7 compiled master PDFs)
-│   │   ├── studio/                        # Studio sandbox
+│   │   ├── cheat-sheet/                   # Cheatsheets hub (86 cards) + PDF downloads hub (7 compiled master PDFs)
+│   │   ├── studio/                        # Personal learning studio sandbox & goal tracker
+│   │   ├── search-topics/                 # Universal Topic Search Engine (BM25F client reader)
+│   │   ├── security/                      # Security Policy & Responsible Disclosure
+│   │   ├── blueprints/                    # Permanent 301 redirect to /whiteboards
+│   │   ├── deployments/                   # Permanent 301 redirect to /studio
+│   │   ├── spark-visualizer/              # Permanent 301 redirect to /visualizer
+│   │   ├── plan/                          # Permanent 301 redirect to /guided-learning?tab=curricula
+│   │   ├── goal/                          # Permanent 301 redirect to /studio
+│   │   ├── learn/                         # Permanent 301 redirect to /guided-learning
+│   │   ├── boost/                         # Permanent 301 redirect to /qa-prep
+│   │   ├── browser/                       # Permanent 301 redirect to /search-topics
 │   │   └── api/                           # Serverless Edge API routes:
 │   │       ├── download/pdf/[filename]/   # Streaming PDF download API with attachment headers
 │   │       ├── search/                    # BM25F Google-grade zero-OOM search API
+│   │       ├── search/item/               # Single-item search API
 │   │       ├── questions/                 # Clamped question queries with edge validation
 │   │       ├── concepts/                  # Concepts API
+│   │       ├── bookmarks/resolve/         # Studio bookmarks resolver API
 │   │       ├── progress/                  # Cloudflare KV/D1 & Redis bounded cache progress sync
+│   │       ├── customer-workers/          # Dynamic customer dispatch workers API
 │   │       └── artifacts/                 # Sharded JSON R2 artifact streaming
 │   ├── components/
 │   │   ├── ui/
@@ -61,10 +79,10 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   │   ├── databricks-cheatsheet-view.tsx # Interactive Databricks 48-card cheatsheet suite
 │   │   │   └── pdf-downloads-hub.tsx        # High-density PDF downloads hub with modal preview & direct download
 │   │   ├── command-palette.tsx              # BM25F universal command palette (⌘K / Ctrl+K)
-│   │   ├── layout/                          # Header, breadcrumbs, HubSubnav, mobile drawer
+│   │   ├── layout/                          # Header, breadcrumbs, sidebar subpage tree, HubSubnav, AllPagesNav
 │   │   └── dashboard/                       # Hero command center, rolling ticker, capsules
 │   ├── data/
-│   │   ├── json/                          # 27 production JSON datasets (11,500+ assets)
+│   │   ├── json/                          # 28 production JSON datasets (~11,800+ assets, 182k lines)
 │   │   ├── index.ts                       # All dataset exports + getStandardizedDomain()
 │   │   ├── diagrams.ts                    # 42 Whiteboard Architecture Blueprint items & metadata
 │   │   ├── concepts-tree-data.ts          # 14 core topics & subtopic pillars for mindmap
@@ -79,7 +97,7 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── guided-learning.ts             # Topic-based cross-dataset aggregation
 │   │   └── diagram-theme.ts               # Whiteboard blueprint styling & asset links
 │   ├── types/data.ts                      # TypeScript interfaces & types
-│   └── __tests__/                         # Vitest test suite (51 test files, 410 unit tests)
+│   └── __tests__/                         # Vitest test suite (58 test files, 472 unit/integration tests)
 ├── public/
 │   ├── diagrams/                          # 42 Whiteboard Architecture Blueprints (.webp, .avif, .jpg)
 │   └── cheatsheets/pdf/                   # 7 Master Vector PDFs & printable incident runbooks
@@ -88,17 +106,17 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 
 ---
 
-## 2. Complete Data File Inventory (All 27 JSON Files)
+## 2. Complete Data File Inventory (All 28 JSON Files)
 
 | File | Export | Type | Count | Highlights |
 |------|--------|------|-------|------------|
-| `data_concepts.json` | `conceptsDb` | `Concept[]` | **679** | Merged modern lakehouse concepts with 4-tier difficulty and keyPoints. |
-| `questions.json` | `questionsDb` | `Question[]` | **3,232** | Core cloud platform and Fabric architect scenarios. |
+| `data_concepts.json` | `conceptsDb` | `Concept[]` | **704** | Merged modern lakehouse concepts with 4-tier difficulty and keyPoints. |
+| `questions.json` | `questionsDb` | `Question[]` | **3,414** | Core cloud platform and Fabric architect scenarios. |
 | `data_de.json` | `questionsDeDb` | `Question[]` | **3,615** | General data engineering, real-world production drills. |
-| `data_architecture.json` | `architectureData` | `ArchitectureQuestion[]` | **3,206** | End-to-end system design and production troubleshooting. |
+| `data_architecture.json` | `architectureData` | `ArchitectureQuestion[]` | **3,214** | End-to-end system design and production troubleshooting. |
 | `company_profiles.json` | `companyProfiles` | `CompanyProfile[]` | **156** | Tier-1 GCC hiring criteria, tech stacks, and rounds. |
 | `databricks_100.json` | `databricks100Db` | `DatabricksConcept[]` | **100** | 100-day progressive Databricks mastery challenge with code. |
-| `databricks_cheatsheets.json` | `databricksCheatsheets` | `CheatSheetSuite[]` | **6 suites (48 cards)** | 48 curated coding cards + 7 master PDF download references. |
+| `databricks_cheatsheets.json` | `databricksCheatsheets` | `CheatSheetSuite[]` | **7 suites** | 7 curated coding suites + 7 master PDF download references. |
 | `data_pyspark.json` | `pysparkData` | `CodeSheetItem[]` | **51** | Windowing, AQE, broadcast joins, Delta optimizations. |
 | `data_sparksql.json` | `sparksqlData` | `CodeSheetItem[]` | **50** | Catalyst plans, shuffle partitioning, CBO tuning. |
 | `data_python.json` | `pythonData` | `CodeSheetItem[]` | **42** | Asyncio, generators, memory management, GIL, Arrow/Polars. |
@@ -106,15 +124,16 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 | `data_paths.json` | `learningPathsDb` | `LearningPath[]` | **12** | Structured career learning journeys. |
 | `data_cheatsheet.json` | `cheatsheetData` | `CheatSheetCard[]` | **76** | High-density cheatsheet reference cards. |
 | `data_personalised.json` | `personalisedData` | `PersonalisedQuestion[]` | **50** | Targeted scenario-based interview drills. |
-| `questions_unified_cleaned.json` | `questionsUnified` | `Question[]` | **2,906** | Cleaned and deduplicated core interview question bank. |
+| `questions_unified_cleaned.json` | `questionsUnified` | `Question[]` | **3,088** | Cleaned and deduplicated core interview question bank. |
 | `modern_blueprints.json` | `modernBlueprints` | `BlueprintItem[]` | **18** | Modern lakehouse architecture blueprints. |
 | `modern_badges.json` | `modernBadges` | `BadgeItem[]` | **10** | Certification and skill mastery badges. |
-| `modern_concepts.json` | `modernConcepts` | `ModernConcept[]` | **20** | Cutting-edge cloud data platform concepts. |
+| `modern_concepts.json` | `modernConcepts` | `ModernConcept[]` | **32** | Cutting-edge cloud data platform concepts (v1.8 expanded). |
 | `modern_stack.json` | `modernStack` | `StackItem[]` | **20** | Modern data stack component overviews. |
 | `modern_subdomains.json` | `modernSubdomains` | `SubdomainItem[]` | **14** | Subdomain taxonomy mappings. |
 | `modern_cost_playbooks.json` | `costPlaybooks` | `CostPlaybook[]` | **15** | Cloud Lakehouse FinOps & compute cost reduction playbooks. |
-| `modern_code_matrix.json` | `codeMatrix` | `CodeMatrixItem[]` | **15** | Comparative polyglot code matrix across 5 engines. |
+| `modern_code_matrix.json` | `codeMatrix` | `CodeMatrixItem[]` | **15** | Comparative polyglot code matrix across 7 engines. |
 | `extreme_architect_questions_block1..5.json` | `extremeArchBlock1..5` | `ArchitectureQuestion[]` | **125** | 5 blocks of 25 extreme edge-case architect scenarios. |
+| `search_catalog.json` | `searchCatalog` | `object` | Build-time | Compact indexed catalog for zero-OOM BM25F edge search. |
 
 ---
 
@@ -133,53 +152,53 @@ All 42 blueprints follow the hand-drawn digital whiteboard sketch style with 100
 | :--- | :--- | :--- |
 | `fabric-onelake-architecture` | Microsoft Fabric Unified Architecture & OneLake | Fabric & Power BI |
 | `powerbi-direct-lake-vertipaq` | Power BI Direct Lake Mode & VertiPaq Semantic Engine | Fabric & Power BI |
-| `powerbi-dax-engine-context` | Power BI DAX Formula/Storage Engine Mechanics | Fabric & Power BI |
-| `apache-airflow-distributed-architecture` | Apache Airflow Distributed Architecture & Schedulers | Data Pipelines & Ingestion |
-| `dbt-analytics-engineering-dag` | dbt Analytics Engineering DAG & Transformation Mesh | Data Pipelines & Ingestion |
-| `adf-hybrid-integration-runtime` | Azure Data Factory Hybrid Pipeline & SHIR | Data Pipelines & Ingestion |
-| `kafka-event-streaming-pipeline` | Apache Kafka Event Streaming & High-Throughput Messaging | Data Pipelines & Ingestion |
-| `cdc-debezium-lakehouse-pipeline` | CDC with Debezium & Streaming Lakehouse Ingestion | Data Pipelines & Ingestion |
-| `databricks-medallion-pipeline` | Databricks Multi-Hop Medallion Architecture | Platform Landscape |
-| `delta-live-tables-pipeline` | Databricks Delta Live Tables (DLT) Declarative ETL | Data Pipelines & Ingestion |
-| `delta-lake-under-the-hood` | Delta Lake Under-The-Hood ACID Transaction Mechanics | Storage Engine |
-| `apache-iceberg-open-table-format` | Apache Iceberg Open Table Format & Snapshot Trees | Storage Engine |
-| `spark-catalyst-photon-engine` | Databricks Compute: Catalyst Optimizer, AQE & Native Photon C++ Engine | Compute & Optimization |
-| `spark-shuffle-memory-internals` | Apache Spark Shuffle Internals & Unified JVM Memory | Compute & Optimization |
-| `databricks-platform-master` | Databricks Unified Platform Master Blueprint | Platform Landscape |
-| `rag-vector-search-data-pipeline` | Enterprise RAG & Vector Search Data Ingestion Pipeline | Platform Landscape |
-| `unity-catalog-governance-lineage` | Databricks Unity Catalog Centralized Governance & Lineage | Governance & Security |
-| `purview-enterprise-governance` | Microsoft Purview Enterprise Unified Governance & Metadata | Governance & Security |
-| `open-table-formats-comparison` | Open Table Formats Comparison (Delta vs Iceberg vs Hudi) | Storage Engine |
-| `open-file-formats-comparison` | Open File Formats Comparison (Parquet vs ORC vs Avro) | Storage Engine |
-| `delta-lake-optimization-techniques` | 6 Delta Lake Optimization Levers (Partitioning, Z-Order, OPTIMIZE, Liquid Clustering, VACUUM) | Compute & Optimization |
-| `sql-server-engine-internals` | SQL Server Relational Engine & Buffer Pool Mechanics | Compute & Optimization |
-| `kimball-dimensional-star-schema` | Kimball Dimensional Modeling & Enterprise Star Schema | Data Modeling & Architecture |
-| `data-vault-enterprise-architecture` | Data Vault 2.0 Enterprise Modeling (Hubs, Links, Satellites) | Data Modeling & Architecture |
-| `enterprise-edge-iot-architecture` | Enterprise Edge Computing, IoT Hub & Distributed Gateways | Platform Landscape |
-| `distributed-systems-resilience` | Distributed Systems Resilience & Circuit Breakers | Data Modeling & Architecture |
-| `python-arrow-polars-duckdb` | Python High-Performance Data Engineering: Arrow, Polars & DuckDB | Platform Landscape |
-| `enterprise-data-mesh-architecture` | Enterprise Data Mesh Architecture & Federated Governance | Data Modeling & Architecture |
-| `spark-data-skew-aqe-optimization` | Apache Spark Data Skew Handling & Adaptive Query Execution | Compute & Optimization |
+| `powerbi-dax-engine-context` | Power BI DAX Engine Mechanics & Context Transition | Fabric & Power BI |
+| `fabric-onelake-direct-lake-architecture` | Microsoft Fabric OneLake Shortcuts & Direct Lake Mode | Fabric & Power BI |
+| `apache-airflow-distributed-architecture` | Apache Airflow Distributed Production Architecture | Data Pipelines & Ingestion |
+| `dbt-analytics-engineering-dag` | dbt (Data Build Tool) Modern Analytics Engineering DAG | Data Pipelines & Ingestion |
+| `adf-hybrid-integration-runtime` | Azure Data Factory Enterprise Hybrid Ingestion Architecture | Data Pipelines & Ingestion |
+| `kafka-event-streaming-pipeline` | Real-Time Event Streaming & Kafka Architecture | Data Pipelines & Ingestion |
+| `cdc-debezium-lakehouse-pipeline` | Real-Time Change Data Capture (CDC) Architecture | Data Pipelines & Ingestion |
+| `databricks-medallion-pipeline` | Databricks Medallion Lakehouse Architecture | Data Pipelines & Ingestion |
+| `delta-live-tables-pipeline` | Delta Live Tables (DLT) Pipeline Architecture | Data Pipelines & Ingestion |
+| `databricks-dabs-devops-pipeline` | Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture | Data Pipelines & Ingestion |
+| `databricks-platform-master` | Databricks Unified Data Intelligence Platform | Platform Landscape |
+| `rag-vector-search-data-pipeline` | Enterprise RAG & Vector Data Architecture | Platform Landscape |
+| `enterprise-edge-client-architecture` | Enterprise Edge Architecture: Data, Edge & Client Flow | Platform Landscape |
+| `distributed-systems-resilience-architecture` | Distributed Systems Design: High-Throughput & Resilient Architecture | Platform Landscape |
 | `lakehouse-finops-cost-optimization` | Enterprise Lakehouse FinOps & Cloud Cost Optimization | Platform Landscape |
-| `databricks-asset-bundles-cicd` | Databricks Asset Bundles (DABs) & Serverless CI/CD | Data Pipelines & Ingestion |
-| `lakehouse-acid-concurrency-matrix` | Lakehouse ACID Concurrency & Conflict Detection Matrix | Storage Engine |
-| `scd-types-medallion-architecture` | Slowly Changing Dimensions (SCD Types 0-6) in Medallion | Storage Engine |
-| `structured-streaming-rocksdb-state` | Structured Streaming Stateful Operations & RocksDB State Store | Compute & Optimization |
-| `spark-tungsten-memory-spill` | Spark Tungsten Engine Memory Management & Spill Mechanics | Compute & Optimization |
-| `delta-savemode-concurrency-handling`| Delta Lake SaveMode Behaviors & Concurrent Append/Overwrite | Storage Engine |
-| `spark-join-strategies-decision-matrix`| Apache Spark Distributed Join Strategy Decision Flowchart | Compute & Optimization |
-| `photon-vectorized-vs-jvm-catalyst` | Photon Native Vectorized Execution vs JVM Whole-Stage CodeGen | Compute & Optimization |
-| `broadcast-variables-accumulators` | Spark Broadcast Variables & Accumulator Internals | Compute & Optimization |
-| `fabric-onelake-shortcuts-directlake`| Fabric OneLake Cross-Cloud Shortcuts & Direct Lake Paging | Fabric & Power BI |
-| `enterprise-data-governance-lineage`| Enterprise Data Lineage, Auditing & Access Control | Governance & Security |
-| `lakehouse-master-enterprise-architecture`| Master Enterprise Lakehouse Reference Blueprint | Platform Landscape |
+| `unity-catalog-governance` | Unity Catalog Unified Governance & 3-Level Namespace | Governance & Security |
+| `purview-governance-catalog` | Microsoft Purview Enterprise Governance Architecture | Governance & Security |
+| `delta-lake-under-the-hood` | How Delta Lake Works Under the Hood | Storage Engine |
+| `apache-iceberg-open-table-format` | Apache Iceberg Open Table Format Mechanics | Storage Engine |
+| `open-table-formats-lakehouse` | Open Table Formats Blueprint: Lakehouse Storage Engines | Storage Engine |
+| `open-file-formats-storage` | Open File Formats Blueprint: Physical Storage Engines | Storage Engine |
+| `databricks-optimization-techniques-architecture` | 6 Delta Lake Optimization Techniques: Lakehouse Performance & Storage Hygiene | Storage Engine |
+| `spark-savemode-architecture` | Apache Spark SaveMode Handling & Storage Execution Architecture | Storage Engine |
+| `delta-vs-iceberg-architecture` | Delta Lake vs. Apache Iceberg Storage & Metadata Architecture | Storage Engine |
+| `lakehouse-acid-concurrency` | Lakehouse ACID Concurrency & Write Conflict Resolution Matrix | Storage Engine |
+| `spark-catalyst-photon-engine` | Databricks Compute: Catalyst Optimizer, AQE & Photon | Compute & Optimization |
+| `spark-shuffle-memory-execution` | Apache Spark Memory Architecture & Shuffle Mechanics | Compute & Optimization |
+| `sql-server-query-engine-optimization` | SQL Server & Relational Query Engine Architecture | Compute & Optimization |
+| `python-arrow-polars-architecture` | Modern Python Data Architecture: Apache Arrow, Polars & Zero-Copy IPC | Compute & Optimization |
+| `spark-data-skew-aqe-optimization` | Apache Spark Data Skew Remediation & AQE Optimization | Compute & Optimization |
+| `spark-join-decision-tree` | Apache Spark Join Strategy Selection Decision Tree | Compute & Optimization |
+| `spark-aqe-dynamic-optimization` | Apache Spark Adaptive Query Execution (AQE) Architecture | Compute & Optimization |
+| `spark-memory-management-spill` | Apache Spark Memory Management & Shuffle Spilling Mechanics | Compute & Optimization |
+| `spark-streaming-state-store` | Spark Structured Streaming State Store & Watermarking Mechanics | Compute & Optimization |
+| `photon-engine-vs-jvm` | Databricks Photon Native C++ Engine vs. Classic Spark JVM | Compute & Optimization |
+| `spark-broadcast-accumulators` | Apache Spark Broadcast Variables vs. Accumulators Architecture | Compute & Optimization |
+| `kimball-dimensional-star-schema` | Kimball Dimensional Modeling & Enterprise Star Schema | Data Modeling & Architecture |
+| `data-vault-enterprise-architecture` | Data Vault 2.0 Architecture & Lakehouse Modeling | Data Modeling & Architecture |
+| `data-mesh-enterprise-architecture` | Enterprise Data Mesh: Decentralized Domains & Data Products | Data Modeling & Architecture |
+| `scd-types-lakehouse` | Slowly Changing Dimensions (SCD Types 1, 2, 3, 4, 6) in Modern Lakehouses | Data Modeling & Architecture |
 
 ---
 
 ## 4. Standard Dev Commands, Testing & Cloudflare Deployment
 
 ```bash
-# 1. Run full test suite (must ALWAYS pass all 53 test files and 424 tests)
+# 1. Run full test suite (must ALWAYS pass all 58 test files and 472 tests)
 npm test
 
 # 2. Production build check (OpenNext Cloudflare build)
@@ -205,13 +224,13 @@ git push origin main
 ## 5. UI Architecture Patterns & Subpages
 
 ### 1. Unified Concepts Hub (`/concepts`)
-Combines 679 concepts and the 14-pillar mind map into a single roof with a 3-way view switcher:
+Combines 704 concepts and the 14-pillar mind map into a single roof with a 3-way view switcher:
 - **Glossary & Cards**: Virtualized searchable concept cards with 4 difficulty levels.
 - **Multi-Level Mind Map**: 4-depth dynamic stretching mind map engine covering 14 pillars.
 - **Flashcards Mode**: Interactive spaced-repetition card flip for active recall.
 
 ### 2. Dedicated Databricks Coding Hub (`/code-practice/databricks`)
-- 148+ operations categorized across 6 suites (Architecture, PySpark, Spark SQL, Python SDK, Memory Triage, Streaming).
+- 148+ operations categorized across 7 suites (Architecture, PySpark, Spark SQL, Python SDK, Memory Triage, Streaming).
 - Dedicated production memory triage playbooks: Driver OOM, Executor OOM, Shuffle Spill, Skew Joins, Small Files, GC Pauses.
 - POSIX-compliant Unity Catalog Volumes, DBFS, and secret vault manipulation code.
 - Seamless redirection from `/code-practice?db=databricks` and `/cheat-sheet?tab=databricks`.
@@ -228,11 +247,11 @@ Combines 679 concepts and the 14-pillar mind map into a single roof with a 3-way
 - Direct browser attachment download headers with in-modal PDF preview fallback.
 
 ### 4. 36-Keyword Scenario Filter Section (`src/components/architecture/keyword-filter-bar.tsx`)
-- Filters 3,206 architecture scenarios across 6 domain groups (Compute, Storage, Ingestion, FinOps, Governance, Modeling) with real-time live counts and URL query parameter sync.
+- Filters 3,214 architecture scenarios across 6 domain groups (Compute, Storage, Ingestion, FinOps, Governance, Modeling) with real-time live counts and URL query parameter sync.
 
 ### 5. Google-Grade BM25F Search Engine (`src/lib/search-engine.ts`)
 - Zero-OOM memory-optimized search catalog executing on Cloudflare Workers edge.
-- Field-weighted BM25F scoring (Title $\times 3$, Subtitle $\times 2$, Content $\times 1$) with typo tolerance and keyboard command palette (`⌘K` / `Ctrl+K`).
+- Field-weighted BM25F scoring (Title $\times 3$, Subtitle $\times 2$, Content $\times 1$) with typo tolerance and keyboard command palette (`⌘K` / `Ctrl+K`) indexing 11,800+ assets.
 
 ### 6. Target Company Intel Workbench (`/company-research`)
 - Space-efficient, dense layout following `nextjs-compact-ui` principles.
@@ -260,3 +279,49 @@ Combines 679 concepts and the 14-pillar mind map into a single roof with a 3-way
 ### 10. Global Scrolling & Layout Resilience
 - `html` and `body` styles: `scroll-behavior: smooth; overflow-x: hidden; overscroll-behavior-y: auto;`
 - Preserves native touch/trackpad inertia, rubber-banding, and scroll anchoring across macOS, iOS, Android, and Windows.
+
+### 11. Dynamic Ultrawide & High-Resolution Display Scaling
+- Never clamp content wrappers to restrictive `max-w-7xl` on large monitors.
+- Standard container classes across all layouts and client components:
+  `w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6`
+- Grids expand dynamically to take advantage of wider viewports:
+  - 4-item cards (e.g. Mastery Stages): `grid-cols-1 md:grid-cols-2 2xl:grid-cols-4`
+  - 2-column code/runbook cards: `grid-cols-1 2xl:grid-cols-2`
+  - Concept/Q&A cards: `grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4`
+  - Simulators and comparison matrix tables stretch seamlessly without horizontal scrollbars on 2K/4K displays.
+
+### 12. Unified Stages Hub & Consolidated Coding Workbenches
+- **Mastery Stages Hub (`/stages`)**: The single authoritative home for all stage frameworks:
+  - `mastery`: 4-Stage Architectural Mastery Progression Framework (Foundations → Core DE → Advanced → Staff/Principal Architect).
+  - `lakehouse`: 7-Stage Modern Lakehouse & AI Stack Flow canvas.
+  - `sdlc`: 6-Stage Enterprise Data Delivery Playbook with 152 controls.
+  - `catalyst`: 5-Stage Spark Catalyst Engine & Whole-Stage CodeGen pipeline.
+  - `flows`: 8 interactive production flow diagrams gallery.
+- **Unified Code Practice Hub (`/code-practice`)**: Combines 326+ operations across 4 tabs:
+  - `drills`: Multi-engine interactive drills (PySpark, SQL, T-SQL, Python/Polars).
+  - `databricks`: Databricks Coding Hub (148+ operations, cheatsheets, memory triage).
+  - `matrix`: Polyglot Engine Translation Matrix (15 operations side-by-side).
+  - `runbooks`: 62 Production Python Lakehouse & Architecture Runbooks.
+- **Permanent Routing Redirects**:
+  - `/blueprints` → `/whiteboards`
+  - `/deployments` → `/studio`
+  - `/spark-visualizer` → `/visualizer`
+  - `/plan` → `/guided-learning?tab=curricula`
+  - `/goal` → `/studio`
+  - `/learn` → `/guided-learning`
+  - `/boost` → `/qa-prep`
+  - `/browser` → `/search-topics`
+
+### 13. Universal Typography Engine & Dynamic Font Scaling
+- Universal 6-font family selector (`inter`, `jetbrains`, `fira`, `system`, `serif`, `dyslexic`).
+- CSS variable multipliers (`--font-scale-multiplier`, `--font-sans`, `--font-mono`) in `globals.css` that propagate size changes to cards, headings, code snippets (`pre`, `code`), and inline tokens.
+- Interactive `TextSizeController` with steppers (`[ A− ]` `[ Reset ]` `[ A+ ]`) and keyboard shortcuts (`Alt +` / `Alt -` / `Alt 0`).
+
+### 14. Left Sidebar Dynamic Subpage Tree Navigation
+- Accordion chevrons on all parent navigation items allowing direct subpage access without navigating away from current page.
+- Top-level 1-click "All Subpages" expand/collapse toggle.
+- Visual branch guidelines (`border-l-2 border-blue-500/25`) with active path indicators and live asset badges.
+
+### 15. Spark Catalyst Optimizer & Execution Visualizer
+- `/spark-catalyst` and `/visualizer`: Interactive 5-stage Catalyst query planning simulator and AST graph visualizer.
+- `/spark-engine`: Physical Spark 4.0 execution simulator, Tungsten memory layout, off-heap buffers, and AQE skew join resolution.

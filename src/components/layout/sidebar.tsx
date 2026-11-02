@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { TextSizeController } from "@/components/ui/text-size-controller";
-import { ChevronLeft, Columns2 } from "lucide-react";
+import { ChevronLeft, Columns2, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { NAV_GROUPS, isSubHrefActive, NavItem } from "@/data/navigation-data";
 
@@ -109,6 +109,26 @@ function SidebarInner() {
   const setPresetWidth = (newWidth: number) => {
     setWidth(newWidth);
     setShowWidthMenu(false);
+  };
+
+  const [manualExpanded, setManualExpanded] = useState<Record<string, boolean>>({});
+  const [expandAll, setExpandAll] = useState(false);
+
+  const toggleItemExpanded = (href: string, currentlyActive: boolean) => {
+    setManualExpanded((prev) => {
+      const current = prev[href] !== undefined ? prev[href] : (currentlyActive || expandAll);
+      return {
+        ...prev,
+        [href]: !current,
+      };
+    });
+  };
+
+  const isItemExpanded = (item: NavItem, active: boolean) => {
+    if (manualExpanded[item.href] !== undefined) {
+      return manualExpanded[item.href];
+    }
+    return active || expandAll;
   };
 
   const isItemActive = (item: NavItem) => {
@@ -255,6 +275,19 @@ function SidebarInner() {
 
       {/* Navigation Tree — Desktop Sidebar with Branch Guides */}
       <nav className="flex-1 overflow-y-auto py-2.5 sm:py-3 px-1 sm:px-2 scrollbar-none">
+        {!collapsed && (
+          <div className="flex items-center justify-between px-3 py-1 mb-2 text-[10px] text-[var(--muted-foreground)] border-b border-[var(--border)]/40 pb-1.5">
+            <span className="font-semibold uppercase tracking-wider text-[9px]">Platform Directory</span>
+            <button
+              type="button"
+              onClick={() => setExpandAll(!expandAll)}
+              className="text-blue-500 hover:text-blue-400 font-medium transition-colors cursor-pointer flex items-center gap-1"
+              title="Toggle showing all subpages in the left navigation bar"
+            >
+              <span>{expandAll ? "Collapse Subpages" : "All Subpages"}</span>
+            </button>
+          </div>
+        )}
         {NAV_GROUPS.map((group, gi) => (
           <div key={gi} className={cn(gi > 0 && "mt-3 sm:mt-3.5")}>
             {group.title && !collapsed && (
@@ -268,49 +301,74 @@ function SidebarInner() {
             <ul className="space-y-0.5">
               {group.items.map((item) => {
                 const active = isItemActive(item);
+                const expanded = isItemExpanded(item, active);
                 const Icon = item.icon;
                 return (
                   <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "flex items-start gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150",
-                        "hover:bg-[var(--surface-3)]",
-                        active
-                          ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold shadow-[inset_2px_0_0_rgb(59,130,246)]"
-                          : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
-                        collapsed && "justify-center px-0 py-2.5 items-center"
-                      )}
-                      title={collapsed ? item.label : undefined}
-                    >
-                      <Icon
-                        size={18}
+                    <div className="flex items-center justify-between w-full group/navitem">
+                      <Link
+                        href={item.href}
                         className={cn(
-                          "shrink-0 transition-colors mt-0.5",
-                          active ? "text-blue-600 dark:text-blue-400" : "text-blue-500 dark:text-blue-400",
-                          collapsed && "mt-0"
+                          "flex items-start gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 flex-1 min-w-0",
+                          "hover:bg-[var(--surface-3)]",
+                          active
+                            ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold shadow-[inset_2px_0_0_rgb(59,130,246)]"
+                            : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
+                          collapsed && "justify-center px-0 py-2.5 items-center"
                         )}
-                      />
-                      {!collapsed && (
-                        <>
-                          <span className="flex-1 break-words whitespace-normal leading-snug text-left">
-                            {item.label}
-                          </span>
-                          {item.pill && (
-                            <span
-                              className={cn(
-                                "text-[10px] font-semibold px-2 py-0.5 rounded-full border shrink-0 leading-tight mt-0.5",
-                                pillVariants[item.pill.variant]
-                              )}
-                            >
-                              {item.pill.text}
-                            </span>
+                        title={collapsed ? item.label : undefined}
+                      >
+                        <Icon
+                          size={18}
+                          className={cn(
+                            "shrink-0 transition-colors mt-0.5",
+                            active ? "text-blue-600 dark:text-blue-400" : "text-blue-500 dark:text-blue-400",
+                            collapsed && "mt-0"
                           )}
-                        </>
+                        />
+                        {!collapsed && (
+                          <>
+                            <span className="flex-1 break-words whitespace-normal leading-snug text-left">
+                              {item.label}
+                            </span>
+                            {item.pill && (
+                              <span
+                                className={cn(
+                                  "text-[10px] font-semibold px-2 py-0.5 rounded-full border shrink-0 leading-tight mt-0.5",
+                                  pillVariants[item.pill.variant]
+                                )}
+                              >
+                                {item.pill.text}
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </Link>
+
+                      {!collapsed && item.subItems && item.subItems.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleItemExpanded(item.href, active);
+                          }}
+                          className="p-1.5 rounded-lg hover:bg-[var(--surface-3)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer shrink-0 ml-0.5"
+                          aria-label={expanded ? `Collapse ${item.label} subpages` : `Expand ${item.label} subpages`}
+                          title={expanded ? "Collapse subpages" : "Expand subpages"}
+                        >
+                          <ChevronDown
+                            size={13}
+                            className={cn(
+                              "transition-transform duration-200",
+                              expanded ? "rotate-0 text-blue-400" : "-rotate-90 text-[var(--muted-foreground)]"
+                            )}
+                          />
+                        </button>
                       )}
-                    </Link>
-                    {/* Sub-navigation items when parent is active — Visually Indented Tree */}
-                    {active && !collapsed && item.subItems && item.subItems.length > 0 && (
+                    </div>
+                    {/* Sub-navigation items when parent is expanded — Visually Indented Tree */}
+                    {expanded && !collapsed && item.subItems && item.subItems.length > 0 && (
                       <ul className="ml-5 pl-2.5 border-l-2 border-blue-500/25 my-1.5 space-y-1">
                         {item.subItems.map((sub) => {
                           const isSubActive = isSubHrefActive(pathname, searchParams, sub.href);

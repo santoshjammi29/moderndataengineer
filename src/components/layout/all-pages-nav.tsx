@@ -17,6 +17,7 @@ import {
   User,
   Home,
   Sparkles,
+  Workflow,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isSubHrefActive } from "@/data/navigation-data";
@@ -102,15 +103,31 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    id: "stages",
+    label: "Stages Hub",
+    href: "/stages",
+    icon: Workflow,
+    badge: "Lifecycle",
+    subpages: [
+      { label: "4-Stage Mastery Journey", href: "/stages?tab=mastery", badge: "4 Stages", description: "Progressive career milestones from foundations to architect" },
+      { label: "7-Stage Lakehouse Flow", href: "/stages?tab=lakehouse", badge: "7 Stages", description: "End-to-end modern lakehouse architecture canvas" },
+      { label: "6-Stage SDLC Playbook", href: "/stages?tab=sdlc", badge: "6 Stages", description: "Production project delivery lifecycle with 152 controls" },
+      { label: "5-Stage Catalyst Pipeline", href: "/stages?tab=catalyst", badge: "5 Stages", description: "Spark physical query execution and Whole-Stage CodeGen" },
+      { label: "8 Production Flows", href: "/stages?tab=flows", badge: "8 Flows", description: "Interactive architectural flow diagrams gallery" },
+    ],
+  },
+  {
     id: "modern-stack",
     label: "Modern Stack & DataOps",
     href: "/modern-stack",
     icon: Zap,
     badge: "Matrix",
     subpages: [
-      { label: "Cloud × Table Matrix", href: "/modern-stack?tab=compatibility", badge: "Compatibility", description: "Azure, AWS, GCP table format support" },
+      { label: "Cloud × Table Matrix", href: "/modern-stack?tab=compatibility", badge: "Compatibility", description: "Azure, AWS, GCP table format support across 10 engines" },
       { label: "FinOps & Cost Playbooks", href: "/modern-stack?tab=cost", description: "DBU, compute, and warehouse cost engineering" },
-      { label: "Polyglot Code Matrix", href: "/modern-stack?tab=matrix", badge: "Matrix", description: "Side-by-side PySpark, SQL, DuckDB, Polars" },
+      { label: "Engine Simulators", href: "/modern-stack?tab=simulators", badge: "6 Tools", description: "Interactive DBU, storage tiering & shuffle calculators" },
+      { label: "Lakehouse Primitives", href: "/modern-stack?tab=concepts", badge: "30", description: "Storage, compute, and transaction primitives" },
+      { label: "AI & Vector Serving", href: "/modern-stack?tab=ai", description: "RAG infrastructure and agentic protocol" },
       { label: "Tool Secrets & Connectivity", href: "/dataops?tab=connectivity", badge: "Secrets", description: "Key Vault, Managed Identity, and PATs" },
       { label: "CI/CD Pipelines", href: "/dataops?tab=cicd", badge: "5 Paths", description: "GitHub Actions, Azure DevOps, DABs" },
       { label: "360° SDLC Lifecycle", href: "/dataops?tab=lifecycle", badge: "152 Controls", description: "NIST SSDF & SRE production controls" },
@@ -122,14 +139,13 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Code Practice",
     href: "/code-practice",
     icon: Code2,
-    badge: "178",
+    badge: "178+",
     subpages: [
       { label: "Coding Hub", href: "/code-practice", description: "All practice drills across languages" },
+      { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: "178", description: "PySpark, Spark SQL, T-SQL, Python & Polars" },
       { label: "Databricks Coding Hub", href: "/code-practice/databricks", badge: "148 Drills", description: "Interactive PySpark, SQL, and DBFS triage" },
-      { label: "PySpark Drills", href: "/code-practice?db=pyspark", badge: "51", description: "DataFrame transformations & window functions" },
-      { label: "Spark SQL Drills", href: "/code-practice?db=sparksql", badge: "50", description: "Advanced SQL analytics & CTE patterns" },
-      { label: "T-SQL Drills", href: "/code-practice?db=mssql", badge: "35", description: "Fabric warehouse & SQL database queries" },
-      { label: "Python & Polars", href: "/code-practice?db=python", badge: "42", description: "Modern zero-copy DataFrame engineering" },
+      { label: "Polyglot Code Matrix", href: "/code-practice?tab=matrix", badge: "15", description: "Side-by-side PySpark, SQL, DuckDB, Polars" },
+      { label: "Python Lakehouse Runbooks", href: "/code-practice?tab=runbooks", badge: "42", description: "Production Python lakehouse scripts & runbooks" },
     ],
   },
   {
@@ -219,7 +235,7 @@ function AllPagesNavInner() {
       ref={navContainerRef}
       className="w-full bg-[var(--surface-1)] border-b border-[var(--border)] select-none shadow-2xs relative z-20"
     >
-      <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1600px] px-3 sm:px-6 lg:px-8 py-2.5 space-y-2">
+      <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none px-3 sm:px-6 lg:px-8 2xl:px-10 py-2.5 space-y-2">
         {/* Universal Search Bar */}
         <div role="search" aria-label="Universal Search Header">
           <button

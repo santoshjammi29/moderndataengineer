@@ -420,7 +420,7 @@ export function DatabricksCodingClient({
   }, [viewMode, filteredCards.length, filteredOperations.length, filteredBottlenecks.length]);
 
   return (
-    <div className="space-y-4 max-w-7xl mx-auto px-2 sm:px-4 py-4 animate-in fade-in duration-200">
+    <div className="space-y-4 w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 py-4 animate-in fade-in duration-200">
       {/* ────────────────────────────────────────────────────────── */}
       {/* 1. TOP HEADER & HUB BANNER */}
       {/* ────────────────────────────────────────────────────────── */}

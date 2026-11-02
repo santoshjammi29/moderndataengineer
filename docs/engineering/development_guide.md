@@ -13,23 +13,24 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 ├── src/
 │   ├── app/                         # Next.js 16 App Router routes
 │   │   ├── page.tsx                 # Landing page & Whiteboard Showcase
+│   │   ├── stages/                  # Unified Stages & Lifecycles Hub (5 architectural lifecycle systems)
 │   │   ├── guided-learning/         # Cross-section progressive topic journeys
-│   │   ├── concepts/                # 679 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
-│   │   ├── qa-prep/                 # Q&A practice (3,232 core + 3,615 DE questions)
-│   │   ├── architecture/            # Architecture scenarios (3,206 scenarios) + 36-keyword filter + 42 blueprints
-│   │   ├── code-practice/           # 178 practical code exercises (PySpark, SQL, Python, MSSQL)
-│   │   │   └── databricks/          # Unified Databricks hub (148+ operations & memory triage)
-│   │   ├── cheat-sheet/             # 7 Master Vector PDFs, posters, and 124 code cards
-│   │   ├── modern-stack/            # 15 Polyglot code matrix items & 15 FinOps cost playbooks
+│   │   ├── concepts/                # 704 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
+│   │   ├── qa-prep/                 # Q&A practice (3,414 core + 3,670 DE questions = 7,084 total)
+│   │   ├── architecture/            # Architecture scenarios (3,269 scenarios) + 36-keyword filter + 42 blueprints
+│   │   ├── code-practice/           # Consolidated Coding Hub (326+ operations across Drills, Databricks, Matrix, Runbooks)
+│   │   │   └── databricks/          # Dedicated Databricks coding subpage (148+ operations & memory triage)
+│   │   ├── cheat-sheet/             # 7 Master Vector PDFs, posters, and 86 operational cheatsheet cards
+│   │   ├── modern-stack/            # Reorganized Cloud Platforms & 10-Engine Matrix, FinOps playbooks, 6 simulators
 │   │   ├── spark-engine/            # Spark memory, shuffle, Catalyst & Photon
 │   │   ├── company-research/        # 156 Hyderabad & Bangalore GCC profiles
-│   │   ├── learning-paths/          # Certification paths (DP-600, DP-203, PL-300, Databricks)
+│   │   ├── learning-paths/          # 13 paths (16-Week Production Lakehouse Track, DP-700, DP-600, DP-203 Legacy, Databricks)
 │   │   └── api/
 │   │       ├── download/pdf/[filename]/ # Streaming PDF download API with attachment headers
 │   │       └── search/route.ts      # Edge BM25F zero-OOM search handler
 │   ├── components/                  # Reusable UI primitives and layout components
 │   ├── data/
-│   │   ├── json/                    # Canonical JSON datasets (11,500+ records)
+│   │   ├── json/                    # Canonical JSON datasets (11,627+ records)
 │   │   ├── diagrams.ts              # 42 Whiteboard Architecture Blueprints catalog
 │   │   ├── concepts-tree-data.ts    # 14 Core pillars & subtopics for mindmap
 │   │   ├── guided-learning-topics.ts# Topic configurations for /guided-learning
@@ -40,7 +41,7 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 │   │   ├── redis.ts                 # Bounded LRU cache
 │   │   └── guided-learning.ts       # Cross-section aggregation engine
 │   ├── workers/                     # Web Workers for SIMD vector compute
-│   └── __tests__/                   # 51 Vitest test suites (410 tests)
+│   └── __tests__/                   # 58 Vitest test suites (472 tests)
 ├── public/
 │   ├── diagrams/                    # Lossless WebP, AVIF, and JPG whiteboard blueprints
 │   └── cheatsheets/pdf/             # 7 Master Vector PDFs & printable incident runbooks
@@ -55,18 +56,18 @@ All canonical datasets reside in `src/data/json/`:
 
 | File | Primary Type | Item Count | Key Fields |
 | :--- | :--- | :--- | :--- |
-| `data_concepts.json` | `Concept[]` | **679** | `id`, `term`, `category`, `difficulty`, `definition`, `explanation`, `keyPoints[]` |
+| `data_concepts.json` | `Concept[]` | **704** | `id`, `term`, `category`, `difficulty`, `definition`, `explanation`, `keyPoints[]` |
 | `databricks_100.json` | `Databricks100Item[]` | **100** | `id`, `day`, `term`, `category`, `difficulty`, `whatYouShouldKnow[]`, `productionCodeSnippet`, `certificationMapping[]` |
-| `data_architecture.json` | `ArchitectureQuestion[]` | **3,206** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
-| `data_de.json` | `Question[]` | **3,615** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer`, `domain` |
-| `questions.json` | `Question[]` | **3,232** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
+| `data_architecture.json` | `ArchitectureQuestion[]` | **3,269** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
+| `data_de.json` | `Question[]` | **3,670** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer`, `domain` |
+| `questions.json` | `Question[]` | **3,414** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
 | `company_profiles.json` | `CompanyProfile[]` | **156** | `id`, `company`, `tier`, `category`, `location`, `techStack[]`, `hiringBar`, `interviewRounds[]`, `keyQuestions[]` |
 | `databricks_cheatsheets.json`| `CheatSheetSuite[]` | **6 suites (48 cards)** | `suiteId`, `title`, `sections[]`, `codeBlocks[]`, `pdfUrl`, `posterUrl` |
 | `data_pyspark.json` | `CodeSheetItem[]` | **51** | `id`, `title`, `level`, `category`, `description`, `code` |
 | `data_sparksql.json` | `CodeSheetItem[]` | **50** | `id`, `title`, `level`, `category`, `description`, `code` |
 | `data_python.json` | `CodeSheetItem[]` | **42** | `id`, `title`, `level`, `category`, `description`, `code` |
 | `data_mssql.json` | `CodeSheetItem[]` | **35** | `id`, `title`, `level`, `category`, `description`, `code` |
-| `data_cheatsheet.json` | `CheatSheetCard[]` | **76** | `id`, `title`, `category`, `description`, `code` |
+| `data_cheatsheet.json` | `CheatSheetCard[]` | **86** | `id`, `title`, `category`, `description`, `code` |
 | `modern_code_matrix.json` | `CodeMatrixItem[]` | **15** | `id`, `operation`, `description`, `engines` (Databricks, Snowflake, BigQuery, Fabric, DuckDB) |
 | `modern_cost_playbooks.json` | `CostPlaybook[]` | **15** | `id`, `title`, `platform`, `savingsPotential`, `implementationRisk`, `steps[]` |
 

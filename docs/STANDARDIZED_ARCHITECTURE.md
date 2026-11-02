@@ -4,13 +4,14 @@
 
 **Modern Data Engineer & Lakehouse Architect** (`moderndataengineer.uk`) is engineered for high-performance, real-time global access by thousands of concurrent engineers, architects, and interview candidates, deployed on **Cloudflare OpenNext / Workers** with R2 artifact synchronization.
 
-To guarantee zero latency worldwide and seamless future maintenance, the codebase adheres to five architectural invariants:
+To guarantee zero latency worldwide and seamless future maintenance, the codebase adheres to six architectural invariants:
 
 1. **Strict Server/Client Boundary**: Every page uses a Server Component entry point (`page.tsx`) for metadata, SEO, and edge caching (ISR), paired with an interactive Client Component (`*-client.tsx`).
 2. **Central Source of Truth**: All platform constants, brand metadata, caching rules, and UI presets reside in `src/config/platform.config.ts`.
 3. **Data Access Layer (DAL)**: All datasets are queried through `src/lib/dal.ts` with React `cache()` request deduplication.
 4. **Zero-Lag Continuous Reading Mode**: All card-centric views support instant "Read All" (`Shift + E`) with $O(1)$ inverse Set evaluation.
 5. **Zero-Bundle Edge Mandate**: Zero raw JSON data bundled into client JavaScript; massive datasets are served via streaming R2 shards and cached in persistent IndexedDB.
+6. **Dynamic Display Scaling**: Utilize the full width across 1080p, 1440p, 2K, 4K, and 3440px ultrawide displays (`w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto`), scaling cards and code blocks into multi-column responsive grids.
 
 ---
 
@@ -19,6 +20,9 @@ To guarantee zero latency worldwide and seamless future maintenance, the codebas
 ```text
 src/
 ├── app/                           # App Router routes (Edge / OpenNext)
+│   ├── stages/                    # Unified Stages Hub: Mastery, Lakehouse, SDLC, Catalyst, Flows
+│   │   ├── page.tsx               # Server Component (ISR, metadata, Suspense)
+│   │   └── stages-client.tsx      # Client Component (5 lifecycle tabs)
 │   ├── qa-prep/
 │   │   ├── page.tsx               # Server Component (ISR, metadata, JSON-LD, Suspense)
 │   │   └── qa-prep-client.tsx     # Client Component (Virtualizer, Read All, filters)
@@ -28,13 +32,18 @@ src/
 │   ├── architecture/
 │   │   ├── page.tsx
 │   │   └── architecture-client.tsx # 36-keyword filter deck & 42 whiteboard blueprints
-│   ├── code-practice/
-│   │   ├── databricks/            # Unified Databricks hub (148+ operations & memory triage)
+│   ├── code-practice/             # Unified Code Practice Hub (Drills, Databricks, Matrix, Runbooks)
+│   │   ├── databricks/            # Dedicated Databricks Hub (148+ operations & memory triage)
 │   │   └── code-practice-client.tsx
 │   ├── cheat-sheet/
 │   │   └── cheat-sheet-client.tsx # 7 Master Vector PDFs & PDF Downloads Hub
 │   ├── modern-stack/
-│   │   └── modern-stack-client.tsx # 2026 Polyglot matrix & FinOps cost playbooks
+│   │   └── modern-stack-client.tsx # Cloud Platforms & Engine Matrix (10 engines, FinOps, simulators)
+│   ├── plan/                      # Permanent 301 edge redirect to /guided-learning?tab=curricula
+│   ├── goal/                      # Permanent 301 edge redirect to /studio
+│   ├── learn/                     # Permanent 301 edge redirect to /guided-learning
+│   ├── boost/                     # Permanent 301 edge redirect to /qa-prep
+│   ├── browser/                   # Permanent 301 edge redirect to /search-topics
 │   └── api/
 │       ├── download/pdf/[filename]/ # Streaming PDF download API with attachment headers
 │       └── search/                # BM25F zero-OOM search route

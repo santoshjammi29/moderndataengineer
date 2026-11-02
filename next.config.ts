@@ -189,6 +189,26 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/plan",
+        destination: "/guided-learning?tab=curricula",
+        permanent: true,
+      },
+      {
+        source: "/goal",
+        destination: "/studio",
+        permanent: true,
+      },
+      {
+        source: "/boost",
+        destination: "/qa-prep",
+        permanent: true,
+      },
+      {
+        source: "/browser",
+        destination: "/search-topics",
+        permanent: true,
+      },
+      {
         source: "/chrome-devtools",
         destination: "/concepts",
         permanent: false,

@@ -350,7 +350,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 space-y-4 pb-16">
+    <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 space-y-4 pb-16">
       {/* ─── Hero Command Center Banner ─── */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600/10 via-amber-500/5 to-purple-500/10 border border-blue-500/20 p-4 sm:p-5 shadow-xs isolate">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">

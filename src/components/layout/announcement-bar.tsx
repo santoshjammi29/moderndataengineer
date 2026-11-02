@@ -14,7 +14,7 @@ export function AnnouncementBar() {
       aria-label="Latest release announcement"
       className="relative z-30 w-full bg-gradient-to-r from-purple-950/90 via-[#111124] to-blue-950/90 border-b border-white/10 px-4 py-2.5 text-xs text-slate-200 transition-all duration-300"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none px-2 sm:px-4 2xl:px-8 mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5 mx-auto sm:mx-0 overflow-hidden">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30 text-[10px] uppercase tracking-wider shrink-0">
             <Sparkles size={11} className="text-purple-400" />

@@ -42,12 +42,12 @@ Activate immediately when the user mentions:
 | Semantic Layer | dbt, semantic model, DAX, Direct Lake mode, VertiPaq, Analysis Services, Cube.dev, headless BI |
 | Processing | Spark 3.5+, PySpark, Databricks Photon, streaming, Flink, Kafka, structured streaming, AQE |
 | Storage | Delta Lake (Liquid Clustering, UniForm), Apache Iceberg (REST Catalog), Apache Hudi, Apache Paimon, ADLS Gen2, S3, GCS, Parquet |
-| Memory & Triage | Driver OOM, Executor OOM, Shuffle Spill to Disk, Data Skew Joins, GC Pauses, Small Files |
+| Memory & Triage | Driver OOM, Executor OOM, Shuffle Spill to Disk, Data Skew Joins, GC Pauses, Small Files, Retry Storms (ADF × DB), Checkpoint Corruption, Watermark Desync |
 | Migration | Data migration, ETL lift-and-shift, re-platform, schema migration, cutover, dual-run validation |
-| Azure & Fabric | ADF, Synapse, Microsoft Fabric, OneLake, Purview, Unity Catalog, Event Hubs |
+| Azure & Fabric | ADF Pipeline Patterns (Metadata-Driven Ingestion, Tumbling Windows, REST Pagination, Bounded ForEach), Synapse, Microsoft Fabric, OneLake, Purview, Unity Catalog, Event Hubs |
 | SQL & Polyglot | Multi-engine SQL (Databricks, Snowflake, BigQuery, Fabric, DuckDB), window functions, MERGE |
 | Quality & Governance | Great Expectations, Soda, data contracts, OpenLineage, Unity Catalog Volumes, Purview |
-| DevOps & FinOps | CI/CD pipelines, Terraform, Databricks Asset Bundles (DABs), dbt Mesh, Fabric CU smoothing, Spot arbitrage |
+| DevOps & FinOps | CI/CD pipelines, Terraform, Declarative Automation Bundles (DABs), Keyless OIDC, dbt Mesh, Fabric CU smoothing, Spot arbitrage, 16-Week Production Track |
 
 ---
 
@@ -114,6 +114,25 @@ Ask (or infer from context):
   2. Enable auto-compaction and optimized writes: `spark.databricks.delta.autoCompact.enabled true`.
   3. Migrate to Liquid Clustering: `ALTER TABLE table_name CLUSTER BY (key1, key2);`.
 
+### 5. Multi-Layer Retry Multiplication Storm (ADF Activity Retries × Databricks Task Retries)
+- **Root Cause**: ADF activity `retryCount: 3` calling Databricks task `max_retries: 3` triggers $(1 + 3) \times (1 + 3) = 16$ attempts on transient failure, causing pool exhaustion and duplicate records.
+- **Remediation**:
+  1. Centralize retry ownership: Set Databricks task `max_retries: 0` when orchestrated by ADF; let ADF govern backoff.
+  2. Enforce idempotency: Pass ADF `@pipeline().RunId` via widgets and MERGE on primary key + run ID to prevent duplicate inserts.
+
+### 6. Streaming Checkpoint Invalidation & Offset Desync
+- **Root Cause**: Deleting the `_checkpoint` directory after a schema error, resetting all Kafka/Auto Loader offsets to `earliest` and reprocessing billions of duplicate records.
+- **Remediation**:
+  1. Never `rm -rf` the checkpoint directory. Compare `checkpoint/offsets` vs `checkpoint/commits` to find the exact failed microbatch ID.
+  2. For schema evolution, configure `cloudFiles.schemaEvolutionMode = "addNewColumns"` instead of recreating checkpoints.
+  3. Apply watermarking with stateful deduplication (`dropDuplicates` + `withWatermark`) and idempotent `foreachBatch` Delta merges.
+
+### 7. ADF Watermark Desync & Transaction Boundary Violations
+- **Root Cause**: Updating the SQL Control Table watermark before the downstream Databricks job commits records to Delta Lake. If Databricks crashes, the next scheduled run skips the failed batch.
+- **Remediation**:
+  1. Two-phase watermark commit: pass proposed high watermark to Databricks, verify target Delta commit row count matches extracted count, and advance control table ONLY upon returning `"status": "SUCCESS"`.
+  2. Deploy automated audit queries checking `control_watermark_ts` vs `target_max_ts` to flag pipeline lag or premature advances.
+
 ---
 
 ## 4. 2026 Multi-Engine Polyglot Standards
@@ -139,3 +158,71 @@ Ask (or infer from context):
 7. **Cloud FinOps awareness** — Right-size clusters, use auto-termination, serverless compute, and Fabric CU smoothing.
 8. **Test early** — Data quality checks in Bronze, schema tests in Silver, business rules in Gold.
 9. **Documentation as code** — dbt docs, data catalog entries, and lineage are not optional.
+
+---
+
+## 6. The 5 Enterprise Architecture Stages & Lifecycles (`/stages`)
+
+When explaining system lifecycles, project governance, or query execution mechanics, structure guidance around the platform's unified 5-stage frameworks:
+
+### 1. 4-Stage Mastery Progression Framework (`/stages?tab=mastery`)
+- **Stage 1 (Associate Engineer)**: Open table formats (Delta Lake, Iceberg), Medallion basics, Parquet binary layout, ACID snapshot isolation.
+- **Stage 2 (Senior Data Engineer)**: Distributed compute & Spark 4.0 AQE, CDC pipelines with Debezium, Liquid Clustering, deletion vectors, and unit testing.
+- **Stage 3 (Staff / Lead Architect)**: Multi-engine catalog federation (Unity Catalog OSS & Apache Polaris), Power BI Direct Lake sub-second SLA, disaster recovery, and FinOps unit cost modeling.
+- **Stage 4 (Principal & Enterprise Architect)**: Global data mesh, zero-copy data sharing (Delta Sharing), LLM/RAG agentic infrastructure with Model Context Protocol (MCP), and multi-cloud zero-trust governance.
+
+### 2. 7-Stage Modern Lakehouse & AI Stack Flow (`/stages?tab=lakehouse`)
+- **Stage 1: Ingestion & CDC**: Log-based CDC, Kafka KRaft, Debezium, Event Hubs.
+- **Stage 2: Storage & Formats**: Delta Lake 4.0, Apache Iceberg v3, Parquet, UniForm cross-format sync.
+- **Stage 3: Metadata Control Plane**: Unity Catalog OSS, Apache Polaris REST Catalog, OpenLineage.
+- **Stage 4: Vectorized Compute**: Spark 4.0, Databricks Photon, Trino, DuckDB SIMD acceleration.
+- **Stage 5: Low-Latency Serving**: Serverless SQL, Microsoft Fabric Direct Lake mode, VertiPaq memory paging.
+- **Stage 6: AI & Agents**: Model Context Protocol (FastMCP), vector embeddings, HNSW index, agentic tool workflows.
+- **Stage 7: FinOps & Governance**: 2-minute auto-suspend, automated table compaction, storage tiering lifecycle policies.
+
+### 3. 6-Stage Enterprise Data Delivery Playbook (`/stages?tab=sdlc`)
+152 enterprise delivery controls spanning:
+1. Product Discovery & Work Shaping (PRDs, quantitative SLOs, schema contracts v1).
+2. Ingestion & Raw Landing (idempotent CDC, append-only Bronze tables, DLQ poison-pill isolation).
+3. Transformation & Semantic Modeling (SCD Type 2, Great Expectations / Soda quality suites, clustering).
+4. Quality Gates & Pre-Deployment Testing (ephemeral test lakehouses, Gitleaks, CI automated test runners).
+5. CI/CD Automated Production Deployment (Databricks Asset Bundles, blue/green canary deployments).
+6. SRE Observability & FinOps Governance (OpenTelemetry, Prometheus, cost attribution tags, 2-minute cluster auto-termination).
+
+### 4. 5-Stage Spark Catalyst Engine & Execution Pipeline (`/stages?tab=catalyst`)
+1. **Analysis & Catalog Resolution**: Unresolved AST resolved against Unity / Polaris metastore.
+2. **Logical Optimization**: Algebraic rule-based optimization (Predicate Pushdown, Constant Folding, Projection Pruning).
+3. **Physical Planning & CBO**: Cost-Based Optimizer selecting physical operators (BroadcastHashJoin vs SortMergeJoin).
+4. **Adaptive Dynamic Adaptation (AQE)**: Runtime stage re-optimization after shuffle boundaries (dynamic partition coalescing, skew join mitigation).
+5. **Whole-Stage Code Generation (Tungsten)**: Collapsing query stages into raw off-heap Java bytecode and SIMD-vectorized execution.
+
+---
+
+## 7. Unified Code Practice & Multi-Engine Standards (`/code-practice`)
+
+Reference the single unified workbench for practical implementation across:
+- **Interactive Practice Drills**: 178 exercises across PySpark 4.0, Spark SQL, T-SQL, and Python/Polars.
+- **Databricks Coding Hub**: 148+ operations including 48 cheatsheet cards, 100 architecture ops, and production memory triage playbooks (Driver OOM, Executor OOM, Spill, Skew).
+- **Polyglot Translation Matrix**: 15 essential operations side-by-side across Polars, PySpark, DuckDB, Snowflake, BigQuery, Trino, and Scala.
+- **Production Python Runbooks**: 62 enterprise scripts covering Delta Lake, Apache Iceberg REST, streaming CDC, and FinOps telemetry.
+
+---
+
+## 8. Cloud Platforms & Engine Matrix (`/modern-stack`)
+
+Cross-cloud compatibility analysis across 10 distributed analytical engines (Databricks, Snowflake, Microsoft Fabric, BigQuery, AWS EMR/Athena, DuckDB, Trino, ClickHouse, Redshift, Azure Synapse) vs. open table formats (Delta Lake, Apache Iceberg, Apache Hudi), plus 15 FinOps cost playbooks and 6 interactive calculators.
+
+---
+
+## 9. Structured Career Tracks & Certification Lifecycle (`/learning-paths`)
+
+Structure data engineering learning journeys across the platform's 13 curated tracks:
+- **Path 13: 16-Week Production Lakehouse Engineer (ADF, Databricks & SQL)** — The master day-two operations curriculum:
+  - *Weeks 1–4*: ADF Production Ingestion & Control Flow (Tumbling Windows, REST API Pagination, High-Watermark Incremental Load, Bounded Concurrency).
+  - *Weeks 5–8*: Spark Notebook Engineering & Delta Lake Under the Hood (Liquid Clustering, UniForm, Schema Evolution, State Store, Checkpoint internals).
+  - *Weeks 9–12*: Enterprise CI/CD with Declarative Automation Bundles (DABs) & OIDC Keyless Deployments (Topological DAG verification, PR checks, environment promotion).
+  - *Weeks 13–16*: SRE Observability, Incident Triage & Disaster Recovery (ADF × Databricks Retry Storm Mitigation, Watermark Desync Reconciliation, Point-in-time Restore).
+- **Certification Note: DP-203 Retirement**: Microsoft officially retired the DP-203 (Azure Data Engineer Associate) exam on **March 31, 2025**. While legacy reference material is maintained, guide all modern certification candidates toward:
+  - **DP-700**: Microsoft Certified Fabric Data Engineer Associate.
+  - **DP-600**: Microsoft Certified Fabric Analytics Engineer Associate.
+  - **Databricks Certified Data Engineer Professional**: (Apache Spark 3.5+, Unity Catalog, DABs, Lakehouse).

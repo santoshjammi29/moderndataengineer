@@ -338,3 +338,102 @@ with DAG('data_pipeline', schedule_interval='@daily', ...) as dag:
     )
 # OpenLineage automatically captures lineage via Marquez
 ```
+
+---
+
+## Declarative Automation Bundles (DABs) for Multi-Environment CI/CD
+
+Databricks Declarative Automation Bundles (formerly Asset Bundles) provide software-engineering rigor for deploying Databricks jobs, pipelines, and notebooks across environments.
+
+### `databricks.yml` Specification
+```yaml
+bundle:
+  name: enterprise_lakehouse_orchestration
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-dev-workspace.azuredatabricks.net
+
+  staging:
+    mode: production
+    workspace:
+      host: https://adb-staging-workspace.azuredatabricks.net
+    run_as:
+      service_principal_name: 00000000-0000-0000-0000-000000000000
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-prod-workspace.azuredatabricks.net
+    run_as:
+      service_principal_name: 11111111-1111-1111-1111-111111111111
+```
+
+### Keyless OIDC GitHub Actions Workflow (`deploy_bundles.yml`)
+```yaml
+name: Deploy Databricks Bundles
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write  # Required for Azure OIDC Federated Credential
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@v0.220.0
+      - name: Validate Bundle Configuration
+        run: databricks bundle validate -t dev
+
+  deploy_prod:
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - uses: databricks/setup-cli@v0.220.0
+      - name: Deploy to Production
+        run: databricks bundle deploy -t prod
+```
+
+---
+
+## Azure Data Factory (ADF) Release Automation Lifecycle
+
+Deploying ADF via CI/CD requires special handling for stateful triggers to prevent schema locks or running pipelines during release:
+
+```
+[PR Merged to Main] ──> [Build ARM Template]
+                               │
+                               ▼
+                   [Pre-Deploy: Stop Active Triggers]
+                               │
+                               ▼
+                   [Deploy ARM Template to Target Factory]
+                   (Override KeyVault, ADLS & DB URLs)
+                               │
+                               ▼
+                   [Post-Deploy: Restart Triggers]
+                               │
+                               ▼
+                   [Smoke Test Pipeline Validation]
+```

@@ -3,7 +3,7 @@
     "id": "path-powerbi-pl300",
     "slug": "powerbi-pl300",
     "title": "1. Microsoft Power BI Data Analyst (PL-300)",
-    "icon": "\ud83d\udcca",
+    "icon": "📊",
     "badge": "Certified Path",
     "weeks": 6,
     "difficulty": "MEDIUM",
@@ -63,7 +63,7 @@
     "id": "path-fabric-dp600",
     "slug": "fabric-dp600",
     "title": "2. Microsoft Fabric Analytics Engineer (DP-600)",
-    "icon": "\ud83d\udd37",
+    "icon": "🔷",
     "badge": "Certified Path",
     "weeks": 8,
     "difficulty": "HARD",
@@ -134,13 +134,13 @@
   {
     "id": "path-azure-dp203",
     "slug": "azure-dp203",
-    "title": "3. Azure Data Engineer Associate (DP-203)",
-    "icon": "\u2601\ufe0f",
-    "badge": "Certified Path",
+    "title": "3. Azure Data Engineer Associate (DP-203 - Legacy Reference Track; Exam Retired March 2025)",
+    "icon": "☁️",
+    "badge": "Legacy Reference",
     "weeks": 10,
     "difficulty": "HARD",
     "prerequisites": "Python, SQL, Cloud Fundamentals",
-    "description": "Architect scalable cloud analytics using Azure Data Factory, Azure Databricks, Synapse Analytics, Cosmos DB, and Azure Stream Analytics.",
+    "description": "Architect scalable cloud analytics using Azure Data Factory, Azure Databricks, Synapse Analytics, Cosmos DB, and Azure Stream Analytics. (Note: Microsoft officially retired the DP-203 exam on March 31, 2025. For current certifications, see Microsoft Fabric DP-700 / DP-600. This track remains as a production reference for ADF and Azure Databricks).",
     "progress": 0,
     "skills": [
       "ADF Data Flows",
@@ -206,7 +206,7 @@
     "id": "path-bigquery-gcp",
     "slug": "bigquery-gcp",
     "title": "4. Google BigQuery & GCP Data Engineering",
-    "icon": "\ud83d\udd0d",
+    "icon": "🔍",
     "badge": "Cloud Platform Track",
     "weeks": 6,
     "difficulty": "HARD",
@@ -265,8 +265,8 @@
   {
     "id": "path-spark-migration",
     "slug": "spark-migration",
-    "title": "5. Apache Spark 3 \u2192 4 Engineering & Optimization",
-    "icon": "\u26a1",
+    "title": "5. Apache Spark 3 → 4 Engineering & Optimization",
+    "icon": "⚡",
     "badge": "Core Engine Track",
     "weeks": 6,
     "difficulty": "HARD",
@@ -327,7 +327,7 @@
     "id": "path-streaming-cdc",
     "slug": "streaming-cdc",
     "title": "6. Real-Time Streaming & Log-Based CDC Architecture",
-    "icon": "\ud83d\udce1",
+    "icon": "📡",
     "badge": "Core Engine Track",
     "weeks": 8,
     "difficulty": "HARD",
@@ -385,7 +385,7 @@
       }
     ],
     "handsOn": {
-      "title": "End-to-End Debezium \u2192 Kafka \u2192 Delta CDC Pipeline",
+      "title": "End-to-End Debezium → Kafka → Delta CDC Pipeline",
       "repo": "https://github.com/santoshjammi29/realtime-cdc-delta-starter",
       "description": "Capture Postgres database changes using Debezium and stream directly into Delta Lake tables."
     },
@@ -396,7 +396,7 @@
     "id": "path-databricks-photon",
     "slug": "databricks-photon",
     "title": "7. Databricks Lakehouse & Photon Vectorized Engine",
-    "icon": "\ud83e\uddf1",
+    "icon": "🧱",
     "badge": "Architect Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -467,7 +467,7 @@
     "id": "path-snowflake-snowpro",
     "slug": "snowflake-snowpro",
     "title": "8. Snowflake SnowPro Advanced Architect",
-    "icon": "\u2744\ufe0f",
+    "icon": "❄️",
     "badge": "Certified Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -536,7 +536,7 @@
     "id": "path-modern-lakehouse",
     "slug": "modern-lakehouse",
     "title": "9. Open Table Formats (Delta / Iceberg / Hudi / Paimon)",
-    "icon": "\ud83e\udeb6",
+    "icon": "🪶",
     "badge": "Architect Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -576,7 +576,7 @@
       {
         "name": "Phase 3: Apache Iceberg Spec v2 / v3",
         "weeks": "Weeks 5-6",
-        "milestone": "Deconstruct Iceberg Catalog \u2192 metadata.json \u2192 Manifest List \u2192 Manifest File \u2192 Parquet Data File.",
+        "milestone": "Deconstruct Iceberg Catalog → metadata.json → Manifest List → Manifest File → Parquet Data File.",
         "topics": [
           "Iceberg Snapshot Isolation",
           "Partition Evolution without Table Rewrite",
@@ -606,7 +606,7 @@
     "id": "path-serverless-finops",
     "slug": "serverless-finops",
     "title": "10. Serverless Cost Engineering & FinOps Mastery",
-    "icon": "\ud83d\udcb0",
+    "icon": "💰",
     "badge": "Architect Path",
     "weeks": 6,
     "difficulty": "ARCHITECT",
@@ -665,7 +665,7 @@
     "id": "path-ai-llm-de",
     "slug": "ai-llm-de",
     "title": "11. AI / LLM Data Engineering & RAG Architecture",
-    "icon": "\ud83e\udd16",
+    "icon": "🤖",
     "badge": "Architect Path",
     "weeks": 8,
     "difficulty": "ARCHITECT",
@@ -735,7 +735,7 @@
     "id": "path-architecture-mastery",
     "slug": "architecture-mastery",
     "title": "12. Enterprise Data Architecture Mastery (32-Week Track)",
-    "icon": "\ud83c\udfdb\ufe0f",
+    "icon": "🏛️",
     "badge": "Mastery Track",
     "weeks": 32,
     "difficulty": "ARCHITECT",
@@ -752,7 +752,7 @@
     ],
     "phases": [
       {
-        "name": "Phase 1: Architectural Paradigms (Monolith \u2192 Lakehouse \u2192 Data Mesh)",
+        "name": "Phase 1: Architectural Paradigms (Monolith → Lakehouse → Data Mesh)",
         "weeks": "Weeks 1-8",
         "milestone": "Design domain-driven Data Mesh specifications with decentralized ownership and centralized governance.",
         "topics": [
@@ -799,5 +799,75 @@
     },
     "capstone": "Complete Global Enterprise Data Platform Architecture Spec (100+ Pages & Mermaid Diagrams)",
     "examQsCount": 300
+  },
+  {
+    "id": "path-production-lakehouse-engineer",
+    "slug": "production-lakehouse-engineer",
+    "title": "13. Production Lakehouse Engineer: ADF, Databricks & SQL (16-Week Applied Track)",
+    "icon": "🏗️",
+    "badge": "Applied Production Track",
+    "weeks": 16,
+    "difficulty": "HARD",
+    "prerequisites": "Relational SQL, Python, Distributed Systems Basics, Azure Fundamentals",
+    "description": "Master the recurring day-two production challenges of enterprise lakehouse engineering across Azure Data Factory (ADF), Azure SQL/SQL Server, Databricks, PySpark, and Delta Lake. Build, release, operate, troubleshoot, and safely recover mission-critical pipelines with end-to-end data reconciliation.",
+    "progress": 0,
+    "skills": [
+      "ADF Ingestion Patterns",
+      "SHIR High Availability",
+      "PySpark Modular Design",
+      "Spark AQE & Skew Salting",
+      "Delta MERGE & Liquid Clustering",
+      "Auto Loader & Streaming CDC",
+      "Declarative Automation Bundles (DABs)",
+      "Cross-System Retry Architecture",
+      "Azure Monitor & KQL Alerting",
+      "Disaster Recovery & Capstone Game Day"
+    ],
+    "phases": [
+      {
+        "name": "Phase 1: Foundations, Source Contracts & Spark Internals (Weeks 1–4)",
+        "weeks": "Weeks 1-4",
+        "milestone": "Profile relational sources, establish strict data contracts, construct pure testable PySpark modules, and diagnose Spark Catalyst and physical query execution plans.",
+        "topics": [
+          "Relational Source Profiling & Data Contracts",
+          "Python Modular Design & Unit Testing with Local Spark",
+          "Spark Execution Engine, Tungsten & Driver Collection Boundaries",
+          "Schema-Safe PySpark Transformations & Exception Classification"
+        ]
+      },
+      {
+        "name": "Phase 2: Relational Operations, ADF Ingestion & Restart Safety (Weeks 5–8)",
+        "weeks": "Weeks 5-8",
+        "milestone": "Tune T-SQL/Azure SQL extraction queries, configure High-Availability Self-Hosted IRs, and implement idempotent metadata-driven ADF ingestion with explicit watermark commit boundaries.",
+        "topics": [
+          "SQL Server / Azure SQL Execution Plans & Deadlock Mitigation",
+          "ADF Linked Services, Datasets & SHIR High Availability Setup",
+          "Metadata-Driven Ingestion, Copy DIU Tuning & Dynamic Slicing",
+          "Watermark Transaction Boundaries & Restart Safety Validation"
+        ]
+      },
+      {
+        "name": "Phase 3: Streaming CDC, Performance Tuning & Test Reconciliation (Weeks 9–12)",
+        "weeks": "Weeks 9-12",
+        "milestone": "Implement streaming CDC with Auto Loader and Dead-Letter Queue quarantine replay, eliminate skew and shuffle spill via AQE and salting, and deploy declarative bundles through CI/CD.",
+        "topics": [
+          "Delta Lake ACID Upserts, Auto Loader & Streaming Checkpoint Recovery",
+          "AQE Dynamic Coalescing, Join Strategy Switching & Skew Salting",
+          "Delta Compaction, Liquid Clustering & VACUUM Safety Thresholds",
+          "Declarative Automation Bundles (DABs) & Multi-Environment GitHub Actions CI/CD"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring, DR, Fallback & Capstone Operations Game Day (Weeks 13–16)",
+        "weeks": "Weeks 13-16",
+        "milestone": "Establish end-to-end run correlation across ADF and Databricks, construct Azure Monitor KQL alert rules, execute bounded backfills, and triumph over an operational game day with injected failures.",
+        "topics": [
+          "Cross-System Correlation (Run IDs), Azure Monitor KQL & System Tables FinOps",
+          "Multi-Layer Retry Multiplication Mitigation & Idempotent replaceWhere",
+          "End-to-End Capstone Lakehouse Build (SQL Source -> ADF -> Databricks -> Gold)",
+          "Capstone Operations Game Day: Failure Injection, Triage, Recovery & Post-Incident Review"
+        ]
+      }
+    ]
   }
 ]

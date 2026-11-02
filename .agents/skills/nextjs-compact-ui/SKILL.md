@@ -162,7 +162,7 @@ Instead of fragmenting related features into disjointed sub-routes (e.g. separat
     onClick={() => setView('glossary')}
     className={cn("px-3 py-1.5 text-xs font-medium rounded-md transition-all", view === 'glossary' && "bg-[var(--surface-1)] shadow-sm font-semibold")}
   >
-    Glossary & Cards (679)
+    Glossary & Cards (704)
   </button>
   <button
     onClick={() => setView('mindmap')}
@@ -221,7 +221,7 @@ When offering production PDF cheat sheets, runbooks, or blueprints:
 
 ## 7. Dynamic Stretching Mindmap / Tree Pattern
 
-When displaying taxonomic knowledge structures (e.g., 679 concepts across 14 core pillars), implement progressive stretch depth levels:
+When displaying taxonomic knowledge structures (e.g., 704 concepts across 14 core pillars), implement progressive stretch depth levels:
 - **Depth 1: Domain Pillars** (Fabric, Databricks, Spark, Governance, Lakehouse, Modern FinOps)
 - **Depth 2: Sub-Topics** (OneLake, Direct Lake, Unity Catalog, Liquid Clustering)
 - **Depth 3: Leaf Concepts** (Compact term chips with difficulty color dots)
@@ -230,9 +230,61 @@ When displaying taxonomic knowledge structures (e.g., 679 concepts across 14 cor
 
 ---
 
-## 8. Mobile Optimization (Responsive Compactness)
+## 9. Dynamic Ultrawide & High-Resolution Display Scaling (`2xl:`, `3xl:`, `4xl:`)
 
-- Never hide essential filters behind 4-click nested sub-menus.
-- Use a **slide-up bottom sheet drawer** on screens `<768px` for filter selection.
-- Sticky bottom dock navigation bar on mobile for instant 1-thumb switching between Search, Filters, and Read All mode.
-- Use `truncate` on table cells and let user tap row to expand full details.
+Standard web designs frequently restrict content wrappers to `max-w-7xl` (1280px). On modern high-resolution displays (1080p, 1440p, 2K, 4K, 3440px ultrawide), this produces artificial letterboxing with massive empty margins.
+
+To dynamically exploit the entire screen width while preserving readability:
+
+### 1. Fluid Container Hierarchy
+Replace restrictive `max-w-7xl mx-auto` wrappers with multi-tier fluid boundaries:
+```tsx
+// Good: Dynamic expanding container with responsive safety cushions
+<div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 3xl:px-8">
+  {content}
+</div>
+```
+
+### 2. Multi-Column Grid Expansion
+Scale grid layouts progressively as viewport width expands:
+- **4-Stage Mastery or Progression**: `grid-cols-1 md:grid-cols-2 2xl:grid-cols-4` (4 columns side-by-side on wide screens).
+- **Code & Runbook Blocks**: `grid-cols-1 2xl:grid-cols-2` (2 full-width code panes side-by-side on 2xl+).
+- **Concept Cards / Knowledge Bases**: `grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4`.
+- **Subtopics & Filter Chips**: `grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 2xl:grid-cols-8`.
+
+### 3. Dense Matrix & Comparison Table Width
+- Matrix tables (e.g. Cross-Engine Compatibility Matrix across 10 engines) should dynamically fill the container width.
+- Eliminate unnecessary horizontal scrollbars on desktop screens $\ge 1440\text{px}$ by using flexible cell widths with `truncate` or high-density micro badges.
+
+### 4. Typography Clamping
+- Never let single prose lines stretch across an entire 4K screen (violates 75-character readable line length).
+- Constrain text paragraphs (`p`, `article`) with `max-w-3xl 2xl:max-w-5xl 3xl:max-w-6xl` while letting data cards, charts, code blocks, and matrices expand to full width.
+
+---
+
+## 10. Dynamic Typography Scaling & Universal Element Propagation
+
+When implementing user-controllable font size and font family switches:
+1. **Never rely solely on root rem scaling**: Arbitrary pixel classes (`text-[10px]`, `text-[11px]`, `text-[12px]`, etc.) in Tailwind compile to absolute pixel values (`font-size: 10px;`) and will ignore root `html { font-size: 150%; }` changes.
+2. **Bind pixel classes with `--font-scale-multiplier`**:
+   ```css
+   .text-\[10px\], [class*="text-\[10px\]"] { font-size: calc(10px * var(--font-scale-multiplier, 1)) !important; }
+   .text-\[11px\], [class*="text-\[11px\]"] { font-size: calc(11px * var(--font-scale-multiplier, 1)) !important; }
+   ```
+3. **Propagate font family across all objects**:
+   ```css
+   html, body { font-family: var(--font-sans); }
+   h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, [class*="card"], .glass-card { font-family: inherit; }
+   code, kbd, samp, pre, .font-mono, [class*="font-mono"], .token-line { font-family: var(--font-mono); }
+   ```
+4. **Code block scaling**: Use relative units (`text-xs`, `text-[0.8125rem]`, `text-sm`) and `calc(0.8125rem * var(--font-scale-multiplier, 1))` on `pre` and `code` tags to ensure code snippets scale synchronously with card text and headings.
+
+---
+
+## 11. Left Sidebar Subpage Tree Navigation Architecture
+
+When rendering high-density multi-level navigation in the left sidebar:
+1. **Always provide direct access to subpages**: Do not restrict subpage visibility to only when the parent route is active.
+2. **Individual accordion chevrons**: Render an expand/collapse toggle chevron next to every parent item that contains subpages.
+3. **Global "All Subpages" toggle**: Include an "All Subpages / Collapse Subpages" button at the top of the sidebar navigation so users can review the entire platform site tree with a single click.
+4. **Indented visual tree branch guidelines**: Style expanded child items with `ml-5 pl-2.5 border-l-2 border-blue-500/25` for clear visual hierarchy.

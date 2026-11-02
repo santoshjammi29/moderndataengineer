@@ -112,7 +112,77 @@ export const TEXT_SIZE_OPTIONS: TextSizeOption[] = [
   },
 ];
 
+export type FontFamilyKey =
+  | "inter"
+  | "jetbrains"
+  | "fira"
+  | "system"
+  | "serif"
+  | "dyslexic";
+
+export interface FontFamilyOption {
+  id: FontFamilyKey;
+  label: string;
+  tagline: string;
+  fontFamily: string;
+  codeFontFamily: string;
+  previewSample: string;
+}
+
+export const FONT_FAMILY_OPTIONS: FontFamilyOption[] = [
+  {
+    id: "inter",
+    label: "Inter Sans",
+    tagline: "Clean, crisp geometric UI typography",
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    codeFontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, monospace",
+    previewSample: "Aa 123",
+  },
+  {
+    id: "jetbrains",
+    label: "JetBrains Mono",
+    tagline: "Full developer monospace across cards, text & code",
+    fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, monospace",
+    codeFontFamily: "'JetBrains Mono', ui-monospace, monospace",
+    previewSample: "fn() {}",
+  },
+  {
+    id: "fira",
+    label: "Fira Code",
+    tagline: "Technical code font with programming ligatures",
+    fontFamily: "'Fira Code', 'JetBrains Mono', ui-monospace, monospace",
+    codeFontFamily: "'Fira Code', 'JetBrains Mono', monospace",
+    previewSample: "=> !==",
+  },
+  {
+    id: "system",
+    label: "System UI",
+    tagline: "Native OS font (Apple San Francisco, Segoe, Roboto)",
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    codeFontFamily: "ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+    previewSample: "Aa 4k",
+  },
+  {
+    id: "serif",
+    label: "Editorial Serif",
+    tagline: "Elegant book typography for comfortable long reading",
+    fontFamily: "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif",
+    codeFontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+    previewSample: "Tt Book",
+  },
+  {
+    id: "dyslexic",
+    label: "Dyslexia Friendly",
+    tagline: "High readability with weighted letter bottoms",
+    fontFamily: "'OpenDyslexic', 'Comic Sans MS', sans-serif",
+    codeFontFamily: "'OpenDyslexicMono', monospace",
+    previewSample: "Aa Read",
+  },
+];
+
 const STORAGE_KEY = "fabric_text_size";
+const FONT_STORAGE_KEY = "fabric_font_family";
+
 const VALID_KEYS: TextSizeKey[] = [
   "3xs",
   "2xs",
@@ -128,6 +198,15 @@ const VALID_KEYS: TextSizeKey[] = [
   "5xl",
 ];
 
+const VALID_FONT_KEYS: FontFamilyKey[] = [
+  "inter",
+  "jetbrains",
+  "fira",
+  "system",
+  "serif",
+  "dyslexic",
+];
+
 interface TextSizeContextType {
   textSize: TextSizeKey;
   currentOption: TextSizeOption;
@@ -138,6 +217,12 @@ interface TextSizeContextType {
   resetTextSize: (notify?: boolean) => void;
   canIncrease: boolean;
   canDecrease: boolean;
+
+  // Font Family additions
+  fontFamily: FontFamilyKey;
+  currentFontFamilyOption: FontFamilyOption;
+  fontFamilyOptions: FontFamilyOption[];
+  setFontFamily: (font: FontFamilyKey, notify?: boolean) => void;
 }
 
 const TextSizeContext = createContext<TextSizeContextType | null>(null);
@@ -156,25 +241,55 @@ function applyTextSizeToDom(size: TextSizeKey) {
   const opt = TEXT_SIZE_OPTIONS.find((o) => o.id === size);
   if (opt) {
     root.style.setProperty("--text-scale", `${opt.percent}%`);
+    root.style.setProperty("--text-scale-num", `${opt.percent}`);
+    root.style.setProperty("--font-scale-multiplier", `${opt.percent / 100}`);
+  }
+}
+
+function applyFontFamilyToDom(font: FontFamilyKey) {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+
+  // Remove existing font classes
+  VALID_FONT_KEYS.forEach((k) => root.classList.remove(`font-${k}`));
+
+  // Add active font class
+  root.classList.add(`font-${font}`);
+
+  const opt = FONT_FAMILY_OPTIONS.find((o) => o.id === font);
+  if (opt) {
+    root.style.setProperty("--font-sans", opt.fontFamily);
+    root.style.setProperty("--font-mono", opt.codeFontFamily);
+    root.style.setProperty("--font-code", opt.codeFontFamily);
   }
 }
 
 export function TextSizeProvider({ children }: { children: React.ReactNode }) {
   const [textSize, setTextSizeState] = useState<TextSizeKey>("base");
+  const [fontFamily, setFontFamilyState] = useState<FontFamilyKey>("inter");
   const [mounted, setMounted] = useState(false);
 
   // Sync with initial DOM / localStorage
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY) as TextSizeKey | null;
-      if (saved && VALID_KEYS.includes(saved)) {
-        setTextSizeState(saved);
-        applyTextSizeToDom(saved);
+      const savedSize = localStorage.getItem(STORAGE_KEY) as TextSizeKey | null;
+      if (savedSize && VALID_KEYS.includes(savedSize)) {
+        setTextSizeState(savedSize);
+        applyTextSizeToDom(savedSize);
       } else {
         applyTextSizeToDom("base");
       }
+
+      const savedFont = localStorage.getItem(FONT_STORAGE_KEY) as FontFamilyKey | null;
+      if (savedFont && VALID_FONT_KEYS.includes(savedFont)) {
+        setFontFamilyState(savedFont);
+        applyFontFamilyToDom(savedFont);
+      } else {
+        applyFontFamilyToDom("inter");
+      }
     } catch {
       applyTextSizeToDom("base");
+      applyFontFamilyToDom("inter");
     }
     setMounted(true);
   }, []);
@@ -185,6 +300,13 @@ export function TextSizeProvider({ children }: { children: React.ReactNode }) {
       TEXT_SIZE_OPTIONS.find((o) => o.id === "base") ||
       TEXT_SIZE_OPTIONS[0],
     [textSize]
+  );
+
+  const currentFontFamilyOption = useMemo(
+    () =>
+      FONT_FAMILY_OPTIONS.find((f) => f.id === fontFamily) ||
+      FONT_FAMILY_OPTIONS[0],
+    [fontFamily]
   );
 
   const currentIndex = useMemo(
@@ -209,6 +331,28 @@ export function TextSizeProvider({ children }: { children: React.ReactNode }) {
       if (notify) {
         const opt = TEXT_SIZE_OPTIONS.find((o) => o.id === newSize);
         toast.success(`Text size: ${opt?.label} (${opt?.scaleLabel})`, {
+          description: opt?.tagline,
+          duration: 1800,
+        });
+      }
+    },
+    []
+  );
+
+  const setFontFamily = useCallback(
+    (newFont: FontFamilyKey, notify = true) => {
+      if (!VALID_FONT_KEYS.includes(newFont)) return;
+      setFontFamilyState(newFont);
+      applyFontFamilyToDom(newFont);
+      try {
+        localStorage.setItem(FONT_STORAGE_KEY, newFont);
+      } catch {
+        // Storage might be restricted
+      }
+
+      if (notify) {
+        const opt = FONT_FAMILY_OPTIONS.find((f) => f.id === newFont);
+        toast.success(`Font: ${opt?.label}`, {
           description: opt?.tagline,
           duration: 1800,
         });
@@ -303,6 +447,11 @@ export function TextSizeProvider({ children }: { children: React.ReactNode }) {
       resetTextSize,
       canIncrease,
       canDecrease,
+
+      fontFamily,
+      currentFontFamilyOption,
+      fontFamilyOptions: FONT_FAMILY_OPTIONS,
+      setFontFamily,
     }),
     [
       textSize,
@@ -313,6 +462,9 @@ export function TextSizeProvider({ children }: { children: React.ReactNode }) {
       resetTextSize,
       canIncrease,
       canDecrease,
+      fontFamily,
+      currentFontFamilyOption,
+      setFontFamily,
     ]
   );
 
@@ -324,6 +476,8 @@ export function TextSizeProvider({ children }: { children: React.ReactNode }) {
 const defaultOption =
   TEXT_SIZE_OPTIONS.find((o) => o.id === "base") || TEXT_SIZE_OPTIONS[0];
 
+const defaultFontOption = FONT_FAMILY_OPTIONS[0];
+
 const defaultContextValue: TextSizeContextType = {
   textSize: "base",
   currentOption: defaultOption,
@@ -334,6 +488,11 @@ const defaultContextValue: TextSizeContextType = {
   resetTextSize: () => {},
   canIncrease: true,
   canDecrease: true,
+
+  fontFamily: "inter",
+  currentFontFamilyOption: defaultFontOption,
+  fontFamilyOptions: FONT_FAMILY_OPTIONS,
+  setFontFamily: () => {},
 };
 
 export function useTextSize(): TextSizeContextType {

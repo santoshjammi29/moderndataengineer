@@ -7,10 +7,12 @@ import {
   Plus,
   Check,
   ChevronUp,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   useTextSize,
+  FontFamilyKey,
 } from "@/components/providers/text-size-provider";
 
 interface TextSizeControllerProps {
@@ -21,7 +23,7 @@ interface TextSizeControllerProps {
 }
 
 /**
- * Primary Text Size Controller for Desktop Sidebar & Settings
+ * Primary Typography & Font Controller for Desktop Sidebar & Settings
  */
 export function TextSizeController({
   className,
@@ -39,9 +41,14 @@ export function TextSizeController({
     resetTextSize,
     canIncrease,
     canDecrease,
+    fontFamily,
+    currentFontFamilyOption,
+    fontFamilyOptions,
+    setFontFamily,
   } = useTextSize();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"scale" | "family">("scale");
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Close on outside click or escape
@@ -78,18 +85,18 @@ export function TextSizeController({
             "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]",
             isOpen && "bg-[var(--surface-3)] text-[var(--foreground)]"
           )}
-          aria-label={`Text size: ${currentOption.scaleLabel}. Click to change text size.`}
+          aria-label={`Font: ${currentFontFamilyOption.label}, Size: ${currentOption.scaleLabel}. Click to change font and text scale.`}
           aria-expanded={isOpen}
-          title={`Text Size: ${currentOption.label} (${currentOption.scaleLabel})`}
+          title={`Font & Size: ${currentFontFamilyOption.label} (${currentOption.scaleLabel})`}
         >
           <div className="relative flex items-center justify-center">
             <Type size={18} />
             <span
               className={cn(
                 "absolute -bottom-1 -right-1 text-[8px] font-mono font-bold leading-none px-0.5 rounded",
-                textSize === "base"
+                textSize === "base" && fontFamily === "inter"
                   ? "text-[var(--muted-foreground)]"
-                  : "text-purple-400 bg-purple-500/20"
+                  : "text-blue-400 bg-blue-500/20"
               )}
             >
               {currentOption.scaleLabel.replace("%", "")}
@@ -100,119 +107,114 @@ export function TextSizeController({
         {/* Collapsed Popover */}
         {isOpen && (
           <div
-            role="listbox"
-            aria-label="Select text size"
+            role="dialog"
+            aria-label="Font and text scale presets"
             className={cn(
-              "absolute z-50 w-60 p-2 rounded-2xl border shadow-xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150",
+              "absolute z-50 w-72 p-2 rounded-2xl border shadow-xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150",
               "bg-[var(--card)] border-[var(--border)]",
-              direction === "up" ? "bottom-full mb-2" : "top-full mt-2",
-              "left-0"
+              direction === "up" ? "bottom-0 mb-10" : "top-0 mt-10",
+              "left-full ml-2"
             )}
           >
-            <div className="px-2.5 py-1.5 mb-1.5 border-b border-[var(--border)] flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
-                Text Size
-              </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--surface-3)] text-[var(--foreground)] font-mono font-semibold">
-                {currentOption.scaleLabel}
-              </span>
-            </div>
-
-            {/* Quick Stepper in Collapsed Popover */}
+            {/* Popover Header Tabs */}
             <div className="flex items-center gap-1 p-1 mb-2 rounded-xl bg-[var(--surface-2)] border border-[var(--border)]">
               <button
                 type="button"
-                onClick={() => decreaseTextSize(true)}
-                disabled={!canDecrease}
+                onClick={() => setActiveTab("scale")}
                 className={cn(
-                  "flex-1 flex items-center justify-center py-1 px-2 rounded-lg text-xs font-bold transition-colors cursor-pointer",
-                  canDecrease
-                    ? "hover:bg-[var(--surface-3)] text-[var(--foreground)] active:scale-95"
-                    : "opacity-40 cursor-not-allowed text-[var(--muted-foreground)]"
+                  "flex-1 py-1 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                  activeTab === "scale"
+                    ? "bg-[var(--surface-1)] text-[var(--foreground)] shadow-xs"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 )}
-                title="Decrease text size (Alt + -)"
-                aria-label="Decrease text size"
               >
-                <span>A−</span>
+                Size ({currentOption.scaleLabel})
               </button>
-
               <button
                 type="button"
-                onClick={() => resetTextSize(true)}
-                className="px-2 py-1 rounded-lg text-[10px] font-mono font-medium hover:bg-[var(--surface-3)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
-                title="Reset to 100% (Alt + 0)"
-                aria-label="Reset text size"
-              >
-                Reset
-              </button>
-
-              <button
-                type="button"
-                onClick={() => increaseTextSize(true)}
-                disabled={!canIncrease}
+                onClick={() => setActiveTab("family")}
                 className={cn(
-                  "flex-1 flex items-center justify-center py-1 px-2 rounded-lg text-xs font-bold transition-colors cursor-pointer",
-                  canIncrease
-                    ? "hover:bg-[var(--surface-3)] text-[var(--foreground)] active:scale-95"
-                    : "opacity-40 cursor-not-allowed text-[var(--muted-foreground)]"
+                  "flex-1 py-1 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                  activeTab === "family"
+                    ? "bg-[var(--surface-1)] text-[var(--foreground)] shadow-xs"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 )}
-                title="Increase text size (Alt + +)"
-                aria-label="Increase text size"
               >
-                <span>A+</span>
+                Font ({currentFontFamilyOption.label.split(" ")[0]})
               </button>
             </div>
 
-            {/* Presets List */}
-            <div className="space-y-1 max-h-72 overflow-y-auto pr-1 scrollbar-thin">
-              {options.map((opt) => {
-                const isSelected = textSize === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    role="option"
-                    aria-selected={isSelected}
-                    onClick={() => {
-                      setTextSize(opt.id, true);
-                      setIsOpen(false);
-                    }}
-                    className={cn(
-                      "flex items-center justify-between w-full px-2.5 py-1.5 rounded-xl text-left transition-all cursor-pointer group",
-                      isSelected
-                        ? "bg-[var(--surface-3)] border border-[var(--border-hover)]"
-                        : "hover:bg-[var(--surface-2)] border border-transparent"
-                    )}
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            "text-xs font-bold leading-tight",
-                            isSelected
-                              ? "text-[var(--foreground)]"
-                              : "text-[var(--foreground)]"
-                          )}
-                        >
-                          {opt.label}
-                        </span>
-                        <span className="text-[10px] px-1.5 py-0.2 rounded font-mono bg-[var(--surface-1)] text-[var(--muted-foreground)] border border-[var(--border)]">
-                          {opt.scaleLabel}
-                        </span>
+            {activeTab === "scale" ? (
+              <div className="space-y-1 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
+                {options.map((opt) => {
+                  const isSelected = textSize === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => {
+                        setTextSize(opt.id, true);
+                        setIsOpen(false);
+                      }}
+                      className={cn(
+                        "flex items-center justify-between w-full p-2 rounded-xl text-left transition-all cursor-pointer",
+                        isSelected
+                          ? "bg-[var(--surface-3)] border border-[var(--border-hover)]"
+                          : "hover:bg-[var(--surface-2)] border border-transparent"
+                      )}
+                    >
+                      <div>
+                        <div className="text-xs font-bold text-[var(--foreground)]">
+                          {opt.label}{" "}
+                          <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
+                            {opt.scaleLabel}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-[var(--muted-foreground)] truncate max-w-[150px]">
+                          {opt.tagline}
+                        </p>
                       </div>
-                      <p className="text-[10px] text-[var(--muted-foreground)] truncate max-w-[150px]">
-                        {opt.tagline}
-                      </p>
-                    </div>
-
-                    {isSelected && (
-                      <div className="w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0">
-                        <Check size={11} strokeWidth={3} />
+                      {isSelected && <Check size={12} className="text-emerald-500" />}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="space-y-1 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
+                {fontFamilyOptions.map((fOpt) => {
+                  const isSelected = fontFamily === fOpt.id;
+                  return (
+                    <button
+                      key={fOpt.id}
+                      onClick={() => {
+                        setFontFamily(fOpt.id, true);
+                        setIsOpen(false);
+                      }}
+                      className={cn(
+                        "flex items-center justify-between w-full p-2 rounded-xl text-left transition-all cursor-pointer",
+                        isSelected
+                          ? "bg-[var(--surface-3)] border border-[var(--border-hover)]"
+                          : "hover:bg-[var(--surface-2)] border border-transparent"
+                      )}
+                    >
+                      <div className="min-w-0">
+                        <div className="text-xs font-bold text-[var(--foreground)]">
+                          {fOpt.label}
+                        </div>
+                        <p className="text-[10px] text-[var(--muted-foreground)] truncate max-w-[180px]">
+                          {fOpt.tagline}
+                        </p>
                       </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+                      <span
+                        className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--border)] shrink-0 ml-2"
+                        style={{ fontFamily: fOpt.fontFamily }}
+                      >
+                        {fOpt.previewSample}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -229,7 +231,7 @@ export function TextSizeController({
           onClick={() => setIsOpen((prev) => !prev)}
           className="flex items-center gap-2 text-xs font-semibold text-[var(--foreground)] hover:text-blue-500 dark:hover:text-blue-400 transition-colors cursor-pointer select-none"
           aria-expanded={isOpen}
-          aria-label="Text size options menu"
+          aria-label="Typography and font settings menu"
         >
           <Type size={14} className="text-[var(--muted-foreground)]" />
           <span>Text Size</span>
@@ -246,14 +248,14 @@ export function TextSizeController({
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
           className={cn(
-            "text-[10px] font-mono font-semibold px-2 py-0.5 rounded-lg border transition-colors cursor-pointer",
-            textSize === "base"
+            "text-[10px] font-mono font-semibold px-2 py-0.5 rounded-lg border transition-colors cursor-pointer flex items-center gap-1",
+            textSize === "base" && fontFamily === "inter"
               ? "bg-[var(--surface-2)] text-[var(--muted-foreground)] border-[var(--border)] hover:bg-[var(--surface-3)]"
               : "bg-blue-500/10 text-blue-500 dark:text-blue-400 border-blue-500/30 hover:bg-blue-500/20"
           )}
-          title="Change text size preset"
+          title="Change font family or text scale"
         >
-          {currentOption.scaleLabel}
+          <span>{currentOption.scaleLabel}</span>
         </button>
       </div>
 
@@ -279,14 +281,17 @@ export function TextSizeController({
         {/* Center reset button */}
         <button
           type="button"
-          onClick={() => resetTextSize(true)}
+          onClick={() => {
+            resetTextSize(true);
+            setFontFamily("inter", true);
+          }}
           className={cn(
             "px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors cursor-pointer select-none text-center",
-            textSize === "base"
+            textSize === "base" && fontFamily === "inter"
               ? "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]"
               : "text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-blue-500/10 font-semibold"
           )}
-          title="Reset to 100% Default (Alt + 0)"
+          title="Reset to Default Font & 100% Scale"
           aria-label="Reset text size to default 100%"
         >
           <span>Reset</span>
@@ -310,13 +315,13 @@ export function TextSizeController({
         </button>
       </div>
 
-      {/* Floating Popover Menu with Presets */}
+      {/* Floating Popover Menu with Tabs */}
       {isOpen && (
         <div
-          role="listbox"
-          aria-label="Choose text size preset"
+          role="dialog"
+          aria-label="Choose font and text scale"
           className={cn(
-            "absolute z-50 w-64 p-2 rounded-2xl border shadow-xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150",
+            "absolute z-50 w-72 p-2.5 rounded-2xl border shadow-xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150",
             "bg-[var(--card)] border-[var(--border)]",
             direction === "up" ? "bottom-full mb-2" : "top-full mt-2",
             align === "start" && "left-0",
@@ -324,57 +329,129 @@ export function TextSizeController({
             align === "center" && "left-1/2 -translate-x-1/2"
           )}
         >
-          <div className="px-2.5 py-1.5 mb-1 border-b border-[var(--border)] flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
-              Choose Text Scale
-            </span>
-            <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
-              Alt + / -
-            </span>
+          {/* Popover Header Switcher: Size vs Font */}
+          <div className="flex items-center gap-1 p-1 mb-2 rounded-xl bg-[var(--surface-2)] border border-[var(--border)]">
+            <button
+              type="button"
+              onClick={() => setActiveTab("scale")}
+              className={cn(
+                "flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                activeTab === "scale"
+                  ? "bg-[var(--surface-1)] text-[var(--foreground)] shadow-xs"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              )}
+            >
+              Text Scale ({currentOption.scaleLabel})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("family")}
+              className={cn(
+                "flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                activeTab === "family"
+                  ? "bg-[var(--surface-1)] text-[var(--foreground)] shadow-xs"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              )}
+            >
+              Font Family
+            </button>
           </div>
 
-          <div className="space-y-1 max-h-72 overflow-y-auto pr-1 scrollbar-thin">
-            {options.map((opt) => {
-              const isSelected = textSize === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  role="option"
-                  aria-selected={isSelected}
-                  onClick={() => {
-                    setTextSize(opt.id, true);
-                    setIsOpen(false);
-                  }}
-                  className={cn(
-                    "flex items-center justify-between w-full p-2 rounded-xl text-left transition-all cursor-pointer group",
-                    isSelected
-                      ? "bg-[var(--surface-3)] border border-[var(--border-hover)] shadow-xs"
-                      : "hover:bg-[var(--surface-2)] border border-transparent"
-                  )}
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold leading-tight text-[var(--foreground)]">
-                        {opt.label}
-                      </span>
-                      <span className="text-[9px] px-1.5 py-0.2 rounded font-mono uppercase bg-[var(--surface-2)] text-[var(--muted-foreground)] border border-[var(--border)]">
-                        {opt.scaleLabel}
-                      </span>
+          {activeTab === "scale" ? (
+            <div className="space-y-1 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
+              {options.map((opt) => {
+                const isSelected = textSize === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => {
+                      setTextSize(opt.id, true);
+                      setIsOpen(false);
+                    }}
+                    className={cn(
+                      "flex items-center justify-between w-full p-2 rounded-xl text-left transition-all cursor-pointer group",
+                      isSelected
+                        ? "bg-[var(--surface-3)] border border-[var(--border-hover)] shadow-xs"
+                        : "hover:bg-[var(--surface-2)] border border-transparent"
+                    )}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold leading-tight text-[var(--foreground)]">
+                          {opt.label}
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.2 rounded font-mono uppercase bg-[var(--surface-2)] text-[var(--muted-foreground)] border border-[var(--border)]">
+                          {opt.scaleLabel}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-[var(--muted-foreground)] truncate max-w-[170px] leading-snug">
+                        {opt.tagline}
+                      </p>
                     </div>
-                    <p className="text-[10px] text-[var(--muted-foreground)] truncate max-w-[150px] leading-snug">
-                      {opt.tagline}
-                    </p>
-                  </div>
 
-                  {isSelected && (
-                    <div className="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/30">
-                      <Check size={12} strokeWidth={3} />
+                    {isSelected && (
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                        <Check size={12} strokeWidth={3} />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="space-y-1 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
+              {fontFamilyOptions.map((fOpt) => {
+                const isSelected = fontFamily === fOpt.id;
+                return (
+                  <button
+                    key={fOpt.id}
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => {
+                      setFontFamily(fOpt.id, true);
+                      setIsOpen(false);
+                    }}
+                    className={cn(
+                      "flex items-center justify-between w-full p-2 rounded-xl text-left transition-all cursor-pointer group",
+                      isSelected
+                        ? "bg-[var(--surface-3)] border border-[var(--border-hover)] shadow-xs"
+                        : "hover:bg-[var(--surface-2)] border border-transparent"
+                    )}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className="text-xs font-bold leading-tight text-[var(--foreground)]"
+                          style={{ fontFamily: fOpt.fontFamily }}
+                        >
+                          {fOpt.label}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-[var(--muted-foreground)] truncate max-w-[170px] leading-snug">
+                        {fOpt.tagline}
+                      </p>
                     </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span
+                        className="text-[11px] font-bold px-2 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--border)]"
+                        style={{ fontFamily: fOpt.fontFamily }}
+                      >
+                        {fOpt.previewSample}
+                      </span>
+                      {isSelected && (
+                        <div className="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                          <Check size={12} strokeWidth={3} />
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Quick shortcuts info at footer */}
           <div className="mt-2 pt-1.5 border-t border-[var(--border)] flex items-center justify-between px-2 text-[10px] text-[var(--muted-foreground)]">
@@ -421,7 +498,7 @@ export function TextSizeSegmentedPills({ className }: { className?: string }) {
               className={cn(
                 "flex flex-col items-center justify-center py-1.5 px-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer text-center shrink-0 min-w-[50px]",
                 isSelected
-                  ? "bg-purple-600 text-white shadow-xs"
+                  ? "bg-blue-600 text-white shadow-xs"
                   : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
               )}
               title={`${opt.label}: ${opt.scaleLabel}`}
@@ -481,9 +558,22 @@ export function TextSizeQuickToggle({
   className?: string;
   size?: number;
 }) {
-  const { textSize, currentOption, options, setTextSize, increaseTextSize, decreaseTextSize, resetTextSize } =
-    useTextSize();
+  const {
+    textSize,
+    currentOption,
+    options,
+    setTextSize,
+    increaseTextSize,
+    decreaseTextSize,
+    resetTextSize,
+    fontFamily,
+    currentFontFamilyOption,
+    fontFamilyOptions,
+    setFontFamily,
+  } = useTextSize();
+
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"scale" | "family">("scale");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -507,81 +597,136 @@ export function TextSizeQuickToggle({
           isOpen && "bg-[var(--surface-3)] text-[var(--foreground)]",
           className
         )}
-        aria-label={`Current text scale: ${currentOption.scaleLabel}. Click to adjust text size.`}
-        title={`Text Size: ${currentOption.label} (${currentOption.scaleLabel})`}
+        aria-label={`Current text scale: ${currentOption.scaleLabel}. Current font: ${currentFontFamilyOption.label}. Click to adjust.`}
+        title={`Font & Size: ${currentFontFamilyOption.label} (${currentOption.scaleLabel})`}
       >
         <Type size={size} />
-        {textSize !== "base" && (
-          <span className="absolute bottom-1 right-1 w-1.5 h-1.5 rounded-full bg-purple-500" />
+        {(textSize !== "base" || fontFamily !== "inter") && (
+          <span className="absolute bottom-1 right-1 w-1.5 h-1.5 rounded-full bg-blue-500" />
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 p-2 rounded-2xl border shadow-xl bg-[var(--card)] border-[var(--border)] z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 top-full mt-2 w-64 p-2 rounded-2xl border shadow-xl bg-[var(--card)] border-[var(--border)] z-50 animate-in fade-in zoom-in-95 duration-150">
           <div className="px-2 py-1 mb-1.5 border-b border-[var(--border)] flex items-center justify-between text-[10px] font-bold uppercase text-[var(--muted-foreground)]">
             <span>Text Size</span>
-            <span className="font-mono text-purple-400 font-bold">{currentOption.scaleLabel}</span>
+            <span className="font-mono text-blue-400 font-bold">{currentOption.scaleLabel}</span>
           </div>
 
-          {/* Quick Stepper */}
           <div className="flex items-center gap-1 p-1 mb-2 rounded-xl bg-[var(--surface-2)] border border-[var(--border)]">
             <button
               type="button"
-              onClick={() => decreaseTextSize(true)}
-              className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-bold hover:bg-[var(--surface-3)] text-[var(--foreground)] transition-colors"
-              title="Decrease font size"
+              onClick={() => setActiveTab("scale")}
+              className={cn(
+                "flex-1 py-1 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                activeTab === "scale"
+                  ? "bg-[var(--surface-1)] text-[var(--foreground)] shadow-xs"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              )}
             >
-              <Minus size={11} />
-              <span>A-</span>
+              Scale
             </button>
             <button
               type="button"
-              onClick={() => resetTextSize(true)}
-              className="px-2 py-1 rounded-lg text-[10px] hover:bg-[var(--surface-3)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-              title="Reset to 100%"
+              onClick={() => setActiveTab("family")}
+              className={cn(
+                "flex-1 py-1 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                activeTab === "family"
+                  ? "bg-[var(--surface-1)] text-[var(--foreground)] shadow-xs"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              )}
             >
-              Reset
-            </button>
-            <button
-              type="button"
-              onClick={() => increaseTextSize(true)}
-              className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-bold hover:bg-[var(--surface-3)] text-[var(--foreground)] transition-colors"
-              title="Increase font size"
-            >
-              <span>A+</span>
-              <Plus size={11} />
+              Font
             </button>
           </div>
 
-          {/* Presets List */}
-          <div className="space-y-1 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
-            {options.map((opt) => {
-              const isSelected = textSize === opt.id;
-              return (
+          {activeTab === "scale" ? (
+            <>
+              {/* Quick Stepper */}
+              <div className="flex items-center gap-1 p-1 mb-2 rounded-xl bg-[var(--surface-2)] border border-[var(--border)]">
                 <button
-                  key={opt.id}
-                  onClick={() => {
-                    setTextSize(opt.id, true);
-                    setIsOpen(false);
-                  }}
-                  className={cn(
-                    "flex items-center justify-between w-full px-2.5 py-1.5 rounded-xl text-xs font-medium text-left transition-colors cursor-pointer",
-                    isSelected
-                      ? "bg-[var(--surface-3)] text-[var(--foreground)] font-bold"
-                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
-                  )}
+                  type="button"
+                  onClick={() => decreaseTextSize(true)}
+                  className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-bold hover:bg-[var(--surface-3)] text-[var(--foreground)] transition-colors"
+                  title="Decrease font size"
                 >
-                  <div className="flex items-center gap-2">
-                    <span>{opt.label}</span>
-                    <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
-                      {opt.scaleLabel}
-                    </span>
-                  </div>
-                  {isSelected && <Check size={12} className="text-emerald-500" />}
+                  <Minus size={11} />
+                  <span>A-</span>
                 </button>
-              );
-            })}
-          </div>
+                <button
+                  type="button"
+                  onClick={() => resetTextSize(true)}
+                  className="px-2 py-1 rounded-lg text-[10px] hover:bg-[var(--surface-3)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                  title="Reset to 100%"
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  onClick={() => increaseTextSize(true)}
+                  className="flex-1 flex items-center justify-center gap-1 py-1 rounded-lg text-xs font-bold hover:bg-[var(--surface-3)] text-[var(--foreground)] transition-colors"
+                  title="Increase font size"
+                >
+                  <span>A+</span>
+                  <Plus size={11} />
+                </button>
+              </div>
+
+              {/* Presets List */}
+              <div className="space-y-1 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
+                {options.map((opt) => {
+                  const isSelected = textSize === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => {
+                        setTextSize(opt.id, true);
+                        setIsOpen(false);
+                      }}
+                      className={cn(
+                        "flex items-center justify-between w-full px-2.5 py-1.5 rounded-xl text-xs font-medium text-left transition-colors cursor-pointer",
+                        isSelected
+                          ? "bg-[var(--surface-3)] text-[var(--foreground)] font-bold"
+                          : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span>{opt.label}</span>
+                        <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
+                          {opt.scaleLabel}
+                        </span>
+                      </div>
+                      {isSelected && <Check size={12} className="text-emerald-500" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div className="space-y-1 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
+              {fontFamilyOptions.map((fOpt) => {
+                const isSelected = fontFamily === fOpt.id;
+                return (
+                  <button
+                    key={fOpt.id}
+                    onClick={() => {
+                      setFontFamily(fOpt.id, true);
+                      setIsOpen(false);
+                    }}
+                    className={cn(
+                      "flex items-center justify-between w-full px-2.5 py-1.5 rounded-xl text-xs font-medium text-left transition-colors cursor-pointer",
+                      isSelected
+                        ? "bg-[var(--surface-3)] text-[var(--foreground)] font-bold"
+                        : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                    )}
+                  >
+                    <span style={{ fontFamily: fOpt.fontFamily }}>{fOpt.label}</span>
+                    {isSelected && <Check size={12} className="text-emerald-500" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -70,9 +70,10 @@ export const NAV_GROUPS: NavGroup[] = [
         pill: { text: "Matrix", variant: "easy" },
         subItems: [
           { label: "Cloud Matrix", href: "/modern-stack?tab=compatibility" },
-          { label: "FinOps Playbooks", href: "/modern-stack?tab=cost" },
-          { label: "Modern Blueprints", href: "/modern-stack?tab=blueprints" },
-          { label: "Polyglot Matrix", href: "/modern-stack?tab=matrix" },
+          { label: "Lakehouse Primitives", href: "/modern-stack?tab=concepts", badge: "32" },
+          { label: "Engine Simulators", href: "/modern-stack?tab=simulators", badge: "6 Tools" },
+          { label: "FinOps Playbooks", href: "/modern-stack?tab=cost", badge: "15" },
+          { label: "AI & Vector Serving", href: "/modern-stack?tab=ai", badge: "RAG" },
         ],
       },
       {
@@ -81,8 +82,8 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Layers,
         pill: { text: "3.2k+", variant: "architect" },
         subItems: [
-          { label: "Whiteboard Mastery Hub", href: "/whiteboards", badge: "42 Master" },
           { label: "System Blueprints", href: "/architecture?tab=scenarios", badge: "3.2k" },
+          { label: "Whiteboard Mastery Hub", href: "/whiteboards", badge: "42 Master" },
           { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: "42" },
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
         ],
@@ -105,10 +106,23 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Workflow,
         pill: { text: "E2E", variant: "info" },
         subItems: [
-          { label: "Tool Connectivity", href: "/dataops?tab=connectivity" },
-          { label: "CI/CD Pipelines", href: "/dataops?tab=cicd" },
           { label: "360° SDLC Lifecycle", href: "/dataops?tab=lifecycle", badge: "152 Controls" },
+          { label: "CI/CD Pipelines", href: "/dataops?tab=cicd" },
+          { label: "Tool Connectivity", href: "/dataops?tab=connectivity" },
           { label: "Architecture Flow", href: "/dataops?tab=diagram" },
+        ],
+      },
+      {
+        label: "Mastery Stages Hub",
+        href: "/stages",
+        icon: Workflow,
+        pill: { text: "Stages", variant: "info" },
+        subItems: [
+          { label: "4-Stage Mastery Journey", href: "/stages?tab=mastery" },
+          { label: "7-Stage Lakehouse Flow", href: "/stages?tab=lakehouse" },
+          { label: "6-Stage SDLC Playbook", href: "/stages?tab=sdlc" },
+          { label: "5-Stage Catalyst Pipeline", href: "/stages?tab=catalyst" },
+          { label: "8 Production Flows", href: "/stages?tab=flows" },
         ],
       },
     ],
@@ -140,11 +154,10 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Code2,
         pill: { text: "Drills", variant: "medium" },
         subItems: [
-          { label: "PySpark Drills", href: "/code-practice?db=pyspark", badge: "51" },
-          { label: "Spark SQL Drills", href: "/code-practice?db=sparksql", badge: "50" },
-          { label: "T-SQL Drills", href: "/code-practice?db=mssql", badge: "35" },
-          { label: "Python & Polars", href: "/code-practice?db=python", badge: "42" },
+          { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: "178" },
           { label: "Databricks Coding", href: "/code-practice/databricks", badge: "148" },
+          { label: "Polyglot Matrix", href: "/code-practice?tab=matrix", badge: "15" },
+          { label: "Python Runbooks", href: "/code-practice?tab=runbooks", badge: "42" },
         ],
       },
       {
@@ -153,9 +166,9 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: FileCode2,
         pill: { text: "Sheets", variant: "medium" },
         subItems: [
+          { label: "A4 PDF Reference Hub", href: "/cheat-sheet?tab=pdf_hub", badge: "7 PDFs" },
           { label: "Production Runbooks", href: "/cheat-sheet?tab=runbooks", badge: "76" },
           { label: "Databricks Suites", href: "/cheat-sheet?tab=databricks", badge: "48" },
-          { label: "A4 PDF Reference Hub", href: "/cheat-sheet?tab=pdf_hub", badge: "7 PDFs" },
         ],
       },
     ],
@@ -163,7 +176,17 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     title: "Interviews & Roadmaps",
     items: [
-      { label: "Question Drill Bank", href: "/qa-prep", icon: MessageSquare, pill: { text: "6.8k+", variant: "hard" } },
+      {
+        label: "Question Drill Bank",
+        href: "/qa-prep",
+        icon: MessageSquare,
+        pill: { text: "6.8k+", variant: "hard" },
+        subItems: [
+          { label: "All Questions Bank", href: "/qa-prep?domain=all", badge: "6.8k" },
+          { label: "System Architect Scenarios", href: "/qa-prep?difficulty=ARCHITECT", badge: "Architect" },
+          { label: "Hard Technical Q&As", href: "/qa-prep?difficulty=HARD", badge: "Hard" },
+        ],
+      },
       {
         label: "Guided Learning",
         href: "/guided-learning",
@@ -176,13 +199,33 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: "130 Deep Dives" },
         ],
       },
-      { label: "Target Company Intel", href: "/company-research", icon: Briefcase, pill: { text: "156+", variant: "new" } },
+      {
+        label: "Target Company Intel",
+        href: "/company-research",
+        icon: Briefcase,
+        pill: { text: "156+", variant: "new" },
+        subItems: [
+          { label: "All 156 GCC Profiles", href: "/company-research", badge: "156" },
+          { label: "Hyderabad GCC Hubs", href: "/company-research?location=hyderabad", badge: "Hyd" },
+          { label: "Bangalore Global Centers", href: "/company-research?location=bangalore", badge: "Blr" },
+        ],
+      },
     ],
   },
   {
     title: "Workspace",
     items: [
-      { label: "My Studio", href: "/studio", icon: User, pill: { text: "Personal", variant: "info" } },
+      {
+        label: "My Studio",
+        href: "/studio",
+        icon: User,
+        pill: { text: "Personal", variant: "info" },
+        subItems: [
+          { label: "Studio Dashboard", href: "/studio" },
+          { label: "Saved Bookmarks", href: "/studio?tab=bookmarks" },
+          { label: "Architect Ledger", href: "/studio?tab=decisions" },
+        ],
+      },
     ],
   },
 ];
@@ -202,18 +245,20 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "modern-concepts", label: "Core Lakehouse Concepts", shortLabel: "Lakehouse Concepts", href: "/modern-stack?tab=concepts", category: "Concepts", categoryColor: "emerald", icon: Zap, badge: "FinOps" },
   
   // Architecture & Systems (Clubbed)
+  { id: "stages", label: "Mastery Stages & Systems Lifecycle", shortLabel: "Stages Hub", href: "/stages", category: "Architecture", categoryColor: "purple", icon: Workflow, badge: "All Stages" },
   { id: "whiteboards", label: "Whiteboard Mastery Hub", shortLabel: "Whiteboards", href: "/whiteboards", category: "Architecture", categoryColor: "purple", icon: Sparkles, badge: "42 Blueprints" },
   { id: "arch-scenarios", label: "System Scenarios", shortLabel: "Scenarios", href: "/architecture?tab=scenarios", category: "Architecture", categoryColor: "purple", icon: Layers, badge: "3.2k+" },
   { id: "spark-engine", label: "Spark Engine Lab", shortLabel: "Spark Lab", href: "/spark-engine", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Lab" },
   { id: "spark-catalyst", label: "Catalyst Optimizer & Visualizer", shortLabel: "Catalyst Lab", href: "/spark-catalyst", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Live" },
   { id: "spark-visualizer", label: "Spark Execution Visualizer", shortLabel: "Visualizer", href: "/visualizer", category: "Architecture", categoryColor: "purple", icon: Activity, badge: "Simulator" },
-  { id: "modern-stack", label: "Modern Stack & FinOps", shortLabel: "Modern Stack", href: "/modern-stack", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "FinOps" },
-  { id: "modern-compat", label: "Cloud × Table Compatibility", shortLabel: "Cloud Matrix", href: "/modern-stack?tab=compatibility", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "Matrix" },
+  { id: "modern-stack", label: "Cloud Platforms & Engine Matrix", shortLabel: "Cloud Matrix", href: "/modern-stack", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "Matrix" },
+  { id: "modern-compat", label: "Cloud × Table Compatibility", shortLabel: "Compatibility", href: "/modern-stack?tab=compatibility", category: "Architecture", categoryColor: "purple", icon: Zap, badge: "10 Engines" },
   { id: "dataops-conn", label: "Tool Connectivity & Secrets", shortLabel: "Tool Secrets", href: "/dataops?tab=connectivity", category: "Architecture", categoryColor: "purple", icon: Network, badge: "Secrets" },
   { id: "dataops-cicd", label: "CI/CD Alternatives & Pipelines", shortLabel: "CI/CD Pipelines", href: "/dataops?tab=cicd", category: "Architecture", categoryColor: "purple", icon: GitBranch, badge: "CI/CD" },
   { id: "dataops-lifecycle", label: "360° SDLC Lifecycle Playbook", shortLabel: "SDLC Lifecycle", href: "/dataops?tab=lifecycle", category: "Architecture", categoryColor: "purple", icon: Workflow, badge: "152 Controls" },
   
   // Coding & Runbooks (Clubbed)
+  { id: "code-practice", label: "Unified Code Practice Hub", shortLabel: "Code Practice", href: "/code-practice", category: "Coding", categoryColor: "cyan", icon: Code2, badge: "Drills" },
   { id: "cheat-sheet", label: "Production Cheat Sheet", shortLabel: "Cheat Sheet", href: "/cheat-sheet", category: "Coding", categoryColor: "cyan", icon: FileCode2, badge: "Runbooks" },
   { id: "dbx-cheat-sheet", label: "Databricks Cheat Sheets", shortLabel: "DBX Sheets", href: "/cheat-sheet?tab=databricks", category: "Coding", categoryColor: "cyan", icon: Terminal, badge: "48" },
   { id: "pdf-hub", label: "A4 PDF Reference Hub", shortLabel: "PDF Hub", href: "/cheat-sheet?tab=pdf_hub", category: "Coding", categoryColor: "cyan", icon: FileText, badge: "7 PDFs" },
@@ -222,7 +267,9 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "code-mssql", label: "T-SQL Drills", shortLabel: "T-SQL", href: "/code-practice?db=mssql", category: "Coding", categoryColor: "cyan", icon: Database, badge: "35" },
   { id: "code-python", label: "Python & Polars", shortLabel: "Python & Polars", href: "/code-practice?db=python", category: "Coding", categoryColor: "cyan", icon: Code2, badge: "42" },
   { id: "code-databricks", label: "Databricks Coding Hub", shortLabel: "Databricks", href: "/code-practice/databricks", category: "Coding", categoryColor: "cyan", icon: Terminal, badge: "148" },
-  { id: "code-matrix", label: "Polyglot Code Matrix", shortLabel: "Polyglot Matrix", href: "/modern-stack?tab=matrix", category: "Coding", categoryColor: "cyan", icon: FileCode2, badge: "Matrix" },
+  { id: "code-matrix", label: "Polyglot Code Matrix", shortLabel: "Polyglot Matrix", href: "/code-practice?tab=matrix", category: "Coding", categoryColor: "cyan", icon: FileCode2, badge: "Matrix" },
+  { id: "code-runbooks", label: "Python Lakehouse Runbooks", shortLabel: "Python Runbooks", href: "/code-practice?tab=runbooks", category: "Coding", categoryColor: "cyan", icon: Terminal, badge: "42" },
+  { id: "modern-matrix", label: "Polyglot Code Matrix", shortLabel: "Polyglot Matrix", href: "/modern-stack?tab=matrix", category: "Coding", categoryColor: "cyan", icon: FileCode2, badge: "Matrix" },
   
   // Visual Blueprints & Diagrams (Clubbed)
   { id: "arch-diagrams", label: "Whiteboard Blueprints", shortLabel: "Blueprints", href: "/architecture?tab=diagrams", category: "Images & Diagrams", categoryColor: "teal", icon: Sparkles, badge: "42" },
@@ -259,6 +306,9 @@ export function isSubHrefActive(pathname: string | null, searchParams: URLSearch
   for (const [key, val] of subParams.entries()) {
     const currentVal = searchParams.get(key);
     // Defaults for pages without explicit search params in URL
+    if (pathname === "/stages" && key === "tab" && val === "mastery" && !currentVal) {
+      return true;
+    }
     if (pathname === "/architecture" && key === "tab" && val === "scenarios" && !currentVal) {
       return true;
     }
@@ -303,6 +353,18 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
     pages: [
       { label: "Home Dashboard", href: "/" },
       {
+        label: "Mastery Stages Hub",
+        href: "/stages",
+        badge: "Lifecycle",
+        subpages: [
+          { label: "4-Stage Mastery Journey", href: "/stages?tab=mastery" },
+          { label: "7-Stage Lakehouse Flow", href: "/stages?tab=lakehouse" },
+          { label: "6-Stage SDLC Playbook", href: "/stages?tab=sdlc" },
+          { label: "5-Stage Catalyst Pipeline", href: "/stages?tab=catalyst" },
+          { label: "8 Production Flows", href: "/stages?tab=flows" },
+        ],
+      },
+      {
         label: "Architecture Hub",
         href: "/architecture",
         badge: "3.2k+",
@@ -329,8 +391,9 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         subpages: [
           { label: "Compatibility Matrix", href: "/modern-stack?tab=compatibility" },
           { label: "FinOps Cost Playbooks", href: "/modern-stack?tab=cost", badge: "15" },
-          { label: "Stack Blueprints", href: "/modern-stack?tab=blueprints" },
-          { label: "Polyglot Code Matrix", href: "/modern-stack?tab=matrix", badge: "15" },
+          { label: "Engine Simulators", href: "/modern-stack?tab=simulators", badge: "6" },
+          { label: "Lakehouse Primitives", href: "/modern-stack?tab=concepts", badge: "30" },
+          { label: "AI & Vector Serving", href: "/modern-stack?tab=ai" },
         ],
       },
       {
@@ -383,11 +446,10 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         href: "/code-practice",
         badge: "Multi-Engine",
         subpages: [
-          { label: "PySpark Drills", href: "/code-practice?db=pyspark", badge: "51" },
-          { label: "Spark SQL Drills", href: "/code-practice?db=sparksql", badge: "50" },
-          { label: "T-SQL Drills", href: "/code-practice?db=mssql", badge: "35" },
-          { label: "Python & Polars", href: "/code-practice?db=python", badge: "42" },
+          { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: "178" },
           { label: "Databricks Coding Hub", href: "/code-practice/databricks", badge: "148" },
+          { label: "Polyglot Translation Matrix", href: "/code-practice?tab=matrix", badge: "15" },
+          { label: "Python Lakehouse Runbooks", href: "/code-practice?tab=runbooks", badge: "42" },
         ],
       },
       {

@@ -34,6 +34,7 @@ const ROUTE_LABELS: Record<string, string> = {
   "/cheat-sheet": "Production Cheat Sheet",
   "/dataops": "DataOps & CI/CD Lifecycle",
   "/code-practice/databricks": "Databricks Coding Hub",
+  "/stages": "Mastery Stages Hub",
 };
 
 const ARCHITECTURE_TABS: Record<string, string> = {
@@ -50,12 +51,19 @@ const CHEATSHEET_TABS: Record<string, string> = {
   pdf_hub: "A4 PDF Reference Hub",
 };
 
-const CODE_PRACTICE_DBS: Record<string, string> = {
-  pyspark: "PySpark Drills",
-  sparksql: "Spark SQL Drills",
-  mssql: "T-SQL Drills",
-  python: "Python & Polars",
+const CODE_PRACTICE_TABS: Record<string, string> = {
+  drills: "Interactive Drills",
   databricks: "Databricks Coding Hub",
+  matrix: "Polyglot Translation Matrix",
+  runbooks: "Python Lakehouse Runbooks",
+};
+
+const STAGES_TABS: Record<string, string> = {
+  mastery: "4-Stage Mastery Journey",
+  lakehouse: "7-Stage Lakehouse Flow",
+  sdlc: "6-Stage SDLC Playbook",
+  catalyst: "5-Stage Catalyst Pipeline",
+  flows: "8 Interactive Production Flows",
 };
 
 const DATAOPS_TABS: Record<string, string> = {
@@ -196,10 +204,28 @@ function BreadcrumbsInner() {
       if (topic) {
         list.push({ label: `${topic.toUpperCase()} Track` });
       }
+    } else if (pathname === "/stages") {
+      const tab = searchParams.get("tab") || "mastery";
+      if (STAGES_TABS[tab]) {
+        list.push({ label: STAGES_TABS[tab], href: `/stages?tab=${tab}` });
+      }
     } else if (pathname === "/code-practice") {
+      const tab = searchParams.get("tab")?.toLowerCase();
+      if (tab && CODE_PRACTICE_TABS[tab]) {
+        list.push({ label: CODE_PRACTICE_TABS[tab], href: `/code-practice?tab=${tab}` });
+      }
       const db = searchParams.get("db")?.toLowerCase();
-      if (db && CODE_PRACTICE_DBS[db]) {
-        list.push({ label: CODE_PRACTICE_DBS[db], href: `/code-practice?db=${db}` });
+      if (db) {
+        const dbLabels: Record<string, string> = {
+          pyspark: "PySpark Drills",
+          sparksql: "Spark SQL Drills",
+          mssql: "T-SQL Drills",
+          python: "Python & Polars",
+          databricks: "Databricks Coding Hub",
+        };
+        if (dbLabels[db]) {
+          list.push({ label: dbLabels[db], href: `/code-practice?db=${db}` });
+        }
       }
       const cat = searchParams.get("category");
       if (cat && cat !== "ALL") {

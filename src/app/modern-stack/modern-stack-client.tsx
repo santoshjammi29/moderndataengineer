@@ -811,22 +811,20 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
   }, [pythonCategory, pythonQSearch]);
 
   return (
-    <div className="space-y-4 pb-16 max-w-7xl mx-auto px-2 sm:px-4">
+    <div className="space-y-4 pb-16 w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6">
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 isolate shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div className="space-y-1 max-w-4xl 2xl:max-w-6xl">
+          <div className="space-y-1 max-w-4xl 2xl:max-w-6xl 3xl:max-w-none">
             <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-[10px] font-semibold text-purple-400">
-              <Layers size={11} />
-              <span>Modern Data &amp; AI Stack · 2026 Reference Architecture</span>
+              <Table size={11} />
+              <span>Cloud Platforms &amp; Engine Matrix · 2026 Reference Standards</span>
             </div>
             <h1 className="text-base sm:text-lg font-bold tracking-tight text-[var(--foreground)] break-words">
-              Modern Data Engineering &amp; AI Lakehouse Hub
+              Cloud Platforms &amp; Engine Matrix
             </h1>
             <p className="text-xs text-[var(--muted-foreground)] leading-relaxed break-words">
-              Open table formats (Delta UniForm &amp; Iceberg v3), metadata control planes (Polaris REST &amp; Unity Catalog OSS),
-              vectorized compute (Photon &amp; Polars), 6 live interactive simulators, {modernBlueprintsDb.length} production blueprints,
-              {modernCodeMatrix.length} polyglot matrix translations, and {modernCostPlaybooks.length} FinOps playbooks.
+              Cross-cloud compatibility analysis across 10 distributed analytical engines (Databricks, Snowflake, Microsoft Fabric, BigQuery, AWS EMR, DuckDB, Trino, ClickHouse, Redshift, Azure Synapse) vs open table formats (Delta Lake, Apache Iceberg, Apache Hudi), plus {modernCostPlaybooks.length} FinOps cost playbooks and 6 interactive platform calculators.
             </p>
           </div>
 
@@ -835,13 +833,13 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
               <div className="text-sm sm:text-base font-bold text-blue-400 leading-none">
                 10 Engines
               </div>
-              <div className="text-[10px] text-[var(--muted-foreground)] font-medium mt-0.5">Matrix First</div>
+              <div className="text-[10px] text-[var(--muted-foreground)] font-medium mt-0.5">Compatibility</div>
             </div>
             <div className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-center">
-              <div className="text-sm sm:text-base font-bold text-cyan-400 leading-none">
-                {modernBlueprintsDb.length}
+              <div className="text-sm sm:text-base font-bold text-amber-400 leading-none">
+                {modernCostPlaybooks.length}
               </div>
-              <div className="text-[10px] text-[var(--muted-foreground)] font-medium mt-0.5">Blueprints</div>
+              <div className="text-[10px] text-[var(--muted-foreground)] font-medium mt-0.5">FinOps Books</div>
             </div>
             <div className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-center">
               <div className="text-sm sm:text-base font-bold text-green-400 leading-none">6</div>
@@ -849,26 +847,24 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
             </div>
             <div className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-center">
               <div className="text-sm sm:text-base font-bold text-purple-400 leading-none">
-                {modernStackDb.length}
+                {modernConceptsDb.length}
               </div>
-              <div className="text-[10px] text-[var(--muted-foreground)] font-medium mt-0.5">Q&amp;A Runbooks</div>
+              <div className="text-[10px] text-[var(--muted-foreground)] font-medium mt-0.5">Primitives</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Subtab Navigation Chips - Styled after media_1792228927376_5ece2e88.png */}
+      {/* Reorganized Subtab Navigation Chips */}
       <div className="flex items-center gap-1 p-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">
         {[
-          { id: "compatibility", label: "Cloud × Table Matrix", icon: Table },
-          { id: "overview", label: "Hub Overview", icon: Sparkles },
-          { id: "concepts", label: `Core Concepts (${modernConceptsDb.length})`, icon: BookOpen },
+          { id: "compatibility", label: "Platform Compatibility Matrix", icon: Table },
+          { id: "cost", label: `FinOps Playbooks (${modernCostPlaybooks.length})`, icon: Flame },
           { id: "simulators", label: "6 Live Simulators", icon: Calculator },
-          { id: "blueprints", label: `${modernBlueprintsDb.length} Blueprints Gallery`, icon: Cpu },
-          { id: "matrix", label: `Polyglot Matrix (${modernCodeMatrix.length})`, icon: FileCode2 },
-          { id: "ai", label: "AI & RAG Stack", icon: Bot },
-          { id: "cost", label: `FinOps Playbook (${modernCostPlaybooks.length})`, icon: Flame },
-          { id: "python", label: `Python for Modern Stack (${modernStackDb.length})`, icon: Code2 },
+          { id: "concepts", label: `Lakehouse Primitives (${modernConceptsDb.length})`, icon: BookOpen },
+          { id: "ai", label: "AI & RAG Serving", icon: Bot },
+          { id: "matrix", label: "Polyglot Matrix → Code Practice", icon: FileCode2 },
+          { id: "overview", label: "Hub Overview (7-Stage Flow)", icon: Sparkles },
         ].map((tab) => {
           const Icon = tab.icon;
           const isSelected = activeTab === tab.id;
@@ -1337,6 +1333,25 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
             </div>
           </div>
 
+          {/* Unified Location Notice */}
+          <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="text-xs font-bold text-purple-400 flex items-center gap-1.5">
+                <Sparkles size={14} /> Unified into the Architecture &amp; Delivery Stages Hub
+              </div>
+              <p className="text-xs text-[var(--muted-foreground)]">
+                All platform stages (4-Stage Mastery, 7-Stage Flow, 6-Stage SDLC, and 5-Stage Catalyst) are now unified under a single dedicated hub.
+              </p>
+            </div>
+            <Link
+              href="/stages?tab=lakehouse"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold whitespace-nowrap transition-colors shrink-0 shadow-xs"
+            >
+              <span>Open in Stages Hub</span>
+              <ArrowRight size={13} />
+            </Link>
+          </div>
+
           {/* Interactive Stack Flow Canvas */}
           <div className="p-3 sm:p-4 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -1475,7 +1490,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                   All Concepts Merged Under Single Roof: /concepts
                 </div>
                 <div className="text-[11px] text-purple-300/80">
-                  These 20 Modern Lakehouse concepts are now permanently merged into the 679-concept central glossary, 14-pillar interactive mind map, and flashcards.
+                  These {modernConceptsDb.length} Modern Lakehouse & Cloud Matrix primitives are curated for multi-engine interoperability, serverless scaling, and distributed architecture.
                 </div>
               </div>
             </div>
@@ -1511,11 +1526,12 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
             <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
               {[
                 { id: "all", label: "All Subdomains" },
+                { id: "lakehouse-formats", label: "Lakehouse Formats" },
                 { id: "dist-sys", label: "Distributed Systems" },
                 { id: "storage-formats", label: "Storage & Formats" },
                 { id: "compute-engines", label: "Compute Engines" },
                 { id: "streaming-cdc", label: "Streaming & CDC" },
-                { id: "ai-llm-native", label: "AI & LLM" },
+                { id: "ai-llm-native", label: "AI & Vector" },
                 { id: "finops", label: "FinOps" },
                 { id: "security-gov", label: "Governance" },
               ].map((sub) => (
@@ -1580,15 +1596,51 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     />
                   </button>
 
-                  <SmoothAccordion isOpen={isOpen} innerClassName="px-3 pb-3 pt-2 space-y-2 text-xs bg-[var(--surface-2)]/40 border-t border-[var(--border)]">
+                  <SmoothAccordion isOpen={isOpen} innerClassName="px-3 pb-3 pt-2 space-y-2.5 text-xs bg-[var(--surface-2)]/40 border-t border-[var(--border)]">
                     {concept.details && (
                       <div className="space-y-1">
-                        <span className="text-[10px] font-bold text-purple-300 uppercase tracking-wider block">
+                        <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider block">
                           Deep Implementation Mechanics
                         </span>
                         <p className="text-[var(--foreground)] opacity-90 leading-relaxed text-xs">
                           {concept.details}
                         </p>
+                      </div>
+                    )}
+
+                    {concept.keyMechanisms && concept.keyMechanisms.length > 0 && (
+                      <div className="space-y-1 pt-1 border-t border-[var(--border)]/40">
+                        <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">
+                          Key Technical Pillars
+                        </span>
+                        <ul className="space-y-0.5 pl-3 list-disc text-[11px] text-[var(--foreground)] opacity-85">
+                          {concept.keyMechanisms.map((mech: string, mIdx: number) => (
+                            <li key={mIdx} className="leading-snug">{mech}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {concept.tradeoffs && (
+                      <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300">
+                        <span className="font-bold block text-[10px] uppercase tracking-wider mb-0.5">
+                          Architectural Trade-Off
+                        </span>
+                        {concept.tradeoffs}
+                      </div>
+                    )}
+
+                    {concept.codeSnippet && (
+                      <div className="pt-1">
+                        <span className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase tracking-wider block mb-1">
+                          Production Configuration Snippet
+                        </span>
+                        <CodeBlock
+                          code={concept.codeSnippet}
+                          language={concept.codeSnippet.startsWith("import") ? "python" : "sql"}
+                          filename={`${concept.id}-spec`}
+                          showLineNumbers={false}
+                        />
                       </div>
                     )}
 
@@ -2295,6 +2347,25 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
       {/* ────────────────────────────────────────────────────────── */}
       {activeTab === "matrix" && (
         <div id="matrix" className="space-y-4 animate-in fade-in duration-200">
+          {/* Relocated Notice */}
+          <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="text-xs font-bold text-blue-400 flex items-center gap-1.5">
+                <Code2 size={14} /> Unified into Code Practice Hub
+              </div>
+              <p className="text-xs text-[var(--muted-foreground)]">
+                All coding sections (Interactive Drills, Databricks 148+, Polyglot Matrix, and Python Runbooks) are now unified under one single Code Practice hub.
+              </p>
+            </div>
+            <Link
+              href="/code-practice?tab=matrix"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold whitespace-nowrap transition-colors shrink-0 shadow-xs"
+            >
+              <span>Open in Code Practice</span>
+              <ArrowRight size={13} />
+            </Link>
+          </div>
+
           {/* Header & Mode Selector */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-[var(--surface-1)] border border-[var(--border)]">
             <div>
@@ -2699,6 +2770,25 @@ def validate_agent_sql(sql_str: str, allowed_tables: set[str]) -> bool:
                 </div>
                 <div className="text-[10px] text-[var(--muted-foreground)] mt-0.5">DE Python Runbooks</div>
               </div>
+            </div>
+
+            {/* Relocated Notice */}
+            <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mt-2">
+              <div className="space-y-0.5">
+                <div className="text-xs font-bold text-blue-400 flex items-center gap-1.5">
+                  <Terminal size={14} /> Unified into Code Practice Hub
+                </div>
+                <div className="text-xs text-[var(--muted-foreground)]">
+                  All production Python runbooks and scripts are now unified under the single Code Practice hub.
+                </div>
+              </div>
+              <Link
+                href="/code-practice?tab=runbooks"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs whitespace-nowrap transition-colors shrink-0 shadow-xs"
+              >
+                <span>Open in Code Practice</span>
+                <ArrowRight size={13} />
+              </Link>
             </div>
 
             {/* Link to Python Guided Learning */}

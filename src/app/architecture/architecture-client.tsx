@@ -1068,7 +1068,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 space-y-4 pb-16 animate-in fade-in duration-300">
+    <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 space-y-4 pb-16 animate-in fade-in duration-300">
       {/* 1. TOP MODULE NAVIGATION TABS - Styled after media_1792228927376_5ece2e88.png */}
       <div className="flex items-center gap-1 overflow-x-auto scrollbar-none p-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] max-w-fit shadow-xs">
         {[
@@ -1568,7 +1568,24 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
       {/* 4. PYTHON RUNBOOKS VIEW */}
       {activeTab === "python" && (
         <div className="space-y-6 animate-in fade-in duration-300">
-
+          {/* Relocated Notice */}
+          <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="text-xs font-bold text-blue-400 flex items-center gap-1.5">
+                <Terminal size={14} /> Unified into Code Practice Hub
+              </div>
+              <p className="text-xs text-[var(--muted-foreground)]">
+                All production Python runbooks, multi-engine drills, and polyglot code matrices are now unified under one dedicated Code Practice hub.
+              </p>
+            </div>
+            <Link
+              href="/code-practice?tab=runbooks"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold whitespace-nowrap transition-colors shrink-0 shadow-xs"
+            >
+              <span>Open in Code Practice</span>
+              <ArrowRight size={13} />
+            </Link>
+          </div>
 
           {/* Results Meta */}
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--muted-foreground)] px-1">
@@ -1706,6 +1723,25 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
       {/* 5. POLYGLOT TRANSLATION MATRIX VIEW */}
       {activeTab === "polyglot" && (
         <div className="space-y-6 animate-in fade-in duration-300">
+          {/* Relocated Notice */}
+          <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="text-xs font-bold text-purple-400 flex items-center gap-1.5">
+                <Code2 size={14} /> Unified into Code Practice Hub
+              </div>
+              <p className="text-xs text-[var(--muted-foreground)]">
+                The Polyglot Code Translation Matrix is now unified under the single Code Practice hub.
+              </p>
+            </div>
+            <Link
+              href="/code-practice?tab=matrix"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold whitespace-nowrap transition-colors shrink-0 shadow-xs"
+            >
+              <span>Open in Code Practice</span>
+              <ArrowRight size={13} />
+            </Link>
+          </div>
+
           <div className="p-6 rounded-3xl bg-[var(--surface-1)] border border-[var(--border)] space-y-2">
             <div className="flex items-center gap-2 text-xs font-semibold text-amber-400">
               <Sparkles size={14} />

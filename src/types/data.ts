@@ -167,6 +167,10 @@ export interface ModernConcept {
   difficulty: Difficulty;
   summary: string;
   details: string;
+  keyMechanisms?: string[];
+  failureModes?: string[];
+  tradeoffs?: string;
+  codeSnippet?: string;
 }
 
 export interface ModernCodeMatrix {

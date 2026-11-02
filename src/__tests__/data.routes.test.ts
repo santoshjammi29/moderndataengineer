@@ -29,6 +29,7 @@ const VALID_ROUTES = new Set([
   '/studio',
   '/cheat-sheet',
   '/mindmap',
+  '/stages',
 ])
 
 function routeIsValid(href: string): boolean {

@@ -1,6 +1,106 @@
 # Changelog
 
-## v1.6 — Progressive Batch Rendering, Global Scroll Stabilization, Stage 1 Default Flows & Universal Navigation Bar (2026-11-01)
+## v1.9 — Production Lakehouse Engineering Curriculum, Day-Two Incident Triage & DABs CI/CD (2026-11-02)
+
+### 🏗️ 16-Week Production Lakehouse Engineer Track (`/learning-paths`)
+- **New Path 13**: Added comprehensive 16-Week applied enterprise curriculum covering the day-two operational workflows:
+  - **Weeks 1–4: ADF Production Ingestion & Control Flow**: Metadata-driven pipelines, tumbling window backfills, REST API pagination with HTTP 429 backoff, high-watermark delta ingestion, bounded ForEach concurrency.
+  - **Weeks 5–8: Spark Notebook Engineering & Delta Lake Under the Hood**: Thin orchestrator notebooks, Liquid Clustering, UniForm cross-catalog sync, schema evolution modes, checkpoint internals, and state store memory management.
+  - **Weeks 9–12: Enterprise CI/CD with Declarative Automation Bundles (DABs)**: Standardized DABs bundle schemas (`databricks.yml`), target environment promotion (`dev`, `staging`, `prod`), DAG topological sorting, and keyless Azure OIDC federated credentials in GitHub Actions.
+  - **Weeks 13–16: SRE Observability, Incident Triage & Disaster Recovery**: ADF $\times$ Databricks retry multiplier storm remediation, watermark desync reconciliation, Structured Streaming checkpoint corruption recovery, and point-in-time time travel recovery.
+- **DP-203 Certification Retirement Notice**: Marked Path 3 (Azure Data Engineer Associate DP-203) with an official **Legacy Reference** badge following Microsoft's retirement of the exam on **March 31, 2025**, directing learners toward **DP-700** (Fabric Data Engineer) and **DP-600** (Fabric Analytics Engineer).
+
+### 🛠️ Production Incident Triage Runbooks (`docs/databricks_master_operations_and_triage_guide.md`)
+- **Runbook 5: Cross-System Failure Triage & Multi-Layer Retry Multiplication**: Eliminating $(1 + R_{\text{ADF}}) \times (1 + R_{\text{DB}}) = 16$ attempt storms by centralizing retry ownership in ADF and enforcing idempotent Delta MERGE operations keyed by `@pipeline().RunId`.
+- **Runbook 6: Structured Streaming Checkpoint Invalidation & Offset Recovery**: Safe diagnostic protocol comparing `checkpoint/offsets` vs `checkpoint/commits`, Auto Loader `cloudFiles.schemaEvolutionMode = "addNewColumns"`, and in-microbatch deduplication without destructive checkpoint deletions.
+- **Runbook 7: ADF Watermark Transaction Boundaries & Safe Post-Recovery Reconciliation**: Two-phase watermark commit protocol asserting Delta commit row count prior to control table advancement, plus production SQL audit queries for watermark lag detection.
+
+### 📚 Knowledge Base Expansion & Re-Sharded Search Index
+- **+55 Production Q&As**: Expanded `src/data/json/data_de.json` to **3,670 entries** (total Q&A pool now **7,084 items**).
+- **+55 Architecture Scenarios**: Expanded `src/data/json/data_architecture.json` to **3,269 scenarios**.
+- **+10 Operational Cheatsheets**: Expanded `src/data/json/data_cheatsheet.json` to **86 cheatsheets**.
+- **BM25F Search Index Re-Sharded**: Re-indexed **11,627 assets** (5.56 MB) into `src/data/json/search_catalog.json` and edge-ready R2 chunked artifacts.
+- **Agent Skills Rebuilt**: Aligned `.agents/skills/big-data-data-engineer-architect/` and `.agents/skills/fabric-pbi-prep-dev/` with day-two production operational workflows, DABs, and multi-layer retry policies.
+
+---
+
+## v1.8 — Universal Typography & Font Scaling System, Enriched Lakehouse Primitives & Dynamic Left Bar Subpage Tree (2026-11-01)
+
+### 🔤 Universal Typography & Dynamic Font Scaling Across ALL Webpage Elements
+- **Universal Multi-Font Engine**: Added dynamic font family selector with 6 production options:
+  1. `inter`: **Inter Sans** (Clean, crisp modern geometric UI sans-serif)
+  2. `jetbrains`: **JetBrains Mono** (Full developer monospace applied across cards, headings, text, and code)
+  3. `fira`: **Fira Code** (Technical code typography with programming ligatures)
+  4. `system`: **System UI** (Native OS font: Apple SF, Windows Segoe UI, Roboto)
+  5. `serif`: **Editorial Serif** (Charter / Georgia / Merriweather for distraction-free reading)
+  6. `dyslexic`: **OpenDyslexic** (High legibility letterforms with weighted bottoms)
+- **Universal Element Scaling**: Updated `src/app/globals.css` with CSS custom properties (`--font-sans`, `--font-mono`, `--text-scale`, `--font-scale-multiplier`).
+- **Cards, Badges & Code Sections**: Bound card containers (`[class*="card"]`, `.glass-card`), headings, paragraphs, and arbitrary pixel utilities (`text-[8px]` through `text-[15px]`) to `var(--font-scale-multiplier, 1)` so that changing font size or font family immediately propagates to code blocks (`pre`, `code`, `.token-line`), card sections, and all webpage text.
+- **Enhanced Typography Controller**: Revamped `TextSizeController` with tabbed `Text Scale` and `Font Family` switchers, interactive steppers (`[ A− ]` `[ Reset ]` `[ A+ ]`), and instant keyboard hotkeys (`Alt + / Alt - / Alt 0`).
+
+### 🏛️ Enriched Table Matrix Primitives & Core Concepts (`/modern-stack`)
+- **Expanded to 32 Cutting-Edge Concepts**: Updated `src/data/json/modern_concepts.json` and `modern-stack-client.tsx` with 12 new deep architectural primitives:
+  - `mc-21`: Delta Lake Universal Format (UniForm) & Multi-Catalog Federation
+  - `mc-22`: Apache Iceberg v2/v3 Delete Files & Puffin Statistical Indexing
+  - `mc-23`: Apache Paimon Streaming Lakehouse Real-Time Primary Key Engine
+  - `mc-24`: LanceDB & Multimodal Vector Storage Format
+  - `mc-25`: Apache Arrow C Data Interface & Zero-Copy Polyglot Transfers
+  - `mc-26`: Serverless SQL Warm Pools, Spot Arbitrage & Instant Auto-Suspension FinOps
+  - `mc-27`: Multi-Engine Optimistic Concurrency Control (OCC) & Conflict Resolution
+  - `mc-28`: Cross-Cloud OneLake Shortcuts & Remote Distributed Cache Acceleration
+  - `mc-29`: Liquid Clustering with Space-Filling Curves vs Legacy Hive Partitioning
+  - `mc-30`: Change Data Capture (CDC) via Debezium & Streaming Lakehouse Merge
+  - `mc-31`: Semantic Layer MetricFlow & Direct Lake VertiPaq In-Memory Paging
+  - `mc-32`: Data Contracts (ODCS Standard) & Shift-Left Producer-Enforced Governance
+- **Interactive Deep Dive Cards**: Added expandable accordions displaying Key Technical Pillars, Architectural Trade-Offs, Failure Modes & Triage, and Production Configuration Code Snippets.
+
+### 🧭 Dynamic Left Bar Navigation & Corrected Subpage Sequences
+- **Full Subpage Tree Navigation**: Overhauled `src/components/layout/sidebar.tsx` so users can expand, collapse, and directly navigate to **all** subpages from the left sidebar without having to visit the parent page first.
+- **Top "All Subpages" Toggle**: Added a 1-click button at the top of the sidebar navigation to expand/collapse all subpages across all 12 platform hubs simultaneously.
+- **Corrected Logical Subpage Sequences**: Reordered subpages in `src/data/navigation-data.ts` to follow natural architectural lifecycles across Cloud Matrix, Architecture Scenarios, Spark Lab, DataOps, Cheat Sheets, and Code Practice.
+- **Vitest Test Suite Scale**: Expanded automated test suite to **58 test files** and **472 unit/integration tests** with 100% pass rate.
+
+### 🏛️ Unified Stages Hub: Mastery Stages & Systems Lifecycle (`/stages`)
+- **Single Authoritative Stages Reference**: Grouped and consolidated all architectural stage frameworks across the platform into `/stages`:
+  1. `mastery`: **4-Stage Mastery Progression Framework** (Foundations & Open Formats → Core Distributed Engineering → Advanced Storage & Compute → Staff & Principal Architect) with topics, deliverables, and interview defense criteria.
+  2. `lakehouse`: **7-Stage Modern Lakehouse & AI Stack Flow** canvas (Ingestion → Storage → Catalog → Compute → Serving → AI & Agents → FinOps) with architecture deep-dives, industry tech standards, production pitfalls & mitigations, and reference code.
+  3. `sdlc`: **6-Stage Enterprise Data Delivery Playbook** with 152 controls (Product Discovery → Ingestion/CDC → Transformation/Modeling → Quality Gates → CI/CD Deployment → SRE Observability & FinOps).
+  4. `catalyst`: **5-Stage Spark Catalyst Engine Pipeline** (Analysis & Catalog Resolution → Logical Optimization → Physical Planning → AQE Runtime Adaptation → Whole-Stage Code Generation / Tungsten).
+  5. `flows`: Interactive gallery of all **8 Production Flow Diagrams** (Mastery Roadmap, Lakehouse Medallion, Enterprise Stack, SDLC, Pipeline Execution, System Design, Interview Defense, Optimization).
+
+### ⚡ Reorganized Cloud Platforms & Engine Matrix (`/modern-stack`)
+- **Renamed to "Cloud Platforms & Engine Matrix"**: Repositioned around core cloud platform engineering concerns:
+  - `compatibility`: 10-engine matrix (Databricks, Snowflake, Microsoft Fabric, BigQuery, AWS EMR/Athena, DuckDB, Trino, ClickHouse, Redshift, Azure Synapse) vs. Delta Lake 4.0, Apache Iceberg v3, and Apache Hudi.
+  - `cost`: 15 FinOps cost playbooks with DBU calculations, storage lifecycle tiering, and auto-suspend guardrails.
+  - `simulators`: 6 live interactive calculators (DBU cluster sizing, storage tiering, shuffle estimation).
+  - `concepts`: 30 Lakehouse transaction and storage primitives.
+  - `ai`: Vector Search, RAG infrastructure, and Model Context Protocol (MCP) data plane serving.
+- **Relocation Notices**: Added clean migration banners on `overview` directing users to `/stages?tab=lakehouse`, on `matrix` directing users to `/code-practice?tab=matrix`, and in Python sections directing to `/code-practice?tab=runbooks`.
+
+### 💻 Unified Code Practice & Production Runbooks Hub (`/code-practice`)
+- **Unified 326+ Coding Operations**: Consolidated all coding resources across the platform under a single roof with 4 dedicated tabs:
+  1. `drills`: 178 multi-engine interactive drills (PySpark 4.0, Spark SQL, T-SQL, Python/Polars).
+  2. `databricks`: Databricks Coding Hub (148+ operations, cheatsheets, memory triage for OOM, Spill, Skew).
+  3. `matrix`: Polyglot Engine Translation Matrix (15 essential operations side-by-side across Polars, PySpark, DuckDB, Snowflake, BigQuery, Trino, Scala).
+  4. `runbooks`: 62 Production Python Lakehouse & Architecture Runbooks with searchable tags and code copy.
+
+### 🖥️ Dynamic Ultrawide & High-Resolution Display Scaling
+- **Full Viewport Utilization**: Upgraded `src/app/layout.tsx`, `AllPagesNav`, `AllPagesFooter`, `AnnouncementBar`, and all client views to dynamic multi-tier fluid containers (`w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6`).
+- **Added Tailwind v4 Breakpoints**: Configured `--breakpoint-3xl: 120rem;` (1920px) and `--breakpoint-4xl: 160rem;` (2560px) in `src/app/globals.css`.
+- **Responsive Grid Expansion**: Scaled grids dynamically on wide screens (e.g. 4-column side-by-side mastery progression cards, 2-column python runbooks, responsive multi-engine comparison tables) eliminating letterboxing and horizontal scrollbars.
+
+### 🔀 Direct Navigation Shortcuts & Permanent Edge Redirects
+- Configured 301 permanent edge redirects in `next.config.ts` and fallback landing components:
+  - `/plan` → `/guided-learning?tab=curricula` (Career Curricula & role roadmaps)
+  - `/goal` → `/studio` (Learning Studio goals & progress tracker)
+  - `/learn` → `/guided-learning` (Guided Learning tracks)
+  - `/boost` → `/qa-prep` (Interview Question Drill Bank & Booster)
+  - `/browser` → `/search-topics` (Knowledge Browser with instant reader)
+
+### 🧪 Automated Test Suite Passing (57 Files, 464 Tests)
+- **100% Quality Gates**: All 57 test files and 464 unit tests passing, validating `/stages` tab navigation, `/modern-stack` restructuring, unified `/code-practice`, and redirect routes.
+
+---
 
 ### 🚀 Progressive Batch Rendering & Zero Blank Space (`/qa-prep`, `/concepts`)
 - **Eliminated Window Virtualizer Blank Spots**: Replaced `@tanstack/react-virtual` absolute-positioning virtualization (`translateY`) in `/qa-prep` and `/concepts` with progressive batch rendering (`visibleCount = 40`, `BATCH_SIZE = 40`) and an `IntersectionObserver` sentinel (`rootMargin: "600px"`).

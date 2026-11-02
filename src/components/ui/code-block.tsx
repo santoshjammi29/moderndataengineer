@@ -458,9 +458,9 @@ export function CodeBlock({
   }, []);
 
   const fontSizeClasses = {
-    compact: "text-[12px] leading-[1.65]",
-    normal: "text-[13.5px] leading-[1.75]",
-    large: "text-[15px] leading-[1.85]",
+    compact: "text-xs leading-[1.65]",
+    normal: "text-[0.8125rem] leading-[1.75]",
+    large: "text-sm leading-[1.85]",
   }[fontSize];
 
   return (
@@ -654,7 +654,7 @@ export function CodeBlock({
               )}
               style={{
                 fontFamily:
-                  "var(--font-mono), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, Menlo, Consolas, monospace",
+                  "var(--font-mono, 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, Menlo, Consolas, monospace)",
                 fontFeatureSettings: '"calt" 1, "liga" 1',
               }}
               placeholder="Edit code snippet here or test your modifications..."

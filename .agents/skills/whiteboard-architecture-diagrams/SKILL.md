@@ -74,60 +74,60 @@ The platform maintains 42 hand-drawn digital blueprints across 7 architectural d
 - **Interactive 4-Tab Lightbox Inspector**: Seamless exploration across Architecture & Pillars, 5 Role Perspectives, Production Triage, and Governance.
 
 ### 1. Compute & Optimization (11)
-- `spark-catalyst-photon-engine`: Catalyst Optimizer, AQE & Native Photon C++ Engine
-- `spark-shuffle-memory-internals`: Apache Spark Shuffle Internals & Unified JVM Memory
-- `sql-server-engine-internals`: SQL Server Relational Engine & Buffer Pool Mechanics
-- `spark-data-skew-aqe-optimization`: Apache Spark Data Skew Handling & Adaptive Query Execution
-- `delta-lake-optimization-techniques`: 6 Delta Lake Optimization Levers (Partitioning, Z-Order, OPTIMIZE, Liquid Clustering, VACUUM)
-- `structured-streaming-rocksdb-state`: Structured Streaming Stateful Operations & RocksDB State Store
-- `spark-tungsten-memory-spill`: Spark Tungsten Engine Memory Management & Spill Mechanics
-- `spark-join-strategies-decision-matrix`: Apache Spark Distributed Join Strategy Decision Flowchart
-- `photon-vectorized-vs-jvm-catalyst`: Photon Native Vectorized Execution vs JVM Whole-Stage CodeGen
-- `broadcast-variables-accumulators`: Spark Broadcast Variables & Accumulator Internals
-- `fabric-onelake-shortcuts-directlake`: Fabric OneLake Cross-Cloud Shortcuts & Direct Lake Paging
+- `spark-catalyst-photon-engine`: Databricks Compute: Catalyst Optimizer, AQE & Photon
+- `spark-shuffle-memory-execution`: Apache Spark Memory Architecture & Shuffle Mechanics
+- `sql-server-query-engine-optimization`: SQL Server & Relational Query Engine Architecture
+- `python-arrow-polars-architecture`: Modern Python Data Architecture: Apache Arrow, Polars & Zero-Copy IPC
+- `spark-data-skew-aqe-optimization`: Apache Spark Data Skew Remediation & AQE Optimization
+- `spark-join-decision-tree`: Apache Spark Join Strategy Selection Decision Tree
+- `spark-aqe-dynamic-optimization`: Apache Spark Adaptive Query Execution (AQE) Architecture
+- `spark-memory-management-spill`: Apache Spark Memory Management & Shuffle Spilling Mechanics
+- `spark-streaming-state-store`: Spark Structured Streaming State Store & Watermarking Mechanics
+- `photon-engine-vs-jvm`: Databricks Photon Native C++ Engine vs. Classic Spark JVM
+- `spark-broadcast-accumulators`: Apache Spark Broadcast Variables vs. Accumulators Architecture
 
 ### 2. Storage Engines & Formats (8)
-- `delta-lake-under-the-hood`: Delta Lake Under-The-Hood ACID Transaction Mechanics
-- `apache-iceberg-open-table-format`: Apache Iceberg Open Table Format & Snapshot Trees
-- `open-table-formats-comparison`: Open Table Formats Comparison (Delta vs Iceberg vs Hudi)
-- `open-file-formats-comparison`: Open File Formats Comparison (Parquet vs ORC vs Avro)
-- `lakehouse-acid-concurrency-matrix`: Lakehouse ACID Concurrency & Conflict Detection Matrix
-- `scd-types-medallion-architecture`: Slowly Changing Dimensions (SCD Types 0-6) in Medallion
-- `delta-savemode-concurrency-handling`: Delta Lake SaveMode Behaviors & Concurrent Append/Overwrite
-- `lakehouse-master-enterprise-architecture`: Master Enterprise Lakehouse Reference Blueprint
+- `delta-lake-under-the-hood`: How Delta Lake Works Under the Hood
+- `apache-iceberg-open-table-format`: Apache Iceberg Open Table Format Mechanics
+- `open-table-formats-lakehouse`: Open Table Formats Blueprint: Lakehouse Storage Engines
+- `open-file-formats-storage`: Open File Formats Blueprint: Physical Storage Engines
+- `databricks-optimization-techniques-architecture`: 6 Delta Lake Optimization Techniques: Lakehouse Performance & Storage Hygiene
+- `spark-savemode-architecture`: Apache Spark SaveMode Handling & Storage Execution Architecture
+- `delta-vs-iceberg-architecture`: Delta Lake vs. Apache Iceberg Storage & Metadata Architecture
+- `lakehouse-acid-concurrency`: Lakehouse ACID Concurrency & Write Conflict Resolution Matrix
 
 ### 3. Pipelines & Ingestion (8)
-- `apache-airflow-distributed-architecture`: Apache Airflow Distributed Architecture & Schedulers
-- `dbt-analytics-engineering-dag`: dbt Analytics Engineering DAG & Transformation Mesh
-- `adf-hybrid-integration-runtime`: Azure Data Factory Hybrid Pipeline & SHIR
-- `kafka-event-streaming-pipeline`: Apache Kafka Event Streaming & High-Throughput Messaging
-- `cdc-debezium-lakehouse-pipeline`: CDC with Debezium & Streaming Lakehouse Ingestion
-- `delta-live-tables-pipeline`: Databricks Delta Live Tables (DLT) Declarative ETL
-- `databricks-asset-bundles-cicd`: Databricks Asset Bundles (DABs) & Serverless CI/CD
-- `rag-vector-search-data-pipeline`: Enterprise RAG & Vector Search Data Ingestion Pipeline
+- `apache-airflow-distributed-architecture`: Apache Airflow Distributed Production Architecture
+- `dbt-analytics-engineering-dag`: dbt (Data Build Tool) Modern Analytics Engineering DAG
+- `adf-hybrid-integration-runtime`: Azure Data Factory Enterprise Hybrid Ingestion Architecture
+- `kafka-event-streaming-pipeline`: Real-Time Event Streaming & Kafka Architecture
+- `cdc-debezium-lakehouse-pipeline`: Real-Time Change Data Capture (CDC) Architecture
+- `databricks-medallion-pipeline`: Databricks Medallion Lakehouse Architecture
+- `delta-live-tables-pipeline`: Delta Live Tables (DLT) Pipeline Architecture
+- `databricks-dabs-devops-pipeline`: Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture
 
 ### 4. Platform Landscape (5)
-- `databricks-medallion-pipeline`: Databricks Multi-Hop Medallion Architecture
-- `databricks-platform-master`: Databricks Unified Platform Master Blueprint
-- `python-arrow-polars-duckdb`: Python High-Performance Data Engineering: Arrow, Polars & DuckDB
+- `databricks-platform-master`: Databricks Unified Data Intelligence Platform
+- `rag-vector-search-data-pipeline`: Enterprise RAG & Vector Data Architecture
+- `enterprise-edge-client-architecture`: Enterprise Edge Architecture: Data, Edge & Client Flow
+- `distributed-systems-resilience-architecture`: Distributed Systems Design: High-Throughput & Resilient Architecture
 - `lakehouse-finops-cost-optimization`: Enterprise Lakehouse FinOps & Cloud Cost Optimization
-- `enterprise-edge-iot-architecture`: Enterprise Edge Computing, IoT Hub & Distributed Gateways
 
 ### 5. Microsoft Fabric & Power BI (4)
 - `fabric-onelake-architecture`: Microsoft Fabric Unified Architecture & OneLake
 - `powerbi-direct-lake-vertipaq`: Power BI Direct Lake Mode & VertiPaq Semantic Engine
-- `powerbi-dax-engine-context`: Power BI DAX Formula/Storage Engine Mechanics
-- `fabric-onelake-shortcuts-directlake`: Fabric OneLake Cross-Cloud Shortcuts & Direct Lake Mode
+- `powerbi-dax-engine-context`: Power BI DAX Engine Mechanics & Context Transition
+- `fabric-onelake-direct-lake-architecture`: Microsoft Fabric OneLake Shortcuts & Direct Lake Mode
 
 ### 6. Data Modeling & Architecture (4)
 - `kimball-dimensional-star-schema`: Kimball Dimensional Modeling & Enterprise Star Schema
-- `data-vault-enterprise-architecture`: Data Vault 2.0 Enterprise Modeling (Hubs, Links, Satellites)
-- `distributed-systems-resilience`: Distributed Systems Resilience & Circuit Breakers
-- `enterprise-data-mesh-architecture`: Enterprise Data Mesh Architecture & Federated Governance
+- `data-vault-enterprise-architecture`: Data Vault 2.0 Architecture & Lakehouse Modeling
+- `data-mesh-enterprise-architecture`: Enterprise Data Mesh: Decentralized Domains & Data Products
+- `scd-types-lakehouse`: Slowly Changing Dimensions (SCD Types 1, 2, 3, 4, 6) in Modern Lakehouses
 
 ### 7. Governance & Security (2)
-- `unity-catalog-governance-lineage`: Databricks Unity Catalog Centralized Governance & Lineage
-- `purview-enterprise-governance`: Microsoft Purview Enterprise Unified Governance & Metadata
+- `unity-catalog-governance`: Unity Catalog Unified Governance & 3-Level Namespace
+- `purview-governance-catalog`: Microsoft Purview Enterprise Governance Architecture
 
 ---
 

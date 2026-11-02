@@ -324,7 +324,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
   }, [selectedLexiconCat, lexiconQuery]);
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 space-y-3.5 pb-16">
+    <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 space-y-3.5 pb-16">
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-3 sm:p-4 shadow-xs isolate">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">

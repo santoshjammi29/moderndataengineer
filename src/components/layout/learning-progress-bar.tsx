@@ -103,7 +103,7 @@ export function LearningProgressBar() {
 
   return (
     <div className="w-full bg-[var(--surface-0)] border-b border-[var(--border)] py-2 px-4 sm:px-6 lg:px-8 text-xs sticky top-0 z-30 shadow-sm">
-      <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1600px] flex items-center justify-between gap-4">
+      <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none flex items-center justify-between gap-4">
         {/* Left: Active Location & Track Indicator */}
         <div className="flex items-center gap-2.5 shrink-0">
           <span className="hidden sm:inline-flex items-center gap-1 font-bold px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">

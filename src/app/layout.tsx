@@ -220,10 +220,10 @@ export default function RootLayout({
               {/* Page content */}
               <main
                 id="main-content"
-                className="flex-1 px-3 pt-4 pb-24 sm:px-6 lg:px-8 lg:pt-6 lg:pb-10"
+                className="flex-1 px-3 pt-4 pb-24 sm:px-6 lg:px-8 2xl:px-10 3xl:px-12 lg:pt-6 lg:pb-10"
                 tabIndex={-1}
               >
-                <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1600px]">
+                <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none">
                   <Breadcrumbs />
                   {children}
                 </div>

@@ -13,7 +13,7 @@ function AllPagesFooterInner() {
       role="contentinfo"
       aria-label="Platform Architecture Notes and Sitemap Footer"
     >
-      <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+      <div className="mx-auto w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none px-4 py-8 sm:px-6 lg:px-8 2xl:px-10 space-y-8">
         {/* Revamped High-Signal Platform Architecture Note */}
         <div className="p-4 sm:p-6 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-2xs">
           <div className="space-y-2 max-w-3xl">

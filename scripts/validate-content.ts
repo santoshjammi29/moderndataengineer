@@ -100,7 +100,7 @@ function runValidation() {
   }
 
   // 3. Validate QA items
-  const qaFiles = ['questions_unified_cleaned.json', 'questions.json'];
+  const qaFiles = ['questions_unified_cleaned.json', 'questions.json', 'data_de.json'];
   const qaIds = new Set<string>();
   let qaErrors = 0;
 

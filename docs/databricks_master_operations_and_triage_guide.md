@@ -10,6 +10,14 @@
 2. [Part 2: PySpark Core & Advanced Transformations Reference](#part-2-pyspark-core--advanced-transformations-reference)
 3. [Part 3: Databricks SQL & Spark SQL Reference](#part-3-databricks-sql--spark-sql-reference)
 4. [Part 4: Production Issues, Memory Bottlenecks & Triage Runbooks](#part-4-production-issues-memory-bottlenecks--triage-runbooks)
+   - [4.1 Production Failure Decision Matrix](#41-production-failure-decision-matrix)
+   - [4.2 Triage Runbook 1: Driver Out Of Memory (Driver OOM)](#42-triage-runbook-1-driver-out-of-memory-driver-oom)
+   - [4.3 Triage Runbook 2: Data Skew Elimination via Two-Phase Key Salting](#43-triage-runbook-2-data-skew-elimination-via-two-phase-key-salting)
+   - [4.4 Triage Runbook 3: Eliminating Tungsten Disk Spill](#44-triage-runbook-3-eliminating-tungsten-disk-spill)
+   - [4.5 Triage Runbook 4: Eliminating Concurrent Append & Metadata Conflicts](#45-triage-runbook-4-eliminating-concurrent-append--metadata-conflicts)
+   - [4.6 Triage Runbook 5: Cross-System Failure Triage & Multi-Layer Retry Multiplication (ADF × Databricks)](#46-triage-runbook-5-cross-system-failure-triage--multi-layer-retry-multiplication-adf--databricks)
+   - [4.7 Triage Runbook 6: Structured Streaming Checkpoint Invalidation, Offset Recovery & In-Batch Deduplication](#47-triage-runbook-6-structured-streaming-checkpoint-invalidation-offset-recovery--in-batch-deduplication)
+   - [4.8 Triage Runbook 7: ADF Watermark Transaction Boundaries & Safe Post-Recovery Reconciliation](#48-triage-runbook-7-adf-watermark-transaction-boundaries--safe-post-recovery-reconciliation)
 5. [Part 5: Multi-Language Interoperability & Notebook Automation](#part-5-multi-language-interoperability--notebook-automation)
 
 ---
@@ -586,6 +594,9 @@ ORDER BY event_time DESC;
 | **Small File Degradation**| Query planning takes minutes; thousands of 50 KB Parquet files | Ingestion jobs appending tiny batches every few seconds | Run `OPTIMIZE`; enable `autoCompact` and `optimizeWrite`; configure `delta.targetFileSize = 134217728`. |
 | **OCC Commit Conflict** | `ConcurrentAppendException` / `ConcurrentTransactionException` | Multiple jobs modifying the same table/partition concurrently | Enable partition-level isolation; migrate to Liquid Clustering; ensure idempotent write batches. |
 | **Broadcast Timeout** | `TimeoutException: Futures timed out after [300 seconds]` | Driver collecting broadcast dataset exceeds 300s socket timeout | Increase `spark.sql.broadcastTimeout = 600`; or set `spark.sql.autoBroadcastJoinThreshold = -1`. |
+| **Retry Explosion (ADF × DB)** | `Operation failed with status 500` / duplicate rows / lock exhaustion | ADF activity retries ($3$) × Databricks task retries ($3$) = $16$ attempts | Centralize retry ownership; set task `max_retries: 0`; enforce idempotent Delta MERGE on batch run ID. |
+| **Streaming Checkpoint Desync** | `IllegalStateException: ... checkpoint is corrupted` / SchemaMismatch | Checkpoint folder deleted manually or breaking upstream schema change | Repair corrupt commit JSON or roll back to epoch $N-1$; never `rm -rf` checkpoint without replay strategy. |
+| **Watermark Advance Desync** | Missing data intervals or duplicated batches after failure | Watermark updated in control DB before target Delta commit verified | Enforce two-phase watermark commit: advance control watermark ONLY after downstream Delta commit succeeds. |
 
 ---
 
@@ -724,6 +735,247 @@ delta_table = DeltaTable.forName(spark, "prod_catalog.silver.transactions")
     .whenNotMatchedInsertAll()
     .execute()
 )
+```
+
+---
+
+### 4.6 Triage Runbook 5: Cross-System Failure Triage & Multi-Layer Retry Multiplication (ADF × Databricks)
+```python
+# ------------------------------------------------------------------------------
+# SCENARIO: ADF pipeline invokes a Databricks Job activity. Both systems have
+#           retry policies enabled (e.g., ADF activity retryCount=3, Databricks
+#           task max_retries=3).
+# SYMPTOM:  A single transient network failure triggers (1 + 3) * (1 + 3) = 16
+#           executions. Sink database connections exhaust pool; Delta tables hit
+#           ConcurrentAppendException; cloud costs explode.
+# ------------------------------------------------------------------------------
+
+# ✅ STEP 1: Centralize Retry Ownership
+# Rule: Never allow both the orchestrator (ADF) and the worker (Databricks)
+# to retry the same logical task independently.
+# Pattern:
+#   - If ADF orchestrates: Set Databricks task `max_retries: 0`. Allow ADF to handle
+#     retries with exponential backoff (e.g., retryIntervalInSeconds: 60).
+#   - If Databricks Workflows orchestrates: Set Databricks task `max_retries: 2`,
+#     retry_on_timeout: true, and min_retry_interval_millis: 30000.
+
+# ✅ STEP 2: Enforce Idempotency via Pipeline Run ID and Delta MERGE
+# Receive unique ADF Pipeline Run ID via parameter widgets
+dbutils.widgets.text("pipeline_run_id", "local_debug_run_001", "ADF Pipeline Run ID")
+pipeline_run_id = dbutils.widgets.get("pipeline_run_id")
+
+from delta.tables import DeltaTable
+from pyspark.sql import functions as F
+
+source_df = spark.read.table("prod_catalog.bronze.staged_orders").withColumn(
+    "_ingestion_run_id", F.lit(pipeline_run_id)
+).withColumn(
+    "_ingested_at", F.current_timestamp()
+)
+
+# Idempotent write: Merging on primary key ensures duplicate retries do not duplicate rows
+target_table = DeltaTable.forName(spark, "prod_catalog.silver.orders")
+
+(
+    target_table.alias("target")
+    .merge(
+        source_df.alias("source"),
+        "target.order_id = source.order_id"
+    )
+    .whenMatchedUpdate(
+        condition="target._ingestion_run_id != source._ingestion_run_id AND source.last_modified > target.last_modified",
+        set={
+            "customer_id": "source.customer_id",
+            "order_total": "source.order_total",
+            "status": "source.status",
+            "last_modified": "source.last_modified",
+            "_ingestion_run_id": "source._ingestion_run_id",
+            "_ingested_at": "source._ingested_at"
+        }
+    )
+    .whenNotMatchedInsert(
+        values={
+            "order_id": "source.order_id",
+            "customer_id": "source.customer_id",
+            "order_total": "source.order_total",
+            "status": "source.status",
+            "last_modified": "source.last_modified",
+            "_ingestion_run_id": "source._ingestion_run_id",
+            "_ingested_at": "source._ingested_at"
+        }
+    )
+    .execute()
+)
+```
+
+---
+
+### 4.7 Triage Runbook 6: Structured Streaming Checkpoint Invalidation, Offset Recovery & In-Batch Deduplication
+```python
+# ------------------------------------------------------------------------------
+# SCENARIO: Streaming pipeline crashes with:
+#           IllegalStateException: Stream-stream Join or Checkpoint is corrupted
+#           or SchemaChangedException: The schema of your data has evolved...
+# ANTI-PATTERN: rm -rf on the checkpoint folder. This erases all Kafka/Auto Loader
+#               offsets, forcing a full source re-read and duplicate records!
+# ------------------------------------------------------------------------------
+
+# ✅ STEP 1: Diagnose Checkpoint Health & Inspect Commits
+checkpoint_base = "/Volumes/prod_catalog/checkpoints/orders_streaming_pipeline"
+offsets_dir = f"{checkpoint_base}/offsets"
+commits_dir = f"{checkpoint_base}/commits"
+
+# Check latest processed batch IDs
+offset_files = [f.name for f in dbutils.fs.ls(offsets_dir) if not f.name.startswith("_")]
+commit_files = [f.name for f in dbutils.fs.ls(commits_dir) if not f.name.startswith("_")]
+
+latest_offset = max([int(x) for x in offset_files]) if offset_files else -1
+latest_commit = max([int(x) for x in commit_files]) if commit_files else -1
+
+print(f"Latest Offset Batch ID: {latest_offset} | Latest Commit Batch ID: {latest_commit}")
+
+# If latest_offset > latest_commit, batch (latest_commit + 1) crashed mid-execution.
+# Spark automatically re-runs batch (latest_commit + 1) upon restart using idempotent Delta sink.
+
+# ✅ STEP 2: Handle Non-Breaking Schema Evolution without Checkpoint Invalidation
+# Auto Loader configuration:
+stream_df = (
+    spark.readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", f"{checkpoint_base}/schema")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")  # Resilient to new incoming fields
+    .option("cloudFiles.maxFilesPerTrigger", 500)              # Bounded micro-batch size
+    .load("/Volumes/prod_catalog/raw_data/incoming_orders/")
+)
+
+# ✅ STEP 3: Watermark + In-Batch Deduplication for Exactly-Once Sink Writes
+deduped_stream = (
+    stream_df
+    .withWatermark("event_timestamp", "2 hours")
+    .dropDuplicates(["order_id", "event_timestamp"])
+)
+
+def upsert_to_delta(micro_batch_df, batch_id):
+    """
+    Micro-batch handler guaranteeing idempotence via Delta ACID transaction
+    """
+    if micro_batch_df.isEmpty():
+        return
+    
+    target_delta = DeltaTable.forName(spark, "prod_catalog.silver.streaming_orders")
+    
+    # In-microbatch deduplication in case multiple records with same key exist in single batch
+    from pyspark.sql.window import Window
+    window_spec = (
+        micro_batch_df
+        .withColumn("row_num", F.row_number().over(
+            Window.partitionBy("order_id").orderBy(F.col("event_timestamp").desc())
+        ))
+        .filter("row_num = 1")
+        .drop("row_num")
+    )
+    
+    (
+        target_delta.alias("t")
+        .merge(window_spec.alias("s"), "t.order_id = s.order_id")
+        .whenMatchedUpdateAll()
+        .whenNotMatchedInsertAll()
+        .execute()
+    )
+
+query = (
+    deduped_stream.writeStream
+    .format("delta")
+    .foreachBatch(upsert_to_delta)
+    .option("checkpointLocation", checkpoint_base)
+    .trigger(availableNow=True)
+    .start()
+)
+query.awaitTermination()
+```
+
+---
+
+### 4.8 Triage Runbook 7: ADF Watermark Transaction Boundaries & Safe Post-Recovery Reconciliation
+```python
+# ------------------------------------------------------------------------------
+# SCENARIO: Incremental ingestion pipeline using SQL / ADF Control Table.
+# CAUSE:    Watermark state updated BEFORE target Delta table verifies write,
+#           or failure occurs mid-batch causing missing data intervals.
+# ------------------------------------------------------------------------------
+
+# ✅ PRODUCTION PROTOCOL: Two-Phase Watermark Commit Protocol
+# 1. Pipeline reads current high-watermark from Control Table: e.g., '2026-10-20 00:00:00'
+# 2. Extract batch from SQL Server: WHERE LastModifiedDate > '2026-10-20 00:00:00' AND LastModifiedDate <= @new_watermark
+# 3. Databricks ingestion notebook processes and verifies ACID commit
+# 4. Advance watermark in Control Table ONLY upon receiving exit status "SUCCESS" and target row count match
+
+# Databricks Verification Cell:
+new_watermark = dbutils.widgets.get("new_watermark")
+expected_row_count = int(dbutils.widgets.get("extracted_row_count"))
+
+target_table = DeltaTable.forName(spark, "prod_catalog.silver.incremental_orders")
+
+# Perform idempotent write
+# ... [Merge or Insert operations] ...
+
+# Verify ACID transaction committed records
+target_history = spark.sql("""
+    SELECT version, operation, operationMetrics.numOutputRows AS rows_written
+    FROM (DESCRIBE HISTORY prod_catalog.silver.incremental_orders LIMIT 1)
+""").collect()[0]
+
+rows_written = int(target_history["rows_written"]) if target_history["rows_written"] else 0
+
+if rows_written < expected_row_count:
+    # Raise exception to prevent ADF from updating the high watermark control table
+    raise ValueError(
+        f"Data reconciliation failed! Expected {expected_row_count} rows, wrote {rows_written}. "
+        "Halting pipeline to protect watermark transaction boundary."
+    )
+
+# Return success metadata to ADF via notebook exit
+import json
+dbutils.notebook.exit(json.dumps({
+    "status": "SUCCESS",
+    "verified_watermark": new_watermark,
+    "rows_committed": rows_written,
+    "target_version": target_history["version"]
+}))
+```
+
+```sql
+-- =============================================================================
+-- AUDIT & RECONCILIATION QUERY: Detect Watermark Desync in Production
+-- =============================================================================
+-- Run against Control DB to detect missing date ranges or gap anomalies
+WITH source_stats AS (
+    SELECT MAX(LastModifiedDate) AS source_max_ts
+    FROM sql_server_source.sales.orders WITH (NOLOCK)
+),
+target_stats AS (
+    SELECT MAX(last_modified) AS target_max_ts, COUNT(*) AS total_rows
+    FROM prod_catalog.silver.incremental_orders
+),
+control_stats AS (
+    SELECT high_watermark_value AS control_watermark_ts
+    FROM etl_metadata.control.pipeline_watermarks
+    WHERE pipeline_name = 'adw_orders_incremental_ingest'
+)
+SELECT 
+    c.control_watermark_ts,
+    t.target_max_ts,
+    s.source_max_ts,
+    CASE 
+        WHEN c.control_watermark_ts < t.target_max_ts THEN 'WARNING: Watermark lagging behind target table'
+        WHEN c.control_watermark_ts > t.target_max_ts THEN 'CRITICAL ALERT: Watermark advanced beyond target data!'
+        ELSE 'SYNCHRONIZED'
+    END AS sync_status
+FROM control_stats c
+CROSS JOIN target_stats t
+CROSS JOIN source_stats s;
+```
 ```
 
 ---
