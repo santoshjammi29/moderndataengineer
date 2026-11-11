@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { Sparkles, ArrowRight, X } from "lucide-react";
@@ -22,7 +24,7 @@ export function AnnouncementBar() {
           </span>
           <p className="truncate font-medium text-slate-300 text-[11px] sm:text-xs">
             <strong className="text-white">Microsoft Fabric DP-600 &amp; Spark 4.0 Architecture Bank</strong>{" "}
-            <span className="hidden md:inline text-slate-400">— 7,080+ vetted scenario Q&amp;As, 6 simulators &amp; polyglot sheets.</span>
+            <span className="hidden md:inline text-slate-400">— {formatContentCount(CONTENT_COUNTS.qa)} interview questions, 6 simulators &amp; polyglot sheets.</span>
           </p>
           <Link
             href="/qa-prep"

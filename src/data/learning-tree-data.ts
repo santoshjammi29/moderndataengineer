@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 export interface LabTreeNode {
   id: string;
   name: string;
@@ -84,7 +85,7 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
       id: "concepts-node",
       name: "concepts",
       type: "folder",
-      badge: "679 Concepts",
+      badge: `${formatContentCount(CONTENT_COUNTS.concepts)} Concepts`,
       description: "Comprehensive 14-pillar terminology, glossary definitions, and mindmaps",
       children: [
         {
@@ -92,22 +93,22 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
           name: "glossary",
           type: "folder",
           badge: "14 Pillars",
-          description: "679 verified concept cards grouped across 14 platform domains",
+          description: `${formatContentCount(CONTENT_COUNTS.concepts)} concept cards grouped across ${Object.keys(CONTENT_COUNTS.conceptsByCategory).length} domains`,
           children: [
-            { id: "g-fab", name: "fabric.md", type: "file", description: "Microsoft Fabric SaaS Lakehouse (51 terms)", href: "/concepts?category=FABRIC" },
-            { id: "g-spark", name: "spark.md", type: "file", description: "Spark Core, Tungsten & Catalyst (62 terms)", href: "/concepts?category=SPARK+%26+DATABRICKS" },
-            { id: "g-dbx", name: "databricks.md", type: "file", description: "Databricks Unified Platform (50 terms)", href: "/concepts?category=DATABRICKS" },
-            { id: "g-lake", name: "lakehouse-storage.md", type: "file", description: "Delta, Iceberg & Storage Formats (53 terms)", href: "/concepts?category=DATALAKE+ARCHITECTURE" },
-            { id: "g-pbi", name: "power-bi.md", type: "file", description: "Power BI VertiPaq & DAX (44 terms)", href: "/concepts?category=POWER+BI" },
-            { id: "g-air", name: "airflow.md", type: "file", description: "Apache Airflow DAG Engine (48 terms)", href: "/concepts?category=APACHE+AIRFLOW" },
-            { id: "g-adf", name: "azure-data-factory.md", type: "file", description: "Azure Data Factory & SHIR (47 terms)", href: "/concepts?category=ADF" },
-            { id: "g-dbt", name: "dbt.md", type: "file", description: "dbt Analytics Engineering (48 terms)", href: "/concepts?category=DBT" },
-            { id: "g-sql", name: "sql-server.md", type: "file", description: "SQL Server & T-SQL Relational (48 terms)", href: "/concepts?category=SQL+SERVER" },
-            { id: "g-dbarch", name: "database-architecture.md", type: "file", description: "Distributed Database Engines (45 terms)", href: "/concepts?category=DATABASE+ARCHITECTURE" },
-            { id: "g-sys", name: "system-design.md", type: "file", description: "System Design & Distributed Patterns (45 terms)", href: "/concepts?category=SYSTEM+DESIGN" },
-            { id: "g-de", name: "general-data-engineering.md", type: "file", description: "Enterprise Data Engineering (58 terms)", href: "/concepts?category=GENERAL+DE" },
-            { id: "g-py", name: "python.md", type: "file", description: "Python, Arrow & Polars (40 terms)", href: "/concepts?category=PYTHON" },
-            { id: "g-mod", name: "modern-lakehouse.md", type: "file", description: "Modern Lakehouse & FinOps (40 terms)", href: "/concepts?category=MODERN+LAKEHOUSE" },
+            { id: "g-fab", name: "fabric.md", type: "file", description: `Microsoft Fabric SaaS Lakehouse (${CONTENT_COUNTS.conceptsByCategory.FABRIC ?? 0} terms)`, href: "/concepts?category=FABRIC" },
+            { id: "g-spark", name: "spark.md", type: "file", description: `Spark Core, Tungsten & Catalyst (${CONTENT_COUNTS.conceptsByCategory["SPARK & DATABRICKS"] ?? 0} terms)`, href: "/concepts?category=SPARK+%26+DATABRICKS" },
+            { id: "g-dbx", name: "databricks.md", type: "file", description: `Databricks Unified Platform (${CONTENT_COUNTS.conceptsByCategory.DATABRICKS ?? 0} terms)`, href: "/concepts?category=DATABRICKS" },
+            { id: "g-lake", name: "lakehouse-storage.md", type: "file", description: `Delta, Iceberg & Storage Formats (${CONTENT_COUNTS.conceptsByCategory["DATALAKE ARCHITECTURE"] ?? 0} terms)`, href: "/concepts?category=DATALAKE+ARCHITECTURE" },
+            { id: "g-pbi", name: "power-bi.md", type: "file", description: `Power BI VertiPaq & DAX (${CONTENT_COUNTS.conceptsByCategory["POWER BI"] ?? 0} terms)`, href: "/concepts?category=POWER+BI" },
+            { id: "g-air", name: "airflow.md", type: "file", description: `Apache Airflow DAG Engine (${CONTENT_COUNTS.conceptsByCategory["APACHE AIRFLOW"] ?? 0} terms)`, href: "/concepts?category=APACHE+AIRFLOW" },
+            { id: "g-adf", name: "azure-data-factory.md", type: "file", description: `Azure Data Factory & SHIR (${CONTENT_COUNTS.conceptsByCategory.ADF ?? 0} terms)`, href: "/concepts?category=ADF" },
+            { id: "g-dbt", name: "dbt.md", type: "file", description: `dbt Analytics Engineering (${CONTENT_COUNTS.conceptsByCategory.DBT ?? 0} terms)`, href: "/concepts?category=DBT" },
+            { id: "g-sql", name: "sql-server.md", type: "file", description: `SQL Server & T-SQL Relational (${CONTENT_COUNTS.conceptsByCategory["SQL SERVER"] ?? 0} terms)`, href: "/concepts?category=SQL+SERVER" },
+            { id: "g-dbarch", name: "database-architecture.md", type: "file", description: `Distributed Database Engines (${CONTENT_COUNTS.conceptsByCategory["DATABASE ARCHITECTURE"] ?? 0} terms)`, href: "/concepts?category=DATABASE+ARCHITECTURE" },
+            { id: "g-sys", name: "system-design.md", type: "file", description: `System Design & Distributed Patterns (${CONTENT_COUNTS.conceptsByCategory["SYSTEM DESIGN"] ?? 0} terms)`, href: "/concepts?category=SYSTEM+DESIGN" },
+            { id: "g-de", name: "general-data-engineering.md", type: "file", description: `Enterprise Data Engineering (${CONTENT_COUNTS.conceptsByCategory["GENERAL DE"] ?? 0} terms)`, href: "/concepts?category=GENERAL+DE" },
+            { id: "g-py", name: "python.md", type: "file", description: `Python, Arrow & Polars (${CONTENT_COUNTS.conceptsByCategory.PYTHON ?? 0} terms)`, href: "/concepts?category=PYTHON" },
+            { id: "g-mod", name: "modern-lakehouse.md", type: "file", description: `Modern Lakehouse & FinOps (${CONTENT_COUNTS.conceptsByCategory["MODERN LAKEHOUSE"] ?? 0} terms)`, href: "/concepts?category=MODERN+LAKEHOUSE" },
           ],
         },
         {
@@ -145,7 +146,7 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
         { id: "lab-10", name: "10-dataops-and-operations", type: "folder", description: "Git CI/CD, testing, monitoring & disaster recovery", href: "/dataops" },
         { id: "lab-11", name: "11-finops", type: "folder", badge: "15 Playbooks", description: "Compute cost, storage tiers, egress & chargeback", href: "/modern-stack?tab=playbooks" },
         { id: "lab-12", name: "12-ai-and-rag", type: "folder", description: "Document chunking, vector indexes & hybrid retrieval", href: "/architecture?tab=scenarios" },
-        { id: "lab-13", name: "13-enterprise-architecture", type: "folder", badge: "3,206 Scenarios", description: "ADRs, migration, cutover & capstone system design", href: "/architecture" },
+        { id: "lab-13", name: "13-enterprise-architecture", type: "folder", badge: `${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios`, description: "ADRs, migration, cutover & capstone system design", href: "/architecture" },
         {
           id: "lab-14",
           name: "14-production-deep-dives",
@@ -186,7 +187,7 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
       children: [
         { id: "arch-1", name: "whiteboards", type: "folder", badge: "42 Blueprints", description: "Architect-grade 5-role whiteboard blueprints", href: "/whiteboards" },
         { id: "arch-2", name: "blueprints", type: "folder", badge: "18 Blueprints", description: "Modern Lakehouse Architecture Blueprints", href: "/modern-stack?tab=blueprints" },
-        { id: "arch-3", name: "scenarios", type: "folder", badge: "3,206 Scenarios", description: "End-to-end production scenarios with failure modes", href: "/architecture?tab=scenarios" },
+        { id: "arch-3", name: "scenarios", type: "folder", badge: `${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios`, description: "End-to-end production scenarios with failure modes", href: "/architecture?tab=scenarios" },
       ],
     },
   ],

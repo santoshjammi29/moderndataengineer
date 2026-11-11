@@ -30,6 +30,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { UnifiedSearchFilterBox } from "@/components/ui/unified-search-filter-box";
+import { EvidenceSources } from "@/components/ui/evidence-sources";
 import { UnifiedQuestion, Difficulty, STANDARDIZED_DOMAINS } from "@/types/data";
 import { ArchitectureDiagramItem } from "@/data/diagrams";
 import { InterviewDefenseFlow } from "@/components/qa-prep/interview-defense-flow";
@@ -859,6 +860,7 @@ export function QaPrepClient({
                         <div className="pt-1 text-xs sm:text-[13px] text-[var(--foreground)] leading-relaxed break-words whitespace-normal">
                           <AnswerRenderer text={q.answer} />
                         </div>
+                        <EvidenceSources sources={q.sources} className="pt-2" />
 
                         {(() => {
                           const matchingDiagram = getQuestionMatchingDiagram(q, diagrams);

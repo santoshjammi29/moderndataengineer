@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { StatCards } from '@/components/dashboard/stat-cards'
+import { CONTENT_COUNTS, formatContentCount } from '@/data/content-counts'
 
 vi.mock('@/data', () => ({
   getDatasetCounts: () => ({
@@ -51,13 +52,13 @@ describe('StatCards component', () => {
     expect(hrefs).toContain('/company-research')
   })
 
-  it('renders consistent metric values (679+ concepts, 7,080+ Q&As, 3,206+ scenarios, 178+ drills) without getting stuck on 0+', () => {
+  it('renders current generated catalog metrics for concepts, Q&As, scenarios, and drills without getting stuck on 0+', () => {
     render(<StatCards />)
     // Must render the actual numbers, not 0+
-    expect(screen.getByText('679+')).toBeDefined()
-    expect(screen.getByText('7,080+')).toBeDefined()
-    expect(screen.getByText('3,206+')).toBeDefined()
-    expect(screen.getByText('178+')).toBeDefined()
+    expect(screen.getByText(formatContentCount(CONTENT_COUNTS.concepts))).toBeDefined()
+    expect(screen.getByText(formatContentCount(CONTENT_COUNTS.qa))).toBeDefined()
+    expect(screen.getByText(formatContentCount(CONTENT_COUNTS.scenarios))).toBeDefined()
+    expect(screen.getByText(formatContentCount(CONTENT_COUNTS.codeDrills))).toBeDefined()
     expect(screen.queryByText('0+')).toBeNull()
   })
 })

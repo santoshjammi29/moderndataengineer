@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { buildPageMetadata, generateCourseSchema, generateBreadcrumbSchema } from "@/lib/seo";
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Lakehouse Architecture & Systems Mind Map: 660+ Interactive Nodes",
+  title: `Lakehouse Architecture & Systems Mind Map: ${formatContentCount(CONTENT_COUNTS.concepts)}+ Interactive Nodes`,
   description:
-    "Interactive multi-level stretching mind map visualizing Lakehouse Architecture, Medallion layers, Delta Lake internals, Apache Spark, and distributed systems design across 660+ linked concepts.",
+    `Interactive multi-level stretching mind map visualizing Lakehouse Architecture, Medallion layers, Delta Lake internals, Apache Spark, and distributed systems design across ${formatContentCount(CONTENT_COUNTS.concepts)}+ linked concepts.`,
   path: "/mindmap",
   keywords: [
     "Lakehouse Architecture Mind Map",
@@ -25,7 +26,7 @@ export default function MindmapLayout({
 }) {
   const jsonLd = generateCourseSchema({
     name: "Enterprise Data Concepts Multi-Level Mind Map",
-    description: "Multi-level stretching mind map organizing 660+ concepts across 13 core technology domains.",
+    description: `Multi-level stretching mind map organizing ${formatContentCount(CONTENT_COUNTS.concepts)}+ concepts across 13 core technology domains.`,
     url: "/mindmap",
   });
 

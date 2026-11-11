@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { m, useInView } from "framer-motion";
@@ -63,12 +65,12 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 
 export function StatCards() {
   const stats: StatCardProps[] = [
-    { title: "Core Concepts", value: 679, suffix: "+", icon: BookOpen, href: "/concepts", accent: "green" },
-    { title: "Interview Q&As", value: 7080, suffix: "+", icon: MessageSquare, href: "/qa-prep", accent: "orange" },
-    { title: "Coding Sheets", value: 178, suffix: "+", icon: FileCode2, href: "/code-practice", accent: "amber" },
+    { title: "Core Concepts", value: CONTENT_COUNTS.concepts, suffix: "", icon: BookOpen, href: "/concepts", accent: "green" },
+    { title: "Interview Q&As", value: CONTENT_COUNTS.qa, suffix: "", icon: MessageSquare, href: "/qa-prep", accent: "orange" },
+    { title: "Coding Sheets", value: CONTENT_COUNTS.codeDrills, suffix: "", icon: FileCode2, href: "/code-practice", accent: "amber" },
     { title: "Spark Engine", value: 85, suffix: "+", icon: Zap, href: "/spark-engine", accent: "indigo" },
-    { title: "Arch Scenarios", value: 3206, suffix: "+", icon: Layers, href: "/architecture", accent: "purple" },
-    { title: "GCC Firms", value: 156, suffix: "+", icon: Building2, href: "/company-research", accent: "sky" },
+    { title: "Arch Scenarios", value: CONTENT_COUNTS.scenarios, suffix: "", icon: Layers, href: "/architecture", accent: "purple" },
+    { title: "GCC Firms", value: CONTENT_COUNTS.companyProfiles, suffix: "", icon: Building2, href: "/company-research", accent: "sky" },
   ];
 
   return (

@@ -15,6 +15,12 @@ export const DifficultyEnum = z.enum([
   'architect',
 ]);
 
+export const EvidenceSourceSchema = z.object({
+  title: z.string().min(1),
+  url: z.string().url(),
+  publisher: z.string().optional(),
+});
+
 export const QaItemSchema = z.object({
   id: z.string(),
   domain: z.string().default('General Data Engineering'),
@@ -29,6 +35,7 @@ export const QaItemSchema = z.object({
   niche: z.string().optional(),
   source: z.string().optional(),
   subdomain: z.string().optional(),
+  sources: z.array(EvidenceSourceSchema).optional(),
 });
 
 export const ScenarioItemSchema = z.object({
@@ -43,6 +50,8 @@ export const ScenarioItemSchema = z.object({
   blueprintId: z.string().optional(),
   question: z.string().optional(),
   answer: z.string().optional(),
+  source: z.string().optional(),
+  sources: z.array(EvidenceSourceSchema).optional(),
 });
 
 export const ConceptItemSchema = z.object({
@@ -56,6 +65,7 @@ export const ConceptItemSchema = z.object({
   definition: z.string().optional(),
   explanation: z.string().optional(),
   keyPoints: z.array(z.string()).default([]),
+  sources: z.array(EvidenceSourceSchema).optional(),
 });
 
 export type QaItem = z.infer<typeof QaItemSchema>;

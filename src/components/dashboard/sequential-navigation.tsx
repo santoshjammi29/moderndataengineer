@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React from "react";
 import Link from "next/link";
 import {
@@ -50,7 +52,7 @@ const PHASES: PhaseSection[] = [
       {
         step: "Step 01",
         title: "Key Concepts & 14-Pillar Mind Map",
-        badge: "679 Concepts",
+        badge: `${formatContentCount(CONTENT_COUNTS.concepts)} Concepts`,
         badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
         icon: BookOpen,
         iconColor: "text-emerald-400",
@@ -103,8 +105,8 @@ const PHASES: PhaseSection[] = [
     steps: [
       {
         step: "Step 04",
-        title: "3,200+ Architecture Scenarios",
-        badge: "3,214 Scenarios",
+        title: `${formatContentCount(CONTENT_COUNTS.scenarios)} Architecture Scenarios`,
+        badge: `${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios`,
         badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
         icon: Layers,
         iconColor: "text-purple-400",
@@ -157,12 +159,12 @@ const PHASES: PhaseSection[] = [
     steps: [
       {
         step: "Step 07",
-        title: "Code Practice Hub (178 Drills)",
+        title: `Code Practice Hub (${formatContentCount(CONTENT_COUNTS.codeDrills)} Drills)`,
         badge: "4 Languages",
         badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
         icon: Code2,
         iconColor: "text-cyan-400",
-        description: "Runnable production code cards across PySpark (51), Spark SQL (50), Python & Polars (42), and T-SQL (35).",
+        description: `Runnable production code cards across PySpark (${formatContentCount(CONTENT_COUNTS.pysparkDrills)}), Spark SQL (${formatContentCount(CONTENT_COUNTS.sparkSqlDrills)}), Python & Polars (${formatContentCount(CONTENT_COUNTS.pythonDrills)}), and T-SQL (${formatContentCount(CONTENT_COUNTS.mssqlDrills)}).`,
         href: "/code-practice",
         actionText: "Practice Code",
         subLinks: [
@@ -213,8 +215,8 @@ const PHASES: PhaseSection[] = [
     steps: [
       {
         step: "Step 10",
-        title: "Interview Q&A Drill Bank (7,080+ Q&As)",
-        badge: "7,080+ Q&As",
+        title: `Interview Q&A Drill Bank (${formatContentCount(CONTENT_COUNTS.qa)} Q&As)`,
+        badge: `${formatContentCount(CONTENT_COUNTS.qa)} Q&As`,
         badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
         icon: MessageSquare,
         iconColor: "text-amber-400",

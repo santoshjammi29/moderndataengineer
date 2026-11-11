@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -78,10 +80,10 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 }
 
 const QUICK_NAV_HUBS = [
-  { label: "Guided Tracks", href: "/guided-learning", icon: Sparkles, badge: "13 Tracks" },
-  { label: "Key Concepts", href: "/concepts", icon: BookOpen, badge: "670+ Terms" },
-  { label: "Q&A Prep Hub", href: "/qa-prep", icon: MessageSquare, badge: "7.1k+ Drills" },
-  { label: "Architecture Hub", href: "/architecture", icon: Cpu, badge: "3.2k+ Scenarios" },
+  { label: "Guided Tracks", href: "/guided-learning", icon: Sparkles, badge: `${CONTENT_COUNTS.guidedTracks} Tracks` },
+  { label: "Key Concepts", href: "/concepts", icon: BookOpen, badge: `${formatContentCount(CONTENT_COUNTS.concepts)}+ Terms` },
+  { label: "Q&A Prep Hub", href: "/qa-prep", icon: MessageSquare, badge: `${formatContentCount(CONTENT_COUNTS.qa)}+ Drills` },
+  { label: "Architecture Hub", href: "/architecture", icon: Cpu, badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+ Scenarios` },
   { label: "Databricks Hub", href: "/code-practice/databricks", icon: Flame, badge: "148+ Ops" },
   { label: "Spark Simulator", href: "/spark-engine", icon: Zap, badge: "Engine" },
   { label: "Modern Stack", href: "/modern-stack", icon: Layers, badge: "Blueprints" },
@@ -245,17 +247,17 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
   const staticRoutes: CommandItem[] = useMemo(
     () => [
       { id: "nav-home", title: "Home Dashboard", category: "Navigation", page: "Home", icon: Sparkles, href: "/", badge: "Main" },
-      { id: "nav-guided", title: "Guided Learning (13 Structured Tracks)", category: "Navigation", page: "Guided Learning", icon: BookMarked, href: "/guided-learning", badge: "Core" },
-      { id: "nav-concepts", title: "Key Concepts (660+ Terms)", category: "Navigation", page: "Key Concepts", icon: BookOpen, href: "/concepts", badge: "Easy" },
-      { id: "nav-qa", title: "Q&A Prep Hub (7,080+ Questions)", category: "Navigation", page: "Q&A Prep", icon: MessageSquare, href: "/qa-prep", badge: "SM-2" },
-      { id: "nav-arch", title: "Architecture Hub (3,206+ Scenarios)", category: "Navigation", page: "Architecture Hub", icon: Cpu, href: "/architecture", badge: "Architect" },
+      { id: "nav-guided", title: `Guided Learning (${CONTENT_COUNTS.guidedTracks} Structured Tracks)`, category: "Navigation", page: "Guided Learning", icon: BookMarked, href: "/guided-learning", badge: "Core" },
+      { id: "nav-concepts", title: `Key Concepts (${formatContentCount(CONTENT_COUNTS.concepts)}+ Terms)`, category: "Navigation", page: "Key Concepts", icon: BookOpen, href: "/concepts", badge: "Easy" },
+      { id: "nav-qa", title: `Q&A Prep Hub (${formatContentCount(CONTENT_COUNTS.qa)} Questions)`, category: "Navigation", page: "Q&A Prep", icon: MessageSquare, href: "/qa-prep", badge: "SM-2" },
+      { id: "nav-arch", title: `Architecture Hub (${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios)`, category: "Navigation", page: "Architecture Hub", icon: Cpu, href: "/architecture", badge: "Architect" },
       { id: "nav-code", title: "Code Practice (PySpark, SQL, Python)", category: "Navigation", page: "Code Practice", icon: FileCode2, href: "/code-practice", badge: "Polyglot" },
       { id: "nav-code-dbx", title: "Databricks Coding Hub (148+ Ops, DBFS & Memory Triage)", category: "Code Practice", page: "Code Practice", icon: Flame, href: "/code-practice/databricks", badge: "DBX", keywords: ["databricks", "dbfs", "spark", "sql", "pyspark", "oom", "bottleneck", "d100", "spill", "skew", "volumes"] },
       { id: "nav-spark", title: "Spark Engine & Simulator", category: "Navigation", page: "Spark Engine", icon: Zap, href: "/spark-engine", badge: "Internals" },
       { id: "nav-cheatsheet", title: "Production Cheat Sheet (Spark, dbt, Airflow, SQL)", category: "Navigation", page: "Cheat Sheets", icon: Terminal, href: "/cheat-sheet", badge: "PROD" },
       { id: "nav-modern", title: "Modern Data Stack & AI Architecture", category: "Navigation", page: "Modern Stack", icon: Layers, href: "/modern-stack", badge: "Hard" },
       { id: "nav-gcc", title: "Company Research (156 Profiles)", category: "Navigation", page: "Company Research", icon: Building2, href: "/company-research", badge: "Enterprise" },
-      { id: "nav-paths", title: "Learning Paths (12 Structured Tracks)", category: "Learning Paths", page: "Learning Paths", icon: Compass, href: "/learning-paths", badge: "Curriculum" },
+      { id: "nav-paths", title: `Learning Paths (${CONTENT_COUNTS.learningPaths} Structured Tracks)`, category: "Learning Paths", page: "Learning Paths", icon: Compass, href: "/learning-paths", badge: "Curriculum" },
       { id: "nav-studio", title: "My Studio & Progress", category: "Navigation", page: "Studio", icon: User, href: "/studio", badge: "Account" },
 
       // Simulators

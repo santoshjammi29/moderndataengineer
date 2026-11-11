@@ -9,6 +9,7 @@ import type {
   ModernCodeMatrix,
   ModernCostPlaybook,
   LearningPath,
+  EvidenceSource,
 } from "@/types/data";
 
 export interface ResolvedKnowledgeItem {
@@ -71,6 +72,7 @@ export interface ResolvedKnowledgeItem {
     snowflake?: string;
     bigquery?: string;
     trino?: string;
+    sources?: EvidenceSource[];
   };
 }
 
@@ -226,6 +228,7 @@ export async function resolveKnowledgeItem(
           description: found.description,
           executiveSummary: found.executiveSummary,
           modules: found.description ? [found.description] : [],
+          sources: found.sources || [],
         },
       };
     }
@@ -304,6 +307,7 @@ export async function resolveKnowledgeItem(
           definition: found.definition,
           explanation: found.explanation,
           keyPoints: found.keyPoints || [],
+          sources: (found as any).sources || [],
         },
       };
     }
@@ -334,6 +338,7 @@ export async function resolveKnowledgeItem(
           architectureSolution: anyFound.architectureSolution || found.answer,
           tradeoffs: anyFound.tradeoffs || [],
           blueprintId: anyFound.blueprintId,
+          sources: (anyFound.sources || (found as any).sources) || [],
         },
       };
     }
@@ -363,6 +368,7 @@ export async function resolveKnowledgeItem(
           companyTargets: found.companyTargets || [],
           tags: Array.isArray(found.tags) ? found.tags : found.niche ? [found.niche] : [],
           code: found.code,
+          sources: (found as any).sources || [],
         },
       };
     }

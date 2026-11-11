@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import {
@@ -56,7 +58,7 @@ export function ArchitectDigest() {
               <ShieldCheck size={14} className="text-purple-400 [.light_&]:text-purple-600" /> No Spam Guarantee
             </span>
             <span className="flex items-center gap-1.5">
-              <BookOpen size={14} className="text-blue-400 [.light_&]:text-blue-600" /> 7,080+ Q&amp;A Archive
+              <BookOpen size={14} className="text-blue-400 [.light_&]:text-blue-600" /> {formatContentCount(CONTENT_COUNTS.qa)} Q&amp;A Archive
             </span>
           </div>
         </div>

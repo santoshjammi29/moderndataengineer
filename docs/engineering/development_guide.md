@@ -6,7 +6,7 @@ Welcome to the **moderndataengineer.uk** developer and contributor guide. This d
 
 ## 1. Project Architecture
 
-The platform is built as an enterprise-grade cloud educational portal leveraging Next.js 16 App Router, React 19 Server Components, and Tailwind CSS. It enforces a strict **Zero-Bundle Data Mandate** to ensure blazing client-side performance even with over 11,500 learning records.
+The platform is built as an enterprise-grade cloud educational portal leveraging Next.js 16 App Router, React 19 Server Components, and Tailwind CSS. It enforces a strict **Zero-Bundle Data Mandate** to ensure blazing client-side performance even with over 11,887 searchable catalog items.
 
 ```
 /Users/santosh/Documents/antigravity/charming-fermi/
@@ -15,9 +15,9 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 │   │   ├── page.tsx                 # Landing page & Whiteboard Showcase
 │   │   ├── stages/                  # Unified Stages & Lifecycles Hub (5 architectural lifecycle systems)
 │   │   ├── guided-learning/         # Cross-section progressive topic journeys
-│   │   ├── concepts/                # 704 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
-│   │   ├── qa-prep/                 # Q&A practice (3,414 core + 3,670 DE questions = 7,084 total)
-│   │   ├── architecture/            # Architecture scenarios (3,269 scenarios) + 36-keyword filter + 42 blueprints
+│   │   ├── concepts/                # 837 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
+│   │   ├── qa-prep/                 # Q&A practice (7,076 deduplicated questions)
+│   │   ├── architecture/            # Architecture scenarios (3,279 scenarios) + 36-keyword filter + 42 blueprints
 │   │   ├── code-practice/           # Consolidated Coding Hub (326+ operations across Drills, Databricks, Matrix, Runbooks)
 │   │   │   └── databricks/          # Dedicated Databricks coding subpage (148+ operations & memory triage)
 │   │   ├── cheat-sheet/             # 7 Master Vector PDFs, posters, and 86 operational cheatsheet cards
@@ -56,9 +56,9 @@ All canonical datasets reside in `src/data/json/`:
 
 | File | Primary Type | Item Count | Key Fields |
 | :--- | :--- | :--- | :--- |
-| `data_concepts.json` | `Concept[]` | **704** | `id`, `term`, `category`, `difficulty`, `definition`, `explanation`, `keyPoints[]` |
+| `data_concepts.json` | `Concept[]` | **837** | `id`, `term`, `category`, `difficulty`, `definition`, `explanation`, `keyPoints[]` |
 | `databricks_100.json` | `Databricks100Item[]` | **100** | `id`, `day`, `term`, `category`, `difficulty`, `whatYouShouldKnow[]`, `productionCodeSnippet`, `certificationMapping[]` |
-| `data_architecture.json` | `ArchitectureQuestion[]` | **3,269** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
+| `data_architecture.json` | `ArchitectureQuestion[]` | **3,279** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
 | `data_de.json` | `Question[]` | **3,670** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer`, `domain` |
 | `questions.json` | `Question[]` | **3,414** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
 | `company_profiles.json` | `CompanyProfile[]` | **156** | `id`, `company`, `tier`, `category`, `location`, `techStack[]`, `hiringBar`, `interviewRounds[]`, `keyQuestions[]` |

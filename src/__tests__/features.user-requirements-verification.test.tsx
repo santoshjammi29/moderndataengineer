@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { AllPagesNav } from "@/components/layout/all-pages-nav";
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/guided-learning",
@@ -24,7 +25,9 @@ describe("User Requirements Verification", () => {
       expect(searchBtn).toBeDefined();
 
       expect(
-        screen.getByText(/Search (?:6,500\+|10,700\+|11,500\+) Q&As, concepts, (?:42 )?architecture blueprints/i)
+        screen.getByText(
+          new RegExp(`Search ${formatContentCount(CONTENT_COUNTS.searchDocuments)} learning items`, "i")
+        )
       ).toBeDefined();
 
       expect(screen.getByText("⌘K")).toBeDefined();

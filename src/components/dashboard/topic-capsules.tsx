@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
@@ -39,7 +41,7 @@ export function TopicCapsules() {
           Explore by Architecture Focus
         </span>
         <Link href="/qa-prep" className="text-purple-400 hover:underline font-medium">
-          View all 7,080+ Questions &rarr;
+          View all {formatContentCount(CONTENT_COUNTS.qa)} Questions &rarr;
         </Link>
       </div>
 

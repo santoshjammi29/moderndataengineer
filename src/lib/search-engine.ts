@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import searchCatalogJson from "@/data/json/search_catalog.json";
 import { GUIDED_TOPICS, GuidedTopic } from "@/data/guided-learning-topics";
 
@@ -293,7 +294,7 @@ export function detectNavigationalIntent(query: string): NavigationalJump | null
   }
   if (q.includes("architecture hub") || q === "scenarios" || q === "architecture scenarios") {
     return {
-      title: "Architecture Hub (3,200+ Scenarios)",
+      title: `Architecture Hub (${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios)`,
       description: "Real-world trade-offs, system design challenges, and architectural blueprint solutions.",
       href: "/architecture",
       page: "Architecture Hub",
@@ -303,7 +304,7 @@ export function detectNavigationalIntent(query: string): NavigationalJump | null
   }
   if (q.includes("qa prep") || q === "questions" || q === "interview questions" || q === "question bank") {
     return {
-      title: "Q&A Prep Hub (7,080+ Questions)",
+      title: `Q&A Prep Hub (${formatContentCount(CONTENT_COUNTS.qa)} Questions)`,
       description: "Comprehensive question bank with active recall, SM-2 spaced repetition, and rubrics.",
       href: "/qa-prep",
       page: "Q&A Prep",

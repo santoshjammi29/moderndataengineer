@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import { HeroCommandCenter } from "@/components/dashboard/hero-command-center";
 import { SequentialNavigation } from "@/components/dashboard/sequential-navigation";
 import { MasteryRoadmapFlow } from "@/components/guided-learning/mastery-roadmap-flow";
@@ -70,10 +72,10 @@ export function DashboardClient() {
       <section className="space-y-4 pt-2 border-t border-[var(--border)]">
         <div className="flex items-center justify-between text-xs text-[var(--muted-foreground)] px-1">
           <span className="font-bold uppercase tracking-wider text-[11px] text-[var(--foreground)]">
-            Verified Question Bank Metrics
+            Question Bank Metrics
           </span>
           <span className="text-[11px] text-[var(--muted-foreground)] hidden sm:inline">
-            7,080+ Verified Scenarios Across Core Technical Domains
+            {formatContentCount(CONTENT_COUNTS.qa)} Interview Questions Across Core Technical Domains
           </span>
         </div>
         <StatCards />

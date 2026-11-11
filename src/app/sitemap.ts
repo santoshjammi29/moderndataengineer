@@ -137,8 +137,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // 2. Guided Learning Subtracks
-  const topicRoutes: MetadataRoute.Sitemap = Object.keys(GUIDED_TOPICS).map((topicKey) => ({
-    url: `${BASE_URL}/guided-learning?topic=${topicKey}`,
+  const topicRoutes: MetadataRoute.Sitemap = GUIDED_TOPICS.map((topic) => ({
+    url: `${BASE_URL}/guided-learning?topic=${topic.key}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.8,

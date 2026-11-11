@@ -193,7 +193,7 @@ ${selectedOption.cons.map((c) => `- [Trade-off] ${c}`).join("\n")}
   };
 
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-3.5 sm:p-4 space-y-3.5 shadow-xs">
+    <div id="decision-ledger" className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-3.5 sm:p-4 space-y-3.5 shadow-xs">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--border)]">
         <div className="space-y-1">

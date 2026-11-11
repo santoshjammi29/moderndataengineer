@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { Suspense } from "react";
 import Link from "next/link";
 import { Layers, Sparkles, BookOpen, Compass, Code2 } from "lucide-react";
@@ -36,8 +38,8 @@ function AllPagesFooterInner() {
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] flex items-center gap-2">
               <BookOpen size={13} className="text-blue-500 shrink-0" />
               <div>
-                <span className="block font-bold text-[var(--foreground)]">11,500+</span>
-                <span className="text-[10px] text-[var(--muted-foreground)]">Verified Assets</span>
+                <span className="block font-bold text-[var(--foreground)]">{formatContentCount(CONTENT_COUNTS.searchDocuments)}</span>
+                <span className="text-[10px] text-[var(--muted-foreground)]">Searchable Items</span>
               </div>
             </div>
 
@@ -60,7 +62,7 @@ function AllPagesFooterInner() {
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] flex items-center gap-2">
               <Sparkles size={13} className="text-amber-500 shrink-0" />
               <div>
-                <span className="block font-bold text-[var(--foreground)]">679 Concepts</span>
+                <span className="block font-bold text-[var(--foreground)]">{formatContentCount(CONTENT_COUNTS.concepts)} Concepts</span>
                 <span className="text-[10px] text-[var(--muted-foreground)]">Architecture Map</span>
               </div>
             </div>

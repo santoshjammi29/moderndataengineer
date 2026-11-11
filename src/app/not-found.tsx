@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import Link from "next/link";
 import { ArrowLeft, Compass, Cpu, FileCode2, Layers, Search, Sparkles } from "lucide-react";
 
@@ -28,7 +29,7 @@ export default function NotFound() {
             <Layers className="w-4 h-4 text-blue-500 group-hover:scale-110 transition-transform" />
             <span className="font-semibold text-xs text-[var(--foreground)]">Architecture Hub</span>
           </div>
-          <p className="text-[11px] text-[var(--muted-foreground)]">3,206+ system design scenarios & diagrams</p>
+          <p className="text-[11px] text-[var(--muted-foreground)]">{formatContentCount(CONTENT_COUNTS.scenarios)} system design scenarios & diagrams</p>
         </Link>
 
         <Link
@@ -39,7 +40,7 @@ export default function NotFound() {
             <Sparkles className="w-4 h-4 text-emerald-500 group-hover:scale-110 transition-transform" />
             <span className="font-semibold text-xs text-[var(--foreground)]">Concepts & Glossary</span>
           </div>
-          <p className="text-[11px] text-[var(--muted-foreground)]">660+ core lakehouse technical terms</p>
+          <p className="text-[11px] text-[var(--muted-foreground)]">{formatContentCount(CONTENT_COUNTS.concepts)} core lakehouse technical terms</p>
         </Link>
 
         <Link
@@ -61,7 +62,7 @@ export default function NotFound() {
             <Cpu className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform" />
             <span className="font-semibold text-xs text-[var(--foreground)]">QA Prep Drills</span>
           </div>
-          <p className="text-[11px] text-[var(--muted-foreground)]">7,081+ verified interview drills</p>
+          <p className="text-[11px] text-[var(--muted-foreground)]">{formatContentCount(CONTENT_COUNTS.qa)} interview questions</p>
         </Link>
       </div>
 

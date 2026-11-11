@@ -62,6 +62,16 @@ export type SourceDatabase =
   | 'sparksql';
 
 // ==========================================
+// Evidence sources
+// ==========================================
+
+export interface EvidenceSource {
+  title: string;
+  url: string;
+  publisher?: string;
+}
+
+// ==========================================
 // 3. Question (questions.js & data_de.js)
 // ==========================================
 
@@ -77,6 +87,7 @@ export interface Question {
   subdomain?: string;
   mergedFrom?: string[];
   linked_concept_id?: string;
+  sources?: EvidenceSource[];
 }
 
 // ==========================================
@@ -91,6 +102,7 @@ export interface ArchitectureQuestion {
   difficulty: Difficulty;
   question: string;
   answer: string;
+  sources?: EvidenceSource[];
 }
 
 // ==========================================
@@ -106,6 +118,7 @@ export interface Concept {
   explanation: string;
   keyPoints: string[];
   relatedTerms?: string[];
+  sources?: EvidenceSource[];
 }
 
 // ==========================================
@@ -295,6 +308,7 @@ export interface UnifiedQuestion {
   topic?: string;
   rubricPoints?: string[];
   companyTargets?: string[];
+  sources?: EvidenceSource[];
 }
 
 // ==========================================

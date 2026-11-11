@@ -1,3 +1,5 @@
+import type { EvidenceSource } from '@/types/data';
+
 export interface GuidedTopic {
   key: string;
   label: string;
@@ -9,6 +11,7 @@ export interface GuidedTopic {
   gradient: string;      // tailwind gradient classes for the chip
   description: string;
   executiveSummary: string;
+  sources?: EvidenceSource[];
   diagramId?: string;    // matching architecture diagram ID in diagrams.ts
   relatedDiagramIds?: string[]; // additional related architecture diagram IDs
   conceptCategories: string[];    // exact match against data_concepts.json `category`
@@ -38,6 +41,7 @@ export const GUIDED_DOMAINS = [
   "Pipelines & Orchestration",
   "Data Modeling & SQL",
   "Governance & Streaming",
+  "Platform Engineering & AI",
 ] as const;
 
 export const GUIDED_TOPICS: GuidedTopic[] = [
@@ -375,6 +379,37 @@ export const GUIDED_TOPICS: GuidedTopic[] = [
       core: 'CAP Theorem trade-offs, Redis data structures (Sorted Sets, Hashes), Rate limiting (Token Bucket/Sliding Window), and Read Replicas.',
       advanced: 'Consistent hashing rings with virtual nodes, SAGA pattern with compensating transactions, Outbox pattern with CDC, and Circuit Breakers.',
       architect: 'Multi-region active-active distributed databases, Raft consensus split-brain mitigation, 10M DAU scaling blueprints, and zero-downtime expand-contract migrations.'
+    }
+  },
+  {
+    key: 'agentic-data-platform',
+    label: 'Governed Agentic Data Platforms',
+    icon: '🧭',
+    domain: 'Platform Engineering & AI',
+    tier: 'Tier 4: Enterprise Scale & Systems Design',
+    tierNum: 4,
+    difficulty: 'Architect',
+    gradient: 'from-fuchsia-500 to-indigo-600',
+    description: 'Agent guardrails, trusted data products, real-time context, cloud-native operations, and FinOps',
+    executiveSummary: 'Design data platforms where agents can discover governed context and propose work safely: scope identity and permissions, require approval for high-impact actions, measure data-product trust and freshness, and compare managed versus self-operated runtimes using reliability and unit economics.',
+    diagramId: 'rag-vector-search-data-pipeline',
+    relatedDiagramIds: ['data-mesh-enterprise-architecture', 'kafka-event-streaming-pipeline', 'databricks-medallion-pipeline'],
+    conceptCategories: ['SYSTEM DESIGN', 'GENERAL DE', 'DBT', 'DATALAKE ARCHITECTURE', 'DATABRICKS', 'MODERN LAKEHOUSE'],
+    questionCategories: ['DATAOPS & SDLC', 'DBT', 'SYSTEM DESIGN', 'KAFKA', 'DATALAKE ARCHITECTURE', 'MODERN LAKEHOUSE', 'FABRIC', 'DATABRICKS'],
+    archKeywords: ['REAL-TIME DATA STREAMING', 'KAFKA', 'LLM & RAG', 'MODERN STORAGE', 'DATAOPS & SDLC', 'ENTERPRISE DATA GOVERNANCE', 'CLOUD-NATIVE', 'FINOPS', 'MICROSOFT FABRIC'],
+    deKeywords: ['DATA ENGINEERING', 'GOVERNANCE', 'ETL & PIPELINES', 'BIG DATA'],
+    sources: [
+      { title: 'Thoughtworks Technology Radar Vol. 35: stronger controls for agentic AI', url: 'https://www.thoughtworks.com/en-gb/about-us/news/2026/thoughtworks-technology-radar-highlights-stronger-controls' },
+      { title: 'DORA 2025 State of AI-assisted Software Development', url: 'https://dora.dev/research/2025/dora-report/' },
+      { title: 'Martin Fowler: Data Product Platform Navigator', url: 'https://martinfowler.com/articles/data-product-platform-nav.html' },
+      { title: 'AWS Big Data Blog: Powering agentic AI with real-time streaming data', url: 'https://aws.amazon.com/blogs/big-data/powering-agentic-ai-with-real-time-streaming-data-on-aws/' },
+      { title: 'Uber Engineering: From batch to streaming in Uber’s data lake', url: 'https://www.uber.com/us/en/blog/from-batch-to-streaming-accelerating-data-freshness-in-ubers-data-lake/' },
+    ],
+    stages: {
+      foundations: 'Map producer, platform, consumer, agent, and operator identities. Define data-product ownership, contract boundaries, lineage, freshness objectives, and the difference between read-only access and production changes.',
+      core: 'Build a searchable semantic context layer with access-aware retrieval. Connect CDC and event streams to governed tables, use replayable ingestion, and record source, event time, and freshness evidence.',
+      advanced: 'Add isolated tool execution, least-privilege delegation, policy checks, human approval for high-impact actions, audit trails, quality evidence, and recovery paths for checkpoint or commit failures.',
+      architect: 'Set SLOs for delivery, trust, freshness, and recovery; compare managed services with Kubernetes or self-operated components; measure total workload cost and egress; expand agent autonomy only when reliability and review evidence support it.'
     }
   },
 ];

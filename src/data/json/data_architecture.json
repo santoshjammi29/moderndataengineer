@@ -29522,453 +29522,624 @@
     "answer": "### Phase 1: Conceptual Foundation & Core Architecture\nIn tightly coupled medallion architectures, an upstream data corruption (e.g., source ERP pushes malformed billing records) cascades through Bronze, pollutes Silver, and overwrites Gold dimensional tables, blinding executive Power BI dashboards and breaking operational downstream APIs.\n\n1. **The Circuit Breaker Pattern**:\n   - Borrowed from electrical engineering and distributed microservices (Michael Nygard).\n   - A **Circuit Breaker** monitors the health of data flowing between pipeline stages.\n   - **3 Circuit States**:\n     - **CLOSED (Normal Operation)**: Data flows freely from Bronze -> Silver -> Gold. Success metrics reset failure counters.\n     - **OPEN (Tripped / Broken)**: If upstream error rates or schema corruption exceed a threshold (e.g., > 5% row validation errors or null primary keys), the circuit **trips OPEN**:\n       - Immediate halt: Downstream Silver and Gold refresh jobs are aborted immediately.\n       - Upstream data lands safely in Bronze raw storage, but does NOT propagate.\n       - Incident alerts fire with high severity.\n       - **Graceful Degradation**: Downstream Power BI semantic models and user-facing dashboards continue serving the previous day's intact Gold snapshot rather than displaying corrupted or half-loaded data!\n     - **HALF-OPEN (Recovery Mode)**: When the next batch arrives or a fix is deployed, the circuit evaluates a small canary batch. If valid, the circuit resets to CLOSED.\n\n### Phase 2: Implementation & Production Code Artifacts\nBelow is the Circuit Breaker implementation governing Silver-to-Gold promotion:\n\n```python\n# circuit_breaker.py: Lakehouse Resilience Gatekeeper\nclass LakehouseCircuitBreaker:\n    def __init__(self, failure_threshold_pct: float = 5.0):\n        self.failure_threshold_pct = failure_threshold_pct\n\n    def evaluate_and_gate(self, df, primary_key: str, source_stage: str) -> bool:\n        '''Evaluates batch health. Trips circuit if anomaly thresholds are breached.'''\n        total_rows = df.count()\n        if total_rows == 0:\n            print(f\"⚠️ Circuit Warning: Empty batch received from {source_stage}.\")\n            return True\n            \n        # Check 1: Null Primary Keys\n        null_keys = df.filter(F.col(primary_key).isNull()).count()\n        null_pct = (null_keys / total_rows) * 100\n        \n        # Check 2: Volume Anomaly (Batch size < 10% of historical average)\n        if null_pct > self.failure_threshold_pct:\n            # TRIP THE CIRCUIT\n            error_msg = (\n                f\"🚨 CIRCUIT BREAKER TRIPPED! Stage: {source_stage}. \"\n                f\"Null {primary_key} rate is {null_pct:.2f}% (Threshold: {self.failure_threshold_pct}%). \"\n                f\"Halting downstream promotion to protect Gold analytics.\"\n            )\n            self._trip_circuit(error_msg)\n            raise RuntimeError(error_msg)\n            \n        print(f\"✅ Circuit CLOSED. Batch health verified: {total_rows} rows, {null_pct:.2f}% nulls.\")\n        return True\n\n    def _trip_circuit(self, message: str):\n        # Update shared control plane flag (e.g., Azure SQL, Cosmos, or Unity Catalog control table)\n        spark.sql(f'''\n            MERGE INTO control.circuit_state AS target\n            USING (SELECT 'SILVER_TO_GOLD' AS circuit_name, 'OPEN' AS state, CURRENT_TIMESTAMP() AS tripped_at) AS src\n            ON target.circuit_name = src.circuit_name\n            WHEN MATCHED THEN UPDATE SET target.state = src.state, target.tripped_at = src.tripped_at\n            WHEN NOT MATCHED THEN INSERT (circuit_name, state, tripped_at) VALUES (src.circuit_name, src.state, src.tripped_at)\n        ''')\n        # Trigger PagerDuty / Teams notification\n        print(f\"ALERT SENT: {message}\")\n\n# Usage in Orchestration Pipeline\nbreaker = LakehouseCircuitBreaker(failure_threshold_pct=2.0)\nsilver_df = spark.table(\"lakehouse_prod.silver.fact_orders_staged\")\n\n# If this throws, execution halts before Gold table is touched!\nbreaker.evaluate_and_gate(silver_df, primary_key=\"order_id\", source_stage=\"Silver Staging\")\n\n# Safe promotion to Gold\nsilver_df.write.format(\"delta\").mode(\"append\").saveAsTable(\"lakehouse_prod.gold.fact_orders\")\n```\n\n### Phase 3: Production Pitfalls, Anti-Patterns & Failure Modes\n- **The Deadlock Circuit Trap**: A circuit breaker trips OPEN on a legitimate business anomaly (e.g., Black Friday 10x volume surge flagging as a false-positive volume anomaly). If there is no manual override mechanism, the pipeline stays halted forever. Always build an administrative bypass flag (`--ignore-circuit-breaker`) for on-call data architects.\n- **Tripping After Overwriting Gold**: Evaluating the circuit breaker *after* invoking `df.write.mode(\"overwrite\").saveAsTable(\"gold.table\")`. By the time the check runs, the Gold layer has already been wiped! The circuit breaker must be an **immutable gatekeeper before the write action**.\n\n### Phase 4: High-Pressure Interview Talking Points\n- *What is the role of a Circuit Breaker in a Medallion Lakehouse?* To prevent data corruption from cascading across layers by aborting downstream writes when data anomalies exceed safety thresholds, allowing consumers to serve the last-known-good Gold snapshot.\n- *What are the three states of a Circuit Breaker?* CLOSED (normal operation), OPEN (tripped/halted), and HALF-OPEN (testing canary recovery)."
   },
   {
-    "id": "arch-techblog-netflix-000",
-    "source": "Netflix System Design",
-    "category": "DATALAKE ARCHITECTURE",
-    "niche": "Petabyte-Scale Apache Iceberg Lakehouse",
-    "difficulty": "ARCHITECT",
-    "question": "How did Netflix scale Apache Iceberg to manage petabytes of data across Amazon S3 while preventing metadata explosion and S3 LIST API throttling?",
-    "answer": "Netflix addressed metadata explosion in petabyte-scale Iceberg tables by decoupling catalog commits from client-side file listings. 1) Hierarchical Manifest Lists: Iceberg structures metadata into hierarchical manifest trees with partition bounds (min/max), allowing compute engines to prune entire manifest files without reading Parquet footers. 2) Automated Orphan File Compaction: A scheduled Spark maintenance service periodically compacts manifest lists and invokes `expireSnapshots` to purge unreferenced data files older than 3 days. 3) Object Storage Partition Hashing: Rather than using sequential Hive-style date prefixes that bottleneck on S3 prefix partition limits (3,500 PUT / 5,500 GET requests/sec), Netflix uses hash-prefixed object keys (`s3://bucket/a1b2/table/data/...`), spreading I/O uniformly across thousands of AWS S3 storage partitions."
-  },
-  {
-    "id": "arch-techblog-uber-001",
-    "source": "Uber System Design",
-    "category": "SPARK & DATABRICKS",
-    "niche": "Surge Pricing Real-Time OLAP with Apache Pinot & Flink",
-    "difficulty": "ARCHITECT",
-    "question": "How does Uber achieve sub-second analytical dashboard latency over millions of incoming driver-rider location events using Apache Flink and Apache Pinot?",
-    "answer": "Uber's real-time surge pricing engine combines Apache Kafka, Apache Flink, and Apache Pinot. 1) Stateful Stream Processing: Flink consumes raw GPS and ride request streams from Kafka, maintaining RocksDB state backends to calculate rolling 10-minute demand-supply ratios using sliding event-time windows and watermarks. 2) Real-Time Ingestion: Flink sinks enriched aggregated metrics into Apache Pinot real-time tables. 3) Star-Tree Indexing: Pinot automatically computes Star-Tree multi-dimensional pre-aggregations on (city_id, hex_id, timestamp_bucket), allowing executive and dispatch dashboards to execute complex spatial-temporal queries in under 50 milliseconds across billions of daily GPS pings without table scans."
-  },
-  {
-    "id": "arch-techblog-stripe-002",
-    "source": "Stripe System Design",
-    "category": "SYSTEM DESIGN",
-    "niche": "Zero-Downtime Multi-Region Financial Ledger Migration",
-    "difficulty": "ARCHITECT",
-    "question": "How does Stripe execute zero-downtime database and lakehouse migrations for mission-critical financial ledgers without data loss or inconsistency?",
-    "answer": "Stripe implements a 4-phase Dual-Run Shadow Writing protocol: 1) Phase 1 (Dual-Write): Application services write transactions to both legacy database (primary) and target lakehouse (shadow), ignoring shadow failures. 2) Phase 2 (Continuous Reconciliation): A background reconciliation pipeline (using Apache Spark) continuously compares primary and shadow tables, verifying byte-for-byte balance accuracy and alerting on discrepancies. 3) Phase 3 (Shadow Read Validation): Read queries are sent to both systems; results are asserted for identical outputs with latency logging. 4) Phase 4 (Cutover): Traffic is switched to the new system as primary with the legacy database acting as secondary fallback before decommissioning."
-  },
-  {
-    "id": "arch-techblog-databricks-003",
-    "source": "Databricks System Design",
-    "category": "MODERN LAKEHOUSE",
-    "niche": "Delta Lake UniForm Zero-Copy Cross-Engine Federation",
-    "difficulty": "ARCHITECT",
-    "question": "How does Delta Lake Universal Format (UniForm) allow Snowflake and BigQuery to query Delta tables natively without data duplication?",
-    "answer": "Delta Lake UniForm decouples physical Parquet data files from the catalog metadata layer. When a Delta commit succeeds in `_delta_log/`, a background asynchronous translation service inspects the newly committed JSON actions and synthesizes equivalent Apache Iceberg metadata JSON snapshots and manifest lists pointing to the EXACT same physical Parquet files. External engines such as Snowflake or Google BigQuery point their Iceberg REST catalogs to the UniForm Iceberg metadata, reading the underlying Parquet files with zero data replication, zero egress costs within the same cloud region, and zero lag."
-  },
-  {
-    "id": "arch-techblog-meta-004",
-    "source": "Meta System Design",
-    "category": "SPARK & DATABRICKS",
-    "niche": "Velox Native Vectorized Execution Acceleration",
-    "difficulty": "ARCHITECT",
-    "question": "What is the architectural purpose of Meta's Velox C++ library and how does it unify compute engines across Spark, Presto, and PyTorch?",
-    "answer": "Meta developed Velox as a modular, open-source C++ database acceleration library to eliminate duplicate query engine development across Presto, Spark (via Gluten), and AI feature stores. Velox operates exclusively on Apache Arrow columnar format in-memory, leveraging SIMD hardware instructions, vectorized expression evaluation, memory arenas, and adaptive compilation. By embedding Velox into Spark via Project Gluten, data pipelines achieve 2x–4x CPU efficiency gains without altering PySpark DataFrame application code."
-  },
-  {
-    "id": "arch-techblog-confluent-005",
-    "source": "Confluent System Design",
-    "category": "GENERAL DE",
-    "niche": "Kafka KRaft Consensus Metadata Architecture",
-    "difficulty": "HARD",
-    "question": "How does Apache Kafka's KRaft consensus protocol improve cluster recovery time and scale partition counts compared to ZooKeeper?",
-    "answer": "In legacy ZooKeeper-based Kafka clusters, cluster metadata was stored externally in ZooKeeper, requiring the Kafka controller broker to asynchronously synchronize state over network RPCs. Under broker failover, the new controller had to reload metadata for hundreds of thousands of partitions from ZooKeeper, taking several minutes during which the cluster was frozen. In KRaft, metadata is managed as an internal replicated log topic using an event-driven Raft quorum directly on active controller brokers. Failover occurs in single-digit milliseconds, and partition limits increase from ~200,000 to millions of partitions per cluster."
-  },
-  {
-    "id": "arch-techblog-amazon aws-006",
-    "source": "Amazon AWS System Design",
-    "category": "DATALAKE ARCHITECTURE",
-    "niche": "S3 Express One Zone Single-Digit Millisecond Query Acceleration",
-    "difficulty": "HARD",
-    "question": "How does Amazon S3 Express One Zone alter lakehouse query latency and what are its trade-offs compared to S3 Standard?",
-    "answer": "Amazon S3 Express One Zone is a high-performance, single-Availability Zone storage class engineered for latency-critical analytical compute (such as Spark shuffle, Trino queries, and small-file ingestion). It delivers 10x lower access latency (<5ms) and supports hundreds of thousands of requests per second with 50% lower request costs than S3 Standard. However, because data resides in a single AZ rather than being redundantly stored across three AZs, it is recommended for ephemeral scratch spaces, shuffle partitions, and intermediate bronze landing zones rather than long-term durable compliance archives."
-  },
-  {
-    "id": "arch-techblog-microsoft fabric-007",
-    "source": "Microsoft Fabric System Design",
-    "category": "FABRIC",
-    "niche": "Direct Lake Mode VertiPaq Memory Guardrails & Fallback",
-    "difficulty": "ARCHITECT",
-    "question": "What happens when a Power BI Direct Lake visual query exceeds the memory capacity of the provisioned Fabric capacity SKU?",
-    "answer": "Microsoft Fabric Direct Lake mode pages Delta Parquet columns directly from OneLake storage into VertiPaq memory on-demand. Each Fabric capacity SKU (e.g., F64 = 25GB memory limit per model) enforces strict memory guardrails. If an analytical DAX query attempts to page columns that exceed the memory limit, or if the model contains unsupported relationships, the engine executes a non-blocking graceful fallback to DirectQuery mode via the Fabric SQL Analytics Endpoint. To prevent fallback, architects must use column pruning, star-schema modeling, and pre-aggregated summaries."
-  },
-  {
-    "id": "arch-techblog-bytebytego-008",
-    "source": "ByteByteGo System Design",
-    "category": "SYSTEM DESIGN",
-    "niche": "Distributed Locking with Redis Redlock vs. Database Advisory Locks",
-    "difficulty": "HARD",
-    "question": "When coordinating exclusive execution across distributed data pipeline workers, how do you evaluate Redis Redlock against PostgreSQL Advisory Locks?",
-    "answer": "PostgreSQL Advisory Locks leverage the relational database's existing ACID engine, providing simple, transactional, session- or transaction-scoped mutual exclusion without external infrastructure; however, they do not scale across multi-region architectures and create database connection holding overhead. Redis Redlock coordinates locks across 5 independent Redis master instances, requiring a majority vote ($N/2 + 1$) within a calculated drift window, making it ideal for high-throughput, multi-cloud microservices and decoupled pipeline schedulers that cannot place lock contention on operational transactional databases."
-  },
-  {
-    "id": "arch-techblog-bytebytego-009",
-    "source": "ByteByteGo System Design",
-    "category": "SYSTEM DESIGN",
-    "niche": "Saga Pattern Choreography vs. Orchestration for CDC Pipelines",
-    "difficulty": "ARCHITECT",
-    "question": "How do you choose between Saga Choreography and Saga Orchestration when designing distributed multi-stage data ingestion pipelines?",
-    "answer": "In Saga Choreography, microservices listen to Kafka domain events and independently execute their local transactions without a central controller; it works well for simple 2-3 step workflows but becomes untraceable ('spaghetti architecture') when workflows span 10+ services. Saga Orchestration uses a centralized orchestrator (such as Apache Airflow, Temporal, or AWS Step Functions) that explicitly directs each participant, receives execution callbacks, and executes compensating actions if any stage fails. For enterprise data lakehouse pipelines with strict SLAs and auditability, Orchestration is strongly favored."
-  },
-  {
-    "id": "arch-techblog-adv-001",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #01",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #01).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-002",
-    "source": "Architecture Hub",
-    "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #02",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #02).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-003",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #03",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #03).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-004",
-    "source": "Architecture Hub",
+    "id": "research-arch-factory-telemetry-freshness",
+    "source": "Research-informed design exercise",
     "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #04",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #04).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "niche": "Factory telemetry freshness and batch-versus-stream",
+    "difficulty": "EASY",
+    "question": "A factory operations team receives sensor files every hour and needs a trusted equipment-health view within fifteen minutes. Design the first release and explain whether it needs continuous streaming.",
+    "constraints": [
+      "Hourly source cadence",
+      "Late event arrival",
+      "Read-only dashboard"
+    ],
+    "answer": "### Proposed design\nStart with incremental file ingestion on a short schedule and define event time, source file identity, and a fifteen-minute freshness objective. Land immutable source records in Bronze, deduplicate and validate them in Silver, then publish equipment-level aggregates to the dashboard. Keep the hourly history available for backfill and comparison.\n\n### Operations and trade-offs\nMeasure end-to-end freshness, late-file rate, rejected records, and dashboard query latency. If measured demand requires lower than the scheduled pipeline can reliably provide, add a stream for new events while keeping batch replay as the recovery path. Streaming now would add state, checkpoint, and on-call complexity without evidence that the business needs it.\n\n**Sources:** [Uber Engineering: From batch to streaming in Uber's data lake](https://www.uber.com/us/en/blog/from-batch-to-streaming-accelerating-data-freshness-in-ubers-data-lake/)",
+    "tradeoffs": [
+      "A short-interval batch design is simpler; a stream can reduce lag but adds state and recovery work."
+    ],
+    "sources": [
+      {
+        "title": "Uber Engineering: From batch to streaming in Uber's data lake",
+        "url": "https://www.uber.com/us/en/blog/from-batch-to-streaming-accelerating-data-freshness-in-ubers-data-lake/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-005",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #05",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #05).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-006",
-    "source": "Architecture Hub",
-    "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #06",
+    "id": "research-arch-retail-order-cdc",
+    "source": "Research-informed design exercise",
+    "category": "Apache Kafka & Real-Time CDC Architecture",
+    "niche": "Retail order CDC with duplicate and late events",
     "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #06).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Design a lakehouse pipeline for retail orders, refunds, and inventory changes arriving through CDC and application events. Duplicate delivery is expected, and the operations dashboard has a ten-minute freshness target.",
+    "constraints": [
+      "The order database is the financial source of truth.",
+      "Events may be redelivered or arrive out of order.",
+      "A daily finance report must reconcile to the source database."
+    ],
+    "answer": "### Proposed design\nCapture database changes and application events with stable source keys and transaction metadata. Write raw, append-only records to Bronze, then build idempotent Silver state with explicit delete and correction handling. Use event time with a bounded lateness policy for streaming aggregates; retain the change log and batch reconciliation for finance.\n\n### Reliability and trade-offs\nExpose source offset, table commit version, and freshness watermark. Reconcile daily totals and refund states against the operational ledger. A streaming path serves the ten-minute view, while a batch correction path handles late events and backfills. The extra path increases operational surface, so keep one canonical transformation contract and monitor disagreement between views.\n\n**Sources:** [Uber Engineering: From batch to streaming in Uber's data lake](https://www.uber.com/us/en/blog/from-batch-to-streaming-accelerating-data-freshness-in-ubers-data-lake/) · [AWS Big Data Blog: Powering agentic AI with real-time streaming data](https://aws.amazon.com/blogs/big-data/powering-agentic-ai-with-real-time-streaming-data-on-aws/)",
+    "tradeoffs": [
+      "Streaming improves dashboard freshness; daily reconciliation and replay add operational work."
+    ],
+    "sources": [
+      {
+        "title": "Uber Engineering: From batch to streaming in Uber's data lake",
+        "url": "https://www.uber.com/us/en/blog/from-batch-to-streaming-accelerating-data-freshness-in-ubers-data-lake/"
+      },
+      {
+        "title": "AWS Big Data Blog: Powering agentic AI with real-time streaming data",
+        "url": "https://aws.amazon.com/blogs/big-data/powering-agentic-ai-with-real-time-streaming-data-on-aws/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-007",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #07",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #07).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "id": "research-arch-governed-analytics-agent",
+    "source": "Research-informed design exercise",
+    "category": "LLM & RAG Infrastructure Pipelines",
+    "niche": "Governed analytics agent for finance and HR",
+    "difficulty": "ARCHITECT",
+    "question": "Design an internal analytics agent that answers questions over finance and HR data, can run read-only queries, and may create a draft report. It must preserve department-level access and never send data to unapproved destinations.",
+    "constraints": [
+      "Finance and HR have different row and column policies.",
+      "The agent can call a SQL tool and a report-drafting tool.",
+      "Production data access must be auditable."
+    ],
+    "answer": "### Trust boundary\nResolve the user's identity before planning and pass a scoped identity to the query service. Enforce row and column rules in the catalog or query engine, filter retrieval by the same authorized scope, and do not rely on prompt instructions as the access boundary. Use an isolated tool runner with a strict destination allowlist and short-lived credentials.\n\n### Action policy\nKeep SQL read-only and apply row limits, timeout, and cost budget. Treat report creation as a draft; require the user to review it before sharing. Log prompt context references, policy decisions, query identifiers, output destination, and cost. Include adversarial tests for prompt injection, cross-department leakage, and attempts to export protected data.\n\n**Sources:** [Thoughtworks Technology Radar Vol. 35](https://www.thoughtworks.com/en-gb/about-us/news/2026/thoughtworks-technology-radar-highlights-stronger-controls) · [Google Cloud Blog: Borderless lakehouse integrations for Gemini](https://cloud.google.com/blog/products/data-analytics/borderless-lakehouse-integrates-with-gemini/?hl=en)",
+    "tradeoffs": [
+      "Strict controls reduce automation breadth but keep data policy enforceable and auditable."
+    ],
+    "sources": [
+      {
+        "title": "Thoughtworks Technology Radar Vol. 35",
+        "url": "https://www.thoughtworks.com/en-gb/about-us/news/2026/thoughtworks-technology-radar-highlights-stronger-controls"
+      },
+      {
+        "title": "Google Cloud Blog: Borderless lakehouse integrations for Gemini",
+        "url": "https://cloud.google.com/blog/products/data-analytics/borderless-lakehouse-integrates-with-gemini/?hl=en"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-008",
-    "source": "Architecture Hub",
+    "id": "research-arch-multicloud-open-lakehouse",
+    "source": "Research-informed design exercise",
+    "category": "Modern Storage & Lakehouse Table Formats",
+    "niche": "Multi-cloud lakehouse interoperability",
+    "difficulty": "ARCHITECT",
+    "question": "A company has data in two clouds and wants analytics engines in both regions to discover and query selected shared tables without copying every dataset. Design the interoperability and governance boundaries.",
+    "constraints": [
+      "Data residency rules differ by region.",
+      "Some workloads are read-heavy while others write.",
+      "Table and catalog capabilities vary by engine."
+    ],
+    "answer": "### Architecture\nInventory each workload's data location, read/write needs, residency, and egress profile. Select a table format and catalog interface only after testing required operations across the chosen engines. Keep authoritative writes within a defined ownership boundary and make read sharing explicit. Federate metadata such as owner, classification, lineage, and semantic definition while enforcing access at the system that owns each dataset.\n\n### Validation\nTest schema changes, deletes, concurrent writes, snapshot visibility, credential propagation, cache invalidation, and recovery. Measure remote bytes and query latency on representative workloads. Use local replicas or caches only where they meet freshness and residency rules. Treat vendor integration claims as hypotheses until verified against this matrix.\n\n**Sources:** [Google Cloud Blog: Borderless lakehouse integrations for Gemini](https://cloud.google.com/blog/products/data-analytics/borderless-lakehouse-integrates-with-gemini/?hl=en) · [AWS Big Data Blog: Multi-cloud lakehouse architecture for agentic AI](https://aws.amazon.com/blogs/big-data/multi-cloud-lakehouse-architecture-on-aws-for-agentic-ai-part-1-architecture-and-best-practices/)",
+    "tradeoffs": [
+      "Federated access can reduce copy and migration work but adds catalog, identity, network, and egress complexity."
+    ],
+    "sources": [
+      {
+        "title": "Google Cloud Blog: Borderless lakehouse integrations for Gemini",
+        "url": "https://cloud.google.com/blog/products/data-analytics/borderless-lakehouse-integrates-with-gemini/?hl=en"
+      },
+      {
+        "title": "AWS Big Data Blog: Multi-cloud lakehouse architecture for agentic AI",
+        "url": "https://aws.amazon.com/blogs/big-data/multi-cloud-lakehouse-architecture-on-aws-for-agentic-ai-part-1-architecture-and-best-practices/"
+      }
+    ]
+  },
+  {
+    "id": "research-arch-batch-to-stream-migration",
+    "source": "Research-informed design exercise",
     "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #08",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #08).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "niche": "Batch-to-stream migration with safe recovery",
+    "difficulty": "HARD",
+    "question": "A logistics company needs to reduce delivery-status freshness from several hours to fifteen minutes across thousands of datasets. Design a phased migration that preserves correctness and avoids a streaming operations outage.",
+    "constraints": [
+      "Historical batch jobs remain the recovery source.",
+      "The source system emits CDC and application events.",
+      "Small-file growth and checkpoint recovery are known risks."
+    ],
+    "answer": "### Migration\nStart with a product-by-product freshness and cost inventory. Select a pilot with stable keys and a measurable consumer benefit. Ingest CDC into an append-only log, process with event-time handling, and write idempotently into the target table. Run batch and stream in parallel, then compare counts, keys, late-event corrections, and business aggregates before shifting consumers.\n\n### Day-two controls\nTrack source lag, checkpoint health, sink commit versions, file-size distribution, and recovery time. Define replay boundaries and a runbook for offset-to-commit reconciliation. Roll out in waves and retain batch backfill until each product meets its freshness and correctness objectives. Uber's case study is a useful reference for freshness and checkpoint/commit coordination, but the migration plan must be measured on the company's own workloads.\n\n**Sources:** [Uber Engineering: From batch to streaming in Uber's data lake](https://www.uber.com/us/en/blog/from-batch-to-streaming-accelerating-data-freshness-in-ubers-data-lake/)",
+    "tradeoffs": [
+      "Streaming lowers freshness delay but increases state, alerting, and recovery obligations; batch remains useful for backfill and reconciliation."
+    ],
+    "sources": [
+      {
+        "title": "Uber Engineering: From batch to streaming in Uber's data lake",
+        "url": "https://www.uber.com/us/en/blog/from-batch-to-streaming-accelerating-data-freshness-in-ubers-data-lake/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-009",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #09",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #09).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "id": "research-arch-ai-assisted-engineering-rollout",
+    "source": "Research-informed design exercise",
+    "category": "DataOps & SDLC",
+    "niche": "AI-assisted data engineering rollout",
+    "difficulty": "HARD",
+    "question": "A platform organization wants to enable AI-generated SQL and pipeline code for several teams. Design a rollout that measures value without increasing production instability.",
+    "constraints": [
+      "Teams have different test coverage and platform maturity.",
+      "Generated changes can affect shared production tables.",
+      "Leadership expects a measurable delivery outcome."
+    ],
+    "answer": "### Rollout\nEstablish a baseline by team and change class. Start with low-risk tasks such as documentation, test scaffolding, and bounded code suggestions. Require human review, small pull requests, schema checks, data tests, and deployment safeguards for production changes. Keep a clear owner for each generated change.\n\n### Measurement\nCompare lead time and review effort with change failure rate, recovery time, rework, and escaped data defects. Segment results by use case and engineering maturity, and pause expansion when stability worsens. DORA's research frames AI as an amplifier of existing systems, so strengthen platform and testing fundamentals alongside tool adoption.\n\n**Sources:** [DORA Research: 2025 State of AI-assisted Software Development](https://dora.dev/research/2025/dora-report/)",
+    "tradeoffs": [
+      "Automation can reduce drafting time, but governance and verification remain part of delivery cost."
+    ],
+    "sources": [
+      {
+        "title": "DORA Research: 2025 State of AI-assisted Software Development",
+        "url": "https://dora.dev/research/2025/dora-report/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-010",
-    "source": "Architecture Hub",
+    "id": "research-arch-health-data-products",
+    "source": "Research-informed design exercise",
     "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #10",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #10).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-011",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #11",
+    "niche": "Privacy-aware healthcare data products",
     "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #11).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "A healthcare organization wants research teams to discover governed patient data products while keeping sensitive fields restricted and data quality visible. Design ownership, access, and lifecycle.",
+    "constraints": [
+      "Research, clinical operations, and finance have different purposes.",
+      "Sensitive fields require masking and audited access.",
+      "Products are owned by multiple clinical domains."
+    ],
+    "answer": "### Product and policy model\nAssign domain owners and publish product contracts that declare grain, permitted purpose, schema, freshness, quality evidence, and retirement policy. Keep identity, consent, tenant, and purpose checks at the governed query layer. Minimize or tokenize direct identifiers before broad analytical use, and maintain lineage from source through transformation to each released product.\n\n### Operating model\nProvide self-service discovery and access requests with policy approval, not unrestricted dataset downloads. Monitor quality, freshness, policy denials, and consumer adoption. Review retention and purpose when a product changes or expires. Use the platform to standardize evidence and deployment while leaving domain teams accountable for semantics.\n\n**Sources:** [Martin Fowler: Data Product Platform Navigator](https://martinfowler.com/articles/data-product-platform-nav.html) · [dbt Labs: 2026 State of Analytics Engineering report](https://www.getdbt.com/blog/new-dbt-labs-report-finds-ai-driven-acceleration-is-outpacing-trust-and-governance)",
+    "tradeoffs": [
+      "Central governance improves control but must keep approval and discovery workable for legitimate research."
+    ],
+    "sources": [
+      {
+        "title": "Martin Fowler: Data Product Platform Navigator",
+        "url": "https://martinfowler.com/articles/data-product-platform-nav.html"
+      },
+      {
+        "title": "dbt Labs: 2026 State of Analytics Engineering report",
+        "url": "https://www.getdbt.com/blog/new-dbt-labs-report-finds-ai-driven-acceleration-is-outpacing-trust-and-governance"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-012",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #12",
+    "id": "research-arch-kubernetes-managed-runtime-decision",
+    "source": "Research-informed design exercise",
+    "category": "Cloud-Native Data Platform",
+    "niche": "Kubernetes versus managed runtime for analytics",
     "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #12).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "An engineering group operates Kubernetes for application workloads and is considering moving Spark, Airflow, and streaming pipelines onto the same clusters. Define a decision framework and pilot.",
+    "constraints": [
+      "The Kubernetes platform has an on-call team but limited stateful-data experience.",
+      "Managed analytics services are available.",
+      "Workloads have different burst and recovery requirements."
+    ],
+    "answer": "### Decision framework\nMap each workload's state, runtime, isolation, autoscaling, storage, network, upgrade, and recovery requirements. Compare the total operating cost and on-call responsibility for Kubernetes with managed services. Shared cluster availability does not guarantee compatible scheduling, storage, or incident ownership.\n\n### Pilot\nSelect one representative workload and test deployment, autoscaling, node loss, storage recovery, secret rotation, version upgrade, and cost attribution. Use Kubernetes when its portability or control produces a demonstrated benefit and the team can support its failure modes. Keep managed services for workloads where the managed control plane better meets the team's reliability target.\n\n**Sources:** [CNCF Annual Cloud Native Survey](https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/)",
+    "tradeoffs": [
+      "Kubernetes may improve control and portability but shifts more lifecycle and reliability work to the platform team."
+    ],
+    "sources": [
+      {
+        "title": "CNCF Annual Cloud Native Survey",
+        "url": "https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-013",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #13",
+    "id": "research-arch-fabric-vendor-file-ingestion",
+    "source": "Research-informed design exercise",
+    "category": "Microsoft Fabric Architecture",
+    "niche": "Vendor workbook ingestion with source history",
+    "difficulty": "EASY",
+    "question": "A procurement team drops revised workbooks into a shared folder each day. Design a Fabric medallion pipeline that can trace each row back to its file and safely process corrections.",
+    "constraints": [
+      "Files may be resent or revised.",
+      "Temporary workbook files must be ignored.",
+      "Analysts need both current supplier state and historical changes."
+    ],
+    "answer": "### Pipeline\nFilter the controlled folder to supported workbook files, ignore temporary files, and attach file path, modified timestamp, and ingestion run ID. Use a staging table for the current extraction. In Bronze, preserve accepted observations with source metadata and a stable record hash. In Silver, deduplicate and apply the supplier's correction semantics; publish current state and history separately if consumers need both.\n\n### Safety\nValidate schema and required business keys before promoting records. Quarantine malformed files with reason and checksum. Make reruns idempotent and alert when file counts or row totals change unexpectedly. The cited Microsoft walkthrough demonstrates a similar file-to-Fabric staging handoff; adapt the history policy to the supplier contract.\n\n**Sources:** [Microsoft Community Hub: Building a medallion architecture with Fabric](https://techcommunity.microsoft.com/blog/AnalyticsonAzure/from-files-to-insights-building-a-medallion-architecture-with-microsoft-fabric/4571519)",
+    "tradeoffs": [
+      "A staging layer simplifies repeat reads; durable Bronze history requires explicit replay and correction rules."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Community Hub: Building a medallion architecture with Fabric",
+        "url": "https://techcommunity.microsoft.com/blog/AnalyticsonAzure/from-files-to-insights-building-a-medallion-architecture-with-microsoft-fabric/4571519"
+      }
+    ]
+  },
+  {
+    "id": "research-arch-ai-platform-finops",
+    "source": "Research-informed design exercise",
+    "category": "Storage & Compute Tiering Strategies",
+    "niche": "FinOps controls for agentic data workloads",
     "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #13).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "An internal AI assistant performs vector retrieval, warehouse queries, and occasional streaming feature lookups. Usage grows quickly and compute cost exceeds the team's budget. Design cost controls that preserve answer quality.",
+    "constraints": [
+      "Different teams share the platform.",
+      "Some questions are cacheable while others need current data.",
+      "The assistant must report when it cannot answer within policy or budget."
+    ],
+    "answer": "### Cost model\nAttribute inference, retrieval, query scans, streaming context, storage, retries, and human review to a workflow and team. Track cost per successful task with answer quality, freshness, and latency; token totals alone omit data-platform costs. Set separate budgets for query scans, retries, and inference, with alerts before hard limits.\n\n### Controls\nUse governed result caching only when identity, freshness, and policy remain valid. Apply query limits and route routine questions to precomputed aggregates where appropriate. When a budget is reached, return a clear refusal or lower-cost approved path rather than silently using stale or unauthorized data. Review unit economics as usage and data freshness change.\n\n**Sources:** [dbt Labs: 2026 State of Analytics Engineering report](https://www.getdbt.com/blog/new-dbt-labs-report-finds-ai-driven-acceleration-is-outpacing-trust-and-governance) · [AWS Big Data Blog: Powering agentic AI with real-time streaming data](https://aws.amazon.com/blogs/big-data/powering-agentic-ai-with-real-time-streaming-data-on-aws/)",
+    "tradeoffs": [
+      "Caching and precomputation lower repeated cost but can increase freshness and invalidation complexity."
+    ],
+    "sources": [
+      {
+        "title": "dbt Labs: 2026 State of Analytics Engineering report",
+        "url": "https://www.getdbt.com/blog/new-dbt-labs-report-finds-ai-driven-acceleration-is-outpacing-trust-and-governance"
+      },
+      {
+        "title": "AWS Big Data Blog: Powering agentic AI with real-time streaming data",
+        "url": "https://aws.amazon.com/blogs/big-data/powering-agentic-ai-with-real-time-streaming-data-on-aws/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-014",
-    "source": "Architecture Hub",
+    "id": "research-arch-ecommerce-raw-to-bronze-lifecycle",
+    "source": "Research-informed design exercise",
+    "category": "Storage & Compute Tiering Strategies",
+    "niche": "E-commerce S3-to-Bronze lakehouse ingestion with lifecycle tiering",
+    "difficulty": "EASY",
+    "question": "Design an automated ingestion and storage lifecycle architecture for an e-commerce platform receiving 500 million webhook events daily across 3 cloud regions, balancing rapid Bronze availability with a 7-year regulatory retention mandate.",
+    "constraints": [
+      "500 million events per day (~2 TB raw JSON/day).",
+      "Data must be available in Bronze Delta tables within 10 minutes.",
+      "Compliance requires 7-year audit retention while minimizing storage costs."
+    ],
+    "answer": "### Proposed design\nDeploy regional API gateways that buffer raw webhooks into streaming message queues (Kafka / Kinesis) and write raw micro-batch objects to cloud object storage (S3). Auto Loader / Structured Streaming processes incoming files incrementally into an append-only Bronze Delta Lake table partitioned by ingestion date (`_ingest_date`).\n\n### Storage lifecycle and FinOps\nConfigure S3 lifecycle transition rules directly on the raw webhook landing bucket:\n- Days 0–30: S3 Standard ($0.023/GB) for active ingestion and initial Silver transformation.\n- Day 30: Transition to S3 Standard-Infrequent Access ($0.0125/GB) for backfill availability.\n- Day 90: Transition to S3 Glacier Flexible ($0.0036/GB) for the remainder of the 7-year regulatory retention.\nOn the Bronze Delta table, execute `VACUUM` with a 14-day retention threshold, allowing time travel while preventing orphan Parquet file buildup.\n\n### Verification and recovery\nMeasure ingestion watermark lag, webhook HTTP 200 rates, and object count transitions. If a regional pipeline fails, incoming webhooks failover to secondary regional endpoints while historical raw files remain immutably archived for replay.\n\n**Sources:** [AWS Well-Architected Framework: Storage & Object Consistency Best Practices](https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html) · [FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation](https://www.finops.org/framework/capabilities/manage-anomalies/)",
+    "tradeoffs": [
+      "Glacier tiering lowers storage costs by ~84% but requires 3-5 hour retrieval latency for compliance audits."
+    ],
+    "sources": [
+      {
+        "title": "AWS Well-Architected Framework: Storage & Object Consistency Best Practices",
+        "url": "https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html"
+      },
+      {
+        "title": "FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation",
+        "url": "https://www.finops.org/framework/capabilities/manage-anomalies/"
+      }
+    ]
+  },
+  {
+    "id": "research-arch-bi-semantic-metric-definition",
+    "source": "Research-informed design exercise",
     "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #14",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #14).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "niche": "Centralized semantic metrics contract for revenue and churn",
+    "difficulty": "EASY",
+    "question": "Design a centralized semantic metrics contract architecture to eliminate conflicting calculations of 'Monthly Active Users' and 'Gross Recurring Revenue' between Marketing, Finance, and Executive BI dashboards.",
+    "constraints": [
+      "Finance, Marketing, and BI tools calculate metrics with conflicting SQL logic.",
+      "BI tools include Power BI, Tableau, and ad-hoc Python notebooks.",
+      "All changes to core financial metric logic require formal stakeholder sign-off."
+    ],
+    "answer": "### Proposed design\nImplement a centralized Semantic Layer (dbt Semantic Layer / MetricFlow) positioned between Gold lakehouse marts and downstream consumption tools. Define metrics declaratively in versioned YAML:\n- Declare metric grain, calculation expressions, dimensions, and filter rules (e.g. `WHERE status != 'CANCELLED'`).\n- Publish standard interfaces (Arrow Flight SQL / JDBC) allowing Power BI, Tableau, and Python to query the semantic layer directly rather than embedding custom SQL in each BI tool.\n\n### Governance and change control\nStore metric definitions in a centralized git repository with code ownership rules (`CODEOWNERS`). Any modification to financial formulas requires automated CI diff validation and mandatory pull request approvals from Finance and Data Governance leads.\n\n### Verification and monitoring\nExpose versioned metric contracts with query lineage. Automated integration tests verify that semantic queries executed across Power BI and Tableau yield mathematically identical figures for every reporting period.\n\n**Sources:** [OpenLineage Standard: Open Governance and Operational Lineage](https://openlineage.io/docs/spec/)",
+    "tradeoffs": [
+      "A centralized semantic layer adds query proxy overhead but guarantees enterprise-wide metric consistency."
+    ],
+    "sources": [
+      {
+        "title": "OpenLineage Standard: Open Governance and Operational Lineage",
+        "url": "https://openlineage.io/docs/spec/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-015",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #15",
+    "id": "research-arch-cdc-debezium-postgres-to-iceberg",
+    "source": "Research-informed design exercise",
+    "category": "Apache Kafka & Real-Time CDC Architecture",
+    "niche": "High-throughput Postgres CDC into Apache Iceberg",
     "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #15).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Design an end-to-end CDC architecture capturing mutations from 50 production PostgreSQL databases into an Apache Iceberg lakehouse with exactly-once idempotency, schema evolution, and a 15-minute freshness SLA.",
+    "constraints": [
+      "50 PostgreSQL databases emitting 5,000 transactions/second combined.",
+      "Downstream analytics queries require ACID snapshot isolation.",
+      "Zero impact on production OLTP read/write query latencies."
+    ],
+    "answer": "### Ingestion pipeline\nDeploy Debezium connectors on Kafka Connect reading transaction logs (WAL) from PostgreSQL logical replication slots with zero table lock contention. Mutations stream as Avro records into compacted Kafka topics registered with a central Schema Registry enforcing BACKWARD compatibility.\n\n### Lakehouse processing and commit boundary\nApache Spark Structured Streaming reads from Kafka topics using RocksDB state stores. The stream micro-batches every 5 minutes, staging updates into memory:\n- Records are deduplicated by primary key and ordered by PostgreSQL Log Sequence Number (`_lsn`).\n- The engine executes an idempotent `MERGE INTO iceberg_table USING batch ON target.id = batch.id WHEN MATCHED AND batch._op = 'D' THEN DELETE WHEN MATCHED THEN UPDATE WHEN NOT MATCHED THEN INSERT`.\n- Commits are coordinated through an Apache Iceberg REST Catalog using optimistic concurrency control.\n\n### Day-two operations and monitoring\nMonitor replication slot lag in Postgres, consumer group lag in Kafka, and snapshot commit frequency in Iceberg. Schedule asynchronous Iceberg table maintenance jobs (`rewrite_data_files` and `expire_snapshots`) to compact small CDC delta files without degrading active reader performance.\n\n**Sources:** [AWS Well-Architected Framework: Storage & Object Consistency Best Practices](https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html) · [Apache Iceberg Table Specification & REST Catalog Spec](https://iceberg.apache.org/spec/)",
+    "tradeoffs": [
+      "5-minute micro-batching meets the 15-minute SLA while preventing excessive small-file metadata commit overhead."
+    ],
+    "sources": [
+      {
+        "title": "AWS Well-Architected Framework: Storage & Object Consistency Best Practices",
+        "url": "https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html"
+      },
+      {
+        "title": "Apache Iceberg Table Specification & REST Catalog Spec",
+        "url": "https://iceberg.apache.org/spec/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-016",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #16",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #16).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "id": "research-arch-airflow-taskflow-dataset-pipeline",
+    "source": "Research-informed design exercise",
+    "category": "Apache Airflow Architecture",
+    "niche": "Event-driven cross-DAG pipeline using Airflow Datasets",
+    "difficulty": "MEDIUM",
+    "question": "Design an event-driven analytics transformation pipeline using Apache Airflow 2.8+ Datasets and TaskFlow API across 3 separate engineering domain teams without relying on cron schedules or polling sensors.",
+    "constraints": [
+      "Team Ingestion, Team Core Marts, and Team ML operate independent DAG repositories.",
+      "Downstream jobs must trigger immediately upon upstream dataset updates.",
+      "Sensor-based polling must be prohibited to prevent worker slot exhaustion."
+    ],
+    "answer": "### Declarative dataset dependency graph\nReplace cron clocks and `ExternalTaskSensor` polling with Airflow Dataset URI definitions (`Dataset('s3://lakehouse/{domain}/{table}')`):\n1. Ingestion DAG (Team Ingestion): Extracts raw files and writes to Bronze, declaring `outlets=[Dataset('s3://lakehouse/bronze/orders')]`.\n2. Transformation DAG (Team Core Marts): Defines `schedule=[Dataset('s3://lakehouse/bronze/orders')]`. The instant Team Ingestion's task completes, the Airflow scheduler automatically triggers this DAG. It transforms data into Gold marts and declares `outlets=[Dataset('s3://lakehouse/gold/order_features')]`.\n3. Machine Learning DAG (Team ML): Defines `schedule=[Dataset('s3://lakehouse/gold/order_features')]`, executing feature extraction immediately upon Gold mart updates.\n\n### TaskFlow implementation and resilience\nUtilize `@task` decorators with explicit type hinting. Pipeline state travels via XCom backends backed by cloud object storage for large payloads. Configure `retries=3` with exponential backoff on all task definitions.\n\n### Observability and governance\nInstrument Airflow with OpenLineage listeners to emit run facets directly to the enterprise catalog. Track dataset update latency, trigger delays, and failed task runtimes on centralized Datadog/Prometheus dashboards.\n\n**Sources:** [Apache Airflow Documentation: Data-Aware Scheduling and TaskFlow](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html) · [OpenLineage Standard: Open Governance and Operational Lineage](https://openlineage.io/docs/spec/)",
+    "tradeoffs": [
+      "Data-aware scheduling eliminates wasted SLA buffers but requires rigorous upstream dataset testing to prevent runaway cascades."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow Documentation: Data-Aware Scheduling and TaskFlow",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html"
+      },
+      {
+        "title": "OpenLineage Standard: Open Governance and Operational Lineage",
+        "url": "https://openlineage.io/docs/spec/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-017",
-    "source": "Architecture Hub",
+    "id": "research-arch-finops-compute-rightsizing-autoscaling",
+    "source": "Research-informed design exercise",
+    "category": "Storage & Compute Tiering Strategies",
+    "niche": "Autoscaling Spark cluster fleet FinOps cost optimization",
+    "difficulty": "MEDIUM",
+    "question": "Design a FinOps cost-governance and auto-scaling compute architecture for a data engineering platform running 500 daily Spark batch jobs with unpredictable load spikes, reducing compute expenditure by 40%.",
+    "constraints": [
+      "Workload consists of predictable nightly ETL plus unpredictable daytime ad-hoc queries.",
+      "Compute bills have grown 80% year-over-year due to idle cluster over-provisioning.",
+      "Mission-critical SLA pipelines must never be terminated by spot node preemption."
+    ],
+    "answer": "### Hybrid compute fleet design\nSegment compute into isolated architectural tiers based on workload predictability and fault tolerance:\n1. Production Nightly ETL: Run on provisioned autoscaling clusters backed by 3-year cloud Savings Plans / Reserved Instances (up to 60% discount over on-demand rates). Use memory-optimized VM instances to prevent shuffle spills.\n2. Daytime Ad-hoc & Exploration: Deploy serverless SQL warehouses and single-user clusters with aggressive auto-termination (15-minute idle shutdown) and auto-scaling minimum set to 0.\n3. Batch Processing Fleet: Utilize Spot Instances (80% discount) for worker nodes while keeping Driver nodes on On-Demand instances. Enable Spark graceful decommissioning (`spark.decommission.enabled=true`) to migrate shuffle and cache data before spot eviction.\n\n### Governance guardrails and tagging\nImplement mandatory cloud tagging on all compute assets (`cost_center`, `project_id`, `environment`). Configure automated budget alerts that trigger webhooks to suspend non-critical clusters when daily spend exceeds 120% of baseline.\n\n### Continuous rightsizing\nIngest Spark event logs into an automated monitoring pipeline that flags jobs with low CPU/memory utilization (< 30%), generating weekly cluster rightsizing recommendations.\n\n**Sources:** [FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation](https://www.finops.org/framework/capabilities/manage-anomalies/)",
+    "tradeoffs": [
+      "Spot nodes reduce compute costs drastically but require resilient retry configurations to withstand occasional node preemptions."
+    ],
+    "sources": [
+      {
+        "title": "FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation",
+        "url": "https://www.finops.org/framework/capabilities/manage-anomalies/"
+      }
+    ]
+  },
+  {
+    "id": "research-arch-delta-liquid-clustering-migration",
+    "source": "Research-informed design exercise",
     "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #17",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #17).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "niche": "Zero-downtime migration to Delta Lake Liquid Clustering",
+    "difficulty": "HARD",
+    "question": "Design a zero-downtime migration strategy for converting a 500-terabyte Hive-partitioned Delta table to Delta Lake Liquid Clustering while continuous streaming pipelines and ad-hoc BI queries remain active.",
+    "constraints": [
+      "500 TB table partitioned by `year/month/day` suffering from severe small-file skew.",
+      "Continuous 24/7 streaming ingest writing 20,000 events/second.",
+      "Zero downtime permitted for mission-critical BI reporting queries."
+    ],
+    "answer": "### Migration architecture\nExecute the migration incrementally without requiring an offline table rewrite:\n1. In-Place Table Property Mutation: Update table clustering metadata without moving existing files:\n   ```sql\n   ALTER TABLE core.telemetry CLUSTER BY (device_id, event_date);\n   ```\n   Delta Lake enables Liquid Clustering as a metadata-level configuration change. Existing historical Hive-partitioned files remain physically intact and readable.\n2. Dual-Layout Query Compatibility: Modern Delta Lake readers seamlessly query tables containing a mixture of legacy partitioned files and newly clustered files in a single unified snapshot.\n3. Incremental Background Optimization: Schedule bounded, incremental optimization jobs during off-peak hours:\n   ```sql\n   OPTIMIZE core.telemetry WHERE event_date >= '2026-10-01';\n   ```\n   The engine incrementally clusters newly appended files and historical data window by window without locking the table.\n4. Streaming Ingestion Coordination: Active streaming writers continue appending directly to the table. Newly written files are automatically queued for background clustering during subsequent incremental `OPTIMIZE` passes.\n\n### Verification and rollback\nCompare query execution plan partition pruning metrics before and after clustering. If query degradation occurs, clustering keys can be altered instantaneously via `ALTER TABLE ... CLUSTER BY` without data loss.\n\n**Sources:** [Delta Lake Documentation: Liquid Clustering and Deletion Vectors](https://docs.delta.io/latest/optimizations-oss.html)",
+    "tradeoffs": [
+      "Incremental clustering takes days to recluster 500TB completely, but guarantees 100% continuous uptime and zero lock contention."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Documentation: Liquid Clustering and Deletion Vectors",
+        "url": "https://docs.delta.io/latest/optimizations-oss.html"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-018",
-    "source": "Architecture Hub",
-    "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #18",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #18).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-019",
-    "source": "Architecture Hub",
+    "id": "research-arch-spark-aqe-skewed-retail-inventory",
+    "source": "Research-informed design exercise",
     "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #19",
+    "niche": "Extreme retail join skew mitigation using Spark AQE",
     "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #19).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Design a high-scale retail inventory allocation pipeline in Apache Spark 3.5+ capable of joining 2 billion sales records with SKU dimensions during Black Friday traffic spikes where top 10 promotional SKUs account for 45% of total volume.",
+    "constraints": [
+      "Extreme data skew: 10 promotional keys represent 900 million out of 2 billion records.",
+      "Standard sort-merge join crashes with Executor Lost / OOM Exit Code 137.",
+      "Pipeline must finish within a 30-minute SLA window."
+    ],
+    "answer": "### Adaptive Query Execution (AQE) configuration\nEnable Spark 3.5+ AQE runtime skew join optimization to dynamically split skewed partitions:\n```conf\nspark.sql.adaptive.enabled=true\nspark.sql.adaptive.skewJoin.enabled=true\nspark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes=268435456  # 256MB\nspark.sql.adaptive.skewJoin.skewedPartitionFactor=5\nspark.sql.adaptive.advisoryPartitionSizeInBytes=134217728             # 128MB\n```\nWhen Spark detects a skewed reducer partition processing a promotional SKU, AQE dynamically splits it into 128MB chunks and duplicates the corresponding dimension slice, parallelizing execution across dozens of worker cores.\n\n### Hybrid broadcast join fallback\nFor small dimensional datasets (< 200MB), force Broadcast Hash Joins (`/*+ BROADCAST(dimensions) */`) to eliminate the shuffle phase entirely. For larger dimension tables, combine AQE with adaptive two-phase salting: dynamically salt only the top 0.01% frequent keys using an isolated key-frequency histogram generated in the upstream staging step.\n\n### Memory and disk spill tuning\nAllocate 30% overhead to `spark.executor.memoryOverhead` to prevent container eviction during heavy GC pauses. Use off-heap Tungsten execution and NVMe SSD local instance storage for high-throughput shuffle spills.\n\n**Sources:** [Apache Spark 3.5 Documentation: Adaptive Query Execution (AQE)](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)",
+    "tradeoffs": [
+      "AQE partition duplication increases shuffle network traffic slightly but eliminates multi-hour OOM stragglers entirely."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark 3.5 Documentation: Adaptive Query Execution (AQE)",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-020",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #20",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #20).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "id": "research-arch-dbt-mesh-multi-project-governance",
+    "source": "Research-informed design exercise",
+    "category": "dbt Architecture & Transformation",
+    "niche": "Multi-project dbt Mesh with public interfaces and contracts",
+    "difficulty": "HARD",
+    "domain": "DataOps & Architecture Governance",
+    "subdomain": "Data Mesh & dbt Mesh",
+    "question": "Architect a multi-project dbt Mesh platform for an enterprise with 40 autonomous data teams, replacing a monolithic 3,000-model dbt repository with decentralized domain projects and enforceable contracts.",
+    "constraints": [
+      "40 domain squads currently suffer from hour-long CI runs in a single monolithic repo.",
+      "Downstream consumer teams experience silent breakage when upstream domains modify tables.",
+      "Core dimensions (Customer, Product) must remain standardized across the enterprise."
+    ],
+    "answer": "### Decentralized dbt Mesh topology\nDecompose the monolithic repository into bounded domain projects structured around business capabilities:\n1. Core Platform Project: Owns enterprise master data (Customer, Account, Product dimensions).\n2. Domain Projects (Orders, Logistics, Marketing): Each squad maintains an independent git repository and dbt project.\n3. Public Model Contracts: Models consumed across domain boundaries are declared as `public` with strict contract enforcement:\n   ```yaml\n   models:\n     - name: dim_customers\n       access: public\n       config:\n         contract: { enforced: true }\n       columns:\n         - name: customer_id\n           data_type: string\n           constraints: [{ type: not_null }]\n   ```\n\n### Cross-project dependencies and CI\nDomain projects reference upstream public models using cross-project `ref()` syntax: `ref('core_platform', 'dim_customers')`. Upstream projects publish compiled metadata artifacts (`manifest.json`) to central object storage. Downstream CI pipelines download the upstream manifest, allowing teams to test models independently without compiling foreign repositories.\n\n### Breaking change governance\nModel contracts enforce semantic versioning: breaking column alterations require publishing a new major model version (e.g. `dim_customers_v2`) with a mandatory 90-day deprecation grace period.\n\n**Sources:** [OpenLineage Standard: Open Governance and Operational Lineage](https://openlineage.io/docs/spec/)",
+    "tradeoffs": [
+      "dbt Mesh increases cross-repository governance overhead but reduces CI runtimes from 60 minutes to 3 minutes per squad."
+    ],
+    "sources": [
+      {
+        "title": "OpenLineage Standard: Open Governance and Operational Lineage",
+        "url": "https://openlineage.io/docs/spec/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-021",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #21",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #21).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-022",
-    "source": "Architecture Hub",
+    "id": "research-arch-zero-trust-lakehouse-identity",
+    "source": "Research-informed design exercise",
     "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #22",
+    "niche": "Zero-trust credentialless lakehouse identity architecture",
     "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #22).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Architect a zero-trust, credentialless access architecture for an enterprise lakehouse spanning AWS, Azure, and Databricks, eliminating all static service account keys while enforcing fine-grained RBAC.",
+    "constraints": [
+      "Zero long-lived API keys, IAM passwords, or client secrets in configuration files.",
+      "Data analysts, pipelines, and AI models access shared tables across multi-cloud storage.",
+      "Full compliance auditability required for SOC 2 and ISO 27001 certification."
+    ],
+    "answer": "### Workload Identity Federation (WIF)\nImplement OpenID Connect (OIDC) federation across cloud boundaries:\n- Orchestrators (GitHub Actions, Airflow on Kubernetes) authenticate using temporary OIDC JWT tokens issued by their respective internal identity providers.\n- Cloud STS endpoints validate token claims (`repository`, `environment`, `service_account`) and issue temporary, scoped 1-hour IAM session credentials.\n\n### Centralized catalog governance (Unity Catalog / Purview)\nAll compute engines access cloud storage through credential-vending catalog abstractions:\n- Direct storage bucket permissions are locked down completely (no user or pipeline has direct S3/ADLS read rights).\n- The catalog validates the caller's federated identity, checks row/column ABAC policies, and returns short-lived pre-signed read/write credentials scoped strictly to authorized Parquet files.\n\n### Audit logging and telemetry\nStream all catalog access events, credential requests, and denied operations to a centralized SIEM (Splunk / Azure Sentinel). Automated threat detection rules flag unexpected cross-region access or bulk data extraction spikes.\n\n**Sources:** [NIST SP 800-207: Zero Trust Architecture & Workload Identity Federation](https://csrc.nist.gov/pubs/sp/800/207/final)",
+    "tradeoffs": [
+      "Credential vending adds a minor initial metadata authentication latency but completely eliminates secret leakage vulnerabilities."
+    ],
+    "sources": [
+      {
+        "title": "NIST SP 800-207: Zero Trust Architecture & Workload Identity Federation",
+        "url": "https://csrc.nist.gov/pubs/sp/800/207/final"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-023",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #23",
+    "id": "research-arch-active-passive-lakehouse-disaster-recovery",
+    "source": "Research-informed design exercise",
+    "category": "Modern Storage & Lakehouse Table Formats",
+    "niche": "Active-passive cross-region lakehouse disaster recovery",
+    "difficulty": "HARD",
+    "question": "Design an active-passive cross-region disaster recovery architecture for a mission-critical lakehouse platform ensuring Recovery Point Objective (RPO) < 15 minutes and Recovery Time Objective (RTO) < 1 hour during catastrophic regional outages.",
+    "constraints": [
+      "Primary region: AWS us-east-1; DR region: AWS us-west-2.",
+      "500 TB data lake with active streaming and batch workloads.",
+      "RPO < 15 minutes, RTO < 1 hour during total primary region blackouts."
+    ],
+    "answer": "### Continuous data and metadata replication\n1. Storage Replication: Configure asynchronous S3 Cross-Region Replication (CRR) on raw and lakehouse buckets with S3 Replication Time Control (RTC), guaranteeing 99.9% of bytes replicated within 15 minutes (meeting RPO).\n2. Catalog Metadata Synchronization: Replicate Delta / Iceberg metadata logs asynchronously. A serverless event-driven worker in the DR region monitors replicated metadata commits and synchronizes the secondary catalog state.\n\n### DR standby infrastructure\nMaintain a pilot-light infrastructure in the DR region:\n- Network VPCs, IAM roles, and storage buckets are pre-provisioned via Terraform.\n- Serverless query endpoints and streaming engines remain in warm standby with zero compute instances running, incurring near-zero idle compute costs.\n\n### Automated failover and cutover runbook\nUpon primary region outage declaration:\n1. Automated DNS Failover: Route 53 health checks detect regional failure and redirect analytical API endpoints to the secondary region.\n2. Ingestion Cutover: Streaming producers (Kafka mirror maker / Kinesis) redirect publishing traffic to DR region brokers.\n3. Reverse Sync Protocol: Once the primary region recovers, a reverse synchronization runbook reconciles metadata and commits accumulated in DR back to the primary before failing back.\n\n**Sources:** [AWS Well-Architected Framework: Storage & Object Consistency Best Practices](https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html) · [FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation](https://www.finops.org/framework/capabilities/manage-anomalies/)",
+    "tradeoffs": [
+      "Cross-region data replication incurs continuous cloud egress costs but guarantees business continuity under catastrophic failures."
+    ],
+    "sources": [
+      {
+        "title": "AWS Well-Architected Framework: Storage & Object Consistency Best Practices",
+        "url": "https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html"
+      },
+      {
+        "title": "FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation",
+        "url": "https://www.finops.org/framework/capabilities/manage-anomalies/"
+      }
+    ]
+  },
+  {
+    "id": "research-arch-hybrid-search-lakehouse-rag",
+    "source": "Research-informed design exercise",
+    "category": "LLM & RAG Infrastructure Pipelines",
+    "niche": "Hybrid vector and BM25 search over enterprise lakehouse",
+    "difficulty": "HARD",
+    "question": "Design a hybrid search retrieval architecture over a 50-million document enterprise lakehouse for an internal AI assistant, combining dense semantic embeddings with sparse keyword search to eliminate hallucination on exact codes.",
+    "constraints": [
+      "50 million unstructured and semi-structured documents (PDFs, contracts, support tickets).",
+      "Queries require both semantic comprehension ('warranty terms') and exact alphanumeric lookup ('Part #AX-9921').",
+      "Retrieval latency must remain under 200 milliseconds."
+    ],
+    "answer": "### Ingestion and dual-indexing pipeline\nIngest document updates from Bronze storage via Spark. Split text into semantic chunks and generate two distinct indices:\n1. Dense Vector Index: Generate dense vector embeddings using an enterprise embedding model, indexing vectors into a distributed vector store (Milvus / Pinecone / pgvector with HNSW indexing).\n2. Sparse Lexical Index: Index chunks into an inverted BM25 full-text search index (OpenSearch / Elasticsearch) with language analyzers, tokenizers, and exact alphanumeric keyword preserve filters.\n\n### Query routing and Reciprocal Rank Fusion (RRF)\nWhen a user query arrives:\n- Execute parallel queries against both the vector index (top 100 semantic candidates) and the BM25 index (top 100 lexical candidates).\n- Pass candidate lists to a Reciprocal Rank Fusion (RRF) ranker: `score(d) = sum(1 / (k + rank_vector(d))) + sum(1 / (k + rank_bm25(d)))`.\n- Deduplicate and pass the top 10 fused results to a cross-encoder re-ranking model for final contextual scoring.\n\n### Governance and security filtering\nEnforce document-level access control lists (ACLs) directly inside the search pre-filter: the retriever filters candidates by the querying user's department ID before semantic scoring occurs, preventing unauthorized data leakage.\n\n**Sources:** [OWASP Top 10 for LLM Applications: Guardrails for Prompt Injection & Tool Calling](https://owasp.org/www-project-top-10-for-large-language-model-applications/)",
+    "tradeoffs": [
+      "Hybrid search doubles indexing compute and storage but completely eliminates semantic vector misses on exact technical identifiers."
+    ],
+    "sources": [
+      {
+        "title": "OWASP Top 10 for LLM Applications: Guardrails for Prompt Injection & Tool Calling",
+        "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+      }
+    ]
+  },
+  {
+    "id": "research-arch-enterprise-iceberg-rest-catalog-lakehouse",
+    "source": "Research-informed design exercise",
+    "category": "Modern Storage & Lakehouse Table Formats",
+    "niche": "Multi-engine enterprise lakehouse on Iceberg REST catalog",
     "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #23).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Architect an open enterprise lakehouse platform centered on an Apache Iceberg REST Catalog, supporting concurrent write workloads from Spark and Flink alongside sub-second ad-hoc BI reads from Trino and Snowflake.",
+    "constraints": [
+      "Heterogeneous compute engines: Spark for batch ETL, Flink for streaming, Trino and Snowflake for interactive BI.",
+      "Single copy of data stored in open Parquet format in cloud object storage.",
+      "Strict ACID transactional consistency across concurrent writer engines."
+    ],
+    "answer": "### Centralized REST catalog architecture\nDeploy an Apache Iceberg REST Catalog (Apache Polaris / Project Nessie / Tabular) implementing the official OpenAPI specification:\n- Query engines (Spark 3.5+, Trino, Snowflake Iceberg tables) configure the REST catalog endpoint as their canonical table catalog.\n- The REST catalog coordinates Optimistic Concurrency Control (OCC) commits using atomic metadata requirements.\n- Token Vending: The catalog vends short-lived, down-scoped cloud storage credentials to query engines, preventing engines from requiring permanent storage IAM permissions.\n\n### Concurrency and maintenance governance\n- Streaming Ingestion (Flink): Writes append-only Iceberg position deletes and small Parquet files every 60 seconds.\n- Batch Transformation (Spark): Reads committed snapshots and writes curated Gold models.\n- Asynchronous Maintenance Daemon: A dedicated containerized Spark job runs continuous table maintenance: `rewrite_data_files` (compaction into 256MB Parquet blocks), `rewrite_position_deletes`, and `expire_snapshots`.\n\n### Multi-engine read performance\nTrino and Snowflake read Iceberg metadata manifests directly, utilizing min/max column statistics for metadata-level partition and file pruning, delivering sub-second interactive query responses over petabyte datasets without data duplication.\n\n**Sources:** [Apache Iceberg Table Specification & REST Catalog Spec](https://iceberg.apache.org/spec/) · [AWS Well-Architected Framework: Storage & Object Consistency Best Practices](https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html)",
+    "tradeoffs": [
+      "Open catalog architecture prevents cloud and engine lock-in but requires managing a shared REST catalog control plane."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification & REST Catalog Spec",
+        "url": "https://iceberg.apache.org/spec/"
+      },
+      {
+        "title": "AWS Well-Architected Framework: Storage & Object Consistency Best Practices",
+        "url": "https://docs.aws.amazon.com/wellarchitected/latest/financial-management-pillar/storage.html"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-024",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #24",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #24).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-025",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #25",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #25).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-026",
-    "source": "Architecture Hub",
+    "id": "research-arch-end-to-end-data-contract-enforcement",
+    "source": "Research-informed design exercise",
     "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #26",
+    "niche": "End-to-end data contract enforcement at producer boundaries",
     "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #26).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Architect an enterprise data contract verification system that validates schema types, business semantic invariants, and freshness SLOs at the software engineering producer boundary before data lands in Bronze lakehouse tables.",
+    "constraints": [
+      "100+ microservices owned by software engineering squads frequently break analytical pipelines.",
+      "Contract checks must run in software engineering CI/CD pull request gates.",
+      "Contract violations must block production deployment and automatically quarantine non-conforming data."
+    ],
+    "answer": "### Contract definition and repository\nDefine contracts using the Open Data Contract Specification (ODCS) in versioned YAML files stored in a centralized contracts repository:\n- Declare dataset schema, field types, primary keys, nullability, and allowed categorical values.\n- Embed operational Service Level Objectives: max latency (< 15 mins), completeness (> 99.9%), and expected volume ranges.\n- Embed security classification tags (`confidential`, `pii`).\n\n### Shift-left CI/CD pre-deployment verification\nIntegrate contract testing into software engineering CI/CD workflows:\n- When a service squad opens a PR modifying database schemas, a contract validation CLI compares the proposed schema against the registered ODCS contract.\n- Breaking alterations (e.g. dropping a column or removing a default value) fail the PR build immediately, requiring the engineer to update the contract version and notify downstream data product consumers.\n\n### Runtime ingestion gate and automated quarantine\nAt the lakehouse ingestion gateway:\n- Ingestion pipelines validate incoming payloads against the active contract schema.\n- Non-conforming payloads are automatically intercepted and routed to a Dead-Letter Queue (DLQ) quarantine table without crashing the pipeline.\n- Automated Slack/PagerDuty alerts notify the producing service squad of contract breaches with exact validation error diffs.\n\n**Sources:** [OpenLineage Standard: Open Governance and Operational Lineage](https://openlineage.io/docs/spec/)",
+    "tradeoffs": [
+      "Strict contract gates require organizational discipline between software and data teams but eliminate 95% of unexpected production pipeline breaks."
+    ],
+    "sources": [
+      {
+        "title": "OpenLineage Standard: Open Governance and Operational Lineage",
+        "url": "https://openlineage.io/docs/spec/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-027",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #27",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #27).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-028",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #28",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #28).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-029",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #29",
+    "id": "research-arch-multi-tenant-lakehouse-noisy-neighbor",
+    "source": "Research-informed design exercise",
+    "category": "Cloud-Native Data Platform",
+    "niche": "Enterprise multi-tenant lakehouse with strict isolation and chargeback",
     "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #29).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Design an enterprise multi-tenant lakehouse architecture supporting 50 independent business units on shared cloud infrastructure, enforcing compute isolation, storage quotas, and granular FinOps chargeback.",
+    "constraints": [
+      "50 business units sharing a single cloud data platform.",
+      "No single tenant may monopolize cluster resources or exceed budget caps.",
+      "100% accurate cost allocation required for monthly internal financial chargeback."
+    ],
+    "answer": "### Three-tier multi-tenant isolation model\n1. Catalog Namespace Isolation: Implement hierarchical namespaces in Unity Catalog or Iceberg REST Catalog (`catalog.tenant_id.schema_name`). Enforce Attribute-Based Access Control (ABAC) so tenant roles have zero visibility into foreign tenant namespaces.\n2. Compute Workload Isolation: Deploy Kubernetes or Databricks cluster pools with dedicated node labels per tenant. In shared pools, configure fair-share scheduling with explicit resource caps:\n   - Max core allocations (e.g. max 64 cores per tenant during peak hours).\n   - Maximum query execution timeout (kill queries exceeding 20 minutes).\n   - Query scan limit guardrails (reject queries scanning > 500GB without partition pruning).\n3. Storage Quota Governance: Enforce object storage bucket prefix quotas via automated monitoring daemons. Tenants exceeding allocated storage are blocked from creating new tables until unmaintained assets are purged.\n\n### FinOps chargeback engine\nTag all compute sessions and storage prefixes with mandatory tenant billing tags (`tenant_id`, `cost_center`). An automated daily FinOps pipeline correlates cloud billing exports (AWS CUR / Azure Cost Management) with query engine audit logs, generating detailed departmental chargeback statements with zero untracked IT overhead.\n\n**Sources:** [FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation](https://www.finops.org/framework/capabilities/manage-anomalies/)",
+    "tradeoffs": [
+      "Strict tenant isolation slightly reduces shared cluster utilization efficiency but prevents noisy neighbor outages and enables predictable budgeting."
+    ],
+    "sources": [
+      {
+        "title": "FinOps Foundation Framework: Cloud Data Cost Management & Anomaly Allocation",
+        "url": "https://www.finops.org/framework/capabilities/manage-anomalies/"
+      }
+    ]
   },
   {
-    "id": "arch-techblog-adv-030",
-    "source": "Architecture Hub",
-    "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #30",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #30).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-031",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #31",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #31).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-032",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #32",
+    "id": "research-arch-ai-agent-governed-tool-execution",
+    "source": "Research-informed design exercise",
+    "category": "LLM & RAG Infrastructure Pipelines",
+    "niche": "Governed AI agent execution platform for automated data engineering",
     "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #32).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-033",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #33",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #33).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-034",
-    "source": "Architecture Hub",
-    "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #34",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #34).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-035",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #35",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #35).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-036",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #36",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #36).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-037",
-    "source": "Architecture Hub",
-    "category": "Databricks Lakehouse Mastery (Delta Lake, Delta Live Tables)",
-    "niche": "Production Scale Pattern #37",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #37).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-038",
-    "source": "Architecture Hub",
-    "category": "Enterprise Data Governance & Cataloging",
-    "niche": "Production Scale Pattern #38",
-    "difficulty": "ARCHITECT",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #38).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-039",
-    "source": "Architecture Hub",
-    "category": "Advanced PySpark & Spark Core Optimization",
-    "niche": "Production Scale Pattern #39",
-    "difficulty": "MEDIUM",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #39).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
-  },
-  {
-    "id": "arch-techblog-adv-040",
-    "source": "Architecture Hub",
-    "category": "Real-Time Streaming & Compute Optimization",
-    "niche": "Production Scale Pattern #40",
-    "difficulty": "HARD",
-    "question": "Design an end-to-end resilient architecture for high-throughput enterprise event streams with SLA guarantees (Scenario #40).",
-    "answer": "The architecture separates ingestion, stateful compute, and low-latency serving: 1) Kafka/Event Hubs ingestion with KRaft consensus. 2) Apache Flink or Spark Structured Streaming with RocksDB state stores and event-time watermarking. 3) Delta Lake Silver/Gold layers with Liquid Clustering (`CLUSTER BY`) and deletion vectors. 4) Serverless Direct Lake or Pinot serving delivering sub-second response times."
+    "question": "Architect an enterprise AI agent execution platform that empowers autonomous data engineering agents to analyze telemetry, optimize tables, and propose pipeline fixes while strictly preventing unauthorized data exfiltration or unapproved production mutations.",
+    "constraints": [
+      "AI agents have access to SQL query tools, table maintenance tools, and git PR creation tools.",
+      "Zero risk of accidental data exfiltration or catastrophic production table deletion.",
+      "Consequential actions (writes, access grants, DDL) must require human approval."
+    ],
+    "answer": "### Architecture of the agent control plane\nDeploy an intermediary policy-enforced Control Plane between the AI agent's planning LLM and underlying platform tools:\n1. Short-Lived Scoped Delegation: The agent authenticates using a temporary, task-scoped workload identity. It inherits read permissions strictly for requested analytical datasets and has zero ambient admin credentials.\n2. Sandbox Tool Execution: Code-execution tools run in ephemeral, isolated microVM containers (e.g. AWS Firecracker / gVisor) with strict CPU/memory limits and zero network egress to the public internet (all traffic routed through an audited internal API proxy).\n3. Risk-Based Action Classification:\n   - Low-Risk Read Actions (e.g. `SELECT`, `EXPLAIN`, `DESCRIBE`): Executed automatically within strict row-count (max 100 rows) and query-cost bounds ($5 per query).\n   - High-Risk Mutation Actions (e.g. `ALTER TABLE`, `OPTIMIZE`, `GRANT`, `DROP`): The control plane intercepts the request, generates an immutable action proposal payload (diff, affected rows, estimated cost, rollback command), and pauses execution.\n4. Human Approval Gate: The proposal posts to a human review portal (or Slack/Teams webhook). An authorized data platform engineer reviews the evidence and cryptographically signs the approval token. Only upon signature verification does the control plane release the mutation for execution.\n5. Complete Audit Lineage: Log prompt context, tool requests, policy decisions, reviewer identity, and execution results into an append-only audit lakehouse table for SOC 2 compliance.\n\n**Sources:** [OWASP Top 10 for LLM Applications: Guardrails for Prompt Injection & Tool Calling](https://owasp.org/www-project-top-10-for-large-language-model-applications/) · [OpenLineage Standard: Open Governance and Operational Lineage](https://openlineage.io/docs/spec/)",
+    "tradeoffs": [
+      "Human-in-the-loop gates restrict full autonomous agent velocity but guarantee complete protection against catastrophic automated mistakes or prompt injection attacks."
+    ],
+    "sources": [
+      {
+        "title": "OWASP Top 10 for LLM Applications: Guardrails for Prompt Injection & Tool Calling",
+        "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+      },
+      {
+        "title": "OpenLineage Standard: Open Governance and Operational Lineage",
+        "url": "https://openlineage.io/docs/spec/"
+      }
+    ]
   }
 ]

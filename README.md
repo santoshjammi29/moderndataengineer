@@ -66,20 +66,20 @@ The platform hosts the industry's most rigorous, verified repository of data eng
 | Category | Module / Dataset | Count | Focus & Architectural Scope |
 | :--- | :--- | :---: | :--- |
 | **Lifecycle Hub** | Unified Mastery Stages Hub | **5 Systems** | 4-Stage Mastery Journey, 7-Stage Lakehouse Flow, 6-Stage SDLC (152 controls), 5-Stage Catalyst Pipeline, and 8 Production Flow diagrams (`/stages`). |
-| **System Design** | Architecture Scenarios | **3,269** | End-to-end cloud designs, trade-off matrices, failure modes & 36-keyword multi-domain filter deck (`/architecture`). |
+| **System Design** | Architecture Scenarios | **3,279** | End-to-end cloud designs, trade-off matrices, failure modes & 36-keyword multi-domain filter deck (`/architecture`). |
 | **Technical Q&A** | Data Engineering Practice | **3,670** | Distributed compute, streaming CDC, pipeline reliability & lakehouse design (`data_de.json`). |
 | **Technical Q&A** | Core Platform Questions | **3,414** | Deep internals across Fabric, Power BI, Synapse, ADF, Spark & SQL Server (`questions.json`). |
-| **Unified Q&A** | Total Q&A Question Bank | **7,084** | Unified technical drill bank with progressive batch rendering & zero-OOM edge delivery (`/qa-prep`). |
+| **Unified Q&A** | Total Q&A Question Bank | **7,076** | Unified technical drill bank with progressive batch rendering & zero-OOM edge delivery (`/qa-prep`). |
 | **Staff+ Mastery** | Extreme Architect Scenarios | **125** | High-pressure Staff/Principal interview design problems across 5 domain blocks. |
-| **Core Concepts** | Architectural Concepts | **704** | 14 pillars: Fabric, Databricks, Lakehouse, Spark, Power BI, ADF, Airflow, dbt, FinOps, etc. (`/concepts`). |
+| **Core Concepts** | Architectural Concepts | **837** | 14 pillars: Fabric, Databricks, Lakehouse, Spark, Power BI, ADF, Airflow, dbt, FinOps, etc. (`/concepts`). |
 | **Modern Concepts** | Cutting-Edge Primitives | **32** | UniForm, Iceberg v2/v3, Paimon, LanceDB, Arrow C Data, Liquid Clustering, Data Contracts, ODCS standard (`/modern-stack`). |
 | **Curriculum** | Databricks 100 Mastery | **100** | 100-day structured roadmap with certification mappings (DE Associate & Pro). |
 | **Visual Design** | Whiteboard Blueprints | **42** | High-resolution digital hand-drawn blueprints with 5 role perspectives (Architect, Senior DE, DE, Steward, BA), failure triage & engine mechanics across 7 domains (`/whiteboards`). |
-| **Coding Hub** | Unified Code Practice Hub | **326+ Ops** | 178 Interactive Drills, 148+ Databricks Operations & Memory Triage, 15 Polyglot Matrix, and 62 Python Runbooks (`/code-practice`). |
+| **Coding Hub** | Unified Code Practice Hub | **431+ Ops** | 283 Interactive Drills, 148+ Databricks Operations & Memory Triage, 15 Polyglot Matrix, and 62 Python Runbooks (`/code-practice`). |
 | **Cloud Matrix** | Cloud Platforms & Engine Matrix | **10 Engines** | Cross-engine compatibility across 10 distributed engines vs. Delta/Iceberg/Hudi, 15 FinOps cost playbooks, and 6 interactive calculators (`/modern-stack`). |
 | **Modern Stack** | Modern Architecture Blueprints | **18** | End-to-end modern lakehouse, vector pipeline, and CDC stream blueprints. |
 | **Enterprise Guide** | GCC Enterprise Directory | **156** | Tier-1 Global Capability Centers (Bangalore/Hyderabad) with hiring rubrics & tech stacks (`/company-research`). |
-| **Coding Practice** | Engine Benchmark Exercises | **178** | Hands-on PySpark (51), Spark SQL (50), Python/DataOps (42), and MSSQL (35). |
+| **Coding Practice** | Engine Benchmark Exercises | **283** | Hands-on PySpark (156), Spark SQL (50), Python/DataOps (42), and MSSQL (35). |
 | **Databricks Hub** | Unified Databricks Operations | **148+** | 7 suite cards + 100 architectural operations + 6 production memory triage playbooks (`/code-practice/databricks`). |
 | **PDF Downloads** | Compiled Master Vector PDFs | **7** | Production vector PDFs (Architecture, PySpark, Python, Spark Core, Spark SQL, Incident Runbooks, Master Ref) (`/cheat-sheet`). |
 | **Reference** | Cheatsheet Suites & Cards | **7 Suites / 134+** | 7 Databricks suites (48 cards) + 86 quick reference cards (Web, PDF, Poster). |
@@ -152,13 +152,13 @@ All 42 blueprints are rendered as high-fidelity hand-drawn digital schematics (a
   - 10-engine cross-cloud compatibility matrix (Databricks, Snowflake, Microsoft Fabric, BigQuery, AWS EMR/Athena, DuckDB, Trino, ClickHouse, Redshift, Azure Synapse) vs. open table formats (Delta Lake, Apache Iceberg, Apache Hudi).
   - 15 Cloud Lakehouse FinOps cost reduction playbooks, 32 cutting-edge Lakehouse primitives, and 6 interactive platform calculators (DBU sizing, storage tiering, shuffle spill estimation).
 - **Unified Code Practice & Production Runbooks Hub (`/code-practice`)**:
-  - Consolidates 326+ coding operations under a single roof with 4 dedicated tabs: **Interactive Drills** (178 drills in PySpark 4.0, Spark SQL, T-SQL, Python/Polars), **Databricks Coding Hub** (148+ operations & memory triage playbooks), **Polyglot Matrix** (15 operations side-by-side across 7 engines), and **Python Runbooks** (62 production Lakehouse scripts).
+  - Consolidates 326+ coding operations under a single roof with 4 dedicated tabs: **Interactive Drills** (283 drills in PySpark 4.0, Spark SQL, T-SQL, Python/Polars), **Databricks Coding Hub** (148+ operations & memory triage playbooks), **Polyglot Matrix** (15 operations side-by-side across 7 engines), and **Python Runbooks** (62 production Lakehouse scripts).
 - **Target Company Intel & Architect Dossiers Hub (`/company-research`)**:
   - Ultra-dense, space-efficient architectural dossiers across 156 verified enterprises (52 BigTech, 52 FinTech, 52 GCCs).
   - Triple-view workbench: **Compact Grid** (space-optimized cards with in-card accordion drawers), **Master-Detail Split Workbench** (directory rail on left, full interactive dossier on right), and **Dense Comparison Matrix** (sortable by USD/INR compensation and tier).
   - Real system design interview loops with 1-click prompt copying and direct architecture simulator links.
 - **Single-Roof Concepts & Mind Map Hub (`/concepts`)**:
-  - Unified view switcher seamlessly toggles between **Glossary & Cards (704 terms)**, **4-Level Interactive Mind Map (14 pillars)**, and **Active Recall Flashcards** without page reload.
+  - Unified view switcher seamlessly toggles between **Glossary & Cards (837 terms)**, **4-Level Interactive Mind Map (14 pillars)**, and **Active Recall Flashcards** without page reload.
 - **Direct Navigation Shortcuts & Permanent Edge Redirects**:
   - Dedicated shortcuts and 301 edge redirects for `/blueprints` (→ `/whiteboards`), `/deployments` (→ `/studio`), `/spark-visualizer` (→ `/visualizer`), `/plan` (→ `/guided-learning?tab=curricula`), `/goal` (→ `/studio`), `/learn` (→ `/guided-learning`), `/boost` (→ `/qa-prep`), and `/browser` (→ `/search-topics`).
 - **Dynamic Ultrawide & High-Resolution Display Scaling**:

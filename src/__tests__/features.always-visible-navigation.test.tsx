@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { AllPagesNav } from "@/components/layout/all-pages-nav";
 import { AllPagesFooter } from "@/components/layout/all-pages-footer";
 import { NAV_GROUPS, ALL_FLAT_PAGES_AND_SUBPAGES, isSubHrefActive } from "@/data/navigation-data";
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
@@ -80,7 +81,7 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
 
     // Search bar is rendered prominently with ⌘K badge
     expect(screen.getByRole("search")).toBeDefined();
-    expect(screen.getByText(/Search (?:10,700\+|11,500\+) Q&As, concepts/i)).toBeDefined();
+    expect(screen.getByText(new RegExp(`Search ${formatContentCount(CONTENT_COUNTS.searchDocuments)} learning items`, "i"))).toBeDefined();
     expect(screen.getByText("⌘K")).toBeDefined();
 
     // Horizontal navigation with all sections is rendered
@@ -112,11 +113,11 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
     // High-signal platform notes and metrics
     expect(screen.getByText("Lakehouse Architect Notes")).toBeDefined();
     expect(screen.getByText("2026 Edition")).toBeDefined();
-    expect(screen.getByText("11,500+")).toBeDefined();
-    expect(screen.getByText("Verified Assets")).toBeDefined();
+    expect(screen.getByText(formatContentCount(CONTENT_COUNTS.searchDocuments))).toBeDefined();
+    expect(screen.getByText("Searchable Items")).toBeDefined();
     expect(screen.getByText("42 Blueprints")).toBeDefined();
     expect(screen.getByText("156 Profiles")).toBeDefined();
-    expect(screen.getByText("679 Concepts")).toBeDefined();
+    expect(screen.getByText(`${formatContentCount(CONTENT_COUNTS.concepts)} Concepts`)).toBeDefined();
 
     // Redundant bottom bar controls removed
     expect(screen.queryByText("Shortcuts:")).toBeNull();

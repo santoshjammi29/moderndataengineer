@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import {
@@ -34,7 +36,7 @@ export const STEPS_CONFIG = [
     title: "Key Concepts",
     shortTitle: "Concepts",
     description: "Foundational definitions, lakehouse architectures, and core data engineering principles.",
-    meta: "660+ concepts",
+    meta: `${formatContentCount(CONTENT_COUNTS.concepts)} concepts`,
     icon: BookOpen,
     href: "/concepts",
     unlockQas: 0,
@@ -45,7 +47,7 @@ export const STEPS_CONFIG = [
     title: "Guided Learning",
     shortTitle: "Journey",
     description: "Structured multi-stage tracks: Python DE, Spark, Databricks, Fabric, and more.",
-    meta: "13 tracks",
+    meta: `${CONTENT_COUNTS.guidedTracks} tracks`,
     icon: BookMarked,
     href: "/guided-learning",
     unlockQas: 5,
@@ -78,7 +80,7 @@ export const STEPS_CONFIG = [
     title: "Q&A Prep Hub",
     shortTitle: "Q&A Hub",
     description: "Spaced repetition (SM-2) flashcards for mastering technical interview questions.",
-    meta: "7,080+ Q&As",
+    meta: `${formatContentCount(CONTENT_COUNTS.qa)} Q&As`,
     icon: MessageSquare,
     href: "/qa-prep",
     unlockQas: 45,
@@ -89,7 +91,7 @@ export const STEPS_CONFIG = [
     title: "Architecture Hub",
     shortTitle: "Architecture",
     description: "End-to-end multi-cloud system design and FinOps scenarios for data platforms.",
-    meta: "3,206+ scenarios",
+    meta: `${formatContentCount(CONTENT_COUNTS.scenarios)} scenarios`,
     icon: Layers,
     href: "/architecture",
     unlockQas: 60,

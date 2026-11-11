@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState, useMemo } from "react";
 import {
   Database,
@@ -208,7 +210,7 @@ export function KeywordFilterBar({
               </span>
             </div>
             <div className="text-[11px] text-[var(--muted-foreground)]">
-              Direct keyword filters extracted from the 3,206+ scenario question base
+              Direct keyword filters extracted from the {formatContentCount(CONTENT_COUNTS.scenarios)} scenario question base
             </div>
           </div>
         </div>

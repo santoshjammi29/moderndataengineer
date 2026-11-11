@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import { TopicIcon } from "@/components/ui/topic-icon";
 
 export function HeroBanner() {
@@ -24,7 +25,7 @@ export function HeroBanner() {
         </h1>
 
         <p className="text-sm sm:text-base text-slate-400 max-w-2xl leading-relaxed">
-          Fabric DP-700 / DP-600, Databricks, Delta Lake, 7,084+ Q&As
+          {`Fabric DP-700 / DP-600, Databricks, Delta Lake, ${formatContentCount(CONTENT_COUNTS.qa)} Q&As`}
         </p>
 
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2">

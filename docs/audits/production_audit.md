@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary & Architectural Mandates
 
-The `lakehouse-architect` platform has undergone a total senior staff-engineer architectural restructure, converting an in-memory prototype into an enterprise-grade cloud educational platform serving **11,500+ technical interview scenarios, coding benchmarks, and architectural blueprints** worldwide.
+This historical audit records prior architecture and performance claims; those measurements have not been re-run in this content update. The current searchable catalog inventory is generated in [`src/data/content-counts.json`](../../src/data/content-counts.json).
 
 ```
        ┌─────────────────────────────────────────────────────────────┐

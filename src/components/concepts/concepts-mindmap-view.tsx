@@ -1,5 +1,6 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import React, { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
@@ -357,7 +358,7 @@ export function ConceptsMindmapView({
               Concepts Multi-Level Mind Map
             </h2>
             <p className="text-xs text-[var(--muted-foreground)]">
-              Explore the entire 660+ concepts repository stretching from Top-Level Domains to Architectural Pillars and Deep Technical Mechanics.
+              Explore the entire {formatContentCount(CONTENT_COUNTS.concepts)}+ concepts repository stretching from Top-Level Domains to Architectural Pillars and Deep Technical Mechanics.
             </p>
           </div>
 

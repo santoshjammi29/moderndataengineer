@@ -1,5 +1,7 @@
 "use client";
 
+import { EvidenceSources } from "@/components/ui/evidence-sources";
+
 import React, { useState, useMemo, useEffect, useCallback, useDeferredValue, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -1052,6 +1054,8 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
                               </ul>
                             </div>
                           )}
+
+                          <EvidenceSources sources={concept.sources} className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)]/50 p-2.5" />
 
                           <div className="pt-2 flex items-center justify-between flex-wrap gap-2">
                             <Link

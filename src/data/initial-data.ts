@@ -1,7 +1,8 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 // Auto-generated lean initial datasets for sub-50ms SSR without loading multi-megabyte JSONs
 import type { UnifiedQuestion, ArchitectureQuestion, Concept } from '@/types/data';
 
-export const TOTAL_QA_COUNT = 7011;
+export const TOTAL_QA_COUNT = CONTENT_COUNTS.qa;
 export const INITIAL_QA_ITEMS: UnifiedQuestion[] = ([
   {
     "id": "sdlc-qa-001",
@@ -1035,7 +1036,7 @@ export const INITIAL_QA_ITEMS: UnifiedQuestion[] = ([
   }
 ]) as unknown as UnifiedQuestion[];
 
-export const TOTAL_SCENARIO_COUNT = 3214;
+export const TOTAL_SCENARIO_COUNT = CONTENT_COUNTS.scenarios;
 export const INITIAL_SCENARIO_ITEMS: ArchitectureQuestion[] = ([
   {
     "id": "arch-spec-0001",
@@ -1459,7 +1460,7 @@ export const INITIAL_SCENARIO_ITEMS: ArchitectureQuestion[] = ([
   }
 ]) as unknown as ArchitectureQuestion[];
 
-export const TOTAL_CONCEPT_COUNT = 704;
+export const TOTAL_CONCEPT_COUNT = CONTENT_COUNTS.concepts;
 export const INITIAL_CONCEPT_ITEMS: Concept[] = ([
   {
     "id": "fabric-onelake",

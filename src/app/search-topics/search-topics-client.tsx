@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -36,6 +38,7 @@ import { cn } from "@/lib/utils";
 import type { SearchResultItem, TopicIdentification, NavigationalJump } from "@/lib/search-types";
 import type { SearchResponse } from "@/lib/search-engine";
 import type { ResolvedKnowledgeItem } from "@/lib/content-resolver";
+import { EvidenceSources } from "@/components/ui/evidence-sources";
 import dynamic from "next/dynamic";
 
 const AnswerRenderer = dynamic(
@@ -365,12 +368,12 @@ export function SearchTopicsClient() {
               Search Topics
             </h1>
             <p className="text-xs sm:text-sm text-[var(--muted-foreground)] mt-0.5 max-w-2xl">
-              Ask any question, keyword, or sentence across 11,500+ verified assets. Expand and read full architectural answers, trade-offs, and code right here on this page.
+              Ask any question, keyword, or sentence across {formatContentCount(CONTENT_COUNTS.searchDocuments)} catalog items. Expand and read architectural answers, trade-offs, and code inline.
             </p>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-medium text-[var(--muted-foreground)] px-2.5 py-1 bg-[var(--surface-2)] rounded-md border border-[var(--border)]">
-              11,507 Total Assets
+              {formatContentCount(CONTENT_COUNTS.searchDocuments)} Catalog Items
             </span>
           </div>
         </div>
@@ -821,6 +824,8 @@ export function SearchTopicsClient() {
                                 ))}
                               </div>
                             )}
+
+                            <EvidenceSources sources={details.details.sources} className="pt-2" />
                           </div>
                         )}
 
@@ -874,6 +879,8 @@ export function SearchTopicsClient() {
                                 </ul>
                               </div>
                             )}
+
+                            <EvidenceSources sources={details.details.sources} className="pt-2" />
                           </div>
                         )}
 
@@ -914,6 +921,8 @@ export function SearchTopicsClient() {
                                 </ul>
                               </div>
                             )}
+
+                            <EvidenceSources sources={details.details.sources} className="pt-2" />
                           </div>
                         )}
 
@@ -1094,6 +1103,23 @@ export function SearchTopicsClient() {
                                 </ul>
                               </div>
                             )}
+                          </div>
+                        )}
+
+                        {/* 8. GUIDED TRACK CONTENT */}
+                        {details.category === "Guided Track" && details.details && (
+                          <div className="space-y-3">
+                            {details.details.description && (
+                              <p className="text-xs text-[var(--foreground)] leading-relaxed">
+                                {details.details.description}
+                              </p>
+                            )}
+                            {details.details.executiveSummary && (
+                              <p className="text-xs text-[var(--muted-foreground)] leading-relaxed italic border-l-2 border-indigo-500 pl-2.5 py-0.5 bg-indigo-500/5 rounded-r">
+                                &ldquo;{details.details.executiveSummary}&rdquo;
+                              </p>
+                            )}
+                            <EvidenceSources sources={details.details.sources} className="pt-1" />
                           </div>
                         )}
 

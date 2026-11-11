@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import type { Metadata, Viewport } from "next";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     template: "%s | Lakehouse Architect",
   },
   description:
-    "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 11,500+ verified scenarios.",
+    `The enterprise reference platform for Lakehouse Architecture, with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items across Microsoft Fabric, Databricks, Delta Lake, Apache Iceberg, and Apache Spark.`,
   keywords: [
     "Lakehouse",
     "Lakehouse Architecture",
@@ -77,7 +78,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Lakehouse Architect | Modern Lakehouse Architecture & Systems Guide",
     description:
-      "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 11,500+ verified scenarios.",
+      `The enterprise reference platform for Lakehouse Architecture, with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items across Microsoft Fabric, Databricks, Delta Lake, Apache Iceberg, and Apache Spark.`,
     url: CANONICAL_SITE_URL,
     siteName: "Lakehouse Architect",
     images: [
@@ -95,7 +96,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lakehouse Architect | Modern Lakehouse Architecture & Systems Guide",
     description:
-      "The definitive enterprise reference platform for Lakehouse Architecture. Master Medallion Architecture, Microsoft Fabric OneLake, Databricks Delta Lake, Apache Iceberg, and Apache Spark 4.0 with 11,500+ verified scenarios.",
+      `The enterprise reference platform for Lakehouse Architecture, with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items across Microsoft Fabric, Databricks, Delta Lake, Apache Iceberg, and Apache Spark.`,
     site: "@SANt0shJ",
     creator: "@SANt0shJ",
     images: ["/diagrams/fabric_onelake_architecture.webp"],

@@ -37,6 +37,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
 import { TopicIcon } from "@/components/ui/topic-icon";
+import { EvidenceSources } from "@/components/ui/evidence-sources";
 import { UnifiedSearchFilterBox } from "@/components/ui/unified-search-filter-box";
 import { architectureDiagrams } from "@/data/diagrams";
 import { ArchitectureDiagramsGallery } from "@/components/architecture/diagrams-gallery";
@@ -585,6 +586,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
                   difficulty: item.difficulty || "ARCHITECT",
                   question: item.question || item.title || item.problemStatement || "",
                   answer: item.answer || item.architectureSolution || "",
+                  sources: Array.isArray(item.sources) ? item.sources : [],
                 });
               }
             }
@@ -1531,6 +1533,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
                       <div className="pt-0.5">
                         <AnswerRenderer text={item.answer} />
                       </div>
+                      <EvidenceSources sources={item.sources} className="pt-2" />
                     </SmoothAccordion>
                   </div>
                 );

@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -60,7 +62,7 @@ const NAV_SECTIONS: NavSection[] = [
     badge: "Tracks",
     subpages: [
       { label: "Topic Tracks", href: "/guided-learning", description: "Structured step-by-step learning tracks" },
-      { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: "12 Paths", description: "Role-based roadmaps for architects" },
+      { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: `${CONTENT_COUNTS.learningPaths} Paths`, description: "Role-based roadmaps for architects" },
       { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: "130 Dives", description: "Interactive deep-dive concept inventory" },
       { label: "Learning Portal", href: "/learning-paths", description: "Modular self-paced learning portal" },
     ],
@@ -70,9 +72,9 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Concepts",
     href: "/concepts",
     icon: BookOpen,
-    badge: "679",
+    badge: formatContentCount(CONTENT_COUNTS.concepts),
     subpages: [
-      { label: "Glossary & Cards", href: "/concepts", badge: "679", description: "Searchable core concept definitions" },
+      { label: "Glossary & Cards", href: "/concepts", badge: formatContentCount(CONTENT_COUNTS.concepts), description: "Searchable core concept definitions" },
       { label: "Concepts Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars", description: "Visual node graph of lakehouse ideas" },
       { label: "Lakehouse Concepts", href: "/modern-stack?tab=concepts", badge: "FinOps", description: "Storage, compute, and transaction primitives" },
     ],
@@ -85,7 +87,7 @@ const NAV_SECTIONS: NavSection[] = [
     badge: "3.2k+",
     subpages: [
       { label: "Whiteboard Mastery Hub", href: "/whiteboards", badge: "42 Blueprints", description: "Illustrated whiteboard systems blueprints" },
-      { label: "System Scenarios", href: "/architecture?tab=scenarios", badge: "3,214", description: "End-to-end distributed system designs" },
+      { label: "System Scenarios", href: "/architecture?tab=scenarios", badge: formatContentCount(CONTENT_COUNTS.scenarios), description: "End-to-end distributed system designs" },
       { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: "42", description: "Detailed architectural SVG diagrams" },
       { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42", description: "Production Python lakehouse runbooks" },
     ],
@@ -139,10 +141,10 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Code Practice",
     href: "/code-practice",
     icon: Code2,
-    badge: "178+",
+    badge: `${formatContentCount(CONTENT_COUNTS.codeDrills)}+`,
     subpages: [
       { label: "Coding Hub", href: "/code-practice", description: "All practice drills across languages" },
-      { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: "178", description: "PySpark, Spark SQL, T-SQL, Python & Polars" },
+      { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: formatContentCount(CONTENT_COUNTS.pysparkDrills), description: "PySpark, Spark SQL, T-SQL, Python & Polars" },
       { label: "Databricks Coding Hub", href: "/code-practice/databricks", badge: "148 Drills", description: "Interactive PySpark, SQL, and DBFS triage" },
       { label: "Polyglot Code Matrix", href: "/code-practice?tab=matrix", badge: "15", description: "Side-by-side PySpark, SQL, DuckDB, Polars" },
       { label: "Python Lakehouse Runbooks", href: "/code-practice?tab=runbooks", badge: "42", description: "Production Python lakehouse scripts & runbooks" },
@@ -167,7 +169,7 @@ const NAV_SECTIONS: NavSection[] = [
     icon: MessageSquare,
     badge: "7.1k+",
     subpages: [
-      { label: "Question Drill Bank", href: "/qa-prep", badge: "7,080+", description: "Architect scenarios with SM-2 spaced repetition" },
+      { label: "Question Drill Bank", href: "/qa-prep", badge: `${formatContentCount(CONTENT_COUNTS.qa)}+`, description: "Architect scenarios with SM-2 spaced repetition" },
       { label: "Target Company Intel", href: "/company-research", badge: "156 GCCs", description: "Interview rubrics, hiring GCCs & salary bands" },
     ],
   },
@@ -247,7 +249,7 @@ function AllPagesNavInner() {
             <div className="flex items-center gap-2.5 min-w-0 text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
               <Search size={15} className="shrink-0 text-blue-500 group-hover:scale-110 transition-transform" />
               <span className="text-xs sm:text-sm font-medium truncate">
-                Search 11,500+ Q&As, concepts, 42 architecture blueprints, system design...
+                {`Search ${formatContentCount(CONTENT_COUNTS.searchDocuments)} learning items, Q&As, concepts, and architecture...`}
               </span>
             </div>
             <div className="flex items-center gap-2 shrink-0">

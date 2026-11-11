@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Sidebar } from '@/components/layout/sidebar';
 import { CommandPalette } from '@/components/command-palette';
 import { conceptsDb } from '@/data';
+import { CONTENT_COUNTS, formatContentCount } from '@/data/content-counts';
 import fs from 'fs';
 import path from 'path';
 
@@ -26,9 +27,9 @@ describe('Professional Reference Portal IA & Search Indexing', () => {
 
     // Check specific pill tags for streamlined primary hubs
     expect(screen.getByText('Matrix')).toBeDefined();
-    expect(screen.getByText('3.2k+')).toBeDefined();
-    expect(screen.getByText('679')).toBeDefined();
-    expect(screen.getByText('6.8k+')).toBeDefined();
+    expect(screen.getByText(`${formatContentCount(CONTENT_COUNTS.scenarios)}+`)).toBeDefined();
+    expect(screen.getByText(formatContentCount(CONTENT_COUNTS.concepts))).toBeDefined();
+    expect(screen.getByText(`${formatContentCount(CONTENT_COUNTS.qa)}+`)).toBeDefined();
   });
 
   it('supports toggling collapsed and expanded states smoothly', () => {

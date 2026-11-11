@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -57,7 +59,7 @@ export function HeroCommandCenter() {
             <Sparkles size={12} className="text-blue-500 dark:text-blue-400 animate-pulse" />
             <span className="tracking-wide">2026 LAKEHOUSE ARCHITECT &amp; SYSTEMS MASTERCLASS</span>
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-            <span className="text-[11px] text-blue-500/90 font-mono font-bold">11,507 ASSETS</span>
+            <span className="text-[11px] text-blue-500/90 font-mono font-bold">{formatContentCount(CONTENT_COUNTS.searchDocuments)} ITEMS</span>
           </div>
 
           {/* Main motivational title */}
@@ -162,17 +164,17 @@ export function HeroCommandCenter() {
           <div className="flex flex-wrap items-center gap-2 sm:gap-4 pt-3 border-t border-[var(--border)]/60 text-xs text-[var(--muted-foreground)]">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">679</strong> Concepts</span>
+              <span><strong className="text-[var(--foreground)]">{formatContentCount(CONTENT_COUNTS.concepts)}</strong> Concepts</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">3,214</strong> Scenarios</span>
+              <span><strong className="text-[var(--foreground)]">{formatContentCount(CONTENT_COUNTS.scenarios)}</strong> Scenarios</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">7,080+</strong> Q&amp;As</span>
+              <span><strong className="text-[var(--foreground)]">{formatContentCount(CONTENT_COUNTS.qa)}</strong> Q&amp;As</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">

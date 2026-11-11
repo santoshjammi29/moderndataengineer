@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SearchTopicsClient } from "./search-topics-client";
@@ -7,9 +8,9 @@ export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
-    title: "Search Topics & Questions — 11,500+ Lakehouse Architecture Assets",
+    title: `Search ${formatContentCount(CONTENT_COUNTS.searchDocuments)} Data Engineering Topics & Questions`,
     description:
-      "Ask any question or topic across 11,500+ verified interview questions, architectural scenarios, key concepts, and code drills. Read full in-depth content directly inline without leaving the page.",
+      `Search ${formatContentCount(CONTENT_COUNTS.searchDocuments)} learning items across interview questions, architecture scenarios, concepts, and code drills. Read full content inline.`,
     path: "/search-topics",
     keywords: [
       "Search Topics",
@@ -31,7 +32,7 @@ export default function SearchTopicsPage() {
     {
       question: "How does the Search Topics engine find relevant architecture and interview content?",
       answer:
-        "The Search Topics engine uses Google-grade BM25F field-weighted retrieval across 11,500+ curated items, combining typo tolerance, domain acronym expansion, keyword in context (KWIC), and multi-word proximity scoring.",
+        `The Search Topics engine uses field-weighted retrieval across ${formatContentCount(CONTENT_COUNTS.searchDocuments)} catalog items, with typo tolerance, domain acronym expansion, and multi-word matching.`,
     },
     {
       question: "Can I read full answers and architectural scenarios directly on this page?",
@@ -41,7 +42,7 @@ export default function SearchTopicsPage() {
     {
       question: "What categories of content are searchable?",
       answer:
-        "You can search across Q&A Interview Prep, System Architecture Scenarios, 679 Concepts, Code Practice Drills, Emergency Cheat Sheets, Whiteboard Blueprints, Guided Tracks, and Tier-1 GCC Company Profiles.",
+        `You can search across Q&A Interview Prep, System Architecture Scenarios, ${formatContentCount(CONTENT_COUNTS.concepts)} Concepts, Code Practice Drills, Cheat Sheets, Whiteboard Blueprints, Guided Tracks, and Company Profiles.`,
     },
   ]);
 

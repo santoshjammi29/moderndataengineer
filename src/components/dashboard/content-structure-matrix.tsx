@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React from "react";
 import Link from "next/link";
 import {
@@ -33,7 +35,7 @@ const HUB_METADATA: Record<string, HubMetadata> = {
     pillar: "Concepts & Foundations",
     badge: "Foundations",
     badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    count: "679 Concepts · Mind Map",
+    count: `${formatContentCount(CONTENT_COUNTS.concepts)} Concepts · Mind Map`,
     summary: "Architectural glossaries, visual hierarchy taxonomy depth tree, and core modern lakehouse engine concepts.",
     icon: BookOpen,
   },
@@ -42,7 +44,7 @@ const HUB_METADATA: Record<string, HubMetadata> = {
     pillar: "Architecture & Systems",
     badge: "Principal",
     badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    count: "3,206+ Scenarios · Spark Lab",
+    count: `${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios · Spark Lab`,
     summary: "Real-world system design scenarios, Spark Tungsten memory simulator, DataOps lifecycle, and Cloud × Table Matrix.",
     icon: Layers,
   },
@@ -51,7 +53,7 @@ const HUB_METADATA: Record<string, HubMetadata> = {
     pillar: "Coding & Runbooks",
     badge: "Prod Ready",
     badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    count: "69 Runbooks · 178 Drills",
+    count: `${formatContentCount(CONTENT_COUNTS.codeDrills)} Drills · Databricks Ops`,
     summary: "Severity-1 incident playbooks, Databricks cheat sheets, and runnable PySpark, SQL, and Polars drills.",
     icon: FileCode2,
   },
@@ -69,7 +71,7 @@ const HUB_METADATA: Record<string, HubMetadata> = {
     pillar: "Interview Drill Hub",
     badge: "7.1k+ Qs",
     badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    count: "7,080+ Q&As · 156 Targets",
+    count: `${formatContentCount(CONTENT_COUNTS.qa)} Q&As · ${CONTENT_COUNTS.companyProfiles} Targets`,
     summary: "Vetted question banks with SM-2 spaced repetition flashcards and Tier-1 GCC company intel dossiers.",
     icon: MessageSquare,
   },
@@ -78,7 +80,7 @@ const HUB_METADATA: Record<string, HubMetadata> = {
     pillar: "Learning Journey",
     badge: "Roadmap",
     badgeColor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-    count: "12 Curricula · 14 Tracks · 130 Deep Dives",
+    count: `${CONTENT_COUNTS.learningPaths} Curricula · ${CONTENT_COUNTS.guidedTracks} Tracks · 130 Deep Dives`,
     summary: "Guided tech tracks and week-by-week role roadmaps from DP-600 to Principal Lakehouse Architect.",
     icon: Compass,
   },
@@ -105,7 +107,7 @@ export function ContentStructureMatrix() {
               <span>Full Content Architecture</span>
             </span>
             <span className="text-[11px] font-medium text-[var(--muted-foreground)] hidden sm:inline">
-              8 Hubs · 21 Subpages · 6,570+ Scenarios
+              8 Hubs · 21 Subpages · {formatContentCount(CONTENT_COUNTS.searchDocuments)} Catalog Items
             </span>
           </div>
           <h2 className="text-lg sm:text-xl font-bold text-[var(--foreground)] tracking-tight mt-1">

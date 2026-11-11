@@ -4,6 +4,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { NAV_GROUPS } from "@/data/navigation-data";
 import { Sidebar } from "@/components/layout/sidebar";
 import { AllPagesFooter } from "@/components/layout/all-pages-footer";
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
@@ -86,7 +87,7 @@ describe("Architecture & Systems Reorder, Word Wrap & Resizable Sidebar Tests", 
     // High signal content remains
     expect(screen.getByText("Lakehouse Architect Notes")).toBeDefined();
     expect(screen.getByText("2026 Edition")).toBeDefined();
-    expect(screen.getByText(/(?:10,700\+|11,500\+)/)).toBeDefined();
+    expect(screen.getByText(new RegExp(formatContentCount(CONTENT_COUNTS.searchDocuments)))).toBeDefined();
 
     // Shortcuts row is removed
     expect(screen.queryByText(/shortcuts:/i)).toBeNull();

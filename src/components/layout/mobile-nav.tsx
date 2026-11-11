@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -34,7 +36,7 @@ const mobileCoreTabs: MobileTabItem[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Journey", href: "/guided-learning", icon: Compass },
   { label: "Concepts", href: "/concepts", icon: BookOpen },
-  { label: "Q&A", href: "/qa-prep", icon: MessageSquare, badge: "6.8k" },
+  { label: "Q&A", href: "/qa-prep", icon: MessageSquare, badge: formatContentCount(CONTENT_COUNTS.qa) },
 ];
 
 // Extended tabs on tablet screens (640px - 1023px) — All Primary Hubs + Home & Studio

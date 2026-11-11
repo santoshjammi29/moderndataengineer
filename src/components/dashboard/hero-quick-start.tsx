@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Compass, Sparkles, MessageSquare, Cpu, Layers, X } from "lucide-react";
@@ -80,7 +82,7 @@ export function HeroQuickStart() {
             </div>
             <div className="space-y-1 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Step 1 · 660 Concepts</span>
+                <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Step 1 · {formatContentCount(CONTENT_COUNTS.concepts)} Concepts</span>
                 <span className="text-xs text-[var(--muted-foreground)] group-hover:text-green-400 transition-colors">→</span>
               </div>
               <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">Core Concepts Hub</h3>
@@ -100,7 +102,7 @@ export function HeroQuickStart() {
             </div>
             <div className="space-y-1 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">3,206+ Scenarios</span>
+                <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">{formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios</span>
                 <span className="text-xs text-[var(--muted-foreground)] group-hover:text-cyan-400 transition-colors">→</span>
               </div>
               <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">Enterprise Architecture Hub</h3>
@@ -140,7 +142,7 @@ export function HeroQuickStart() {
             </div>
             <div className="space-y-1 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Step 5 · 7,080+ Q&amp;As</span>
+                <span className="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Step 5 · {formatContentCount(CONTENT_COUNTS.qa)} Q&amp;As</span>
                 <span className="text-xs text-[var(--muted-foreground)] group-hover:text-orange-400 transition-colors">→</span>
               </div>
               <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">Interview Prep Hub</h3>

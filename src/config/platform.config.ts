@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 /**
  * Platform Configuration & Central Source of Truth
  * DataPlatform Architect
@@ -46,25 +47,25 @@ export const PLATFORM_CONFIG = {
     qaPrep: {
       title: "Architecture Interview Q&A Hub",
       path: "/qa-prep",
-      badge: "7,080+ Questions",
-      description: "Verified interview scenarios with architectural answers, trade-off rubrics, and continuous reading stream.",
+      badge: `${formatContentCount(CONTENT_COUNTS.qa)} Questions`,
+      description: "Interview questions with structured architectural answers, trade-off rubrics, and continuous reading.",
     },
     concepts: {
       title: "Core Concepts & Foundations",
       path: "/concepts",
-      badge: "679 Concepts",
-      description: "Interactive architecture lexicon, 14 topic pillars, engine mechanics, and spaced repetition flashcards.",
+      badge: `${formatContentCount(CONTENT_COUNTS.concepts)} Concepts`,
+      description: `Interactive architecture lexicon, ${Object.keys(CONTENT_COUNTS.conceptsByCategory).length} topic pillars, engine mechanics, and spaced repetition flashcards.`,
     },
     architecture: {
       title: "System Scenarios & Whiteboards",
       path: "/architecture",
-      badge: "3,206+ Scenarios",
-      description: "Real-world data platform design challenges, 42 whiteboard blueprints, and distributed Python runbooks.",
+      badge: `${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios`,
+      description: `Real-world data platform design challenges, trade-off matrices, failure modes, ${CONTENT_COUNTS.whiteboards} whiteboard blueprints, and distributed Python runbooks.`,
     },
     guidedLearning: {
       title: "Guided Learning Roadmaps",
       path: "/guided-learning",
-      badge: "14 Tracks · 12 Paths",
+      badge: `${CONTENT_COUNTS.guidedTracks} Tracks · ${CONTENT_COUNTS.learningPaths} Paths`,
       description: "Structured progressive learning paths, 130 production deep dives, and 152 SDLC controls from foundations to principal architect.",
     },
     sparkEngine: {

@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Shuffle } from "lucide-react";
@@ -100,8 +102,8 @@ export function RollingTicker() {
           onClick={handleShuffle}
           disabled={isShuffling}
           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--surface-2)] text-[var(--muted-foreground)] hover:text-purple-300 hover:bg-purple-500/15 border border-[var(--border)] hover:border-purple-500/40 text-[11px] font-medium transition-all duration-200 shadow-sm active:scale-95 cursor-pointer disabled:opacity-50 select-none"
-          title="Shuffle Topics (Draw fresh topics from 7,000+ database)"
-          aria-label="Shuffle topics from 7,000+ questions database"
+          title={`Shuffle Topics (Draw fresh topics from ${formatContentCount(CONTENT_COUNTS.qa)} questions)`}
+          aria-label={`Shuffle topics from ${formatContentCount(CONTENT_COUNTS.qa)} questions`}
         >
           <Shuffle
             size={12}

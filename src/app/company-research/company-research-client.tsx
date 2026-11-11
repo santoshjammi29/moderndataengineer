@@ -121,12 +121,19 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
     const tierParam = searchParams.get("tier");
     const techParam = searchParams.get("tech");
     const hubParam = searchParams.get("hub");
+    const locationParam = searchParams.get("location");
     const viewParam = searchParams.get("view") as ViewMode | null;
 
     if (qParam !== null) setSearchQuery(qParam);
     if (tierParam) setSelectedTier(tierParam);
     if (techParam) setSelectedTech(techParam);
     if (hubParam) setSelectedHub(hubParam);
+    if (locationParam) {
+      const normalizedLocation = locationParam.toLowerCase() === "bangalore"
+        ? "Bengaluru"
+        : MAJOR_HUBS.find((hub) => hub.toLowerCase() === locationParam.toLowerCase());
+      if (normalizedLocation) setSelectedHub(normalizedLocation);
+    }
     if (viewParam && ["grid", "split", "table"].includes(viewParam)) {
       setViewMode(viewParam);
     }

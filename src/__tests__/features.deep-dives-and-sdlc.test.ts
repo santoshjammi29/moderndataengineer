@@ -3,6 +3,7 @@ import { PRODUCTION_DEEP_DIVES } from "@/data/production-deep-dives-data";
 import { SDLC_PHASES, SDLC_LIFECYCLE_GATES } from "@/data/sdlc-lifecycle-data";
 import { COMPLETE_LEARNING_TREE } from "@/data/learning-tree-data";
 import { PLATFORM_CONFIG } from "@/config/platform.config";
+import { CONTENT_COUNTS } from "@/data/content-counts";
 
 describe("Production Deep Dives Dataset (130 Topics)", () => {
   it("contains exactly 13 production domains", () => {
@@ -104,8 +105,8 @@ describe("Master Lab & Learning Tree", () => {
 });
 
 describe("Platform Metadata & Hubs Alignment", () => {
-  it("has updated platform config with 679 concepts and 42 whiteboards", () => {
-    expect(PLATFORM_CONFIG.hubs.concepts.badge).toContain("679");
+  it("has updated platform config with generated concepts and 42 whiteboards", () => {
+    expect(PLATFORM_CONFIG.hubs.concepts.badge).toContain(`${CONTENT_COUNTS.concepts}`);
     expect(PLATFORM_CONFIG.hubs.architecture.description).toContain("42 whiteboard blueprints");
   });
 

@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import React from "react";
 import {
   Home,
@@ -80,9 +81,9 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Architecture Scenarios",
         href: "/architecture",
         icon: Layers,
-        pill: { text: "3.2k+", variant: "architect" },
+        pill: { text: `${formatContentCount(CONTENT_COUNTS.scenarios)}+`, variant: "architect" },
         subItems: [
-          { label: "System Blueprints", href: "/architecture?tab=scenarios", badge: "3.2k" },
+          { label: "System Blueprints", href: "/architecture?tab=scenarios", badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}` },
           { label: "Whiteboard Mastery Hub", href: "/whiteboards", badge: "42 Master" },
           { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: "42" },
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
@@ -140,10 +141,10 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Concepts Glossary",
         href: "/concepts",
         icon: BookOpen,
-        pill: { text: "679", variant: "easy" },
+        pill: { text: `${formatContentCount(CONTENT_COUNTS.concepts)}`, variant: "easy" },
         matches: ["/concepts", "/mindmap"],
         subItems: [
-          { label: "Glossary & Cards", href: "/concepts", badge: "679" },
+          { label: "Glossary & Cards", href: "/concepts", badge: `${formatContentCount(CONTENT_COUNTS.concepts)}` },
           { label: "Concepts Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars" },
           { label: "Flashcards Study", href: "/concepts?view=study", badge: "Recall" },
         ],
@@ -154,7 +155,7 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Code2,
         pill: { text: "Drills", variant: "medium" },
         subItems: [
-          { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: "178" },
+          { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: `${formatContentCount(CONTENT_COUNTS.pysparkDrills)}` },
           { label: "Databricks Coding", href: "/code-practice/databricks", badge: "148" },
           { label: "Polyglot Matrix", href: "/code-practice?tab=matrix", badge: "15" },
           { label: "Python Runbooks", href: "/code-practice?tab=runbooks", badge: "42" },
@@ -180,9 +181,9 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Question Drill Bank",
         href: "/qa-prep",
         icon: MessageSquare,
-        pill: { text: "6.8k+", variant: "hard" },
+        pill: { text: `${formatContentCount(CONTENT_COUNTS.qa)}+`, variant: "hard" },
         subItems: [
-          { label: "All Questions Bank", href: "/qa-prep?domain=all", badge: "6.8k" },
+          { label: "All Questions Bank", href: "/qa-prep?domain=all", badge: `${formatContentCount(CONTENT_COUNTS.qa)}` },
           { label: "System Architect Scenarios", href: "/qa-prep?difficulty=ARCHITECT", badge: "Architect" },
           { label: "Hard Technical Q&As", href: "/qa-prep?difficulty=HARD", badge: "Hard" },
         ],
@@ -195,7 +196,7 @@ export const NAV_GROUPS: NavGroup[] = [
         matches: ["/guided-learning", "/learning-paths"],
         subItems: [
           { label: "Topic Tracks", href: "/guided-learning" },
-          { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: "12 Paths" },
+          { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: `${CONTENT_COUNTS.learningPaths} Paths` },
           { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: "130 Deep Dives" },
         ],
       },
@@ -222,8 +223,8 @@ export const NAV_GROUPS: NavGroup[] = [
         pill: { text: "Personal", variant: "info" },
         subItems: [
           { label: "Studio Dashboard", href: "/studio" },
-          { label: "Saved Bookmarks", href: "/studio?tab=bookmarks" },
-          { label: "Architect Ledger", href: "/studio?tab=decisions" },
+          { label: "Saved Bookmarks", href: "/studio#bookmarks" },
+          { label: "Architect Ledger", href: "/learning-paths#decision-ledger" },
         ],
       },
     ],
@@ -240,14 +241,14 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "learning-paths", label: "Career Curricula", shortLabel: "Career Paths", href: "/learning-paths", category: "Journey", categoryColor: "indigo", icon: GraduationCap, badge: "Curricula" },
   
   // Concepts & Foundations (Clubbed)
-  { id: "concepts", label: "Concepts Glossary", shortLabel: "Glossary", href: "/concepts", category: "Concepts", categoryColor: "emerald", icon: BookOpen, badge: "679" },
+  { id: "concepts", label: "Concepts Glossary", shortLabel: "Glossary", href: "/concepts", category: "Concepts", categoryColor: "emerald", icon: BookOpen, badge: `${formatContentCount(CONTENT_COUNTS.concepts)}` },
   { id: "mindmap", label: "Concepts Mind Map", shortLabel: "Mind Map", href: "/concepts?view=mindmap", category: "Concepts", categoryColor: "emerald", icon: GitBranch, badge: "Mind Map" },
   { id: "modern-concepts", label: "Core Lakehouse Concepts", shortLabel: "Lakehouse Concepts", href: "/modern-stack?tab=concepts", category: "Concepts", categoryColor: "emerald", icon: Zap, badge: "FinOps" },
   
   // Architecture & Systems (Clubbed)
   { id: "stages", label: "Mastery Stages & Systems Lifecycle", shortLabel: "Stages Hub", href: "/stages", category: "Architecture", categoryColor: "purple", icon: Workflow, badge: "All Stages" },
   { id: "whiteboards", label: "Whiteboard Mastery Hub", shortLabel: "Whiteboards", href: "/whiteboards", category: "Architecture", categoryColor: "purple", icon: Sparkles, badge: "42 Blueprints" },
-  { id: "arch-scenarios", label: "System Scenarios", shortLabel: "Scenarios", href: "/architecture?tab=scenarios", category: "Architecture", categoryColor: "purple", icon: Layers, badge: "3.2k+" },
+  { id: "arch-scenarios", label: "System Scenarios", shortLabel: "Scenarios", href: "/architecture?tab=scenarios", category: "Architecture", categoryColor: "purple", icon: Layers, badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+` },
   { id: "spark-engine", label: "Spark Engine Lab", shortLabel: "Spark Lab", href: "/spark-engine", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Lab" },
   { id: "spark-catalyst", label: "Catalyst Optimizer & Visualizer", shortLabel: "Catalyst Lab", href: "/spark-catalyst", category: "Architecture", categoryColor: "purple", icon: Cpu, badge: "Live" },
   { id: "spark-visualizer", label: "Spark Execution Visualizer", shortLabel: "Visualizer", href: "/visualizer", category: "Architecture", categoryColor: "purple", icon: Activity, badge: "Simulator" },
@@ -262,7 +263,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "cheat-sheet", label: "Production Cheat Sheet", shortLabel: "Cheat Sheet", href: "/cheat-sheet", category: "Coding", categoryColor: "cyan", icon: FileCode2, badge: "Runbooks" },
   { id: "dbx-cheat-sheet", label: "Databricks Cheat Sheets", shortLabel: "DBX Sheets", href: "/cheat-sheet?tab=databricks", category: "Coding", categoryColor: "cyan", icon: Terminal, badge: "48" },
   { id: "pdf-hub", label: "A4 PDF Reference Hub", shortLabel: "PDF Hub", href: "/cheat-sheet?tab=pdf_hub", category: "Coding", categoryColor: "cyan", icon: FileText, badge: "7 PDFs" },
-  { id: "code-pyspark", label: "PySpark Drills", shortLabel: "PySpark", href: "/code-practice?db=pyspark", category: "Coding", categoryColor: "cyan", icon: Code2, badge: "51" },
+  { id: "code-pyspark", label: "PySpark Drills", shortLabel: "PySpark", href: "/code-practice?db=pyspark", category: "Coding", categoryColor: "cyan", icon: Code2, badge: `${formatContentCount(CONTENT_COUNTS.pysparkDrills)}` },
   { id: "code-sparksql", label: "Spark SQL Drills", shortLabel: "Spark SQL", href: "/code-practice?db=sparksql", category: "Coding", categoryColor: "cyan", icon: Database, badge: "50" },
   { id: "code-mssql", label: "T-SQL Drills", shortLabel: "T-SQL", href: "/code-practice?db=mssql", category: "Coding", categoryColor: "cyan", icon: Database, badge: "35" },
   { id: "code-python", label: "Python & Polars", shortLabel: "Python & Polars", href: "/code-practice?db=python", category: "Coding", categoryColor: "cyan", icon: Code2, badge: "42" },
@@ -277,7 +278,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "modern-blueprints", label: "Modern Stack Blueprints", shortLabel: "Stack Blueprints", href: "/modern-stack?tab=blueprints", category: "Images & Diagrams", categoryColor: "teal", icon: Cpu, badge: "Blueprints" },
   
   // Interview Drill Hub / Q&A (Clubbed) - Target Company Intel at the last
-  { id: "qa-prep", label: "Question Drill Bank", shortLabel: "Q&A Drill Bank", href: "/qa-prep", category: "Q&A", categoryColor: "amber", icon: MessageSquare, badge: "6.8k+" },
+  { id: "qa-prep", label: "Question Drill Bank", shortLabel: "Q&A Drill Bank", href: "/qa-prep", category: "Q&A", categoryColor: "amber", icon: MessageSquare, badge: `${formatContentCount(CONTENT_COUNTS.qa)}+` },
   { id: "company-research", label: "Target Company Intel", shortLabel: "Company Intel", href: "/company-research", category: "Q&A", categoryColor: "amber", icon: Briefcase, badge: "156" },
   
   // Workspace
@@ -367,9 +368,9 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
       {
         label: "Architecture Hub",
         href: "/architecture",
-        badge: "3.2k+",
+        badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+`,
         subpages: [
-          { label: "System Blueprints", href: "/architecture?tab=scenarios", badge: "3.2k" },
+          { label: "System Blueprints", href: "/architecture?tab=scenarios", badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}` },
           { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: "42" },
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
         ],
@@ -416,9 +417,9 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
       {
         label: "Concepts Glossary",
         href: "/concepts",
-        badge: "679",
+        badge: `${formatContentCount(CONTENT_COUNTS.concepts)}`,
         subpages: [
-          { label: "Glossary & Cards", href: "/concepts", badge: "679" },
+          { label: "Glossary & Cards", href: "/concepts", badge: `${formatContentCount(CONTENT_COUNTS.concepts)}` },
           { label: "Concepts Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars" },
           { label: "Flashcards Study", href: "/concepts?view=study", badge: "Recall" },
         ],
@@ -428,25 +429,25 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         href: "/guided-learning",
         badge: "Tracks & Roadmaps",
         subpages: [
-          { label: "Specialized Topic Tracks", href: "/guided-learning", badge: "14 Tracks" },
-          { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: "12 Paths" },
+          { label: "Specialized Topic Tracks", href: "/guided-learning", badge: `${CONTENT_COUNTS.guidedTracks} Tracks` },
+          { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: `${CONTENT_COUNTS.learningPaths} Paths` },
           { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: "130 Deep Dives" },
         ],
       },
-      { label: "Question Drill Bank", href: "/qa-prep", badge: "6.8k+ Scenarios" },
+      { label: "Question Drill Bank", href: "/qa-prep", badge: `${formatContentCount(CONTENT_COUNTS.qa)} Questions` },
       { label: "Target Company Intel", href: "/company-research", badge: "156 GCC" },
     ],
   },
   {
     title: "Code & Incident Runbooks",
-    badge: "178+ Drills",
+    badge: `${formatContentCount(CONTENT_COUNTS.codeDrills)} Drills`,
     pages: [
       {
         label: "Code Practice Hub",
         href: "/code-practice",
         badge: "Multi-Engine",
         subpages: [
-          { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: "178" },
+          { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: `${formatContentCount(CONTENT_COUNTS.pysparkDrills)}` },
           { label: "Databricks Coding Hub", href: "/code-practice/databricks", badge: "148" },
           { label: "Polyglot Translation Matrix", href: "/code-practice?tab=matrix", badge: "15" },
           { label: "Python Lakehouse Runbooks", href: "/code-practice?tab=runbooks", badge: "42" },

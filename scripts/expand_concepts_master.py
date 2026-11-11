@@ -862,33 +862,7 @@ def main():
             })
             existing_ids.add(slug)
 
-    # If still below target, generate additional specialized concept entries
-    idx = 1
-    while (len(existing_data) + len(systematic_concepts)) < 1010:
-        cat_tuple = categories_to_seed[idx % len(categories_to_seed)]
-        cat_name = cat_tuple[0]
-        cat_desc = cat_tuple[1]
-        term_name = f"{cat_name.title()} Operational Pattern #{idx:03d}"
-        slug = f"{cat_name.lower().replace(' ', '-').replace('&', 'and')}-pattern-{idx:03d}"
-        
-        if slug not in existing_ids:
-            diff_level = ["EASY", "MEDIUM", "HARD", "ARCHITECT"][idx % 4]
-            systematic_concepts.append({
-                "id": slug,
-                "term": term_name,
-                "category": cat_name,
-                "difficulty": diff_level,
-                "definition": f"Production engineering standard for {term_name} within {cat_desc}.",
-                "explanation": f"Implements robust fault tolerance, predictable performance scaling, and strict operational invariants in enterprise {cat_name} architectures.",
-                "keyPoints": [
-                    f"Engineered for high-availability {cat_name} lakehouse and data platform workloads.",
-                    f"Balances compute efficiency, network throughput, and storage persistence.",
-                    f"Classified at {diff_level} operational mastery tier.",
-                    "Validated against production industry benchmarks and telemetry standards."
-                ]
-            })
-            existing_ids.add(slug)
-        idx += 1
+    # Do not pad the curated catalog with generated placeholder entries.
 
     print(f"Generated {len(systematic_concepts)} new concepts.")
     existing_data.extend(systematic_concepts)

@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import { Metadata } from "next";
 import { DashboardClient } from "./dashboard-client";
 import { LakehouseArchitectureGuide } from "@/components/dashboard/lakehouse-architecture-guide";
@@ -14,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: "Lakehouse Architecture: The Definitive Systems Guide & Blueprints",
     description:
-      "The definitive guide to Lakehouse Architecture. Master Medallion Architecture (Bronze, Silver, Gold), Delta Lake, Apache Iceberg, Microsoft Fabric OneLake, Databricks, and Apache Spark 4.0 with 11,500+ verified assets, 679 concepts, and 42 whiteboard blueprints.",
+      `The definitive guide to Lakehouse Architecture, with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items, ${formatContentCount(CONTENT_COUNTS.concepts)} concepts, and ${CONTENT_COUNTS.whiteboards} whiteboard blueprints across Delta Lake, Apache Iceberg, Microsoft Fabric, Databricks, and Apache Spark.`,
     path: "/",
     keywords: [
       "Lakehouse",
@@ -40,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function DashboardPage() {
   const courseSchema = generateCourseSchema(
     "Enterprise Lakehouse Architecture & Modern Data Platform Masterclass",
-    "Comprehensive preparation curriculum featuring 11,500+ technical assets, Spark execution simulator, and 42 high-resolution whiteboard blueprints."
+    `A technical curriculum with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items, a Spark execution simulator, and ${CONTENT_COUNTS.whiteboards} whiteboard blueprints.`
   );
 
   const techArticleSchema = generateTechArticleSchema({
@@ -90,7 +91,7 @@ export default function DashboardPage() {
     {
       question: "How does Lakehouse Architect prepare engineers for DP-700, DP-600, and Databricks certifications?",
       answer:
-        "Lakehouse Architect provides over 11,600 verified interview scenarios, 704 architectural concepts, 42 digital whiteboard blueprints, and dedicated Spark execution labs covering Microsoft Fabric Data Engineer (DP-700), Fabric Analytics Engineer (DP-600), and Databricks Certified Data Engineer Professional.",
+        `Lakehouse Architect provides ${formatContentCount(CONTENT_COUNTS.qa)} interview questions, ${formatContentCount(CONTENT_COUNTS.concepts)} architectural concepts, ${CONTENT_COUNTS.whiteboards} digital whiteboard blueprints, and Spark execution labs for Microsoft Fabric and Databricks.`,
     },
   ]);
 

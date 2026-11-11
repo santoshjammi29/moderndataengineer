@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import {
   Layers,
@@ -1205,11 +1207,11 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                 <BookOpen size={16} />
               </div>
               <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)] group-hover:text-purple-300 transition-colors flex items-center gap-1.5">
-                Central Concepts Hub (679+)
+                Central Concepts Hub ({formatContentCount(CONTENT_COUNTS.concepts)})
                 <ExternalLink size={12} className="opacity-70" />
               </h4>
               <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
-                All 20 Modern Lakehouse concepts merged under single roof with 679+ topics & mind map.
+                All 20 Modern Lakehouse concepts sit alongside {formatContentCount(CONTENT_COUNTS.concepts)} core topics and a mind map.
               </p>
             </Link>
 

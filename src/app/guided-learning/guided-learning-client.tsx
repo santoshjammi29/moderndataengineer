@@ -1,5 +1,7 @@
 "use client";
 
+import { EvidenceSources } from "@/components/ui/evidence-sources";
+
 import React, { useState, useEffect, useMemo, useDeferredValue, useCallback, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -929,6 +931,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                   <p className="text-xs text-[var(--foreground)] leading-relaxed italic border-l-2 border-purple-500 pl-2.5 py-0.5 bg-purple-500/5 rounded-r">
                     &ldquo;{activeTopicObj?.executiveSummary}&rdquo;
                   </p>
+                  <EvidenceSources sources={activeTopicObj?.sources} className="pt-1" />
 
                   <div className="flex flex-wrap items-center gap-2.5 text-xs text-[var(--muted-foreground)] pt-0.5">
                     <span className="flex items-center gap-1">

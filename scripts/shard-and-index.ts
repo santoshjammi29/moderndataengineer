@@ -12,6 +12,7 @@ import dataSparksqlJson from '../src/data/json/data_sparksql.json';
 import dataMssqlJson from '../src/data/json/data_mssql.json';
 import dataPythonJson from '../src/data/json/data_python.json';
 import modernBlueprintsJson from '../src/data/json/modern_blueprints.json';
+import modernConceptsJson from '../src/data/json/modern_concepts.json';
 import modernCodeMatrixJson from '../src/data/json/modern_code_matrix.json';
 import modernCostPlaybooksJson from '../src/data/json/modern_cost_playbooks.json';
 import { GUIDED_TOPICS } from '../src/data/guided-learning-topics';
@@ -83,6 +84,7 @@ function loadQaItems(): any[] {
             tags: Array.isArray(q.tags) ? q.tags : (q.niche ? [q.niche] : []),
             rubricPoints: q.rubricPoints || [],
             companyTargets: q.companyTargets || [],
+            sources: Array.isArray(q.sources) ? q.sources : [],
             topic: q.category || q.niche || 'General',
           });
         }
@@ -125,6 +127,7 @@ function loadScenarioItems(): any[] {
           architectureSolution: s.answer || s.architectureSolution || '',
           tradeoffs: s.tradeoffs || [],
           blueprintId: s.blueprintId,
+          sources: Array.isArray(s.sources) ? s.sources : [],
         });
       }
     }
@@ -160,6 +163,8 @@ function loadConceptItems(): any[] {
           summary: c.definition || c.summary || '',
           internals: c.explanation || c.internals || '',
           relatedTerms: c.relatedTerms || c.keyPoints || [],
+          keyPoints: c.keyPoints || [],
+          sources: Array.isArray(c.sources) ? c.sources : [],
         });
       }
     }
@@ -208,6 +213,44 @@ function copyStaticDirectory(srcSubdir: string, destSubdir: string) {
   if (!fs.existsSync(src)) return;
   ensureDir(dest);
   fs.cpSync(src, dest, { recursive: true });
+}
+
+function syncResearchTrackCache(concepts: any[], qaItems: any[], scenarios: any[]) {
+  const cachePath = path.join(process.cwd(), 'src', 'data', 'guided-topics-cache.json');
+  const cache = JSON.parse(fs.readFileSync(cachePath, 'utf-8')) as Record<string, any[]>;
+  const sourcedConcepts = concepts.filter((item) => String(item.id).startsWith('research-concept-'));
+  const sourcedQa = qaItems.filter((item) => String(item.id).startsWith('research-qa-'));
+  const sourcedScenarios = scenarios.filter((item) => String(item.id).startsWith('research-arch-'));
+  const normalizeDifficulty = (value: string) => {
+    const difficulty = String(value || '').toUpperCase();
+    if (['EASY', 'BEGINNER', 'FOUNDATIONAL'].includes(difficulty)) return 'EASY';
+    if (['MEDIUM', 'INTERMEDIATE'].includes(difficulty)) return 'MEDIUM';
+    if (['HARD', 'ADVANCED', 'SENIOR'].includes(difficulty)) return 'HARD';
+    return 'ARCHITECT';
+  };
+  const items = [
+    ...sourcedConcepts.map((item) => ({
+      id: item.id, type: 'concept', difficulty: normalizeDifficulty(item.difficulty), title: item.term,
+      body: `${item.definition || ''}\n\n${item.explanation || ''}`, keyPoints: item.keyPoints || [],
+      category: item.category, sourceLabel: 'Key Concepts',
+      sourceHref: `/concepts?category=${encodeURIComponent(item.category || '')}&term=${encodeURIComponent(item.term || '')}`,
+    })),
+    ...sourcedQa.map((item) => ({
+      id: item.id, type: 'qa', difficulty: normalizeDifficulty(item.difficulty), title: item.question, body: item.answer,
+      category: item.category, niche: item.niche, sourceLabel: item.sourceLabel || 'Q&A Prep',
+      sourceHref: `/qa-prep?card=${encodeURIComponent(item.id)}`,
+    })),
+    ...sourcedScenarios.map((item) => ({
+      id: item.id, type: 'architecture', difficulty: normalizeDifficulty(item.difficulty),
+      title: item.question || item.title || item.id, body: item.answer || item.architectureSolution || '',
+      category: item.category, niche: item.niche, sourceLabel: item.source || 'Architecture Hub',
+      sourceHref: `/architecture?card=${encodeURIComponent(item.id)}`,
+    })),
+  ];
+  if (items.length) {
+    cache['agentic-data-platform'] = items;
+    fs.writeFileSync(cachePath, JSON.stringify(cache, null, 2));
+  }
 }
 
 function run() {
@@ -261,7 +304,7 @@ function run() {
   GUIDED_TOPICS.forEach((topic) => addDoc({
     id: `topic-${topic.key}`, type: 'topic', title: topic.label,
     category: 'Guided Track', page: 'Guided Learning', href: `/guided-learning?topic=${topic.key}`,
-    domain: topic.domain, tags: [topic.key, topic.domain], body: `${topic.description} ${topic.executiveSummary}`,
+    domain: topic.domain, tags: [topic.key, topic.domain, ...(topic.sources || []).map((source) => source.title)], body: `${topic.description} ${topic.executiveSummary} ${(topic.sources || []).map((source) => source.title).join(' ')}`,
     badge: `Track · ${topic.domain}`, iconType: 'sparkles',
     topicKey: topic.key, topicLabel: topic.label, topicIcon: topic.icon,
     topicDescription: topic.description, topicExecutiveSummary: topic.executiveSummary,
@@ -272,7 +315,7 @@ function run() {
     category: 'Q&A Prep', page: 'Q&A Prep Hub',
     href: `/qa-prep?category=${encodeURIComponent(q.category || 'ALL')}&card=${encodeURIComponent(q.id)}`,
     domain: q.domain || q.category, difficulty: q.difficulty, badge: q.difficulty,
-    tags: [q.category, q.niche, q.domain, q.sourceLabel].filter(Boolean),
+    tags: [q.category, q.niche, q.domain, q.sourceLabel, ...(q.sources || []).map((source: any) => source.title)].filter(Boolean),
     body: (q.answer || '').slice(0, 300), iconType: 'message',
   }));
 
@@ -281,7 +324,7 @@ function run() {
     category: 'Architecture', page: 'Architecture Hub',
     href: `/architecture?category=${encodeURIComponent(item.category || 'ALL')}&card=${encodeURIComponent(item.id)}`,
     domain: item.category, difficulty: item.difficulty, badge: item.difficulty,
-    tags: [item.niche, item.source].filter(Boolean), body: (item.answer || item.problemStatement || '').slice(0, 300),
+    tags: [item.niche, item.source, ...(item.sources || []).map((source: any) => source.title)].filter(Boolean), body: (item.answer || item.problemStatement || '').slice(0, 300),
     iconType: 'cpu',
   }));
 
@@ -290,7 +333,7 @@ function run() {
     category: 'Concepts', page: 'Key Concepts',
     href: `/concepts?tab=concepts&category=${encodeURIComponent(item.category)}&term=${encodeURIComponent(item.term)}`,
     domain: item.category, difficulty: item.difficulty, badge: item.difficulty,
-    tags: item.keyPoints || item.relatedTerms || [], body: `${item.definition || ''} ${item.explanation || ''}`.slice(0, 300),
+    tags: [...(item.keyPoints || []), ...(item.relatedTerms || []), ...(item.sources || []).map((source: any) => source.title)], body: `${item.definition || ''} ${item.explanation || ''}`.slice(0, 300),
     iconType: 'book',
   }));
 
@@ -394,6 +437,35 @@ function run() {
     tags: [...(item.stack || []), ...(item.interviewFocus || []), item.location || ''].filter(Boolean),
     body: `${item.keyChallenges || ''} ${item.location || ''}`, iconType: 'building',
   }));
+
+  syncResearchTrackCache(conceptItems, qaItems, scenarioItems);
+
+  const conceptsByCategory: Record<string, number> = {};
+  conceptItems.forEach((item) => {
+    const category = String(item.category || 'General');
+    conceptsByCategory[category] = (conceptsByCategory[category] || 0) + 1;
+  });
+  const contentCounts = {
+    searchDocuments: searchDocs.length,
+    qa: qaItems.length,
+    scenarios: scenarioItems.length,
+    concepts: conceptItems.length,
+    conceptsByCategory,
+    codeDrills: codeGroups.reduce((total, group) => total + group.items.length, 0),
+    pysparkDrills: (dataPysparkJson as any[]).length,
+    sparkSqlDrills: (dataSparksqlJson as any[]).length,
+    mssqlDrills: (dataMssqlJson as any[]).length,
+    pythonDrills: (dataPythonJson as any[]).length,
+    learningPaths: (dataPathsJson as any[]).length,
+    guidedTracks: GUIDED_TOPICS.length,
+    companyProfiles: (companyProfilesJson as any[]).length,
+    whiteboards: architectureDiagrams.length,
+    modernBlueprints: (modernBlueprintsJson as any[]).length,
+    modernConcepts: (modernConceptsJson as any[]).length,
+    finopsPlaybooks: (modernCostPlaybooksJson as any[]).length,
+  };
+  fs.writeFileSync(path.join(process.cwd(), 'src', 'data', 'content-counts.json'), JSON.stringify(contentCounts, null, 2));
+  console.log(`✓ Generated exact content counts (${contentCounts.searchDocuments} searchable items)`);
 
   miniSearch.addAll(searchDocs);
   const searchJson = JSON.stringify(miniSearch.toJSON());

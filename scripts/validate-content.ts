@@ -49,6 +49,7 @@ function runValidation() {
       summary: c.definition || c.summary || '',
       internals: c.explanation || c.internals || '',
       relatedTerms: c.relatedTerms || c.keyPoints || [],
+      sources: c.sources,
     });
 
     if (!res.success) {
@@ -89,6 +90,8 @@ function runValidation() {
       architectureSolution: s.answer || s.architectureSolution || '',
       tradeoffs: s.tradeoffs || [],
       blueprintId: s.blueprintId,
+      source: s.source,
+      sources: s.sources,
     });
 
     if (!res.success) {
@@ -121,6 +124,8 @@ function runValidation() {
         rubricPoints: q.rubricPoints || [],
         tags: Array.isArray(q.tags) ? q.tags : (q.niche ? [q.niche] : []),
         companyTargets: q.companyTargets || [],
+        source: q.source,
+        sources: q.sources,
       });
 
       if (!res.success) {

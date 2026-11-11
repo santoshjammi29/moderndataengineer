@@ -1,3 +1,4 @@
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-static";
@@ -23,15 +24,15 @@ export async function GET() {
   </item>
   
   <item>
-    <title>Enterprise Lakehouse Architecture Hub (3,206+ Scenarios)</title>
+    <title>Enterprise Lakehouse Architecture Hub (${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios)</title>
     <link>${BASE_URL}/architecture</link>
     <guid>${BASE_URL}/architecture</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>3,206+ real-world production system design scenarios, distributed failure modes, and architectural trade-offs for Lead Data Engineers and Architects.</description>
+    <description>${formatContentCount(CONTENT_COUNTS.scenarios)} system design scenarios, distributed failure modes, and architectural trade-offs for Lead Data Engineers and Architects.</description>
   </item>
 
   <item>
-    <title>Lakehouse Concepts &amp; Architecture Glossary (679 Terms)</title>
+    <title>Lakehouse Concepts &amp; Architecture Glossary (${formatContentCount(CONTENT_COUNTS.concepts)} Terms)</title>
     <link>${BASE_URL}/concepts</link>
     <guid>${BASE_URL}/concepts</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
@@ -43,7 +44,7 @@ export async function GET() {
     <link>${BASE_URL}/cheat-sheet</link>
     <guid>${BASE_URL}/cheat-sheet</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>124+ production runbooks and 7 downloadable high-resolution vector PDFs covering PySpark, Databricks, Incident Runbooks, and Master Reference.</description>
+    <description>Production runbooks and 7 downloadable high-resolution vector PDFs covering PySpark, Databricks, Incident Runbooks, and Master Reference.</description>
   </item>
 
   <item>
