@@ -1,5 +1,20 @@
 # Standardized Architecture & Developer Guide
 
+<p align="center">
+  <a href="https://moderndataengineer.uk"><img src="https://img.shields.io/badge/Production-moderndataengineer.uk-blueviolet?style=flat-square" alt="Live Site"></a>
+  <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js" alt="Next.js 16"></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Vitest-58_Suites_%E2%80%A2_472_Tests-green?style=flat-square&logo=vitest" alt="Vitest 58/58"></a>
+  <a href="content-expansion-plan.md"><img src="https://img.shields.io/badge/Research-21_Authoritative_Sources-emerald?style=flat-square" alt="21 Research Sources"></a>
+</p>
+
+> **Architectural Invariants, Server/Client Boundaries & Zero-Bundle Mandates**  
+> Operational and architectural specifications for `moderndataengineer.uk`, deployed on Cloudflare OpenNext / Workers with R2 storage synchronization.
+
+> [!NOTE]
+> **Production Edge Standards**: Built with Next.js 16 App Router and React 19 Server Components. All 11,956+ searchable catalog records are served with **0 KB raw JSON in client bundles**, backed by React `cache()` Data Access Layers (DAL) and persistent browser IndexedDB caching.
+
+---
+
 ## 1. Overview & Core Philosophy
 
 **Modern Data Engineer & Lakehouse Architect** (`moderndataengineer.uk`) is engineered for high-performance, real-time global access by thousands of concurrent engineers, architects, and interview candidates, deployed on **Cloudflare OpenNext / Workers** with R2 artifact synchronization.
@@ -38,7 +53,13 @@ src/
 │   ├── cheat-sheet/
 │   │   └── cheat-sheet-client.tsx # 7 Master Vector PDFs & PDF Downloads Hub
 │   ├── modern-stack/
-│   │   └── modern-stack-client.tsx # Cloud Platforms & Engine Matrix (10 engines, FinOps, simulators)
+│   │   └── modern-stack-client.tsx # Cloud Platforms & Engine Matrix (10 engines, FinOps, 6 simulators)
+│   ├── spark-engine/
+│   │   └── spark-engine-client.tsx # Spark memory pools, shuffle, and AQE skew join splitting flow
+│   ├── spark-catalyst/
+│   │   └── spark-catalyst-client.tsx # Catalyst 5-stage plan inspector with 7 production scenarios
+│   ├── guided-learning/
+│   │   └── guided-learning-client.tsx # 15 progressive tracks including Governed Agentic Data Platforms
 │   ├── plan/                      # Permanent 301 edge redirect to /guided-learning?tab=curricula
 │   ├── goal/                      # Permanent 301 edge redirect to /studio
 │   ├── learn/                     # Permanent 301 edge redirect to /guided-learning

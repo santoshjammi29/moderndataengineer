@@ -3,8 +3,8 @@
 **System Status**: Deployed to Cloudflare OpenNext / Workers with Edge R2 Caching  
 **Canonical Deployment Target**: [https://moderndataengineer.uk](https://moderndataengineer.uk)  
 **Architecture Spec**: Zero-Bundle Server Components + Edge DAL + Persistent IndexedDB + HTML5 Canvas 60 FPS Engine + Web Workers  
-**Test Suite**: 57 / 57 test files passed (464 / 464 unit & integration tests)  
-**Date of Audit**: November 2026 (Updated to v1.7)  
+**Test Suite**: 58 / 58 test files passed (472 / 472 unit & integration tests)  
+**Date of Audit**: November 2026 (Updated to v2.0)  
 
 ---
 
@@ -33,7 +33,7 @@ This historical audit records prior architecture and performance claims; those m
 ### 1.1 Foundation: Data Layer (Static $\rightarrow$ Dynamic)
 - **Zero-Bundle Data Mandate**: Completely eliminated direct imports of `src/data/json` from client-side bundles across all routes (`/concepts`, `/qa-prep`, `/architecture`, `/code-practice`, `/cheat-sheet`, `/learning-paths`, `/spark-engine`, `/modern-stack`, `/company-research`).
 - **Serverless DB Adapter (`src/lib/db.ts`)**: Built a universal REST database adapter supporting Supabase (PostgREST) and MongoDB Atlas Data API with edge caching tags and seamless in-memory fallback.
-- **Automated Migration Script (`scripts/migrate_to_serverless_db.ts`)**: Provides one-click migration of all 11,500+ rows of JSON data to Supabase or MongoDB Atlas.
+- **Automated Migration Script (`scripts/migrate_to_serverless_db.ts`)**: Provides one-click migration of all 11,956+ rows of JSON data to Supabase or MongoDB Atlas.
 - **Server-Side DAL (`src/lib/dal.ts`)**: Encapsulates data fetching via React `cache()` for request-level deduplication and sub-50ms execution.
 - **Dynamic Edge Search (`src/app/api/search/route.ts` & `src/lib/search-engine.ts`)**: Google-grade in-memory BM25F ranking engine with zero-OOM memory optimization, serving search index queries in <5ms.
 
@@ -43,7 +43,7 @@ This historical audit records prior architecture and performance claims; those m
 - **Above-The-Fold `priority`**: Enforced `priority={true}` and strict responsive `sizes` on all hero graphics and blueprint modals, locking **Cumulative Layout Shift (CLS) at 0.000**.
 
 ### 1.3 Fluidity: UI Engine (DOM $\rightarrow$ GPU)
-- **Windowed List Virtualization**: Implemented `@tanstack/react-virtual` in `/qa-prep`, `/concepts`, and `/architecture`, sustaining 60 FPS scrolling through 11,500+ items without DOM bloat.
+- **Windowed List Virtualization**: Implemented `@tanstack/react-virtual` in `/qa-prep`, `/concepts`, and `/architecture`, sustaining 60 FPS scrolling through 11,956+ items without DOM bloat.
 - **Web Worker Compute Offloading (`src/workers/compute.worker.ts`)**: Moved SIMD 4-way loop unrolled Float32Array cosine distance (1536-dim) and Spark execution simulations off the main thread into dedicated background workers.
 
 ### 1.4 Growth: Global SEO (Keyword $\rightarrow$ Semantic)

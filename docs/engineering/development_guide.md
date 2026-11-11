@@ -6,7 +6,7 @@ Welcome to the **moderndataengineer.uk** developer and contributor guide. This d
 
 ## 1. Project Architecture
 
-The platform is built as an enterprise-grade cloud educational portal leveraging Next.js 16 App Router, React 19 Server Components, and Tailwind CSS. It enforces a strict **Zero-Bundle Data Mandate** to ensure blazing client-side performance even with over 11,887 searchable catalog items.
+The platform is built as an enterprise-grade cloud educational portal leveraging Next.js 16 App Router, React 19 Server Components, and Tailwind CSS. It enforces a strict **Zero-Bundle Data Mandate** to ensure blazing client-side performance even with over 11,956 searchable catalog items.
 
 ```
 /Users/santosh/Documents/antigravity/charming-fermi/
@@ -14,15 +14,16 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 │   ├── app/                         # Next.js 16 App Router routes
 │   │   ├── page.tsx                 # Landing page & Whiteboard Showcase
 │   │   ├── stages/                  # Unified Stages & Lifecycles Hub (5 architectural lifecycle systems)
-│   │   ├── guided-learning/         # Cross-section progressive topic journeys
-│   │   ├── concepts/                # 837 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
-│   │   ├── qa-prep/                 # Q&A practice (7,076 deduplicated questions)
-│   │   ├── architecture/            # Architecture scenarios (3,279 scenarios) + 36-keyword filter + 42 blueprints
+│   │   ├── guided-learning/         # Cross-section progressive topic journeys (15 tracks including Governed Agentic Platforms)
+│   │   ├── concepts/                # 869 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
+│   │   ├── qa-prep/                 # Q&A practice (7,098 deduplicated questions)
+│   │   ├── architecture/            # Architecture scenarios (3,294 scenarios) + 36-keyword filter + 42 blueprints
 │   │   ├── code-practice/           # Consolidated Coding Hub (326+ operations across Drills, Databricks, Matrix, Runbooks)
 │   │   │   └── databricks/          # Dedicated Databricks coding subpage (148+ operations & memory triage)
 │   │   ├── cheat-sheet/             # 7 Master Vector PDFs, posters, and 86 operational cheatsheet cards
-│   │   ├── modern-stack/            # Reorganized Cloud Platforms & 10-Engine Matrix, FinOps playbooks, 6 simulators
-│   │   ├── spark-engine/            # Spark memory, shuffle, Catalyst & Photon
+│   │   ├── modern-stack/            # Cloud Platforms & 10-Engine Matrix, FinOps playbooks, 6 interactive simulators
+│   │   ├── spark-engine/            # Spark memory, shuffle, Catalyst & Photon (with Spark 3.5 AQE skew join splitting)
+│   │   ├── spark-catalyst/          # Catalyst physical plan inspector with 7 production scenarios
 │   │   ├── company-research/        # 156 Hyderabad & Bangalore GCC profiles
 │   │   ├── learning-paths/          # 13 paths (16-Week Production Lakehouse Track, DP-700, DP-600, DP-203 Legacy, Databricks)
 │   │   └── api/
@@ -30,7 +31,7 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 │   │       └── search/route.ts      # Edge BM25F zero-OOM search handler
 │   ├── components/                  # Reusable UI primitives and layout components
 │   ├── data/
-│   │   ├── json/                    # Canonical JSON datasets (11,627+ records)
+│   │   ├── json/                    # Canonical JSON datasets (11,956+ records)
 │   │   ├── diagrams.ts              # 42 Whiteboard Architecture Blueprints catalog
 │   │   ├── concepts-tree-data.ts    # 14 Core pillars & subtopics for mindmap
 │   │   ├── guided-learning-topics.ts# Topic configurations for /guided-learning
@@ -45,7 +46,7 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 ├── public/
 │   ├── diagrams/                    # Lossless WebP, AVIF, and JPG whiteboard blueprints
 │   └── cheatsheets/pdf/             # 7 Master Vector PDFs & printable incident runbooks
-└── docs/                            # Deep-dive guides & Knowledge Base
+└── docs/                            # Deep-dive guides, Sourced Research Ledger & Knowledge Base
 ```
 
 ---
@@ -56,11 +57,11 @@ All canonical datasets reside in `src/data/json/`:
 
 | File | Primary Type | Item Count | Key Fields |
 | :--- | :--- | :--- | :--- |
-| `data_concepts.json` | `Concept[]` | **837** | `id`, `term`, `category`, `difficulty`, `definition`, `explanation`, `keyPoints[]` |
+| `data_concepts.json` | `Concept[]` | **869** | `id`, `term`, `category`, `difficulty`, `definition`, `explanation`, `keyPoints[]`, `sources[]` |
 | `databricks_100.json` | `Databricks100Item[]` | **100** | `id`, `day`, `term`, `category`, `difficulty`, `whatYouShouldKnow[]`, `productionCodeSnippet`, `certificationMapping[]` |
-| `data_architecture.json` | `ArchitectureQuestion[]` | **3,279** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
-| `data_de.json` | `Question[]` | **3,670** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer`, `domain` |
-| `questions.json` | `Question[]` | **3,414** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer` |
+| `data_architecture.json` | `ArchitectureQuestion[]` | **3,294** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer`, `sources[]` |
+| `data_de.json` | `Question[]` | **3,670** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer`, `domain`, `sources[]` |
+| `questions.json` | `Question[]` | **3,428** | `id`, `source`, `category`, `niche`, `difficulty`, `question`, `answer`, `sources[]` |
 | `company_profiles.json` | `CompanyProfile[]` | **156** | `id`, `company`, `tier`, `category`, `location`, `techStack[]`, `hiringBar`, `interviewRounds[]`, `keyQuestions[]` |
 | `databricks_cheatsheets.json`| `CheatSheetSuite[]` | **6 suites (48 cards)** | `suiteId`, `title`, `sections[]`, `codeBlocks[]`, `pdfUrl`, `posterUrl` |
 | `data_pyspark.json` | `CodeSheetItem[]` | **51** | `id`, `title`, `level`, `category`, `description`, `code` |

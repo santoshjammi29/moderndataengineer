@@ -4,8 +4,15 @@ This roadmap outlines achieved milestones and future planned expansions for **Ve
 
 ---
 
-## 🏆 Recently Completed Architectural Initiatives (v1.0 – v1.9)
+## 🏆 Recently Completed Architectural Initiatives (v1.0 – v2.0)
 
+- [x] **Evidence-Led Lakehouse Expansion & Interactive Systems Modernization (v2.0)**:
+  - **Sourced Evidence Expansion**: Synthesized 21 primary authoritative standards (DORA 2025, Thoughtworks Radar Vol. 35, dbt Labs 2026, OpenLineage, NIST SP 800-207 Zero Trust, OWASP Top 10 for LLMs, Uber Wukong, Delta Lake 3.2, Apache Iceberg v2/v3, AWS S3 Express One Zone).
+  - **11,956+ Searchable Assets**: Expanded catalog to 7,098 Q&A, 3,294 architecture scenarios, 869 concepts, 283 code drills, 156 GCC company profiles, and 42 whiteboard blueprints.
+  - **Governed Agentic Data Platforms Track**: Added Track 15 to `/guided-learning` spanning foundation-to-architect stages, agent tool sandbox boundaries, and provenance tracking.
+  - **6 Modern Dynamic Simulators**: Upgraded `/modern-stack` with Spark 3.5 AQE Skew Join Splitting, Iceberg REST Catalog selector, S3 Express One Zone cost modeling, Driver/Executor memory overhead, HNSW RAG vector sizing, and RocksDB streaming state stores.
+  - **Spark Engine & Catalyst Enhancements**: Added Spark 3.5 AQE skew split execution flow to `/spark-engine` and 3 cutting-edge plan scenarios (Delta Liquid Clustering scan, Iceberg v2 positional deletes, AQE runtime split) to `/spark-catalyst`.
+  - **Vitest Suite Scale**: 58 test files and 472 unit/integration tests with 100% pass rate.
 - [x] **Production Lakehouse Engineering & Day-Two Incident Triage (v1.9)**: Added 16-Week applied enterprise curriculum (Path 13 under `/learning-paths`), Triage Runbooks 5–7 for multi-layer retry storms (ADF $\times$ Databricks), Structured Streaming checkpoint recovery, two-phase watermark commit boundaries, +120 new Q&As/scenarios/cheatsheets (totaling 7,084 Q&As, 3,269 architecture scenarios, 86 cheatsheets), and BM25F catalog re-sharded to 11,627 assets.
 - [x] **Universal Typography & Font Scaling System (v1.8)**: Dynamic font switcher (Inter, JetBrains Mono, Fira Code, System, Editorial Serif, OpenDyslexic), CSS custom property multiplier (`--font-scale-multiplier`), and instant propagation to code blocks, cards, and text across all viewports.
 - [x] **Unified Stages & Lifecycles Hub (v1.7)**: Consolidated 5 enterprise lifecycle systems under `/stages` with interactive 5-tab switcher (4-Stage Mastery, 7-Stage Lakehouse Flow, 6-Stage Delivery Playbook with 152 controls, 5-Stage Spark Catalyst Engine, and 12-Factor Data Delivery Playbook).
