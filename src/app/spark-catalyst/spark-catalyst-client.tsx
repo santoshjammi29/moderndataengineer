@@ -229,6 +229,108 @@ while (transScan.hasNext()) {
   emit(tx.getLong(0), tx.getDouble(1), rate);
 }`,
   },
+  {
+    id: "delta-liquid-clustering-scan",
+    name: "Delta 3.2 Liquid Clustering & Deletion Vectors",
+    description: "Multi-dimensional Hilbert-curve data skipping with Roaring Bitmap Deletion Vectors filtering deleted rows in memory.",
+    sql: `SELECT customer_id, SUM(order_total) AS total_spend
+FROM delta.\`s3://lakehouse/gold/orders\`
+WHERE region = 'EMEA'
+  AND order_date BETWEEN '2026-06-01' AND '2026-06-30'
+GROUP BY customer_id;`,
+    unresolvedPlan: `'Aggregate ['customer_id], ['customer_id, 'SUM('order_total) AS total_spend#901]
++- 'Filter (('region = EMEA) AND ('order_date >= 2026-06-01 AND 'order_date <= 2026-06-30))
+   +- 'UnresolvedRelation [delta, s3://lakehouse/gold/orders]`,
+    optimizedLogicalPlan: `Aggregate [customer_id#902L], [customer_id#902L, sum(order_total#903) AS total_spend#901]
++- Project [customer_id#902L, order_total#903]
+   +- Filter ((region#904 = 'EMEA') AND (order_date#905 >= 2026-06-01 AND order_date#905 <= 2026-06-30))
+      +- DeltaTableScan[orders] (HilbertCurvePruning: 1,842 files skipped out of 2,000; DeletionVectorBitmap applied)`,
+    catalystRulesApplied: [
+      "DeltaLiquidClustering: Evaluated Hilbert space curve index across [region, order_date]; pruned 92% of Parquet files",
+      "DeletionVectorPruning: Embedded RoaringBitmap filter in scan task to eliminate soft-deleted rows without file rewrites",
+      "PushDownPredicates: Pushed [region = 'EMEA', order_date range] directly into Parquet column chunk headers",
+    ],
+    physicalPlan: `*(2) HashAggregate(keys=[customer_id#902L], functions=[sum(order_total#903)])
++- Exchange hashpartitioning(customer_id#902L, 200)
+   +- *(1) HashAggregate(keys=[customer_id#902L], functions=[partial_sum(order_total#903)])
+      +- *(1) Project [customer_id#902L, order_total#903]
+         +- *(1) BatchScan delta orders[customer_id#902L,order_total#903] DeltaScan(files=158/2000, DVs=12)`,
+    codegenSnippet: `// RoaringBitmap lookup executes at L1 cache latency (sub-5ns per record)
+RoaringBitmap dv = loadDeletionVector(parquetFileIndex);
+while (columnarBatch.hasNext()) {
+  int rowId = columnarBatch.nextRowId();
+  if (dv != null && dv.contains(rowId)) continue; // Zero-copy skip
+  long custId = columnarBatch.getLong(0, rowId);
+  double total = columnarBatch.getDouble(1, rowId);
+  aggBuffer.update(custId, total);
+}`,
+  },
+  {
+    id: "iceberg-v2-positional-delete-merge",
+    name: "Iceberg v2 Row-Level Delete Merge-On-Read",
+    description: "Iceberg v2 positional delete files joined at read time with data files via anti-join bitmaps.",
+    sql: `SELECT user_id, email, consent_status
+FROM iceberg_catalog.gdpr.user_profiles
+WHERE account_status = 'ACTIVE';`,
+    unresolvedPlan: `'Project ['user_id, 'email, 'consent_status]
++- 'Filter ('account_status = ACTIVE)
+   +- 'UnresolvedRelation [iceberg_catalog, gdpr, user_profiles]`,
+    optimizedLogicalPlan: `Project [user_id#910L, email#911, consent_status#912]
++- Filter (account_status#913 = 'ACTIVE')
+   +- IcebergMergeOnReadScan [data_files + positional_delete_files] (pushedFilters: [EqualTo(account_status, 'ACTIVE')])`,
+    catalystRulesApplied: [
+      "IcebergManifestPruning: Scanned manifest list and pruned partitions using column summary bounds",
+      "MergeOnReadJoin: Injected position delete index bitmap into DataFileScan to filter purged GDPR records",
+      "ColumnProjection: Pruned 42 unneeded columns from user_profiles, reading only 4 columns",
+    ],
+    physicalPlan: `*(1) Project [user_id#910L, email#911, consent_status#912]
++- *(1) Filter (account_status#913 = 'ACTIVE')
+   +- *(1) BatchScan iceberg_catalog.gdpr.user_profiles [user_id#910L, email#911, consent_status#912, account_status#913] (DeleteFiles=4)`,
+    codegenSnippet: `// Merge-On-Read executes without rewriting historical Parquet data files
+PositionDeleteIndex posDeletes = manifestReader.loadPositionDeletes(currentDataFilePath);
+for (int i = 0; i < batchSize; i++) {
+  if (posDeletes.isDeleted(fileOffset + i)) continue; // Suppress GDPR deleted row
+  emitRow(user_id[i], email[i], consent_status[i]);
+}`,
+  },
+  {
+    id: "aqe-runtime-skew-split",
+    name: "Spark 3.5 AQE Dynamic Skew Join Splitting",
+    description: "Adaptive Query Execution monitors shuffle map stage sizes; splits skewed partitions (>5x median) into sub-partitions.",
+    sql: `SELECT /*+ SKEW('c', 'country_code') */ c.country_code, COUNT(t.tx_id), SUM(t.amount)
+FROM global_transactions t
+JOIN country_master c ON t.country_code = c.country_code
+GROUP BY c.country_code;`,
+    unresolvedPlan: `'Aggregate ['c.country_code], ['c.country_code, 'COUNT('t.tx_id), 'SUM('t.amount)]
++- 'Join Inner, ('t.country_code = 'c.country_code)
+   :- 'UnresolvedRelation [global_transactions], [t]
+   +- 'UnresolvedRelation [country_master], [c]`,
+    optimizedLogicalPlan: `Aggregate [country_code#920], [country_code#920, count(tx_id#921L), sum(amount#922)]
++- Join Inner, (country_code#923 = country_code#920)
+   :- Relation[global_transactions]
+   +- Relation[country_master]`,
+    catalystRulesApplied: [
+      "AQEShuffleRead: Gathered MapOutputTracker metrics after Stage 0; detected partition #42 = 8.4 GB (median = 120 MB)",
+      "OptimizeSkewedJoin: Split partition #42 into 35 parallel sub-partitions (target ~240 MB each)",
+      "CoalesceShufflePartitions: Compressed 165 tiny partitions (<10 MB) into 12 optimal 128 MB partitions",
+    ],
+    physicalPlan: `AdaptiveSparkPlan isFinalPlan=true
++- *(3) HashAggregate(keys=[country_code#920], functions=[count(tx_id#921L), sum(amount#922)])
+   +- *(3) SortMergeJoin [country_code#923], [country_code#920], Inner
+      :- *(1) Sort [country_code#923 ASC], false, 0
+      :  +- AQEShuffleRead(isSkewed=true, splitParts=35)
+      :     +- ShuffleExchange hashpartitioning(country_code#923, 200)
+      +- *(2) Sort [country_code#920 ASC], false, 0
+         +- AQEShuffleRead(isCoalesced=true, original=200, coalesced=12)
+            +- ShuffleExchange hashpartitioning(country_code#920, 200)`,
+    codegenSnippet: `// AQE splits the 8.4GB skewed partition across 35 parallel executor threads
+// Completely avoids executor OOM (exit code 137) and straggler tasks
+int startBlock = partitionSlice.getStartBlock();
+int endBlock = partitionSlice.getEndBlock();
+while (streamReader.hasMoreSlices(startBlock, endBlock)) {
+  processSubSlice(streamReader.next());
+}`,
+  },
 ];
 
 export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps) {

@@ -41,6 +41,7 @@ import { OptimizationFlow } from "@/components/cheatsheet/optimization-flow";
 import { recordLastTopic } from "@/lib/user-progress";
 
 type SparkSubtab = "architecture" | "simulator" | "memory" | "curriculum" | "lexicon";
+type SparkFlowType = "narrow" | "wide" | "broadcast" | "aggregation" | "aqe_skew";
 
 interface LexiconTerm {
   term: string;
@@ -116,7 +117,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
   }, []);
 
   // Simulator State
-  const [flowType, setFlowType] = useState<"narrow" | "wide" | "broadcast" | "aggregation">("narrow");
+  const [flowType, setFlowType] = useState<SparkFlowType>("narrow");
   const [simStep, setSimStep] = useState(0);
   const [isSimRunning, setIsSimRunning] = useState(false);
 
@@ -167,7 +168,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
     });
   }, []);
 
-  const handleFlowTypeChange = useCallback((type: "narrow" | "wide" | "broadcast" | "aggregation") => {
+  const handleFlowTypeChange = useCallback((type: SparkFlowType) => {
     setFlowType(type);
     setSimStep(0);
     clearSimTimers();
@@ -199,8 +200,8 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
         setActiveTab(target as SparkSubtab);
       }
 
-      if (queryFlow && ["narrow", "wide", "broadcast", "aggregation"].includes(queryFlow)) {
-        setFlowType(queryFlow as "narrow" | "wide" | "broadcast" | "aggregation");
+      if (queryFlow && ["narrow", "wide", "broadcast", "aggregation", "aqe_skew"].includes(queryFlow)) {
+        setFlowType(queryFlow as SparkFlowType);
       }
     };
 
@@ -231,8 +232,8 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
       setActiveTab(queryTab as SparkSubtab);
     }
 
-    if (queryFlow && ["narrow", "wide", "broadcast", "aggregation"].includes(queryFlow)) {
-      setFlowType(queryFlow as "narrow" | "wide" | "broadcast" | "aggregation");
+    if (queryFlow && ["narrow", "wide", "broadcast", "aggregation", "aqe_skew"].includes(queryFlow)) {
+      setFlowType(queryFlow as SparkFlowType);
     }
   }, [searchParams]);
 
@@ -286,6 +287,14 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
       shuffled: "~2.1 GB",
       tasks: "50 Tasks",
       stages: "1 Stage",
+    },
+    aqe_skew: {
+      title: "Spark 3.5 AQE Skew Join Dynamic Splitting",
+      mechanics: "AQE monitors shuffle map stage output statistics. Upon detecting partition skew (>5x median threshold or >256MB), it dynamically splits the skewed partition into parallel sub-partitions at runtime.",
+      benefit: "Eliminates executor OOM (exit code 137) and straggler tasks without manual two-phase key salting.",
+      shuffled: "~14.2 GB (Split into 28 sub-tasks)",
+      tasks: "64 Tasks",
+      stages: "1 Stage (Dynamic)",
     },
   };
 
@@ -684,6 +693,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                 <option value="wide">Wide Dependency (Sort-Merge Shuffle)</option>
                 <option value="broadcast">Map-Side Join (Broadcast Hash)</option>
                 <option value="aggregation">Two-Phase Hash Aggregate</option>
+                <option value="aqe_skew">Spark 3.5 AQE Skew Join Split</option>
               </select>
 
               <button

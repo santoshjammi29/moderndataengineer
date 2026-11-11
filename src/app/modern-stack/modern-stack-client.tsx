@@ -1809,11 +1809,12 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
               <div className="space-y-2">
                 <div className="space-y-1">
                   <span className="text-xs font-medium block">Target Ecosystem:</span>
-                  <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
                     {[
                       { id: "uc", label: "Databricks UC" },
                       { id: "polaris", label: "Snowflake/Polaris" },
                       { id: "fabric", label: "MS Fabric" },
+                      { id: "iceberg_rest", label: "Iceberg REST" },
                     ].map((c) => (
                       <button
                         key={c.id}
@@ -1879,6 +1880,12 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     Guarantees sub-second in-memory direct access in Power BI Direct Lake mode.
                   </>
                 )}
+                {targetCatalogEngine === "iceberg_rest" && (
+                  <>
+                    <strong>Format:</strong> Apache Iceberg v2/v3 open-standard REST Catalog (AWS Glue / Polaris / Tabular).
+                    Supports branch/tag isolation, in-place partition evolution, and positional delete Merge-On-Read.
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -1940,7 +1947,8 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
             {(() => {
               const bqCost = costTb * 6.25; // BigQuery On-demand $6.25/TB
               const dbsqlEst = (costTb * 11.5); // DBSQL Serverless approx
-              const duckdbStorage = (costTb * 0.023 * 1024 * 0.1); // S3 storage with 90% partition pushdown
+              const s3Standard = (costTb * 0.023 * 1024 * 0.1); // S3 standard storage with 90% partition pushdown
+              const s3Express = (costTb * 0.16 * 1024 * 0.05); // S3 Express One Zone sub-10ms tier (5% hot working set)
 
               return (
                 <div className="p-3 rounded-lg bg-[var(--surface-2)] border border-green-500/20 text-xs space-y-1">
@@ -1954,11 +1962,15 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     <span className="font-bold">~${dbsqlEst.toFixed(2)}</span>
                   </div>
                   <div className="text-[var(--muted-foreground)] font-mono text-[11px] flex justify-between pt-0.5 border-t border-[var(--border)]">
-                    <span>DuckDB direct over S3 (90% pruned):</span>
-                    <span className="text-emerald-400 font-bold">~${duckdbStorage.toFixed(2)}</span>
+                    <span>S3 Standard (90% pruned):</span>
+                    <span className="text-emerald-400 font-bold">~${s3Standard.toFixed(2)}</span>
+                  </div>
+                  <div className="text-[var(--muted-foreground)] font-mono text-[11px] flex justify-between">
+                    <span>S3 Express One Zone (hot shuffle/state):</span>
+                    <span className="text-cyan-400 font-bold">~${s3Express.toFixed(2)}</span>
                   </div>
                   <p className="text-[10px] text-green-300/80 pt-0.5">
-                    💡 Applying Liquid Clustering or Partition Pruning cuts scan volume by up to 85%.
+                    💡 Applying Liquid Clustering cuts scan volume by up to 85%; S3 Express One Zone reduces PUT costs by 50% for high-churn streaming checkpoints.
                   </p>
                 </div>
               );
@@ -2025,18 +2037,20 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
               const totalCores = sparkWorkers * coresPerWorker;
               const totalRam = sparkWorkers * ramPerWorkerGb;
               const offHeapMemGb = Math.round(totalRam * 0.1);
+              const driverMemGb = Math.max(4, Math.round(ramPerWorkerGb * 0.5));
+              const driverOverheadMb = Math.max(384, Math.round(driverMemGb * 1024 * 0.1));
 
               return (
                 <div className="p-3 rounded-lg bg-[var(--surface-2)] border border-amber-500/20 text-xs space-y-1">
                   <div className="text-amber-300 font-bold">Cluster Execution Profile:</div>
                   <div className="text-[var(--foreground)] font-mono text-[11px]">
-                    Total Cores: {totalCores} · RAM: {totalRam} GB
+                    Total Cores: {totalCores} · RAM: {totalRam} GB · Driver: {driverMemGb} GB (+{driverOverheadMb}MB overhead)
                   </div>
                   <div className="text-[var(--muted-foreground)] text-[11px]">
-                    Recommended spark.executor.memoryOverhead: ~{Math.max(1, Math.round(ramPerWorkerGb * 0.15))} GB
+                    Recommended spark.executor.memoryOverhead: ~{Math.max(1, Math.round(ramPerWorkerGb * 0.15))} GB · Off-Heap: {offHeapMemGb} GB
                   </div>
                   <div className="text-[10px] text-amber-300/80 pt-0.5">
-                    Photon vectorized C++ execution provides up to 3x throughput on these cores.
+                    Photon vectorized C++ execution provides up to 3x throughput. Sized to prevent Driver OOM during broadcast hash joins.
                   </div>
                 </div>
               );
@@ -2103,7 +2117,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
               const overlapTokens = Math.round(ragChunk * (ragOverlapPct / 100));
               const effectiveChunk = ragChunk - overlapTokens;
               const estChunks = Math.round(docCorpusCount * 3); // approx 3 chunks per doc
-              const vectorMemoryMb = Math.round((estChunks * 1536 * 4) / (1024 * 1024));
+              const vectorMemoryMb = Math.round((estChunks * 1536 * 4 * 1.25) / (1024 * 1024)); // 1.25x for HNSW graph structure
 
               return (
                 <div className="p-3 rounded-lg bg-[var(--surface-2)] border border-pink-500/20 text-xs space-y-1">
@@ -2112,12 +2126,12 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     Effective Step: {effectiveChunk} tokens (Overlap: {overlapTokens} tok)
                   </div>
                   <div className="text-[var(--muted-foreground)] text-[11px]">
-                    Estimated HNSW Memory Footprint: ~{vectorMemoryMb} MB for {estChunks.toLocaleString()} chunks
+                    Estimated HNSW Memory Footprint (1536d + graph edges): ~{vectorMemoryMb} MB for {estChunks.toLocaleString()} chunks
                   </div>
                   <div className="text-[10px] text-pink-300/80 pt-0.5">
                     {ragChunk <= 512
-                      ? "High precision search, ideal for exact factual Q&A."
-                      : "Broad context window, optimal for long executive summaries."}
+                      ? "High precision search, ideal for exact factual Q&A and OWASP LLM01/06 sandboxed tool queries."
+                      : "Broad context window, optimal for long executive summaries and complex multi-document reasoning."}
                   </div>
                 </div>
               );
@@ -2194,7 +2208,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                     Events lagging &gt; {watermarkMins}m dropped without updating state.
                   </div>
                   <div className="text-[10px] text-amber-300/80 pt-0.5">
-                    💡 Requires RocksDB provider to eliminate JVM heap garbage collection pauses.
+                    💡 RocksDB state provider on local NVMe SSDs avoids JVM heap garbage collection pauses. Enable changelog checkpointing for sub-second snapshot latency.
                   </div>
                 </div>
               );

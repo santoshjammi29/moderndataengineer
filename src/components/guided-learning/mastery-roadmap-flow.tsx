@@ -133,13 +133,31 @@ export function MasteryRoadmapFlow({
       actionLabel: "Explore Architecture Hub",
       actionHref: "/architecture",
     },
+    {
+      id: "agentic",
+      name: "7. Governed Agentic Platforms",
+      subtitle: "OWASP LLM & AI Tool Isolation",
+      icon: ShieldCheck,
+      color: "text-rose-400",
+      bgColor: "bg-rose-500/10",
+      borderColor: "border-rose-500/30",
+      description:
+        "Architect trusted platforms for autonomous AI agents: enforce OWASP LLM01 prompt injection defenses, run agent tools in isolated read-only sandboxes with mandatory human review gates for mutating DDL/DML.",
+      keyTechniques: [
+        "OWASP Top 10 for LLMs (LLM01/02/06)",
+        "Ephemeral credential token exchange",
+        "Sandboxed SQL execution & human gates",
+      ],
+      actionLabel: "Explore Agentic Track",
+      actionHref: "/guided-learning?topic=topic-agentic-data-platform",
+    },
   ];
 
   return (
     <InteractiveFlowDiagram
       title="Principal Data Architect Mastery Roadmap"
       badge="Career Progression"
-      subtitle="The 6 developmental milestones from Senior Data Engineer to Principal Enterprise Lakehouse Architect."
+      subtitle="The 7 developmental milestones from Senior Data Engineer to Principal Enterprise Lakehouse Architect."
       icon={GraduationCap}
       stages={stages}
       defaultStageId="compute"

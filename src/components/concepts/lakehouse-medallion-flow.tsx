@@ -76,11 +76,11 @@ export function LakehouseMedallionFlow({
       bgColor: "bg-purple-500/10",
       borderColor: "border-purple-500/30",
       description:
-        "Cleanses, deduplicates, and enriches raw events. Validates data against Data Contracts, handles late-arriving records, and maintains Slowly Changing Dimensions (SCD Type 1 & 2).",
+        "Cleanses, deduplicates, and enriches raw events. Validates data against declarative Data Contracts in CI/CD, handles late-arriving records, and maintains Slowly Changing Dimensions (SCD Type 1 & 2) using Delta 3.2 Deletion Vectors.",
       keyTechniques: [
-        "Data contract validation",
-        "Idempotent MERGE deduplication",
-        "SCD Type 2 history tracking",
+        "Data contract validation (OpenLineage)",
+        "Delta 3.2 Deletion Vectors (soft deletes)",
+        "SCD Type 2 idempotent MERGE tracking",
       ],
       actionLabel: "View Silver Concepts",
       onAction: onSelectConceptQuery
@@ -97,11 +97,11 @@ export function LakehouseMedallionFlow({
       bgColor: "bg-emerald-500/10",
       borderColor: "border-emerald-500/30",
       description:
-        "Transforms conformed data into business-aligned dimensional star schemas, aggregated KPI marts, and Kimball fact tables optimized for high-concurrency reporting.",
+        "Transforms conformed data into business-aligned dimensional star schemas, aggregated KPI marts, and Kimball fact tables optimized with Hilbert curve Liquid Clustering for high-concurrency reporting.",
       keyTechniques: [
         "Kimball dimensional modeling",
-        "Surrogate key hashing",
-        "Liquid clustering & Z-Order",
+        "Multi-dimensional Liquid Clustering",
+        "Iceberg REST / Unity Catalog federation",
       ],
       actionLabel: "View Gold Concepts",
       onAction: onSelectConceptQuery
@@ -118,11 +118,11 @@ export function LakehouseMedallionFlow({
       bgColor: "bg-cyan-500/10",
       borderColor: "border-cyan-500/30",
       description:
-        "Exposes governed metrics and business logic without data duplication. Powers sub-second interactive slicing through Microsoft Fabric Direct Lake VertiPaq memory caching.",
+        "Exposes governed metrics and business logic without data duplication. Powers sub-second interactive slicing through Microsoft Fabric Direct Lake VertiPaq memory caching and Cube/dbt Semantic Layer.",
       keyTechniques: [
         "Direct Lake zero-copy paging",
         "VertiPaq columnar compression",
-        "Standardized metric definitions",
+        "dbt Semantic Layer & metric governance",
       ],
       actionLabel: "View Semantic Concepts",
       onAction: onSelectConceptQuery
@@ -133,17 +133,17 @@ export function LakehouseMedallionFlow({
     {
       id: "consumption",
       name: "Consumption",
-      subtitle: "BI, RAG & Feature Stores",
+      subtitle: "BI, RAG & Agentic Tools",
       icon: Bot,
       color: "text-indigo-400",
       bgColor: "bg-indigo-500/10",
       borderColor: "border-indigo-500/30",
       description:
-        "Delivers governed data to diverse enterprise consumers: executive BI dashboards, sub-second operational APIs, real-time ML feature stores, and generative AI RAG embeddings.",
+        "Delivers governed data to enterprise consumers: executive BI dashboards, sub-second operational APIs, real-time ML feature stores, and OWASP LLM01/06 sandboxed AI data agents.",
       keyTechniques: [
-        "Sub-second BI reporting",
-        "Low-latency feature retrieval",
-        "Vector search & GenAI RAG",
+        "Sub-second BI reporting & Direct Lake",
+        "Vector search & GenAI RAG context",
+        "OWASP LLM sandboxed agent execution",
       ],
       actionLabel: "Explore Use Cases",
       onAction: onSelectConceptQuery

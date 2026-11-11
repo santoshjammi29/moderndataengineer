@@ -21,7 +21,7 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
       name: "curriculum",
       type: "folder",
       badge: "Roadmaps & Checks",
-      description: "Progressive learning tiers, 12 career certification paths, and production checklists",
+      description: "Progressive learning tiers, 13 career certification paths, and production checklists",
       children: [
         {
           id: "curr-map",
@@ -76,7 +76,7 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
             { id: "chk-1", name: "production-readiness.md", type: "file", description: "SLA/SLO, Runbooks, Monitoring & Launch Gates", href: "/dataops?tab=lifecycle" },
             { id: "chk-2", name: "security-and-governance.md", type: "file", description: "Least Privilege, RLS/CLS, CMEK & Lineage", href: "/dataops?tab=connectivity" },
             { id: "chk-3", name: "reliability-and-recovery.md", type: "file", description: "Idempotency, RPO/RTO & Disaster Recovery", href: "/architecture?tab=scenarios" },
-            { id: "chk-4", name: "cost-and-performance.md", type: "file", description: "Compute Sizing, Pruning, Liquid Clustering & FinOps", href: "/modern-stack?tab=playbooks" },
+            { id: "chk-4", name: "cost-and-performance.md", type: "file", description: "Compute Sizing, Pruning, Liquid Clustering & FinOps", href: "/modern-stack?tab=cost" },
           ],
         },
       ],
@@ -144,7 +144,7 @@ export const COMPLETE_LEARNING_TREE: LabTreeNode = {
         { id: "lab-08", name: "08-cloud-and-warehouse-platforms", type: "folder", description: "Azure, Fabric, BigQuery, Snowflake & DuckDB", href: "/modern-stack?tab=compatibility" },
         { id: "lab-09", name: "09-governance-and-security", type: "folder", description: "Unity Catalog, Purview, RBAC/ABAC & Residency", href: "/concepts?category=GENERAL+DE" },
         { id: "lab-10", name: "10-dataops-and-operations", type: "folder", description: "Git CI/CD, testing, monitoring & disaster recovery", href: "/dataops" },
-        { id: "lab-11", name: "11-finops", type: "folder", badge: "15 Playbooks", description: "Compute cost, storage tiers, egress & chargeback", href: "/modern-stack?tab=playbooks" },
+        { id: "lab-11", name: "11-finops", type: "folder", badge: "15 Playbooks", description: "Compute cost, storage tiers, egress & chargeback", href: "/modern-stack?tab=cost" },
         { id: "lab-12", name: "12-ai-and-rag", type: "folder", description: "Document chunking, vector indexes & hybrid retrieval", href: "/architecture?tab=scenarios" },
         { id: "lab-13", name: "13-enterprise-architecture", type: "folder", badge: `${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios`, description: "ADRs, migration, cutover & capstone system design", href: "/architecture" },
         {
