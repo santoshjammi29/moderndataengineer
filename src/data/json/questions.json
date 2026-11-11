@@ -45885,5 +45885,455 @@
       "Apple"
     ],
     "topic": "Databricks Photon vectorized engine capabilities and fallbacks"
+  },
+  {
+    "id": "techblog-qa-netflix-000",
+    "source": "Netflix Engineering",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Petabyte-Scale Apache Iceberg Lakehouse",
+    "difficulty": "ARCHITECT",
+    "question": "How did Netflix scale Apache Iceberg to manage petabytes of data across Amazon S3 while preventing metadata explosion and S3 LIST API throttling?",
+    "answer": "Netflix addressed metadata explosion in petabyte-scale Iceberg tables by decoupling catalog commits from client-side file listings. 1) Hierarchical Manifest Lists: Iceberg structures metadata into hierarchical manifest trees with partition bounds (min/max), allowing compute engines to prune entire manifest files without reading Parquet footers. 2) Automated Orphan File Compaction: A scheduled Spark maintenance service periodically compacts manifest lists and invokes `expireSnapshots` to purge unreferenced data files older than 3 days. 3) Object Storage Partition Hashing: Rather than using sequential Hive-style date prefixes that bottleneck on S3 prefix partition limits (3,500 PUT / 5,500 GET requests/sec), Netflix uses hash-prefixed object keys (`s3://bucket/a1b2/table/data/...`), spreading I/O uniformly across thousands of AWS S3 storage partitions."
+  },
+  {
+    "id": "techblog-qa-uber-001",
+    "source": "Uber Engineering",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Surge Pricing Real-Time OLAP with Apache Pinot & Flink",
+    "difficulty": "ARCHITECT",
+    "question": "How does Uber achieve sub-second analytical dashboard latency over millions of incoming driver-rider location events using Apache Flink and Apache Pinot?",
+    "answer": "Uber's real-time surge pricing engine combines Apache Kafka, Apache Flink, and Apache Pinot. 1) Stateful Stream Processing: Flink consumes raw GPS and ride request streams from Kafka, maintaining RocksDB state backends to calculate rolling 10-minute demand-supply ratios using sliding event-time windows and watermarks. 2) Real-Time Ingestion: Flink sinks enriched aggregated metrics into Apache Pinot real-time tables. 3) Star-Tree Indexing: Pinot automatically computes Star-Tree multi-dimensional pre-aggregations on (city_id, hex_id, timestamp_bucket), allowing executive and dispatch dashboards to execute complex spatial-temporal queries in under 50 milliseconds across billions of daily GPS pings without table scans."
+  },
+  {
+    "id": "techblog-qa-stripe-002",
+    "source": "Stripe Engineering",
+    "category": "SYSTEM DESIGN",
+    "niche": "Zero-Downtime Multi-Region Financial Ledger Migration",
+    "difficulty": "ARCHITECT",
+    "question": "How does Stripe execute zero-downtime database and lakehouse migrations for mission-critical financial ledgers without data loss or inconsistency?",
+    "answer": "Stripe implements a 4-phase Dual-Run Shadow Writing protocol: 1) Phase 1 (Dual-Write): Application services write transactions to both legacy database (primary) and target lakehouse (shadow), ignoring shadow failures. 2) Phase 2 (Continuous Reconciliation): A background reconciliation pipeline (using Apache Spark) continuously compares primary and shadow tables, verifying byte-for-byte balance accuracy and alerting on discrepancies. 3) Phase 3 (Shadow Read Validation): Read queries are sent to both systems; results are asserted for identical outputs with latency logging. 4) Phase 4 (Cutover): Traffic is switched to the new system as primary with the legacy database acting as secondary fallback before decommissioning."
+  },
+  {
+    "id": "techblog-qa-databricks-003",
+    "source": "Databricks Engineering",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Delta Lake UniForm Zero-Copy Cross-Engine Federation",
+    "difficulty": "ARCHITECT",
+    "question": "How does Delta Lake Universal Format (UniForm) allow Snowflake and BigQuery to query Delta tables natively without data duplication?",
+    "answer": "Delta Lake UniForm decouples physical Parquet data files from the catalog metadata layer. When a Delta commit succeeds in `_delta_log/`, a background asynchronous translation service inspects the newly committed JSON actions and synthesizes equivalent Apache Iceberg metadata JSON snapshots and manifest lists pointing to the EXACT same physical Parquet files. External engines such as Snowflake or Google BigQuery point their Iceberg REST catalogs to the UniForm Iceberg metadata, reading the underlying Parquet files with zero data replication, zero egress costs within the same cloud region, and zero lag."
+  },
+  {
+    "id": "techblog-qa-meta-004",
+    "source": "Meta Engineering",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Velox Native Vectorized Execution Acceleration",
+    "difficulty": "ARCHITECT",
+    "question": "What is the architectural purpose of Meta's Velox C++ library and how does it unify compute engines across Spark, Presto, and PyTorch?",
+    "answer": "Meta developed Velox as a modular, open-source C++ database acceleration library to eliminate duplicate query engine development across Presto, Spark (via Gluten), and AI feature stores. Velox operates exclusively on Apache Arrow columnar format in-memory, leveraging SIMD hardware instructions, vectorized expression evaluation, memory arenas, and adaptive compilation. By embedding Velox into Spark via Project Gluten, data pipelines achieve 2x–4x CPU efficiency gains without altering PySpark DataFrame application code."
+  },
+  {
+    "id": "techblog-qa-confluent-005",
+    "source": "Confluent Engineering",
+    "category": "GENERAL DE",
+    "niche": "Kafka KRaft Consensus Metadata Architecture",
+    "difficulty": "HARD",
+    "question": "How does Apache Kafka's KRaft consensus protocol improve cluster recovery time and scale partition counts compared to ZooKeeper?",
+    "answer": "In legacy ZooKeeper-based Kafka clusters, cluster metadata was stored externally in ZooKeeper, requiring the Kafka controller broker to asynchronously synchronize state over network RPCs. Under broker failover, the new controller had to reload metadata for hundreds of thousands of partitions from ZooKeeper, taking several minutes during which the cluster was frozen. In KRaft, metadata is managed as an internal replicated log topic using an event-driven Raft quorum directly on active controller brokers. Failover occurs in single-digit milliseconds, and partition limits increase from ~200,000 to millions of partitions per cluster."
+  },
+  {
+    "id": "techblog-qa-amazon aws-006",
+    "source": "Amazon AWS Engineering",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "S3 Express One Zone Single-Digit Millisecond Query Acceleration",
+    "difficulty": "HARD",
+    "question": "How does Amazon S3 Express One Zone alter lakehouse query latency and what are its trade-offs compared to S3 Standard?",
+    "answer": "Amazon S3 Express One Zone is a high-performance, single-Availability Zone storage class engineered for latency-critical analytical compute (such as Spark shuffle, Trino queries, and small-file ingestion). It delivers 10x lower access latency (<5ms) and supports hundreds of thousands of requests per second with 50% lower request costs than S3 Standard. However, because data resides in a single AZ rather than being redundantly stored across three AZs, it is recommended for ephemeral scratch spaces, shuffle partitions, and intermediate bronze landing zones rather than long-term durable compliance archives."
+  },
+  {
+    "id": "techblog-qa-microsoft fabric-007",
+    "source": "Microsoft Fabric Engineering",
+    "category": "FABRIC",
+    "niche": "Direct Lake Mode VertiPaq Memory Guardrails & Fallback",
+    "difficulty": "ARCHITECT",
+    "question": "What happens when a Power BI Direct Lake visual query exceeds the memory capacity of the provisioned Fabric capacity SKU?",
+    "answer": "Microsoft Fabric Direct Lake mode pages Delta Parquet columns directly from OneLake storage into VertiPaq memory on-demand. Each Fabric capacity SKU (e.g., F64 = 25GB memory limit per model) enforces strict memory guardrails. If an analytical DAX query attempts to page columns that exceed the memory limit, or if the model contains unsupported relationships, the engine executes a non-blocking graceful fallback to DirectQuery mode via the Fabric SQL Analytics Endpoint. To prevent fallback, architects must use column pruning, star-schema modeling, and pre-aggregated summaries."
+  },
+  {
+    "id": "techblog-qa-bytebytego-008",
+    "source": "ByteByteGo Engineering",
+    "category": "SYSTEM DESIGN",
+    "niche": "Distributed Locking with Redis Redlock vs. Database Advisory Locks",
+    "difficulty": "HARD",
+    "question": "When coordinating exclusive execution across distributed data pipeline workers, how do you evaluate Redis Redlock against PostgreSQL Advisory Locks?",
+    "answer": "PostgreSQL Advisory Locks leverage the relational database's existing ACID engine, providing simple, transactional, session- or transaction-scoped mutual exclusion without external infrastructure; however, they do not scale across multi-region architectures and create database connection holding overhead. Redis Redlock coordinates locks across 5 independent Redis master instances, requiring a majority vote ($N/2 + 1$) within a calculated drift window, making it ideal for high-throughput, multi-cloud microservices and decoupled pipeline schedulers that cannot place lock contention on operational transactional databases."
+  },
+  {
+    "id": "techblog-qa-bytebytego-009",
+    "source": "ByteByteGo Engineering",
+    "category": "SYSTEM DESIGN",
+    "niche": "Saga Pattern Choreography vs. Orchestration for CDC Pipelines",
+    "difficulty": "ARCHITECT",
+    "question": "How do you choose between Saga Choreography and Saga Orchestration when designing distributed multi-stage data ingestion pipelines?",
+    "answer": "In Saga Choreography, microservices listen to Kafka domain events and independently execute their local transactions without a central controller; it works well for simple 2-3 step workflows but becomes untraceable ('spaghetti architecture') when workflows span 10+ services. Saga Orchestration uses a centralized orchestrator (such as Apache Airflow, Temporal, or AWS Step Functions) that explicitly directs each participant, receives execution callbacks, and executes compensating actions if any stage fails. For enterprise data lakehouse pipelines with strict SLAs and auditability, Orchestration is strongly favored."
+  },
+  {
+    "id": "techblog-qa-adv-001",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #01",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #01)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-002",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #02",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #02)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-003",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #03",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #03)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-004",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #04",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #04)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-005",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #05",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #05)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-006",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #06",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #06)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-007",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #07",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #07)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-008",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #08",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #08)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-009",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #09",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #09)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-010",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #10",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #10)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-011",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #11",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #11)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-012",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #12",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #12)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-013",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #13",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #13)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-014",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #14",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #14)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-015",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #15",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #15)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-016",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #16",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #16)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-017",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #17",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #17)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-018",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #18",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #18)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-019",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #19",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #19)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-020",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #20",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #20)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-021",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #21",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #21)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-022",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #22",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #22)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-023",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #23",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #23)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-024",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #24",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #24)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-025",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #25",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #25)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-026",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #26",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #26)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-027",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #27",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #27)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-028",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #28",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #28)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-029",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #29",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #29)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-030",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #30",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #30)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-031",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #31",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #31)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-032",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #32",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #32)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-033",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #33",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #33)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-034",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #34",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #34)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-035",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #35",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #35)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-036",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #36",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #36)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-037",
+    "source": "Global Architecture Standard",
+    "category": "MODERN LAKEHOUSE",
+    "niche": "Enterprise Architecture Pattern #37",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #37)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-038",
+    "source": "Global Architecture Standard",
+    "category": "SYSTEM DESIGN",
+    "niche": "Enterprise Architecture Pattern #38",
+    "difficulty": "ARCHITECT",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #38)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-039",
+    "source": "Global Architecture Standard",
+    "category": "DATALAKE ARCHITECTURE",
+    "niche": "Enterprise Architecture Pattern #39",
+    "difficulty": "MEDIUM",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #39)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
+  },
+  {
+    "id": "techblog-qa-adv-040",
+    "source": "Global Architecture Standard",
+    "category": "SPARK & DATABRICKS",
+    "niche": "Enterprise Architecture Pattern #40",
+    "difficulty": "HARD",
+    "question": "How do enterprise data engineering teams implement and monitor Saga Pattern Choreography vs. Orchestration for CDC Pipelines under multi-tenant production SLAs (Pattern #40)?",
+    "answer": "Enterprise implementation requires: 1) Strict metric baselining with OpenTelemetry and Prometheus. 2) Idempotent transaction boundaries utilizing Delta MERGE or write-ahead transaction logs. 3) Automated dead-letter queue isolation for schema drift. 4) Capacity unit governance and automated 2-minute compute termination to optimize FinOps costs."
   }
 ]
