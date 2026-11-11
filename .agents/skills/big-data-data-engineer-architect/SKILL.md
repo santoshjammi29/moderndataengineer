@@ -226,3 +226,20 @@ Structure data engineering learning journeys across the platform's 13 curated tr
   - **DP-700**: Microsoft Certified Fabric Data Engineer Associate.
   - **DP-600**: Microsoft Certified Fabric Analytics Engineer Associate.
   - **Databricks Certified Data Engineer Professional**: (Apache Spark 3.5+, Unity Catalog, DABs, Lakehouse).
+
+---
+
+## 10. Reference Manuals & Specialized Playbooks
+
+Consult these bundled deep-dive reference documents for complex implementations:
+
+- 🚨 **[Incident Runbooks & Triage Playbooks](./references/incident_runbooks.md)**: 8 step-by-step production runbooks (Driver OOM, Data Skew salting, Tungsten disk spill, Concurrent append conflicts, ADF × Databricks retry storms, Streaming checkpoint invalidation, Watermark desync, Kafka rebalance storms).
+- 💰 **[FinOps & Cost Optimization](./references/finops_cost_optimization.md)**: DBU cost analysis via `system.billing.usage`, serverless auto-stop, Fabric CU smoothing, and storage lifecycle tiering.
+- 🔄 **[Polyglot Execution Matrix](./references/polyglot_execution_matrix.md)**: Side-by-side syntax for PySpark, Spark SQL, Snowflake, BigQuery, DuckDB, and Polars.
+- 🌳 **[Architecture Decision Tree](./references/architecture_decision_tree.md)**: Selection frameworks for compute engines, storage formats, and catalog layers.
+- ☁️ **[Azure & Multi-Cloud Patterns](./references/azure_multicloud_patterns.md)**: Enterprise ADLS Gen2, OneLake, ADF, and cross-cloud architectures.
+- ⚙️ **[DataOps & DevOps Playbook](./references/dataops_devops.md)**: CI/CD automation, DABs, testing matrices, and infrastructure-as-code.
+- 📐 **[Kimball Dimensional Modeling](./references/kimball_patterns.md)**: Star schemas, surrogate keys, and SCD Types 1-6.
+- 🥉 **[Medallion Lakehouse Architecture](./references/medallion_architecture.md)**: Bronze/Silver/Gold layers, Delta Lake 3.2, and ACID invariants.
+- 📊 **[Semantic Layer Patterns](./references/semantic_layer.md)**: Direct Lake mode, VertiPaq, dbt Semantic Layer, and metric views.
+- 🚚 **[Data Migration Playbook](./references/data_migration_playbook.md)**: Heterogeneous database migration, dual-run reconciliation, and cutover protocols.
