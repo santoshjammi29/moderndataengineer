@@ -5,9 +5,9 @@ import { architectureDiagrams } from "@/data/diagrams";
 import { WHITEBOARD_CATEGORIES, TOTAL_WHITEBOARDS_COUNT } from "@/data/whiteboards-learning-data";
 
 describe("Whiteboard Blueprints Integrity & Asset Verification", () => {
-  it("contains exactly 42 architect-grade whiteboard diagrams", () => {
-    expect(architectureDiagrams.length).toBe(42);
-    expect(TOTAL_WHITEBOARDS_COUNT).toBe(42);
+  it("contains exactly 52 architect-grade whiteboard diagrams", () => {
+    expect(architectureDiagrams.length).toBe(52);
+    expect(TOTAL_WHITEBOARDS_COUNT).toBe(52);
   });
 
   it("ensures every whiteboard diagram points to an existing, non-empty WebP asset on disk", () => {
@@ -59,12 +59,12 @@ describe("Whiteboard Blueprints Integrity & Asset Verification", () => {
     });
   });
 
-  it("verifies all 7 master categories accurately link to all 42 diagrams", () => {
+  it("verifies all 7 master categories accurately link to all 52 diagrams", () => {
     const allCategoryDiagramIds = WHITEBOARD_CATEGORIES.flatMap((c) => c.diagrams.map((d) => d.id));
-    expect(allCategoryDiagramIds.length).toBe(42);
+    expect(allCategoryDiagramIds.length).toBe(52);
 
     const uniqueCategoryIds = new Set(allCategoryDiagramIds);
-    expect(uniqueCategoryIds.size).toBe(42);
+    expect(uniqueCategoryIds.size).toBe(52);
 
     architectureDiagrams.forEach((d) => {
       expect(uniqueCategoryIds.has(d.id), `Diagram ${d.id} is not mapped in WHITEBOARD_CATEGORIES`).toBe(true);

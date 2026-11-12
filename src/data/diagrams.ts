@@ -1440,7 +1440,7 @@ export const architectureDiagrams: ArchitectureDiagramItem[] =
       "Lakehouse"
     ],
     "description": "Architectural head-to-head comparison between the two dominant modern open table formats: Delta Lake and Apache Iceberg. Examines their divergent metadata strategies (Delta's single-directory atomic transaction log with Parquet checkpoints vs Iceberg's 3-level hierarchical Avro manifest tree), partition evolution capabilities, concurrency handling under heavy multi-writer contention, and cross-format interoperability via Databricks UniForm.",
-    "architectNotes": "Delta Lake and Apache Iceberg share identical goals—ACID transactions, time travel, and high performance on cloud object storage—but diverge in metadata topology. Delta's transaction log is lightweight and lightning-fast for single-engine Spark workloads, while Iceberg's hierarchical manifest tree provides superior file-pruning and in-place partition evolution across heterogeneous query engines (Snowflake, Trino, Flink). Architects should implement Databricks UniForm to capture the benefits of both: fast Delta writes with universal Iceberg reader compatibility.",
+    "architectNotes": "Delta Lake and Apache Iceberg share identical goals\u2014ACID transactions, time travel, and high performance on cloud object storage\u2014but diverge in metadata topology. Delta's transaction log is lightweight and lightning-fast for single-engine Spark workloads, while Iceberg's hierarchical manifest tree provides superior file-pruning and in-place partition evolution across heterogeneous query engines (Snowflake, Trino, Flink). Architects should implement Databricks UniForm to capture the benefits of both: fast Delta writes with universal Iceberg reader compatibility.",
     "keyPoints": [
       "Metadata Model Disparity: Delta organizes metadata linearly in a single `_delta_log/` directory; Iceberg organizes metadata as a hierarchical tree of immutable Avro snapshots and manifest lists.",
       "Partition Evolution: Iceberg supports true in-place partition evolution (changing partition schemes without rewriting data); Delta historical data must be rewritten or migrated to Liquid Clustering.",
@@ -2359,5 +2359,575 @@ export const architectureDiagrams: ArchitectureDiagramItem[] =
       "Immutable audit records capturing who modified each attribute and at what exact timestamp"
     ],
     "docLink": "https://docs.delta.io/latest/delta-update.html#slowly-changing-data-scd-type-2-with-delta-lake"
+  },
+  {
+    "id": "lakehouse-ingestion-autoloader",
+    "title": "End-to-End Batch & Incremental Lakehouse Ingestion",
+    "subtitle": "Auto Loader (cloudFiles), File Notification Queues, Schema Evolution & Idempotent Bronze Ingestion",
+    "category": "Data Pipelines & Ingestion",
+    "image": "/diagrams/lakehouse_ingestion_autoloader_architecture.webp",
+    "tags": [
+      "Auto Loader",
+      "cloudFiles",
+      "Incremental Ingestion",
+      "Bronze Layer",
+      "Schema Evolution",
+      "Rescued Data Column",
+      "File Notification",
+      "Directory Listing",
+      "RocksDB State Store",
+      "Delta Lake",
+      "Structured Streaming"
+    ],
+    "description": "Production-grade incremental lakehouse ingestion pattern utilizing Apache Spark's Auto Loader (`cloudFiles`) to process millions of incoming semi-structured files from cloud object storage (S3, ADLS Gen2, GCS) into Bronze Delta tables. Combines automatic cloud notification queues (AWS SNS/SQS, Azure Event Grid) with an embedded RocksDB state store for exactly-once metadata tracking, asynchronous schema inference, automatic schema evolution, and malformed record quarantine via `_rescued_data`.",
+    "architectNotes": "Auto Loader scales beyond the physical limits of cloud directory listing by pivoting from directory-walk mode to event-driven notification mode when file counts exceed 1 million. For enterprise landing zones receiving thousands of micro-batches per hour, directory listing introduces exponential latency and API throttling (HTTP 429). File notification decouples file arrival from processing, enabling sub-minute SLA ingestion. Never disable `cloudFiles.schemaEvolutionMode` in dynamic SaaS ingestion; always persist `_rescued_data` to guarantee zero data loss when upstream producers alter field data types or append unannounced keys.",
+    "keyPoints": [
+      "Dual Ingestion Modalities: Automatically transitions between Directory Listing mode (efficient for <1M files) and File Notification mode (using SNS/SQS or Event Grid queues for >10M files).",
+      "RocksDB Metadata State Store: Persists ingested file metadata and offsets in a high-throughput off-heap RocksDB state store in the checkpoint directory, preventing costly repeated list operations.",
+      "Zero Data Loss via Rescued Data: Automatically quarantines corrupt JSON/CSV payloads and unmapped columns into a string column (`_rescued_data`) without breaking active stream execution.",
+      "Automatic Schema Inference & Evolution: Ingests new columns on the fly when configured with `cloudFiles.schemaEvolutionMode = 'addNewColumns'`, avoiding manual schema definition migrations.",
+      "Idempotent Exactly-Once Ingestion: End-to-end exactly-once delivery guarantees enforced through Spark Structured Streaming checkpointing combined with Delta Lake ACID transaction log commits.",
+      "Cost-Efficient Cloud Notification Cleanup: Automatically manages cloud queue resources, including Dead-Letter Queues (DLQ) and TTL message expiration to eliminate runaway cloud billing.",
+      "Multi-Format Native Decoding: Native streaming decoding across JSON, CSV, Parquet, Avro, ORC, XML, and binary text formats with built-in gzip/snappy/zstd decompression."
+    ],
+    "personaBreakdown": {
+      "architect": "Designs cross-cloud ingestion topologies; balances directory listing vs. notification queue operational costs; defines global Bronze storage partitioning standards and IAM service principal least-privilege policies for cloud messaging services.",
+      "seniorDe": "Configures Auto Loader streaming options (`cloudFiles.maxFilesPerTrigger`, `cloudFiles.backpressure.enabled`); tunes RocksDB memory allocations; authors schema evolution rules and automated schema drift alerts.",
+      "dataEngineer": "Implements Auto Loader streaming pipelines via PySpark or Delta Live Tables; monitors streaming checkpoint directories and handles schema evolutions; audits `_rescued_data` to identify malformed vendor payloads.",
+      "steward": "Audits incoming raw file formats and column mutations; verifies that newly inferred columns do not expose unclassified PII; establishes retention policies for raw landing zones versus Bronze Delta tables.",
+      "businessAnalyst": "Gains rapid access to newly landed operational data without waiting for weekly schema migration change requests; queries Bronze and Silver layers with high schema fidelity."
+    },
+    "technicalMechanisms": [
+      "Cloud event subscription synthesis via AWS EventBridge/SNS/SQS and Azure Event Grid Storage queues",
+      "Off-heap embedded RocksDB state store managing file checkpoint monotonically increasing sequence IDs",
+      "Micro-batch execution triggering dynamic schema inference and Delta transaction commit protocol",
+      "Column type widening and nullability relaxation rules during `addNewColumns` schema evolution",
+      "JSON parser fallback populating the hidden `_rescued_data` struct during deserialization failures"
+    ],
+    "failureModesAndTriage": [
+      "File Notification Queue Permission Expiration: Ingestion stalls with AccessDeniedException on cloud queue; re-issue cloud IAM role credentials and verify SNS/SQS or Event Grid subscription permissions.",
+      "Exploding Checkpoint RocksDB Size: Checkpoint directory bloat slows down driver state initialization; run checkpoint compaction and tune `spark.sql.streaming.stateStore.rocksdb.compactOnCommit`.",
+      "Unintended Schema Pollution: Rogue API client sends thousands of unique key-value pairs, causing schema widening limits to trip; switch `schemaEvolutionMode` from `addNewColumns` to `rescue` and quarantine rogue attributes."
+    ],
+    "governanceAndCompliance": [
+      "Immutable Bronze audit trail: raw ingested records preserved byte-for-byte including original file names and ingestion timestamps",
+      "Automated PII detection on newly evolved columns via Unity Catalog and Purview system classification hooks",
+      "Storage access controlled through cloud storage IAM policies and short-lived credential vending",
+      "GDPR deletion support via Delta Lake ACID table vacuuming following Bronze redaction pipelines"
+    ],
+    "docLink": "https://docs.databricks.com/en/ingestion/auto-loader/index.html"
+  },
+  {
+    "id": "streaming-dlq-recovery-flow",
+    "title": "Stateful Streaming Failure Recovery & Dead-Letter Queue (DLQ) Remediation",
+    "subtitle": "Poison Pill Quarantine, Circuit Breakers, Checkpoint State Recovery & Replay Lifecycle",
+    "category": "Data Pipelines & Ingestion",
+    "image": "/diagrams/streaming_dlq_recovery_flow_architecture.webp",
+    "tags": [
+      "Dead-Letter Queue",
+      "DLQ",
+      "Structured Streaming",
+      "Stateful Stream",
+      "Poison Pill",
+      "Circuit Breaker",
+      "Kafka",
+      "Checkpointing",
+      "Failure Recovery",
+      "Idempotency",
+      "Data Observability"
+    ],
+    "description": "Comprehensive resilience architecture for mission-critical streaming pipelines encountering unparseable payloads, schema violations, or stateful crashes. Combines an in-line poison pill routing gate, a configurable circuit breaker threshold, a partitioned Dead-Letter Queue (Kafka topic / Delta quarantine table), and an automated triage and re-injection loop that preserves consumer offsets and maintains 99.99% pipeline uptime.",
+    "architectNotes": "In stateful streaming, a single unhandled parsing error or malformed payload ('poison pill') will crash the streaming driver and cause repeated container restart loops, violating pipeline SLAs. The architectural rule of thumb is: never let unvalidated external data enter the primary state store. Separate stream validation into an inline evaluator; when error rates exceed a safety threshold (e.g., >1% in 5 consecutive micro-batches), trip a circuit breaker to halt the consumer gracefully rather than filling the DLQ with millions of valid records caused by an upstream bug.",
+    "keyPoints": [
+      "Non-Blocking Poison Pill Quarantine: Diverts corrupt records, invalid JSON schemas, and deserialization exceptions directly to a DLQ topic or table without halting the main pipeline.",
+      "Adaptive Circuit Breaker Pattern: Automatically pauses streaming ingestion and triggers PagerDuty alerts if the error rate exceeds pre-configured thresholds (e.g., >2% of micro-batch volume).",
+      "State Store Checkpoint Isolation: Separates validation stages from stateful aggregations (e.g., stream-stream joins, flatMapGroupsWithState) to protect state store consistency.",
+      "Dead-Letter Metadata Enrichment: Appends rich failure diagnostic metadata to each quarantined record, including source topic, partition, offset, timestamp, error class, and full stack trace.",
+      "Idempotent Replay Engine: Dedicated remediation pipeline allows engineers to patch schema parsers, reprocess quarantined events, and merge them back into the main stream with deduplication.",
+      "Watermark & Late-Data Handling: Distinguishes between corrupt records (routed to DLQ) and valid records arriving outside the watermark window (logged to late-arrival telemetry).",
+      "Audit Trail & Compliance Logging: Preserves a tamper-evident audit record of all diverted payloads and manual interventions to satisfy financial and operational regulatory compliance."
+    ],
+    "personaBreakdown": {
+      "architect": "Establishes enterprise streaming fault-tolerance standards; sets maximum allowable data loss (RPO = 0) and downtime (RTO < 15m); determines DLQ storage formats and multi-tenant isolation policies.",
+      "seniorDe": "Implements custom streaming deserialization wrappers with try-catch quarantine routing; tunes checkpoint commit intervals and RocksDB memory; designs replay micro-batch jobs with deduplication.",
+      "dataEngineer": "Monitors active streaming pipelines and DLQ alert notifications; runs triage notebooks to inspect malformed records; coordinates with upstream producer teams when schema drift occurs.",
+      "steward": "Monitors DLQ tables to ensure quarantined payloads containing unmasked PII or sensitive operational data are encrypted and subject to automated data retention/purging policies.",
+      "businessAnalyst": "Receives notifications regarding potential temporary data latency in downstream BI dashboards during active circuit breaker trip events; queries DLQ metrics for pipeline health visibility."
+    },
+    "technicalMechanisms": [
+      "UDF-based deserialization wrapper utilizing try-catch semantics to emit Either[CleanRecord, CorruptRecord]",
+      "Spark Structured Streaming dual-sink dispatching via `foreachBatch` or multi-query streaming execution",
+      "Circuit breaker rate-limiting counter tracking failed rows across micro-batch sliding windows",
+      "Kafka producer idempotent routing sending failed payloads with original partition headers to `.dlq` topic",
+      "Delta Lake `MERGE INTO` statement with unique event UUIDs for deduplicated post-repair replay"
+    ],
+    "failureModesAndTriage": [
+      "Driver Crash-Loop on Poison Pill: Pipeline crashes continuously upon restart; verify checkpoint directory is intact, wrap parser in permissive rescue mode, and point stream to clean checkpoint.",
+      "DLQ Runaway Storage Spillage: Upstream producer releases broken schema sending 100% of events to DLQ; circuit breaker trips, engineer alerts upstream team and rolls back producer deployment.",
+      "State Store Version Inconsistency: Unclean shutdown corrupts state store files; restore from latest valid metadata checkpoint version and reprocess offsets from Kafka commit log."
+    ],
+    "governanceAndCompliance": [
+      "Quarantined payloads encrypted at rest using customer-managed encryption keys (CMEK)",
+      "Strict 30-day retention policies on DLQ storage to comply with GDPR data minimization principles",
+      "Detailed audit logging of all DLQ reprocessing and manual record injection actions",
+      "SOC 2 compliance verified via automated alerting when pipeline availability deviates from SLA"
+    ],
+    "docLink": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#recovering-from-failures-with-checkpointing"
+  },
+  {
+    "id": "data-ingestion-strategy-matrix",
+    "title": "Enterprise Data Movement & Replication Strategy Decision Flow",
+    "subtitle": "Evaluating Batch ELT, Log-Based CDC, Streaming, Zero-Copy Shortcuts & Database Mirroring",
+    "category": "Data Pipelines & Ingestion",
+    "image": "/diagrams/data_ingestion_strategy_matrix_architecture.webp",
+    "tags": [
+      "Data Ingestion",
+      "CDC",
+      "Batch ELT",
+      "Streaming",
+      "Zero-Copy",
+      "Shortcuts",
+      "Mirroring",
+      "Lakehouse Ingestion",
+      "Decision Tree",
+      "Architecture Strategy",
+      "Data Engineering"
+    ],
+    "description": "Architectural decision matrix and flow diagram evaluating modern data ingestion patterns based on business latency SLAs, source engine constraints, network egress, and compute cost. Compares scheduled Batch ELT, Log-Based Change Data Capture (CDC), Real-Time Event Streaming, Zero-Copy Object Storage Shortcuts, and Managed Database Mirroring to guide architects toward the optimal ingestion archetype.",
+    "architectNotes": "A common architectural failure is defaulting to real-time streaming for workloads whose downstream consumers only query data on a daily or hourly cadence. Real-time streaming carries continuous 24/7 compute costs, complex state store management, and heightened operational overhead. Conversely, traditional batch extraction against OLTP databases locks transactional tables and misses intraday mutations. Use zero-copy shortcuts when data already resides in Delta/Iceberg format in a companion cloud; use log-based CDC for transactional databases; reserve streaming for true event-driven telemetry.",
+    "keyPoints": [
+      "Latency-Driven Pattern Selection: Matches data movement paradigms (sub-second streaming, 5-minute CDC, hourly micro-batch, daily bulk ELT) to actual business query requirements.",
+      "Log-Based CDC Superiority: Emphasizes zero-impact read-only replication via database transaction logs (WAL/Binlog) rather than query-based polling with timestamp columns.",
+      "Zero-Copy Lakehouse Federation: Highlights Microsoft Fabric OneLake shortcuts and Databricks Unity Catalog foreign tables to query external object stores without copying bytes.",
+      "Managed Database Mirroring: Evaluates near-real-time managed replication (Fabric Mirroring, Snowflake Zero-ETL) that bypasses ETL pipelines for supported cloud databases.",
+      "Compute Cost & Resource Optimization: Demonstrates how transitioning from idle 24/7 streaming clusters to serverless micro-batches cuts cloud compute spend by 40-70%.",
+      "Network Egress & Security Boundaries: Incorporates private link connectivity and VPC peering requirements to avoid internet transit and egress charges during cross-cloud ingestion.",
+      "Unified Lakehouse Landing: Converges disparate ingestion archetypes into standardized Delta Lake or Apache Iceberg tables with uniform ACID governance."
+    ],
+    "personaBreakdown": {
+      "architect": "Evaluates TCO, operational complexity, and data freshness requirements across enterprise business domains; establishes enterprise ingestion standards and approves cross-cloud shortcut policies.",
+      "seniorDe": "Selects appropriate ingestion connectors (Debezium, Fivetran, Kafka Connect, Auto Loader); designs high-availability networking and replication failover topologies.",
+      "dataEngineer": "Configures and deploys ingestion pipelines; monitors replication lag, connection pools, and source database transaction log growth; handles initial snapshot synchronizations.",
+      "steward": "Maintains data catalog entries for all ingested sources; verifies that database mirroring and shortcuts maintain row-level security and column masking definitions.",
+      "businessAnalyst": "Aligns report refresh schedules with pipeline replication frequency; avoids building DirectQuery dashboards against batch-ingested tables that only refresh nightly."
+    },
+    "technicalMechanisms": [
+      "Transaction log extraction (PostgreSQL WAL, MySQL Binlog, Oracle Redo) via Debezium Kafka Connect",
+      "Zero-copy DFS shortcut pointer resolution across ADLS Gen2, AWS S3, and Google Cloud Storage",
+      "Micro-batch triggering (`Trigger.AvailableNow` / `Trigger.ProcessingTime`) for cost-optimized Spark jobs",
+      "Asynchronous continuous replication engine converting OLTP row changes into Delta Lake change data feed (CDF)",
+      "Reverse proxy and PrivateLink endpoint tunneling for secure hybrid-cloud network traversal"
+    ],
+    "failureModesAndTriage": [
+      "OLTP Source Transaction Log Bloat: CDC replication stalls and source database transaction logs exhaust disk space; immediately verify CDC consumer lag and increase CDC slot retention thresholds.",
+      "Shortcut Metadata Lease Timeout: Cross-cloud shortcut queries fail with HTTP 403 or 408; refresh cloud IAM assume-role credentials and check cross-region network latency.",
+      "Downstream Ingestion Lag Spike: Batch copy pipeline exceeds allotted execution window; partition the extraction query by primary key chunks to enable parallel ingestion threads."
+    ],
+    "governanceAndCompliance": [
+      "Least-privilege replication service accounts configured with read-only transaction log permissions",
+      "End-to-end data encryption in transit via TLS 1.3 and at rest with cloud provider KMS keys",
+      "Automated lineage tracking registering source endpoints and target lakehouse table dependencies",
+      "Compliance with data residency regulations by restricting cross-region shortcuts and replication"
+    ],
+    "docLink": "https://docs.databricks.com/en/ingestion/index.html"
+  },
+  {
+    "id": "orchestration-backfill-lifecycle",
+    "title": "Pipeline Orchestration Lifecycle, State Machine & Catchup Backfill",
+    "subtitle": "Task Execution States, Upstream Dependencies, SLA Monitoring, Catchup & Historical Backfilling",
+    "category": "Data Pipelines & Ingestion",
+    "image": "/diagrams/orchestration_backfill_lifecycle_architecture.webp",
+    "tags": [
+      "Orchestration",
+      "Apache Airflow",
+      "State Machine",
+      "Backfill",
+      "Catchup",
+      "Task Dependencies",
+      "SLA Monitoring",
+      "Retry Policy",
+      "Idempotency",
+      "DataOps"
+    ],
+    "description": "Deep-dive architecture into production pipeline orchestration lifecycles, task instance state machines, and historical catchup backfill operations. Visualizes the exact state transitions (None -> Scheduled -> Queued -> Running -> Success/Failed/Up_for_Retry), task dependency evaluation, concurrency throttling, SLA miss alerting, and safe historical backfilling practices across Apache Airflow, Dagster, and Databricks Lakeflow.",
+    "architectNotes": "The single most dangerous setting in legacy orchestration DAGs is `catchup=True` paired with non-idempotent task logic. If a DAG with `catchup=True` is paused for weeks and unpaused, the scheduler will trigger hundreds of simultaneous DAG runs, overwhelming data warehouses and producing duplicated or corrupt table partitions. Always design tasks to be idempotent using deterministic partition overwrites or `MERGE INTO`, set `catchup=False` by default, and execute backfills deliberately using controlled CLI/API commands with strict `max_active_runs` concurrency limits.",
+    "keyPoints": [
+      "Deterministic State Machine Transitions: Maps every task lifecycle state (Scheduled, Queued, Running, Success, Failed, Upstream_Failed, Up_for_Retry, Skipped) and its scheduler triggers.",
+      "Safe Historical Backfilling: Step-by-step backfill execution protocols using CLI parameters (`airflow dags backfill -s -e`) with isolated execution date contexts (`data_interval_start`).",
+      "Concurrency & Connection Throttling: Employs `max_active_runs`, `max_active_tasks_per_dag`, and pool concurrency limits to prevent database connection exhaustion.",
+      "Smart Retries with Exponential Backoff: Configures resilient retry policies with jitter to avoid 'thundering herd' retry storms against external APIs and warehouses.",
+      "Cross-DAG Dependencies & Sensors: Utilizes `ExternalTaskSensor` (in `reschedule` mode) and dataset-triggered scheduling to build modular, loosely coupled data pipelines.",
+      "SLA Monitoring & Miss Alerting: Real-time SLA tracking mechanisms triggering automated Slack/Teams webhooks and incident tickets before downstream executive reports are impacted.",
+      "Dynamic Task Mapping & Sharding: Dynamically spawns parallel task instances at runtime based on incoming partition files or database chunks without hardcoding DAG topology."
+    ],
+    "personaBreakdown": {
+      "architect": "Establishes enterprise orchestration topology (single central Airflow cluster vs. decentralized domain clusters); defines SLA policies, secret management integrations, and backfill guardrails.",
+      "seniorDe": "Designs reusable DAG factory templates, custom Airflow operators, and hook libraries; optimizes scheduler heartbeat intervals and worker pool allocations.",
+      "dataEngineer": "Authors daily production DAGs; debugs task failures and state exceptions; executes historical data backfills; tunes task memory and timeout configurations.",
+      "steward": "Audits pipeline run history and SLA attainment metrics to verify data timeliness compliance against enterprise data service level agreements.",
+      "businessAnalyst": "Tracks expected data refresh times; receives automated notifications if upstream pipeline delays threaten morning dashboard availability."
+    },
+    "technicalMechanisms": [
+      "Scheduler heartbeat loop querying database for eligible DAG runs and updating state to `Queued`",
+      "Executor worker pool dispatching tasks via Celery, Kubernetes, or CeleryKubernetesExecutor",
+      "Dynamic execution date interval calculation (`data_interval_start`, `data_interval_end`) for deterministic partitioning",
+      "ExternalTaskSensor non-blocking `reschedule` mode freeing worker slots between status polls",
+      "Transactional Airflow metadata database locking ensuring single-thread task state promotions"
+    ],
+    "failureModesAndTriage": [
+      "Thundering Herd Backfill Overload: Unpausing a DAG with `catchup=True` triggers 200 concurrent runs, exhausting database connections; immediately pause DAG, set `catchup=False`, and run backfill in bounded chunks.",
+      "Worker Slot Starvation by Sensors: Sensors running in `poke` mode hold worker slots for hours, blocking active ETL tasks; switch all long-running sensors to `mode='reschedule'`.",
+      "Ghost Task Hanging in Running State: Worker pod terminated by OOM without notifying scheduler; configure task `execution_timeout` and let scheduler heartbeat transition task to `Up_for_Retry`."
+    ],
+    "governanceAndCompliance": [
+      "Immutable execution logs persisted in cloud object storage with 90-day retention policies",
+      "Role-based access control (RBAC) governing who can trigger DAGs, clear states, or execute backfills",
+      "Secure credential retrieval via HashiCorp Vault or AWS Secrets Manager integrations",
+      "Full audit trail recording user identity for every manual state override or rerun action"
+    ],
+    "docLink": "https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dag-run.html#catchup"
+  },
+  {
+    "id": "data-quality-wap-quarantine",
+    "title": "Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow",
+    "subtitle": "Data Contracts, Automated Validation Gates, Zero-Downtime Fast-Forwarding & Quarantine",
+    "category": "Governance & Security",
+    "image": "/diagrams/data_quality_wap_quarantine_architecture.webp",
+    "tags": [
+      "Data Quality",
+      "Write-Audit-Publish",
+      "WAP Pattern",
+      "Data Contracts",
+      "Circuit Breaker",
+      "Quarantine",
+      "Great Expectations",
+      "Soda Core",
+      "Delta Lake",
+      "Apache Iceberg",
+      "Observability"
+    ],
+    "description": "Production architecture for zero-downtime data quality enforcement using the Write-Audit-Publish (WAP) pattern and automated quarantine circuit breakers. New data is written into an isolated staging branch or partition, audited against formal Data Contracts using automated assertion engines (Great Expectations, Soda, Delta Constraints), and only published to downstream production consumers via zero-copy atomic fast-forwarding if all quality gates pass.",
+    "architectNotes": "The traditional anti-pattern of 'write directly to production, then run quality tests' inevitably leaks corrupt or malformed data to executive dashboards before pipelines can be stopped. The Write-Audit-Publish (WAP) pattern solves this by treating table commits like Git branches: writes land in an isolated staging snapshot or table branch. If audits pass, the production branch pointer fast-forwards instantly with zero data movement; if audits fail, the staging branch is purged or quarantined, and production consumers continue querying the pristine prior snapshot without disruption.",
+    "keyPoints": [
+      "Zero-Downtime Write-Audit-Publish: Decouples physical write operations from business data publication using Iceberg table branches or Delta transaction staging commits.",
+      "Enforceable Data Contracts: Formal YAML-defined data contracts specifying strict schema types, nullability rules, valid value ranges, and foreign key referential integrity.",
+      "Automated Multi-Layer Quality Gates: Executes row-level constraint checks, table-level statistical aggregations, and historical distribution anomaly drift detection.",
+      "Zero-Copy Atomic Fast-Forward: Upon 100% audit validation success, production branch pointer updates atomically via metadata commit, making data live in milliseconds.",
+      "Circuit Breaker & Quarantine Divert: When validation fails, circuit breaker prevents the publish step, alerts DataOps teams, and routes bad records to a quarantined triage table.",
+      "Automated Drift & Anomaly Alerting: Uses statistical baselines (Z-score, IQR) to detect unexpected volume spikes, missing categories, or sudden column distribution shifts.",
+      "Quality Scorecards & Lineage Integration: Publishes quality audit results and test pass/fail metrics directly to enterprise data catalogs (Unity Catalog, Microsoft Purview)."
+    ],
+    "personaBreakdown": {
+      "architect": "Establishes enterprise Data Contract specifications; determines SLA impact thresholds for WAP branching; mandates quality gate compliance for all Silver and Gold data tier publications.",
+      "seniorDe": "Implements WAP branching logic via Spark/Iceberg APIs or dbt pre-publish hooks; configures automated test runners and circuit breaker trip handlers.",
+      "dataEngineer": "Authors specific quality assertion tests (completeness, freshness, uniqueness); triages quarantined data records; fixes underlying ETL pipeline parsing errors.",
+      "steward": "Reviews Data Contract compliance dashboards; monitors enterprise data quality health scores; resolves data governance discrepancies with source domain owners.",
+      "businessAnalyst": "Enjoys 100% confidence in production reporting data, guaranteed free of partial loads, unexpected nulls, or duplicate keys; views quality audit certification badges on BI models."
+    },
+    "technicalMechanisms": [
+      "Apache Iceberg / Delta Lake branch isolation (`CREATE BRANCH audit_branch_20261112`)",
+      "Assertion evaluation engine executing SQL-based statistical checks against the isolated branch",
+      "Metadata fast-forwarding via Iceberg `fastForwardBranch` or Delta catalog pointer update",
+      "Automated transaction rollback and tombstone cleanup upon audit check assertion failure",
+      "Webhook event dispatching to Slack / Microsoft Teams / PagerDuty with failure context payloads"
+    ],
+    "failureModesAndTriage": [
+      "Staging Branch Accumulation: Audit failures leave abandoned staging branches consuming storage; schedule automated cleanup jobs to drop unpromoted branches older than 48 hours.",
+      "Overly Strict Validation False-Positive: Sudden business surge (e.g., Black Friday) triggers volume anomaly alerts, halting pipeline; adjust dynamic threshold bands to accommodate seasonal spikes.",
+      "Long-Running Audit Check Delay: Complex statistical checks delay publication past morning SLA; optimize validation SQL by running checks on column summary statistics rather than full table scans."
+    ],
+    "governanceAndCompliance": [
+      "100% verifiable Data Contract compliance records attached to every published production snapshot",
+      "Tamper-evident audit trail capturing who authored, tested, and published each data release",
+      "Quarantine tables isolated with restricted access permissions to prevent unauthorized viewing of bad data",
+      "Regulatory compliance with BCBS 239 and SOX financial reporting data accuracy mandates"
+    ],
+    "docLink": "https://docs.delta.io/latest/delta-constraints.html"
+  },
+  {
+    "id": "lakehouse-cicd-promotion-lifecycle",
+    "title": "Enterprise Lakehouse CI/CD Multi-Environment Promotion & Rollback Flow",
+    "subtitle": "Databricks Asset Bundles (DABs), dbt Core, Automated PR Validation & Blue/Green Table Promotion",
+    "category": "Platform Landscape",
+    "image": "/diagrams/lakehouse_cicd_promotion_lifecycle_architecture.webp",
+    "tags": [
+      "CI/CD",
+      "Databricks Asset Bundles",
+      "DABs",
+      "DevOps",
+      "dbt",
+      "GitOps",
+      "Multi-Environment",
+      "Promotion Lifecycle",
+      "Rollback Strategy",
+      "DataOps",
+      "Blue-Green"
+    ],
+    "description": "Enterprise-grade CI/CD and deployment promotion lifecycle for modern lakehouse platforms. Demonstrates the complete GitOps path from local developer workspaces (VS Code, Databricks CLI) through automated Pull Request testing (Ruff, mypy, pytest in ephemeral schemas), gated staging integration validation, and zero-downtime production deployment via Databricks Asset Bundles (DABs) and blue/green table promotion with automated rollback.",
+    "architectNotes": "Lakehouse CI/CD differs fundamentally from traditional software engineering because compute code is inextricably linked to persistent physical data storage. Deploying a breaking schema change can corrupt terabytes of production data. To safeguard the lakehouse: never allow direct developer deployment to production; use dedicated Service Principals in CI/CD pipelines; test migrations against isolated ephemeral schemas; and utilize Delta Lake time travel or clone mechanisms to enable instant, zero-downtime rollback in case of runtime regressions.",
+    "keyPoints": [
+      "Declarative Infrastructure as Code: Uses Databricks Asset Bundles (DABs) and Terraform to declare jobs, pipelines, permissions, and compute resources as versioned YAML code.",
+      "Isolated Multi-Environment Architecture: Strict isolation between Dev, Staging, and Production environments across separate cloud subscriptions, storage accounts, and Unity Catalog namespaces.",
+      "Automated PR Validation Gates: GitHub Actions / Azure DevOps pipelines execute SQL linting (SQLFluff), Python typing (`mypy`), and unit tests against ephemeral dynamic schemas.",
+      "Service Principal Automation: Completely eliminates personal user tokens in deployment pipelines; all deployments are authenticated via Entra ID / AWS IAM Service Principals.",
+      "Blue/Green Table Promotion: Deploys schema changes to secondary 'blue' tables or table clones, runs regression verification, then swaps catalog pointers for zero-downtime release.",
+      "Instant One-Line Rollback: Leverages Delta Lake `RESTORE TABLE prod.table TO VERSION AS OF` or branch rollback to revert production state to previous snapshots within seconds.",
+      "Immutable Release Tagging: Binds every production deployment to an immutable Git commit SHA, generating cryptographic provenance for regulatory and audit compliance."
+    ],
+    "personaBreakdown": {
+      "architect": "Defines enterprise multi-environment topology (Dev/Stage/Prod); designs service principal IAM boundaries; establishes change approval gates and disaster recovery rollback SLAs.",
+      "seniorDe": "Authors CI/CD pipeline definition files (GitHub Actions workflows, DABs `databricks.yml`); builds automated testing harnesses and ephemeral schema provisioning scripts.",
+      "dataEngineer": "Develops pipeline features in local branch; runs pre-commit hooks; submits Pull Requests with test coverage; validates deployment logs in Staging.",
+      "steward": "Audits deployment release notes and schema change requests; confirms that new production table deployments include mandatory governance tags and ownership assignments.",
+      "businessAnalyst": "Experiences zero downtime or query disruption during production deployments; relies on consistent, regression-free metric definitions across releases."
+    },
+    "technicalMechanisms": [
+      "Databricks Asset Bundles (DABs) dynamic variable substitution across target environments (`dev`, `stage`, `prod`)",
+      "Ephemeral test schema generation (`test_schema_${{ github.run_id }}`) automatically torn down post-test",
+      "Automated data diffing comparing Staging transformation outputs against Production baselines",
+      "Unity Catalog 3-level namespace promotion (`dev_catalog` -> `staging_catalog` -> `prod_catalog`)",
+      "Delta Lake `RESTORE TABLE` execution triggered automatically upon pipeline health check failures"
+    ],
+    "failureModesAndTriage": [
+      "Staging Schema Drift from Production: Staging environment gets out of sync with production, causing PR tests to pass in staging but fail in prod; enforce automated weekly schema mirroring from prod to staging.",
+      "Service Principal Permission Revocation: Deployment fails with HTTP 403 Forbidden; verify CI/CD secret rotation has not expired the service principal client secret or Entra certificate.",
+      "Production Query Regression Post-Deploy: New pipeline code degrades query latency; immediately trigger automated rollback to prior Git SHA and execute Delta table time travel restore."
+    ],
+    "governanceAndCompliance": [
+      "Separation of duties enforced: developers cannot manually push code or alter schemas in production",
+      "Complete cryptographic audit trail linking every production catalog table state to a Git commit SHA",
+      "Automated vulnerability scanning of all Python dependencies via Dependabot / Snyk in CI",
+      "SOC 2 and ISO 27001 compliance validated via automated pull request review approvals"
+    ],
+    "docLink": "https://docs.databricks.com/en/dev-tools/bundles/ci-cd.html"
+  },
+  {
+    "id": "lakehouse-access-masking-lifecycle",
+    "title": "Lakehouse Fine-Grained Access Control, Dynamic Masking & Entra/ABAC Enforcement",
+    "subtitle": "Role-Based & Attribute-Based Access Control (RBAC/ABAC), Row Filters & Column Masking Rules",
+    "category": "Governance & Security",
+    "image": "/diagrams/lakehouse_access_masking_lifecycle_architecture.webp",
+    "tags": [
+      "Access Control",
+      "Dynamic Masking",
+      "Row-Level Security",
+      "RLS",
+      "Column-Level Security",
+      "CLS",
+      "ABAC",
+      "RBAC",
+      "Unity Catalog",
+      "Microsoft Purview",
+      "Data Security",
+      "PII"
+    ],
+    "description": "Comprehensive security architecture for fine-grained data governance across enterprise lakehouses. Demonstrates how unified catalogs (Unity Catalog, Microsoft Purview) enforce Role-Based (RBAC) and Attribute-Based (ABAC) Access Control. Illustrates dynamic column masking (e.g. hashing SSNs or credit cards based on user group membership) and dynamic row-level security (RLS) filters applied at query runtime without duplicating physical data.",
+    "architectNotes": "Creating separate physical tables or sanitized database views for different regional or permission-tiered user groups is an expensive anti-pattern that leads to massive data duplication, high ETL compute costs, and inevitable permission drift. The gold standard is Single-Copy Governed Storage: persist one canonical Gold Delta table and enforce fine-grained access control dynamically at query compilation time using centralized catalog UDFs for row filtering and column masking based on the caller's Entra ID/Okta group context.",
+    "keyPoints": [
+      "Single-Copy Governed Lakehouse: Eliminates duplicate physical tables by dynamically transforming query plans to filter rows and mask sensitive columns at runtime.",
+      "Dynamic Column Masking (CLS): Obfuscates sensitive fields (e.g. `CASE WHEN is_member('HR_Admin') THEN ssn ELSE 'XXX-XX-' || RIGHT(ssn, 4) END`) transparently during query compilation.",
+      "Dynamic Row-Level Security (RLS): Injects row filter predicates (e.g. `WHERE region = current_user_region()`) into Catalyst query plans to restrict rows by user authorization.",
+      "Attribute-Based Access Control (ABAC): Dynamically applies governance policies based on tag inheritance (e.g., all columns tagged `PII.Confidential` automatically receive hashing masks).",
+      "Enterprise Identity Integration: Natively integrates with Microsoft Entra ID and Okta SAML tokens to resolve user identity, tenant attributes, and security group memberships.",
+      "Zero-Transcode Performance: Push-down predicate optimization ensures row filters are evaluated directly at the Parquet scan level, maintaining sub-second query response times.",
+      "Centralized Audit Lineage: Logs every query, user session, applied mask, and data access event into tamper-evident system audit tables (`system.access.audit`)."
+    ],
+    "personaBreakdown": {
+      "architect": "Designs enterprise zero-trust security framework; selects RBAC vs. ABAC policy models; establishes global data classification taxonomies (Public, Internal, Confidential, Restricted).",
+      "seniorDe": "Authors centralized row-filter and column-masking SQL UDFs; benchmarks query latency with active filters; ensures filter predicates push down cleanly into Parquet readers.",
+      "dataEngineer": "Attaches masking policies and row filters to target Gold tables and views; verifies masking logic in test environments; maps database objects to Unity Catalog tags.",
+      "steward": "Monitors PII discovery scan results; applies governance classification tags to sensitive columns; reviews user access audit logs to verify compliance with GDPR and HIPAA.",
+      "businessAnalyst": "Executes standard BI and SQL queries against authorized tables without needing special views; sees properly redacted or regionally scoped data according to their assigned role."
+    },
+    "technicalMechanisms": [
+      "Catalyst Optimizer plan rewrites injecting UDF expressions into the logical query tree prior to physical planning",
+      "Entra ID / Okta SAML OAuth2 token resolution via `is_account_group_member()` and `current_user()` functions",
+      "Tag-based policy inheritance propagating column masks from semantic catalog models to physical Delta tables",
+      "Pushdown predicate evaluation at the storage scan layer filtering row groups prior to decompression",
+      "Continuous system audit table streaming capturing every data access attempt and credential context"
+    ],
+    "failureModesAndTriage": [
+      "Catastrophic Query Slowdown on Complex RLS: Inefficient row-filter UDF causes full table scans; optimize filter UDF to avoid cross-table subqueries and ensure filter keys align with table clustering keys.",
+      "Access Denied on Valid User: User cannot view expected rows post-reorganization; verify user's Entra ID group membership sync and check role assignment in Unity Catalog / Purview.",
+      "Masking Bypass in BI DirectQuery: DirectQuery report shows raw values due to cached credentials; enforce credential delegation and ensure semantic model uses user identity rather than fixed service principal."
+    ],
+    "governanceAndCompliance": [
+      "Full compliance with GDPR Right to Privacy and HIPAA Safe Harbor de-identification rules",
+      "Dynamic data pseudonymization protecting customer PII while enabling aggregate analytical modeling",
+      "Tamper-evident audit logging in `system.access.audit` satisfying SOC 2 and ISO 27001 access control audits",
+      "Automated periodic access review (PAR) workflows to certify privilege grants every 90 days"
+    ],
+    "docLink": "https://docs.databricks.com/en/data-governance/unity-catalog/row-column-filters.html"
+  },
+  {
+    "id": "lakehouse-bcdr-failover",
+    "title": "Lakehouse Disaster Recovery (BCDR) Cross-Region Failover & Split-Brain Prevention",
+    "subtitle": "Cross-Region Storage Replication, Catalog Metadata Sync, RPO/RTO SLAs & Split-Brain Fencing",
+    "category": "Platform Landscape",
+    "image": "/diagrams/lakehouse_bcdr_failover_architecture.webp",
+    "tags": [
+      "Disaster Recovery",
+      "BCDR",
+      "High Availability",
+      "Failover",
+      "Cross-Region",
+      "Replication",
+      "Split-Brain",
+      "RPO",
+      "RTO",
+      "Delta Deep Clone",
+      "Unity Catalog"
+    ],
+    "description": "Enterprise disaster recovery (BCDR) and business continuity architecture for cloud lakehouse platforms. Outlines active-passive and active-active topologies across geographic regions (e.g. East US to West US), covering asynchronous storage replication (Azure GRS, AWS S3 CRR), catalog metadata synchronization (Delta Deep Clone, Unity Catalog federation), strict RPO/RTO bounds, DNS health routing, and quorum fencing to prevent disastrous split-brain dual writes.",
+    "architectNotes": "Designing lakehouse disaster recovery requires a clear separation between storage recovery and compute failover. Cloud object storage replication (e.g., AWS S3 Cross-Region Replication or Azure GRS) provides data persistence, but storage replication alone does not constitute a working lakehouse. The catalog metadata (Delta transaction logs, table definitions, and permission grants) must remain synchronized. Furthermore, during a regional outage, architects must enforce strict write fencing on the failing primary region before promoting the secondary region to avoid split-brain divergence that cannot be programmatically reconciled.",
+    "keyPoints": [
+      "Formal RPO & RTO Service Level Objectives: Defines target Recovery Point Objective (RPO < 15 minutes) and Recovery Time Objective (RTO < 1 hour) based on tier-1 business criticality.",
+      "Dual-Plane Replication Architecture: Combines continuous asynchronous object storage replication (AWS CRR / Azure GRS) with orchestrated catalog metadata sync (Delta Deep Clone).",
+      "Global Traffic Management: Employs health-checked DNS and global routers (Azure Front Door, Route 53) to automatically reroute client SQL and BI queries to the active region.",
+      "Quorum Fencing & Split-Brain Prevention: Enforces automated IAM write revocation on the primary storage account before promoting the secondary region to prevent competing concurrent writes.",
+      "Pre-Warmed Secondary Compute: Maintains minimal serverless compute pools and standby clusters in the secondary region to guarantee rapid compute provisioning during failover.",
+      "Automated Catalog Synchronization: Continuously replicates Unity Catalog metastore definitions, access control privileges, and storage credentials across regions.",
+      "Graceful Post-Outage Failback Protocol: Orchestrates reverse synchronization of newly ingested secondary data back to the primary region before re-establishing primary status."
+    ],
+    "personaBreakdown": {
+      "architect": "Establishes enterprise BCDR strategy; negotiates RPO/RTO agreements with executive stakeholders; designs cross-region network topologies, failover runbooks, and annual disaster recovery simulations.",
+      "seniorDe": "Implements automated cross-region Delta Deep Clone pipelines; scripts infrastructure failover via Terraform; tunes storage replication lifecycle rules and latency monitors.",
+      "dataEngineer": "Configures pipeline parameterization to support dynamic region switching; tests pipeline idempotency in DR environments; validates data integrity post-failover.",
+      "steward": "Verifies that secondary region security policies, catalog permissions, and data classifications mirror the primary region exactly; audits DR compliance records.",
+      "businessAnalyst": "Experiences minimal disruption during regional cloud outages; understands disaster recovery SLA expectations and temporary read-only mode states."
+    },
+    "technicalMechanisms": [
+      "Asynchronous block-level cloud object storage replication (AWS S3 CRR with RTC / Azure Geo-Redundant Storage)",
+      "Orchestrated incremental Delta Deep Clone (`CREATE OR REPLACE TABLE dr.table DEEP CLONE prod.table`)",
+      "Route 53 / Azure Front Door health-check probe monitoring primary Lakehouse SQL warehouse availability",
+      "IAM Policy fencing via cloud API revoking `s3:PutObject` / `Microsoft.Storage/write` permissions during cutover",
+      "Unity Catalog cross-region metastore replication and service principal credential synchronization"
+    ],
+    "failureModesAndTriage": [
+      "Split-Brain Dual Writes: Incomplete network partition allows ingestion pipelines to write to both regions simultaneously; trigger immediate IAM write lock on primary and run reconciliation diff scripts.",
+      "Replication Lag Exceeding RPO: High write volume causes storage replication lag to exceed 15-minute SLA; increase replication bandwidth allocation and switch high-priority tables to prioritized CRR.",
+      "Stale DR Catalog Metadata: Secondary storage has newer files than the secondary catalog metadata reflects; execute `MSCK REPAIR TABLE` and run sync notebooks to reconcile catalog transaction logs."
+    ],
+    "governanceAndCompliance": [
+      "Meets regulatory disaster recovery testing mandates (e.g. FFIEC, HIPAA, SOX, and DORA in the EU)",
+      "Continuous cross-region encryption maintaining customer-managed keys (CMEK) parity in both regions",
+      "Documented and certified annual DR failover drills with executive sign-off and audit documentation",
+      "Geographic data sovereignty compliance verifying replication stays within approved national borders"
+    ],
+    "docLink": "https://docs.databricks.com/en/admin/disaster-recovery.html"
+  },
+  {
+    "id": "table-maintenance-compaction-vacuum",
+    "title": "Open Table Maintenance Lifecycle: Bin-Packing, Liquid Clustering & Safe VACUUM",
+    "subtitle": "Small-File Bin-Packing (OPTIMIZE), Liquid Clustering, Deletion Vector Merging & Safe VACUUM Retention",
+    "category": "Storage Engine",
+    "image": "/diagrams/table_maintenance_compaction_vacuum_architecture.webp",
+    "tags": [
+      "Table Maintenance",
+      "Delta Lake",
+      "Compaction",
+      "Bin-Packing",
+      "OPTIMIZE",
+      "VACUUM",
+      "Liquid Clustering",
+      "Deletion Vectors",
+      "Storage Hygiene",
+      "Apache Iceberg",
+      "FinOps"
+    ],
+    "description": "Exhaustive physical storage and lifecycle hygiene architecture for open table formats (Delta Lake, Apache Iceberg). Details the 3-phase maintenance cycle: resolving small-file fragmentation via `OPTIMIZE` bin-packing (consolidating 2-5MB files into 512MB-1GB targets), rewriting multi-dimensional sort keys via Liquid Clustering, consolidating Deletion Vector tombstones, and executing safe `VACUUM` operations that purge unreferenced data files while strictly respecting time-travel retention windows.",
+    "architectNotes": "The two greatest hazards in lakehouse table administration are small-file explosion and premature vacuuming. Streaming ingestion inevitably generates thousands of tiny files that degrade read performance by 10x to 100x due to object storage metadata overhead. However, running `VACUUM` with retention set to zero (`SET spark.databricks.delta.vacuum.parallelDelete.enabled = true; VACUUM table RETAIN 0 HOURS`) is catastrophic: it purges files currently being scanned by active reader queries, causing fatal FileNotFound exceptions. Enforce automated daily bin-packing and maintain a minimum 7-day (168 hour) VACUUM safety threshold.",
+    "keyPoints": [
+      "Small-File Problem Resolution: Consolidates millions of fragmented streaming micro-batch files into optimal 128MB to 1GB columnar Parquet files via automated bin-packing.",
+      "Liquid Clustering vs. Static Partitioning: Replaces brittle hive-style folder partitioning with flexible, multi-dimensional Liquid Clustering that adapts to changing query patterns without data rewriting.",
+      "Deletion Vector Consolidation: Reconciles soft-deleted row markers (stored in sidecar `.bin` deletion vectors) into clean physical Parquet files during scheduled maintenance windows.",
+      "Safe VACUUM Retention Windows: Enforces strict time-travel safety buffers (default 7 days / 168 hours) to prevent deleting files referenced by in-flight read queries or disaster recovery workflows.",
+      "Transaction Log Checkpointing: Automatically consolidates Delta log JSON commits into compacted multi-part Parquet checkpoints every 10 commits, keeping metadata scans fast.",
+      "Storage FinOps Cost Reduction: Frees petabytes of unreferenced storage and reduces cloud provider S3/ADLS LIST and GET API charges by up to 80%.",
+      "Predictive Auto-Compaction: Evaluates write-time auto-compaction and optimized writes to mitigate fragmentation before files ever hit disk."
+    ],
+    "personaBreakdown": {
+      "architect": "Establishes enterprise storage hygiene SLAs; defines global retention policies (7 vs. 30 days) balancing time travel needs with cloud storage FinOps spend; approves clustering key selections.",
+      "seniorDe": "Authors automated maintenance DAGs scheduling off-peak `OPTIMIZE` and `VACUUM` runs; monitors table metrics using `DESCRIBE DETAIL` and `DESCRIBE HISTORY`; tunes target file sizes (`targetFileSize`).",
+      "dataEngineer": "Configures table properties (`delta.autoOptimize.optimizeWrite`, `delta.enableDeletionVectors`); troubleshoots slow query logs resulting from uncompacted partitions.",
+      "steward": "Verifies that physical file deletions executed via `VACUUM` comply with GDPR/CCPA 'Right to be Forgotten' mandates following user erasure requests.",
+      "businessAnalyst": "Enjoys consistently fast sub-second query performance on curated tables without experiencing query slowdowns caused by file system fragmentation."
+    },
+    "technicalMechanisms": [
+      "Bin-packing algorithm grouping small files into optimal memory partitions prior to Parquet re-encoding",
+      "Hilbert space-filling curve / Liquid Clustering key assignment ordering rows across multidimensional space",
+      "Delta transaction log atomic commit declaring newly compacted files and soft-deleting fragmented predecessors",
+      "Garbage collection scanner comparing physical storage objects against active transaction log commit references",
+      "Object storage asynchronous bulk delete API invocations purging unreferenced tombstoned files"
+    ],
+    "failureModesAndTriage": [
+      "In-Flight Reader Crash via VACUUM 0: Running VACUUM with zero retention deletes files in-use by long-running queries; enforce safety checks preventing retention below 168 hours in production.",
+      "Compaction Job Out-of-Memory (OOM): Running OPTIMIZE on a massive unpartitioned table exhausts driver memory; partition the OPTIMIZE command using `WHERE` clauses (e.g. `OPTIMIZE table WHERE date >= '2026-01-01'`).",
+      "Write Concurrency Conflict on OPTIMIZE: Compaction conflicts with concurrent ETL stream; configure Delta Lake to enable optimistic conflict resolution or schedule OPTIMIZE during low-ingestion windows."
+    ],
+    "governanceAndCompliance": [
+      "Guarantees permanent physical data destruction required by GDPR/CCPA following logical record deletion",
+      "Audit logs record all `OPTIMIZE` and `VACUUM` operations including deleted file counts and reclaimed bytes",
+      "Prevents compliance violations by ensuring historical table versions remain queryable throughout audit periods",
+      "Automated policy enforcement through cloud storage lifecycle rules complementing table-level vacuuming"
+    ],
+    "docLink": "https://docs.delta.io/latest/delta-utility.html#vacuum"
+  },
+  {
+    "id": "governed-agentic-rag-pipeline",
+    "title": "Governed Agentic AI & Enterprise Vector Search Pipeline with ACL Propagation",
+    "subtitle": "Document Parsing, Semantic Chunking, Vector Embeddings, Hybrid Search & Preserving ACL Security",
+    "category": "Platform Landscape",
+    "image": "/diagrams/governed_agentic_rag_pipeline_architecture.webp",
+    "tags": [
+      "Agentic AI",
+      "RAG",
+      "Vector Search",
+      "ACL Propagation",
+      "Governance",
+      "Hybrid Search",
+      "Embeddings",
+      "Unity Catalog",
+      "LLM",
+      "Enterprise AI",
+      "MLflow"
+    ],
+    "description": "Production-grade, enterprise-governed Retrieval-Augmented Generation (RAG) and Agentic AI architecture. Ingests unstructured documents (PDFs, contracts, internal wikis) and structured Delta tables, applies semantic chunking and dense vector embedding, preserves source Access Control Lists (ACLs) directly on vector metadata, and executes hybrid search (dense semantic + BM25 sparse keyword) with strict pre-retrieval security filtering so LLM agents never leak unauthorized data.",
+    "architectNotes": "The single greatest security failure in enterprise GenAI implementations is 'security stripping during chunking': parsing a confidential HR document, storing its text chunks in an ungoverned vector database, and allowing any employee to query it via an enterprise LLM chatbot. In a governed architecture, every chunk must inherit the source document's Entra ID/Okta security ACLs. The retrieval engine must perform pre-query filtering\u2014pruning chunks the asking user is not authorized to read BEFORE feeding context to the LLM\u2014guaranteeing zero data leakage.",
+    "keyPoints": [
+      "End-to-End ACL Security Propagation: Ingests documents with source permission tags (Entra ID groups, user SID) and embeds them as searchable metadata attributes on vector records.",
+      "Pre-Retrieval Security Filtering: Evaluates user authorization at query runtime, filtering out unauthorized chunks before semantic similarity ranking and prompt assembly.",
+      "Hybrid Search Architecture: Combines dense semantic vector retrieval (approximate nearest neighbor / HNSW) with sparse lexical search (BM25 keyword match) for maximum recall.",
+      "Two-Stage Reranking Pipeline: Uses cross-encoder rerankers to rescore top-K candidate chunks, ensuring only the most contextually relevant passages reach the LLM prompt window.",
+      "Agentic Tool Execution & Grounding: Autonomous AI agents utilize structured Lakehouse tools (SQL query execution, catalog lookups) alongside unstructured vector search.",
+      "Verifiable Citation & Provenance: Generates grounded LLM answers accompanied by exact source document links, page numbers, and cryptographic chunk hashes for compliance auditability.",
+      "MLflow Observability & Evaluation: Traces every agent step, retrieved context, token latency, and evaluation metric (faithfulness, hallucination, answer relevance) via MLflow Tracing."
+    ],
+    "personaBreakdown": {
+      "architect": "Defines enterprise AI architecture and governance boundaries; selects embedding and foundation models; establishes RAG security standards, token budgets, and LLM evaluation benchmarks.",
+      "seniorDe": "Builds scalable document ingestion and chunking pipelines using Spark; configures vector index synchronization pipelines (Delta Sync); implements hybrid search and reranking services.",
+      "dataEngineer": "Maintains document landing zones and vector search sync jobs; monitors embedding generation throughput; handles document schema changes and OCR ingestion pipelines.",
+      "steward": "Audits vector search indexes to confirm that confidential documents maintain proper classification tags; reviews hallucination logs and verifies citation provenance.",
+      "businessAnalyst": "Interacts with enterprise AI chatbots to retrieve rapid, accurate answers grounded in verified corporate data; verifies answers against linked source document citations."
+    },
+    "technicalMechanisms": [
+      "Semantic chunking with sliding token windows (512 tokens with 10% overlap) preserving paragraph integrity",
+      "Vector embedding generation via state-of-the-art models (`text-embedding-3-large`, BGE-large) emitting 1536/3072-dim vectors",
+      "Databricks Vector Search / Azure AI Search Delta Sync continuously indexing new and modified documents",
+      "Pre-retrieval metadata filter injection (`WHERE array_intersect(acl_groups, :user_groups) != []`)",
+      "Cross-encoder deep reranking model re-scoring candidate chunks based on query-passage relevance"
+    ],
+    "failureModesAndTriage": [
+      "Unauthorized Data Leakage in LLM Response: LLM cites confidential executive salary; inspect vector search query to confirm pre-retrieval ACL filtering was not bypassed by an unauthenticated service account.",
+      "Hallucination Caused by Low Retrieval Quality: LLM produces fictitious answers; evaluate retrieval recall metrics, tune chunk size from 1024 down to 512 tokens, and enable hybrid BM25 + dense search.",
+      "Vector Index Synchronization Lag: Newly uploaded legal contracts do not appear in search results; verify Delta Sync trigger schedule and inspect vector index sync pipeline error logs."
+    ],
+    "governanceAndCompliance": [
+      "Preserves existing enterprise identity access control (Entra ID, Okta) across all AI query workflows",
+      "100% citation provenance guaranteeing every LLM assertion is traceable to an authorized source document",
+      "Comprehensive MLflow tracing recording prompt text, retrieved contexts, and model outputs for audit review",
+      "Guardrail validation preventing prompt injection attacks, toxic content generation, and PII leakage"
+    ],
+    "docLink": "https://docs.databricks.com/en/generative-ai/vector-search.html"
   }
 ];

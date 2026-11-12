@@ -828,10 +828,11 @@
       "databricks-optimization-techniques-architecture",
       "spark-savemode-architecture",
       "delta-vs-iceberg-architecture",
-      "lakehouse-acid-concurrency"
+      "lakehouse-acid-concurrency",
+      "table-maintenance-compaction-vacuum"
     ],
     "stats": {
-      "diagramsCount": 8,
+      "diagramsCount": 9,
       "conceptsCount": 25,
       "qaCount": 30,
       "blueprintsCount": 7
@@ -1598,10 +1599,14 @@
       "cdc-debezium-lakehouse-pipeline",
       "databricks-medallion-pipeline",
       "delta-live-tables-pipeline",
-      "databricks-dabs-devops-pipeline"
+      "databricks-dabs-devops-pipeline",
+      "lakehouse-ingestion-autoloader",
+      "streaming-dlq-recovery-flow",
+      "data-ingestion-strategy-matrix",
+      "orchestration-backfill-lifecycle"
     ],
     "stats": {
-      "diagramsCount": 8,
+      "diagramsCount": 12,
       "conceptsCount": 25,
       "qaCount": 30,
       "blueprintsCount": 8
@@ -2381,10 +2386,13 @@
       "rag-vector-search-data-pipeline",
       "enterprise-edge-client-architecture",
       "distributed-systems-resilience-architecture",
-      "lakehouse-finops-cost-optimization"
+      "lakehouse-finops-cost-optimization",
+      "lakehouse-cicd-promotion-lifecycle",
+      "lakehouse-bcdr-failover",
+      "governed-agentic-rag-pipeline"
     ],
     "stats": {
-      "diagramsCount": 5,
+      "diagramsCount": 8,
       "conceptsCount": 25,
       "qaCount": 30,
       "blueprintsCount": 10
@@ -4745,10 +4753,12 @@
     ],
     "diagramIds": [
       "unity-catalog-governance",
-      "purview-governance-catalog"
+      "purview-governance-catalog",
+      "data-quality-wap-quarantine",
+      "lakehouse-access-masking-lifecycle"
     ],
     "stats": {
-      "diagramsCount": 2,
+      "diagramsCount": 4,
       "conceptsCount": 18,
       "qaCount": 30,
       "blueprintsCount": 8

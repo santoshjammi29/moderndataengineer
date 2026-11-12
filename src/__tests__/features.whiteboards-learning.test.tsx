@@ -44,16 +44,16 @@ describe("Whiteboard Learning Data & Architecture", () => {
     expect(TOTAL_CATEGORIES_COUNT).toBe(7);
   });
 
-  it("covers all 42 whiteboard architecture diagrams across categories", () => {
-    expect(TOTAL_WHITEBOARDS_COUNT).toBe(42);
-    expect(architectureDiagrams.length).toBe(42);
+  it("covers all 52 whiteboard architecture diagrams across categories", () => {
+    expect(TOTAL_WHITEBOARDS_COUNT).toBe(52);
+    expect(architectureDiagrams.length).toBe(52);
 
     const mappedDiagramIds = new Set<string>();
     WHITEBOARD_CATEGORIES.forEach((cat) => {
       cat.diagrams.forEach((d) => mappedDiagramIds.add(d.id));
     });
 
-    expect(mappedDiagramIds.size).toBe(42);
+    expect(mappedDiagramIds.size).toBe(52);
     architectureDiagrams.forEach((diagram) => {
       expect(mappedDiagramIds.has(diagram.id)).toBe(true);
     });
@@ -82,7 +82,7 @@ describe("Whiteboard Learning Data & Architecture", () => {
 
     const storage = getCategoryById("storage-engine");
     expect(storage).toBeDefined();
-    expect(storage?.diagrams.length).toBe(8);
+    expect(storage?.diagrams.length).toBe(9);
 
     const fabric = getCategoryById("fabric-powerbi");
     expect(fabric).toBeDefined();
