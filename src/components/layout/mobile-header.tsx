@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, useMemo, Suspense } from "react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { ThemeCycleButton, ThemeSegmentedPills } from "@/components/ui/theme-switcher";
 import { TextSizeQuickToggle, TextSizeSegmentedPills } from "@/components/ui/text-size-controller";
 import { KbdShortcut } from "@/components/ui/kbd-shortcut";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { cn } from "@/lib/utils";
-import { NAV_GROUPS, isSubHrefActive } from "@/data/navigation-data";
+import { NAV_GROUPS, isSubHrefActive, NavItem } from "@/data/navigation-data";
 
 const badgeVariants: Record<string, string> = {
   easy: "bg-green-500/10 text-green-400 border-green-500/20",
@@ -26,6 +26,55 @@ function MobileHeaderInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Subpages expansion state in mobile drawer
+  const [manualExpanded, setManualExpanded] = useState<Record<string, boolean>>({});
+  const [defaultExpanded, setDefaultExpanded] = useState<boolean>(true);
+
+  const itemsWithSub = useMemo(() => {
+    return NAV_GROUPS.flatMap((g) => g.items).filter((i) => i.subItems && i.subItems.length > 0);
+  }, []);
+
+  const isItemExpanded = (item: NavItem) => {
+    if (manualExpanded[item.href] !== undefined) {
+      return manualExpanded[item.href];
+    }
+    return defaultExpanded;
+  };
+
+  const areAllExpanded = useMemo(() => {
+    return itemsWithSub.every((i) => {
+      return manualExpanded[i.href] !== undefined ? manualExpanded[i.href] : defaultExpanded;
+    });
+  }, [itemsWithSub, manualExpanded, defaultExpanded]);
+
+  const toggleItemExpanded = (href: string) => {
+    setManualExpanded((prev) => {
+      const current = prev[href] !== undefined ? prev[href] : defaultExpanded;
+      return {
+        ...prev,
+        [href]: !current,
+      };
+    });
+  };
+
+  const toggleAllSubpages = () => {
+    if (areAllExpanded) {
+      const newMap: Record<string, boolean> = {};
+      itemsWithSub.forEach((i) => {
+        newMap[i.href] = false;
+      });
+      setManualExpanded(newMap);
+      setDefaultExpanded(false);
+    } else {
+      const newMap: Record<string, boolean> = {};
+      itemsWithSub.forEach((i) => {
+        newMap[i.href] = true;
+      });
+      setManualExpanded(newMap);
+      setDefaultExpanded(true);
+    }
+  };
 
   useFocusTrap(drawerRef, drawerOpen, () => setDrawerOpen(false));
 
@@ -54,7 +103,9 @@ function MobileHeaderInner() {
   }, [drawerOpen]);
 
   const openSearch = () => {
-    window.dispatchEvent(new CustomEvent("open-command-palette"));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("open-command-palette"));
+    }
   };
 
   const isItemActive = (item: { href: string; matches?: string[] }) => {
@@ -87,18 +138,19 @@ function MobileHeaderInner() {
             onClick={() => setDrawerOpen(!drawerOpen)}
             className="p-2 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors shrink-0 cursor-pointer"
             aria-label={drawerOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={drawerOpen}
           >
             {drawerOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          <Link href="/" className="flex items-center gap-2.5 min-w-0" title="Lakehouse Architect">
+          <Link href="/" className="flex items-center gap-2.5 min-w-0" title="Modern Data Engineer">
             <BrandLogo size={28} className="rounded-lg shadow-xs" />
             <div className="min-w-0">
               <h2 className="text-xs sm:text-sm font-bold text-[var(--foreground)] leading-tight truncate">
-                Lakehouse
+                Modern Data Engineer
               </h2>
               <span className="text-[9px] sm:text-[10px] font-medium text-[var(--muted-foreground)] block -mt-0.5">
-                Architect Platform
+                Study Workspace
               </span>
             </div>
           </Link>
@@ -120,7 +172,7 @@ function MobileHeaderInner() {
         </div>
       </header>
 
-      {/* Slide-over Mobile Navigation Drawer — All Pages & Subpages Always Visible */}
+      {/* Slide-over Mobile Navigation Drawer — Full Study Navigation Tree */}
       {drawerOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex animate-in fade-in duration-200">
           {/* Backdrop */}
@@ -135,7 +187,7 @@ function MobileHeaderInner() {
             ref={drawerRef}
             role="dialog"
             aria-modal="true"
-            aria-label="Navigation drawer"
+            aria-label="Study Navigation Drawer"
             className="relative w-[85%] max-w-sm bg-[var(--surface-1)] border-r border-[var(--border)] h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-left duration-250"
           >
             {/* Drawer Header */}
@@ -143,8 +195,8 @@ function MobileHeaderInner() {
               <div className="flex items-center gap-2.5">
                 <BrandLogo size={28} className="rounded-lg shadow-xs" />
                 <div>
-                  <div className="text-xs font-bold text-[var(--foreground)]">Lakehouse Architect</div>
-                  <div className="text-[10px] text-[var(--muted-foreground)]">Platform &amp; Systems Reference</div>
+                  <div className="text-xs font-bold text-[var(--foreground)]">Modern Data Engineer</div>
+                  <div className="text-[10px] text-[var(--muted-foreground)]">Study Workspace &amp; Navigation Tree</div>
                 </div>
               </div>
               <button
@@ -156,65 +208,108 @@ function MobileHeaderInner() {
               </button>
             </div>
 
-            {/* Quick Search Button in Drawer */}
-            <div className="p-3 border-b border-[var(--border)]">
+            {/* Quick Search Button & Tree Controls */}
+            <div className="p-3 border-b border-[var(--border)] space-y-2 bg-[var(--surface-1)]">
               <button
+                type="button"
                 onClick={() => {
                   setDrawerOpen(false);
                   openSearch();
                 }}
                 className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] cursor-pointer"
+                aria-label="Search all lessons and tools"
               >
                 <span className="flex items-center gap-2">
-                  <Search size={14} />
-                  <span>Search all topics &amp; code...</span>
+                  <Search size={14} className="text-blue-500" />
+                  <span>Search lessons &amp; tools...</span>
                 </span>
                 <KbdShortcut shortcutKey="k" className="bg-[var(--surface-3)]" />
               </button>
+
+              <div className="flex items-center justify-between px-1 text-[10px] text-[var(--muted-foreground)]">
+                <span className="font-bold uppercase tracking-wider text-[9px]">Study Navigation</span>
+                <button
+                  type="button"
+                  onClick={toggleAllSubpages}
+                  aria-expanded={areAllExpanded}
+                  className="text-blue-500 hover:text-blue-400 font-semibold transition-colors cursor-pointer"
+                >
+                  {areAllExpanded ? "Collapse subpages" : "Expand all subpages"}
+                </button>
+              </div>
             </div>
 
-            {/* Nav Groups List — All Pages and Subpages Permanently Visible */}
-            <nav className="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-none">
+            {/* Nav Groups List — All 20 Canonical Pages and Subpages Visible */}
+            <nav className="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-none" aria-label="Mobile study navigation">
               {NAV_GROUPS.map((group) => (
                 <div key={group.title} className="space-y-1">
                   <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
                     {group.title}
                   </div>
-                  <div className="space-y-0.5">
+                  <ul className="space-y-0.5" role="list">
                     {group.items.map((item) => {
                       const active = isItemActive(item);
+                      const expanded = isItemExpanded(item);
                       const Icon = item.icon;
-                      return (
-                        <div key={item.href} className="space-y-0.5">
-                          <Link
-                            href={item.href}
-                            onClick={() => setDrawerOpen(false)}
-                            className={cn(
-                              "flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all",
-                              active
-                                ? "bg-blue-600 text-white font-semibold shadow-xs"
-                                : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
-                            )}
-                          >
-                            <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                              <Icon size={16} className={cn(active ? "text-white" : "text-blue-500 dark:text-blue-400 shrink-0")} />
-                              <span className="break-words whitespace-normal leading-snug">{item.label}</span>
-                            </div>
-                            {item.pill && (
-                              <span
-                                className={cn(
-                                  "text-[10px] font-semibold px-2 py-0.5 rounded-full border shrink-0",
-                                  active ? "bg-white/20 text-white border-white/30" : badgeVariants[item.pill.variant]
-                                )}
-                              >
-                                {item.pill.text}
-                              </span>
-                            )}
-                          </Link>
+                      const hasChildren = Boolean(item.subItems && item.subItems.length > 0);
 
-                          {/* Subpages when present — Visually distinct indented tree */}
-                          {item.subItems && item.subItems.length > 0 && (
-                            <ul className="ml-5 pl-2.5 border-l-2 border-blue-500/25 my-1 space-y-1">
+                      return (
+                        <li key={item.href} className="space-y-0.5">
+                          <div className="flex items-center justify-between w-full">
+                            <Link
+                              href={item.href}
+                              onClick={() => setDrawerOpen(false)}
+                              aria-current={active ? "page" : undefined}
+                              className={cn(
+                                "flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all flex-1 min-w-0",
+                                active
+                                  ? "bg-blue-600 text-white font-semibold shadow-xs"
+                                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                              )}
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                <Icon size={16} className={cn(active ? "text-white" : "text-blue-500 dark:text-blue-400 shrink-0")} aria-hidden="true" />
+                                <span className="break-words whitespace-normal leading-snug">{item.label}</span>
+                              </div>
+                              {item.pill && (
+                                <span
+                                  className={cn(
+                                    "text-[10px] font-semibold px-2 py-0.5 rounded-full border shrink-0",
+                                    active ? "bg-white/20 text-white border-white/30" : badgeVariants[item.pill.variant]
+                                  )}
+                                >
+                                  {item.pill.text}
+                                </span>
+                              )}
+                            </Link>
+
+                            {hasChildren && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  toggleItemExpanded(item.href);
+                                }}
+                                className="p-2 rounded-lg hover:bg-[var(--surface-2)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer shrink-0 ml-1"
+                                aria-label={expanded ? `Collapse ${item.label} subpages` : `Expand ${item.label} subpages`}
+                                aria-expanded={expanded}
+                              >
+                                <ChevronDown
+                                  size={14}
+                                  className={cn(
+                                    "transition-transform duration-200",
+                                    expanded ? "rotate-0 text-blue-500" : "-rotate-90 text-[var(--muted-foreground)]"
+                                  )}
+                                  aria-hidden="true"
+                                />
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Subpages when present */}
+                          {expanded && hasChildren && item.subItems && (
+                            <ul className="ml-5 pl-2.5 border-l-2 border-blue-500/25 my-1 space-y-1" role="list">
                               {item.subItems.map((sub) => {
                                 const isSubActive = isSubHrefActive(pathname, searchParams, sub.href);
                                 return (
@@ -222,6 +317,7 @@ function MobileHeaderInner() {
                                     <Link
                                       href={sub.href}
                                       onClick={() => setDrawerOpen(false)}
+                                      aria-current={isSubActive ? "page" : undefined}
                                       className={cn(
                                         "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all",
                                         isSubActive
@@ -237,6 +333,7 @@ function MobileHeaderInner() {
                                               ? "bg-blue-500 scale-125 shadow-[0_0_6px_rgba(59,130,246,0.8)]"
                                               : "bg-[var(--muted-foreground)]/30"
                                           )}
+                                          aria-hidden="true"
                                         />
                                         <span className="truncate">{sub.label}</span>
                                       </div>
@@ -258,15 +355,27 @@ function MobileHeaderInner() {
                               })}
                             </ul>
                           )}
-                        </div>
+                        </li>
                       );
                     })}
-                  </div>
+                  </ul>
                 </div>
               ))}
             </nav>
 
-            {/* Drawer Footer */}
+            {/* Quick Link to Studio */}
+            <div className="px-4 py-2 border-t border-[var(--border)] bg-[var(--surface-1)] flex items-center justify-between text-xs text-[var(--muted-foreground)]">
+              <span>Personal workspace:</span>
+              <Link
+                href="/studio"
+                onClick={() => setDrawerOpen(false)}
+                className="text-blue-500 font-semibold hover:underline"
+              >
+                Open My Studio →
+              </Link>
+            </div>
+
+            {/* Drawer Footer — Text Size & Theme controls */}
             <div className="p-3 border-t border-[var(--border)] bg-[var(--surface-2)] space-y-3">
               <div>
                 <div className="flex items-center justify-between text-xs px-1 mb-1.5">
@@ -295,10 +404,7 @@ export function MobileHeader() {
   return (
     <Suspense
       fallback={
-        <header
-          className="lg:hidden sticky top-0 z-40 flex items-center justify-between h-14 px-3 sm:px-4 bg-[var(--glass-bg)] backdrop-blur-xl border-b border-[var(--glass-border)]"
-          aria-hidden="true"
-        />
+        <header className="lg:hidden sticky top-0 z-40 flex items-center justify-between h-14 px-3 sm:px-4 bg-[var(--surface-1)] border-b border-[var(--border)]" />
       }
     >
       <MobileHeaderInner />

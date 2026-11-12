@@ -34,8 +34,8 @@ interface MobileTabItem {
 // 4 Core tabs on small mobile screens (< 640px) + Explore button = 5 perfect equal columns
 const mobileCoreTabs: MobileTabItem[] = [
   { label: "Home", href: "/", icon: Home },
-  { label: "Journey", href: "/guided-learning", icon: Compass },
-  { label: "Concepts", href: "/concepts", icon: BookOpen },
+  { label: "Learn", href: "/guided-learning", icon: Compass },
+  { label: "Practise", href: "/code-practice", icon: FileCode2 },
   { label: "Q&A", href: "/qa-prep", icon: MessageSquare, badge: formatContentCount(CONTENT_COUNTS.qa) },
 ];
 
@@ -43,12 +43,12 @@ const mobileCoreTabs: MobileTabItem[] = [
 const tabletTabs: MobileTabItem[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Search", href: "/search-topics", icon: Search, isNew: true },
-  { label: "Journey", href: "/guided-learning", icon: Compass },
+  { label: "Learn", href: "/guided-learning", icon: Compass },
   { label: "Concepts", href: "/concepts", icon: BookOpen },
   { label: "Arch", href: "/architecture", icon: Layers },
   { label: "Code", href: "/code-practice", icon: FileCode2 },
   { label: "DataOps", href: "/dataops", icon: Workflow },
-  { label: "Q&A", href: "/qa-prep", icon: MessageSquare, badge: "7.1k" },
+  { label: "Q&A", href: "/qa-prep", icon: MessageSquare, badge: formatContentCount(CONTENT_COUNTS.qa) },
   { label: "Studio", href: "/studio", icon: User },
 ];
 

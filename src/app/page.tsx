@@ -1,7 +1,6 @@
 import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 import { Metadata } from "next";
 import { DashboardClient } from "./dashboard-client";
-import { LakehouseArchitectureGuide } from "@/components/dashboard/lakehouse-architecture-guide";
 import {
   generatePageMetadata,
   generateCourseSchema,
@@ -13,18 +12,17 @@ export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
-    title: "Lakehouse Architecture: The Definitive Systems Guide & Blueprints",
+    title: "Modern Data Engineer | Study Workspace & Architecture Reference",
     description:
-      `The definitive guide to Lakehouse Architecture, with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items, ${formatContentCount(CONTENT_COUNTS.concepts)} concepts, and ${CONTENT_COUNTS.whiteboards} whiteboard blueprints across Delta Lake, Apache Iceberg, Microsoft Fabric, Databricks, and Apache Spark.`,
+      `A structured study workspace for Modern Data Engineering and Lakehouse Architecture, with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items, ${formatContentCount(CONTENT_COUNTS.concepts)} concepts, and ${CONTENT_COUNTS.whiteboards} whiteboard blueprints across Delta Lake, Apache Iceberg, Microsoft Fabric, Databricks, and Apache Spark.`,
     path: "/",
     keywords: [
-      "Lakehouse",
+      "Modern Data Engineer",
       "Lakehouse Architecture",
+      "Data Engineering Study",
       "Lakehouse Architect",
       "Data Lakehouse",
       "Medallion Architecture",
-      "What is a Lakehouse",
-      "Lakehouse vs Data Warehouse",
       "Delta Lake",
       "Apache Iceberg",
       "Microsoft Fabric OneLake",
@@ -32,6 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "Unity Catalog",
       "Apache Spark 4.0",
       "DP-600 Exam Prep",
+      "DP-700 Exam Prep",
       "Direct Lake Power BI",
       "Data Platform Architecture",
     ],
@@ -40,20 +39,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function DashboardPage() {
   const courseSchema = generateCourseSchema(
-    "Enterprise Lakehouse Architecture & Modern Data Platform Masterclass",
-    `A technical curriculum with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items, a Spark execution simulator, and ${CONTENT_COUNTS.whiteboards} whiteboard blueprints.`
+    "Enterprise Lakehouse Architecture & Modern Data Platform Study Program",
+    `A technical study curriculum with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items, a Spark execution simulator, and ${CONTENT_COUNTS.whiteboards} whiteboard blueprints.`
   );
 
   const techArticleSchema = generateTechArticleSchema({
-    title: "Lakehouse Architecture: The Definitive Enterprise Reference Blueprint",
+    title: "Modern Data Engineer & Lakehouse Architecture Study Workspace",
     description:
-      "A comprehensive architectural guide to modern data lakehouses, medallion architecture, Delta Lake, Apache Iceberg, and decoupled distributed systems.",
+      "A structured study workspace covering foundations, code drills, system design scenarios, and production operations for modern data engineering.",
     path: "/",
     keywords: [
+      "Modern Data Engineer",
       "Lakehouse",
       "Lakehouse Architecture",
-      "Lakehouse Architect",
-      "Data Lakehouse",
       "Medallion Architecture",
       "Delta Lake",
       "Apache Iceberg",
@@ -89,9 +87,9 @@ export default function DashboardPage() {
         "The three dominant open table formats are Delta Lake (pioneered by Databricks and native to Microsoft Fabric), Apache Iceberg (originated by Netflix and widely adopted across Snowflake, AWS, and GCP), and Apache Hudi (optimized for streaming updates and CDC ingestion).",
     },
     {
-      question: "How does Lakehouse Architect prepare engineers for DP-700, DP-600, and Databricks certifications?",
+      question: "How does the study workspace prepare engineers for DP-700, DP-600, and Databricks certifications?",
       answer:
-        `Lakehouse Architect provides ${formatContentCount(CONTENT_COUNTS.qa)} interview questions, ${formatContentCount(CONTENT_COUNTS.concepts)} architectural concepts, ${CONTENT_COUNTS.whiteboards} digital whiteboard blueprints, and Spark execution labs for Microsoft Fabric and Databricks.`,
+        `The platform provides ${formatContentCount(CONTENT_COUNTS.qa)} interview questions, ${formatContentCount(CONTENT_COUNTS.concepts)} architectural concepts, ${CONTENT_COUNTS.whiteboards} digital whiteboard blueprints, and Spark execution labs for Microsoft Fabric and Databricks.`,
     },
   ]);
 
@@ -100,24 +98,17 @@ export default function DashboardPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Lakehouse Architect",
+    name: "Modern Data Engineer Study Workspace",
     url: siteUrl,
     applicationCategory: "EducationalApplication",
     operatingSystem: "All",
     browserRequirements: "Requires HTML5 and modern web browser",
     description:
-      "Enterprise preparation platform and architecture reference encyclopedia for Lakehouse Architects and Lead Data Engineers.",
+      "A structured study workspace and architecture reference encyclopedia for Modern Data Engineers and Lakehouse Architects.",
     offers: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "1420",
-      bestRating: "5",
-      worstRating: "1",
     },
     author: {
       "@type": "Person",
@@ -145,10 +136,6 @@ export default function DashboardPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
       />
       <DashboardClient />
-      <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto px-2 sm:px-4 2xl:px-6 pb-12">
-        <LakehouseArchitectureGuide />
-      </div>
     </>
   );
 }
-

@@ -32,6 +32,7 @@ import { TopicIcon } from "@/components/ui/topic-icon";
 import { CodeBlock } from "@/components/ui/code-block";
 import { MasteryRoadmapFlow } from "@/components/guided-learning/mastery-roadmap-flow";
 import { LakehouseMedallionFlow } from "@/components/concepts/lakehouse-medallion-flow";
+import { LakehouseArchitectureGuide } from "@/components/dashboard/lakehouse-architecture-guide";
 import { EnterpriseStackFlow } from "@/components/company-research/enterprise-stack-flow";
 import { SdlcPipelineFlow } from "@/components/dataops/sdlc-pipeline-flow";
 import { PipelineExecutionFlow } from "@/components/code-practice/pipeline-execution-flow";
@@ -1091,6 +1092,11 @@ resources:
           </div>
         </div>
       )}
+
+      {/* ── Comprehensive Lakehouse Architecture Blueprint & Educational Guide ── */}
+      <div className="pt-4">
+        <LakehouseArchitectureGuide />
+      </div>
     </div>
   );
 }

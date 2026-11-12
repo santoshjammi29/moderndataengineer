@@ -38,6 +38,36 @@ export function setStoredExperienceTier(tier: ExperienceTier): void {
   } catch {}
 }
 
+export function hasRealUserProgress(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const rawTopic = localStorage.getItem(LAST_TOPIC_STORAGE_KEY);
+    if (rawTopic) {
+      const parsed = JSON.parse(rawTopic);
+      if (parsed?.title && parsed?.href) return true;
+    }
+    const rawBookmarks = localStorage.getItem(BOOKMARKS_STORAGE_KEY);
+    if (rawBookmarks) {
+      const parsed = JSON.parse(rawBookmarks);
+      if (Array.isArray(parsed) && parsed.length > 0) return true;
+    }
+    const rawUserData = localStorage.getItem(USERDATA_STORAGE_KEY);
+    if (rawUserData) {
+      const parsed = JSON.parse(rawUserData);
+      if (
+        (typeof parsed?.reviewedCount === "number" && parsed.reviewedCount > 0) ||
+        (typeof parsed?.xp === "number" && parsed.xp > 0)
+      ) {
+        return true;
+      }
+    }
+    const storeState = useUserStore.getState();
+    if (storeState.bookmarks.length > 0) return true;
+    if (storeState.userData.reviewedCount > 0) return true;
+  } catch {}
+  return false;
+}
+
 export function getLastTopic(fallbackTier?: ExperienceTier): LastTopicData {
   const currentTier = fallbackTier || getStoredExperienceTier();
   const defaultStarting = EXPERIENCE_TIERS[currentTier]?.startingPath || EXPERIENCE_TIERS.associate.startingPath;
