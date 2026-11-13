@@ -29,6 +29,7 @@ import {
   Filter,
   Bug,
   HelpCircle,
+  BookOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -43,13 +44,14 @@ import { PosterLightbox } from "@/components/cheatsheet/poster-lightbox";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { PipelineExecutionFlow } from "@/components/code-practice/pipeline-execution-flow";
+import { DatabricksManualView } from "@/components/code-practice/databricks-manual-view";
 
 export interface DatabricksCodingClientProps {
   suiteData: DatabricksSuiteData;
   operationsData: Databricks100Concept[];
 }
 
-type CodingViewMode = "all" | "cheatsheets" | "d100" | "bottlenecks" | "dbfs";
+type CodingViewMode = "all" | "manual" | "cheatsheets" | "d100" | "bottlenecks" | "dbfs";
 
 interface BottleneckPlaybook {
   id: string;
@@ -240,6 +242,91 @@ df_parsed = df.withColumn("payload", F.from_json(F.col("raw_json"), schema))`,
       "Leverage Databricks Photon engine to execute query graphs in native C++ off-heap memory.",
     ],
   },
+  {
+    id: "concurrent-append-write-conflict",
+    title: "ConcurrentAppendException & Write Conflicts in Delta Lake",
+    severity: "HIGH",
+    symptom: "ConcurrentAppendException: Files were added to the target table by a concurrent update. Simultaneous streaming micro-batch merges and batch updates fail.",
+    rootCause: "Multiple concurrent transactions attempting to modify overlapping partitions or data files under Optimistic Concurrency Control (OCC) without Deletion Vectors or disjoint file partitions.",
+    language: "sql",
+    codeSnippet: `-- ✅ PRODUCTION FIX 1: Enable Deletion Vectors & Row Tracking (Eliminates Rewrite Conflicts)
+ALTER TABLE gold.orders SET TBLPROPERTIES (
+  'delta.enableDeletionVectors' = 'true',
+  'delta.enableRowTracking' = 'true'
+);
+
+-- ✅ PRODUCTION FIX 2: Dynamic Partition Pruning on MERGE to limit file scope
+MERGE INTO gold.orders t
+USING (SELECT * FROM staging_orders WHERE order_date >= current_date() - INTERVAL 7 DAYS) s
+ON t.order_date = s.order_date AND t.order_id = s.order_id
+WHEN MATCHED THEN UPDATE SET *
+WHEN NOT MATCHED THEN INSERT *;`,
+    keyTakeaways: [
+      "Enable Deletion Vectors to convert costly file rewrites on UPDATE/DELETE into lightweight bitmap tombstones.",
+      "Always include partition/cluster predicate filters in MERGE statements to minimize scan footprint and avoid concurrent append collisions.",
+      "Separate high-frequency appends from heavy update/compaction operations, or leverage CDF with micro-batch isolation.",
+    ],
+  },
+  {
+    id: "photon-to-spark-vectorization-breakout",
+    title: "Photon-to-Spark Transition Breakout (Vectorization Fallback)",
+    severity: "HIGH",
+    symptom: "Query execution plan shows PhotonOffload / PhotonToRow / RowToPhoton operators with high CPU overhead, or Spark UI stage logs indicate vectorization fallback.",
+    rootCause: "Using non-Photon-compatible operators such as standard Python UDFs (BatchEvalPython), unsupported Scala/Java UDFs, unsupported window framing, or legacy complex data type casts in the inner loop.",
+    language: "python",
+    codeSnippet: `# ❌ ANTI-PATTERN: Standard row-level Python UDF breaks Photon off-heap vectorized loop
+# @udf("string")
+# def extract_code(raw): return raw.split("-")[0]
+
+# ✅ PRODUCTION FIX 1: Use native Spark SQL string functions compiled in Photon C++
+import pyspark.sql.functions as F
+df_clean = df.withColumn("code", F.substring_index(F.col("raw"), "-", 1))
+
+# ✅ PRODUCTION FIX 2: If custom logic is required, use Vectorized Pandas UDF (ArrowEvalPython)
+from pyspark.sql.functions import pandas_udf
+import pandas as pd
+
+@pandas_udf("string")
+def extract_code_vectorized(series: pd.Series) -> pd.Series:
+    return series.str.split("-").str[0]
+
+df_vectorized = df.withColumn("code", extract_code_vectorized(F.col("raw")))`,
+    keyTakeaways: [
+      "Look for 'PhotonToRow' and 'RowToPhoton' transitions in SQL query profiles — each transition causes memory serialization overhead.",
+      "Replace all standard Python UDFs with native PySpark functions or SQL expressions executed natively by Photon.",
+      "If Python transforms are non-negotiable, batch via Apache Arrow / @pandas_udf to maintain vectorized columnar buffers.",
+    ],
+  },
+  {
+    id: "explicit-null-skew-split",
+    title: "Null Key Skew in Joins & Aggregations (Single Partition Straggler)",
+    severity: "HIGH",
+    symptom: "Join task on 1 partition takes 45 minutes while all others finish in seconds. Spark UI shows hundreds of millions of rows hashed to a single bucket due to NULL join keys.",
+    rootCause: "NULL keys in Left Outer or Inner joins all hash to partition 0 or a single worker slot, overwhelming that executor core.",
+    language: "python",
+    codeSnippet: `import pyspark.sql.functions as F
+
+# ✅ PRODUCTION FIX: Explicit NULL Split Pattern
+# Step 1: Split non-null and null records
+df_non_null = df_events.filter(F.col("user_id").isNotNull())
+df_null = df_events.filter(F.col("user_id").isNull())
+
+# Step 2: Join ONLY non-null records (cleanly distributed across hash partitions)
+df_joined_non_null = df_non_null.join(df_users, "user_id", "left")
+
+# Step 3: Align schema with empty user fields for null records
+for c in df_users.columns:
+    if c != "user_id":
+        df_null = df_null.withColumn(c, F.lit(None))
+
+# Step 4: Union back - completely bypassing the skew bottleneck
+df_final = df_joined_non_null.unionByName(df_null)`,
+    keyTakeaways: [
+      "NULL values hash to identical buckets, creating extreme skew in hash joins and aggregations.",
+      "Use the Explicit NULL Split pattern to isolate null records from the join entirely.",
+      "Alternatively, replace NULLs with salted surrogate keys prior to joining if the dimension table supports it.",
+    ],
+  },
 ];
 
 const DBFS_OPERATIONS_PLAYBOOK = [
@@ -310,7 +397,7 @@ export function DatabricksCodingClient({
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<CodingViewMode>(() => {
     const v = searchParams.get("view")?.toLowerCase();
-    if (v === "cheatsheets" || v === "d100" || v === "bottlenecks" || v === "dbfs") {
+    if (v === "manual" || v === "cheatsheets" || v === "d100" || v === "bottlenecks" || v === "dbfs") {
       return v as CodingViewMode;
     }
     return "all";
@@ -333,7 +420,7 @@ export function DatabricksCodingClient({
   // Sync viewMode from URL searchParams
   useEffect(() => {
     const v = searchParams.get("view")?.toLowerCase();
-    if (v && ["all", "cheatsheets", "d100", "bottlenecks", "dbfs"].includes(v)) {
+    if (v && ["all", "manual", "cheatsheets", "d100", "bottlenecks", "dbfs"].includes(v)) {
       setViewMode(v as CodingViewMode);
     }
   }, [searchParams]);
@@ -412,6 +499,7 @@ export function DatabricksCodingClient({
   }, [searchQuery]);
 
   const totalFilteredCount = useMemo(() => {
+    if (viewMode === "manual") return 8;
     if (viewMode === "cheatsheets") return filteredCards.length;
     if (viewMode === "d100") return filteredOperations.length;
     if (viewMode === "bottlenecks") return filteredBottlenecks.length;
@@ -460,6 +548,9 @@ export function DatabricksCodingClient({
 
             {/* Quick Stat Chips */}
             <div className="flex items-center gap-2 flex-wrap pt-1 text-xs">
+              <span className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono font-medium">
+                8 Manual Modules (L100-L400)
+              </span>
               <span className="px-2.5 py-1 rounded-md bg-sky-500/10 text-sky-300 border border-sky-500/20 font-mono font-medium">
                 48 Cheatsheet Cards
               </span>
@@ -467,7 +558,7 @@ export function DatabricksCodingClient({
                 100 Architecture Ops
               </span>
               <span className="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 font-mono font-medium">
-                6 Critical Memory Fixes
+                9 Critical Incident Fixes
               </span>
               <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono font-medium">
                 8 DBFS &amp; Secret Scripts
@@ -525,6 +616,7 @@ export function DatabricksCodingClient({
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] overflow-x-auto scrollbar-none shadow-xs">
         {[
           { id: "all", label: `All Databricks Coding (${suiteData.cards.length + operationsData.length})`, icon: Flame },
+          { id: "manual", label: "Technical Manual (Level 100–400)", icon: BookOpen },
           { id: "cheatsheets", label: `Production Cheatsheets (${suiteData.cards.length})`, icon: FileCode2 },
           { id: "d100", label: `Databricks 100 Operations (${operationsData.length})`, icon: Cpu },
           { id: "bottlenecks", label: `Memory & Bottleneck Triage (${PRODUCTION_BOTTLENECK_PLAYBOOKS.length})`, icon: Bug },
@@ -596,6 +688,29 @@ export function DatabricksCodingClient({
       {/* ────────────────────────────────────────────────────────── */}
       {/* 4. CONTENT SECTIONS */}
       {/* ────────────────────────────────────────────────────────── */}
+
+      {/* VIEW: TECHNICAL MANUAL (LEVEL 100 TO 400) */}
+      {(viewMode === "all" || viewMode === "manual") && (
+        <div className="space-y-3 pt-2">
+          {viewMode === "all" && (
+            <div className="flex items-center justify-between pb-1">
+              <h2 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
+                <BookOpen size={16} className="text-amber-400" />
+                <span>Databricks Platform Technical Manual (Level 100–400)</span>
+              </h2>
+              <button
+                type="button"
+                onClick={() => handleViewChange("manual")}
+                className="text-[11px] text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 cursor-pointer"
+              >
+                <span>Focus Manual Mode</span>
+                <ArrowRight size={12} />
+              </button>
+            </div>
+          )}
+          <DatabricksManualView />
+        </div>
+      )}
 
       {/* VIEW: MEMORY & BOTTLENECK TRIAGE */}
       {(viewMode === "all" || viewMode === "bottlenecks") && (

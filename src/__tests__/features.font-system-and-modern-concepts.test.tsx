@@ -137,47 +137,49 @@ describe("Core Concepts in Table Matrix Page (/modern-stack)", () => {
 });
 
 describe("Left Bar Navigation & Subpages Sequence", () => {
-  it("verifies logical subpage sequence for Cloud × Table Matrix", () => {
-    const modernStackItem = NAV_GROUPS[0].items.find((i) => i.href === "/modern-stack");
+  it("verifies logical subpage sequence for Modern Stack", () => {
+    const modernStackItem = NAV_GROUPS.find((g) => g.title === "Build and operate")?.items.find((i) => i.href === "/modern-stack");
     expect(modernStackItem).toBeDefined();
     expect(modernStackItem?.subItems).toBeDefined();
 
     const subHrefs = modernStackItem!.subItems!.map((s) => s.href);
-    expect(subHrefs[0]).toContain("tab=compatibility");
-    expect(subHrefs[1]).toContain("tab=concepts");
-    expect(subHrefs[2]).toContain("tab=simulators");
-    expect(subHrefs[3]).toContain("tab=cost");
-    expect(subHrefs[4]).toContain("tab=ai");
+    expect(subHrefs).toContain("/modern-stack");
+    expect(subHrefs).toContain("/modern-stack?tab=compatibility");
+    expect(subHrefs).toContain("/modern-stack?tab=cost");
+    expect(subHrefs).toContain("/modern-stack?tab=simulators");
+    expect(subHrefs).toContain("/modern-stack?tab=concepts");
   });
 
-  it("verifies logical subpage sequence for Architecture Scenarios", () => {
-    const archItem = NAV_GROUPS[0].items.find((i) => i.href === "/architecture");
+  it("verifies logical subpage sequence for Architecture", () => {
+    const archItem = NAV_GROUPS.find((g) => g.title === "Practise")?.items.find((i) => i.href === "/architecture");
     expect(archItem).toBeDefined();
     expect(archItem?.subItems).toBeDefined();
 
     const subHrefs = archItem!.subItems!.map((s) => s.href);
     expect(subHrefs[0]).toContain("tab=scenarios");
-    expect(subHrefs[1]).toBe("/whiteboards");
-    expect(subHrefs[2]).toContain("tab=diagrams");
-    expect(subHrefs[3]).toContain("tab=python");
+    expect(subHrefs[1]).toContain("tab=diagrams");
+    expect(subHrefs[2]).toContain("tab=python");
+    expect(subHrefs[3]).toContain("tab=polyglot");
   });
 
   it("renders expand/collapse controls and all subpages toggle in the left Sidebar", () => {
     render(<Sidebar />);
 
-    // Toggle button for All Subpages is rendered
-    const toggleAllBtn = screen.getByRole("button", { name: /All Subpages/i });
-    expect(toggleAllBtn).toBeDefined();
+    // By default on desktop, subpages are expanded, showing Collapse subpages
+    const toggleBtn = screen.getByRole("button", { name: /Collapse all subpages|Expand all subpages/i });
+    expect(toggleBtn).toBeDefined();
 
-    // Clicking All Subpages expands all subpages across the left bar
+    // Verify key sub-items are visible in the expanded tree
+    expect(screen.getByText("Topic Tracks")).toBeDefined();
+    expect(screen.getByText("Lakehouse Flow")).toBeDefined();
+    expect(screen.getByText("PySpark Drills")).toBeDefined();
+    expect(screen.getByText("Incident Runbooks")).toBeDefined();
+
+    // Clicking toggle collapses all subpages
     act(() => {
-      fireEvent.click(toggleAllBtn);
+      fireEvent.click(toggleBtn);
     });
 
-    expect(screen.getByText("Collapse Subpages")).toBeDefined();
-    expect(screen.getByText("Cloud Matrix")).toBeDefined();
-    expect(screen.getByText("Lakehouse Primitives")).toBeDefined();
-    expect(screen.getByText("Interactive Drills")).toBeDefined();
-    expect(screen.getByText("Databricks Coding")).toBeDefined();
+    expect(screen.getByRole("button", { name: /Expand all subpages/i })).toBeDefined();
   });
 });

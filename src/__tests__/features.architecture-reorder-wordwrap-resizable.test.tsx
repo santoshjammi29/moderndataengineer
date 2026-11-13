@@ -26,25 +26,26 @@ describe("Architecture & Systems Reorder, Word Wrap & Resizable Sidebar Tests", 
     vi.restoreAllMocks();
   });
 
-  it("places Cloud × Table Matrix as the first platform feature item", () => {
-    const platformGroup = NAV_GROUPS.find((g) => g.title === "Platform");
-    expect(platformGroup).toBeDefined();
+  it("places Modern Stack with Matrix pill as the first build and operate feature item", () => {
+    const buildGroup = NAV_GROUPS.find((g) => g.title === "Build and operate");
+    expect(buildGroup).toBeDefined();
 
-    const items = platformGroup!.items;
-    expect(items.length).toBeGreaterThanOrEqual(4);
+    const items = buildGroup!.items;
+    expect(items.length).toBeGreaterThanOrEqual(3);
 
-    // After Home Dashboard, index 1 is Cloud × Table Matrix
-    expect(items[1].label).toBe("Cloud × Table Matrix");
-    expect(items[1].href).toBe("/modern-stack");
-    expect(items[1].pill?.text).toBe("Matrix");
+    expect(items[0].label).toBe("Modern Stack");
+    expect(items[0].href).toBe("/modern-stack");
+    expect(items[0].pill?.text).toBe("Matrix");
 
-    // Next is Architecture Scenarios
-    expect(items[2].label).toBe("Architecture Scenarios");
-    expect(items[2].href).toBe("/architecture");
+    // Practise group has Architecture as first item
+    const practiseGroup = NAV_GROUPS.find((g) => g.title === "Practise");
+    expect(practiseGroup).toBeDefined();
+    expect(practiseGroup!.items[0].label).toBe("Architecture");
+    expect(practiseGroup!.items[0].href).toBe("/architecture");
 
-    // Next is Spark Engine Lab
-    expect(items[3].label).toBe("Spark Engine Lab");
-    expect(items[3].href).toBe("/spark-engine");
+    // Next is Spark Lab
+    expect(practiseGroup!.items[1].label).toBe("Spark Lab");
+    expect(practiseGroup!.items[1].href).toBe("/spark-engine");
   });
 
   it("renders Sidebar with word-wrap enabled classes and resizer handle", () => {
@@ -60,7 +61,7 @@ describe("Architecture & Systems Reorder, Word Wrap & Resizable Sidebar Tests", 
     expect(resizer.getAttribute("title")).toContain("Drag to resize nav bar width");
 
     // Check word-wrap text styling on navigation items
-    const archLabel = screen.getByText("Architecture Scenarios");
+    const archLabel = screen.getByText("Architecture");
     expect(archLabel.className).toContain("break-words");
     expect(archLabel.className).toContain("whitespace-normal");
   });
@@ -69,16 +70,16 @@ describe("Architecture & Systems Reorder, Word Wrap & Resizable Sidebar Tests", 
     render(<Sidebar />);
 
     // Open width preset menu
-    const widthBtn = screen.getByRole("button", { name: /adjust nav bar width/i });
+    const widthBtn = screen.getByRole("button", { name: /adjust sidebar width/i });
     expect(widthBtn).toBeDefined();
     fireEvent.click(widthBtn);
 
-    // Click Wide View (420px) preset
+    // Click Wide View (430px) preset
     const widePreset = screen.getByText("Wide View");
     fireEvent.click(widePreset);
 
     // Verify localStorage was updated
-    expect(localStorage.getItem("sidebar-width")).toBe("420");
+    expect(localStorage.getItem("sidebar-width")).toBe("430");
   });
 
   it("verifies the bottom utility bar with Shortcuts and duplicate controls is completely removed from AllPagesFooter", () => {

@@ -51,7 +51,7 @@ describe("Consolidated Stages, Code Practice, and Clubbed Redirects Verification
         (p) => p.href === "/stages"
       );
       expect(stagesFlat).toBeDefined();
-      expect(stagesFlat?.category).toBe("Architecture");
+      expect(stagesFlat?.category).toBe("Learn");
     });
 
     it("defaults to mastery tab when search params are empty on /stages", () => {

@@ -1783,6 +1783,56 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                       💡 Skew &gt; 2.5x detected! Enable AQE skew join: <code className="text-purple-300">spark.sql.adaptive.skewJoin.enabled = true</code> or apply salting keys.
                     </div>
                   )}
+
+                  {/* Visual Partition Workload Distribution */}
+                  <div className="pt-2 border-t border-[var(--border)] space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-[var(--muted-foreground)] font-medium">Core Workload Distribution:</span>
+                      <span className={cn("text-[10px] font-mono font-bold", isHighSkew ? "text-amber-400" : "text-emerald-400")}>
+                        {isHighSkew ? "Straggler on Core 0" : "Balanced Load"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1.5 h-12 items-end bg-[var(--surface-3)] p-1.5 rounded-lg border border-[var(--border)]">
+                      {[
+                        { id: "Core 0", height: Math.min(100, Math.round((shuffleSkew / 5.0) * 100)), isHot: true },
+                        { id: "Core 1", height: Math.max(15, Math.round((1.0 / 5.0) * 100)), isHot: false },
+                        { id: "Core 2", height: Math.max(15, Math.round((1.0 / 5.0) * 100)), isHot: false },
+                        { id: "Core 3", height: Math.max(15, Math.round((1.0 / 5.0) * 100)), isHot: false },
+                      ].map((p) => (
+                        <div key={p.id} className="flex flex-col items-center h-full justify-end group relative">
+                          <div
+                            style={{ height: `${p.height}%` }}
+                            className={cn(
+                              "w-full rounded transition-all duration-300",
+                              p.isHot
+                                ? (isHighSkew ? "bg-red-500 shadow-xs shadow-red-500/50" : "bg-purple-500")
+                                : "bg-blue-500/60"
+                            )}
+                          />
+                          <span className="text-[9px] font-mono text-[var(--muted-foreground)] mt-0.5">{p.id}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Cross-Repository Link */}
+                  <div className="pt-2 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-1.5 text-[10px]">
+                    <a
+                      href="https://github.com/afaqueahmad7117/spark-experiments/blob/main/spark/1_data_skew/3_solving_data_skew_aqe_broadcast.ipynb"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 hover:underline font-medium"
+                    >
+                      <span>🧪 Real Skew Benchmark (39.8M)</span>
+                      <span>↗</span>
+                    </a>
+                    <Link
+                      href="/whiteboards?id=data_skew_salting_repartition"
+                      className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:underline"
+                    >
+                      Architecture Blueprint ↗
+                    </Link>
+                  </div>
                 </div>
               );
             })()}

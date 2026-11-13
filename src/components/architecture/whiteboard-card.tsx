@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Maximize2, Share2, Download, Check, Sparkles, ChevronRight } from "lucide-react";
+import { Maximize2, Share2, Download, Check, Sparkles, ChevronRight, Bookmark, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ArchitectureDiagramItem } from "@/data/diagrams";
@@ -14,6 +14,8 @@ interface WhiteboardCardProps {
   className?: string;
   showDetails?: boolean;
   priority?: boolean;
+  bookmarked?: boolean;
+  onBookmark?: (id: string, e: React.MouseEvent) => void;
 }
 
 export function WhiteboardCard({
@@ -22,9 +24,48 @@ export function WhiteboardCard({
   className,
   showDetails = true,
   priority = false,
+  bookmarked,
+  onBookmark,
 }: WhiteboardCardProps) {
   const [theme] = useDiagramTheme();
   const [copied, setCopied] = React.useState(false);
+  const [localBookmarked, setLocalBookmarked] = React.useState(false);
+
+  React.useEffect(() => {
+    if (bookmarked !== undefined) return;
+    try {
+      const saved = localStorage.getItem("dataprep_bookmarks");
+      if (saved) {
+        const list = JSON.parse(saved);
+        if (Array.isArray(list) && list.includes(diagram.id)) {
+          setLocalBookmarked(true);
+        }
+      }
+    } catch {}
+  }, [diagram.id, bookmarked]);
+
+  const isBookmarked = bookmarked !== undefined ? bookmarked : localBookmarked;
+
+  const handleBookmarkToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onBookmark) {
+      onBookmark(diagram.id, e);
+      return;
+    }
+    try {
+      const saved = localStorage.getItem("dataprep_bookmarks");
+      const currentList: string[] = saved ? JSON.parse(saved) : [];
+      const exists = currentList.includes(diagram.id);
+      const nextList = exists
+        ? currentList.filter((x) => x !== diagram.id)
+        : [...currentList, diagram.id];
+      localStorage.setItem("dataprep_bookmarks", JSON.stringify(nextList));
+      setLocalBookmarked(!exists);
+      toast.success(exists ? "Removed from bookmarks" : "Bookmarked diagram");
+    } catch {
+      toast.error("Could not update bookmarks");
+    }
+  };
 
   const isDark = theme === "dark";
 
@@ -71,7 +112,7 @@ export function WhiteboardCard({
         )}
       >
         {/* Diagram Image with Hardware-Accelerated Theme Transition */}
-        <div style={{ position: "relative", minHeight: "220px" }} className="relative w-full h-full min-h-[220px] flex items-center justify-center">
+        <div style={{ position: "relative", minHeight: "220px", height: "100%" }} className="relative w-full h-full min-h-[220px] flex items-center justify-center">
           <Image
             src={diagram.image}
             alt={diagram.title}
@@ -96,9 +137,12 @@ export function WhiteboardCard({
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 px-2.5 py-0.5 rounded-lg bg-blue-500/10 border border-blue-500/20">
                     {diagram.category}
                   </span>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                    🧭 8-Stage Journey
+                  </span>
                   {diagram.personaBreakdown && (
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 px-2 py-0.5 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                      Architect Grade • 5 Roles
+                      5 Roles
                     </span>
                   )}
                 </div>
@@ -114,6 +158,24 @@ export function WhiteboardCard({
                 className="flex items-center gap-1 shrink-0"
                 onClick={(e) => e.stopPropagation()}
               >
+                <button
+                  type="button"
+                  onClick={handleBookmarkToggle}
+                  className={cn(
+                    "p-1.5 sm:p-2 min-w-[34px] min-h-[34px] flex items-center justify-center rounded-xl transition-colors touch-manipulation cursor-pointer",
+                    isBookmarked
+                      ? "text-amber-400 bg-amber-500/10 hover:bg-amber-500/20"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]"
+                  )}
+                  title={isBookmarked ? "Bookmarked" : "Bookmark"}
+                  aria-label={isBookmarked ? "Remove Bookmark" : "Save Bookmark"}
+                >
+                  {isBookmarked ? (
+                    <BookmarkCheck size={16} className="text-amber-400" />
+                  ) : (
+                    <Bookmark size={16} />
+                  )}
+                </button>
                 <button
                   type="button"
                   onClick={handleCardClick}
@@ -198,7 +260,7 @@ export function WhiteboardCard({
               ))}
             </div>
             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0">
-              Inspect <ChevronRight size={14} />
+              Start Journey <ChevronRight size={14} />
             </span>
           </div>
         </div>

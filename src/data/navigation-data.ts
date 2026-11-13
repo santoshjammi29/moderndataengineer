@@ -106,7 +106,7 @@ export const NAV_GROUPS: NavGroup[] = [
         pill: { text: `${CONTENT_COUNTS.learningPaths} Paths`, variant: "info" },
       },
       {
-        label: "Mastery Stages",
+        label: "Mastery Stages Hub",
         href: "/stages",
         icon: Workflow,
         pill: { text: "Stages", variant: "info" },
@@ -130,7 +130,7 @@ export const NAV_GROUPS: NavGroup[] = [
         pill: { text: `${formatContentCount(CONTENT_COUNTS.scenarios)}+`, variant: "architect" },
         subItems: [
           { label: "Scenarios", href: "/architecture?tab=scenarios", badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}` },
-          { label: "Diagrams", href: "/architecture?tab=diagrams", badge: "42" },
+          { label: "Diagrams", href: "/architecture?tab=diagrams", badge: `${CONTENT_COUNTS.whiteboards}` },
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
           { label: "Polyglot Examples", href: "/architecture?tab=polyglot", badge: "15" },
           { label: "Distributed Systems", href: "/architecture?tab=distributed", badge: "Systems" },
@@ -172,6 +172,7 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Spark SQL", href: "/code-practice?db=sparksql", badge: "50" },
           { label: "Python & Polars", href: "/code-practice?db=python", badge: "42" },
           { label: "T-SQL", href: "/code-practice?db=mssql", badge: "35" },
+          { label: "Databricks Hub", href: "/code-practice/databricks", badge: "148" },
           { label: "Language Matrix", href: "/code-practice?tab=matrix", badge: "15" },
           { label: "Runbooks", href: "/code-practice?tab=runbooks", badge: "42" },
         ],
@@ -315,7 +316,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   // Practise
   { id: "architecture", label: "Architecture Hub", shortLabel: "Architecture", href: "/architecture", category: "Practise", categoryColor: "purple", icon: Layers, badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+` },
   { id: "arch-scenarios", label: "System Blueprints & Scenarios", shortLabel: "Scenarios", href: "/architecture?tab=scenarios", category: "Practise", categoryColor: "purple", icon: Layers, badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+` },
-  { id: "arch-diagrams", label: "Architecture Diagrams", shortLabel: "Diagrams", href: "/architecture?tab=diagrams", category: "Practise", categoryColor: "purple", icon: Sparkles, badge: "42" },
+  { id: "arch-diagrams", label: "Architecture Diagrams", shortLabel: "Diagrams", href: "/architecture?tab=diagrams", category: "Practise", categoryColor: "purple", icon: Sparkles, badge: `${CONTENT_COUNTS.whiteboards}` },
   { id: "arch-python", label: "Architecture Python Runbooks", shortLabel: "Arch Runbooks", href: "/architecture?tab=python", category: "Practise", categoryColor: "purple", icon: Terminal, badge: "42" },
   { id: "arch-polyglot", label: "Polyglot Examples", shortLabel: "Polyglot", href: "/architecture?tab=polyglot", category: "Practise", categoryColor: "purple", icon: Code2, badge: "15" },
   { id: "arch-distributed", label: "Distributed Systems Scenarios", shortLabel: "Distributed", href: "/architecture?tab=distributed", category: "Practise", categoryColor: "purple", icon: Network, badge: "Systems" },
@@ -507,7 +508,7 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+`,
         subpages: [
           { label: "System Scenarios", href: "/architecture?tab=scenarios", badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}` },
-          { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: "42" },
+          { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: `${CONTENT_COUNTS.whiteboards}` },
           { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42" },
           { label: "Polyglot Examples", href: "/architecture?tab=polyglot", badge: "15" },
           { label: "Distributed Systems", href: "/architecture?tab=distributed" },

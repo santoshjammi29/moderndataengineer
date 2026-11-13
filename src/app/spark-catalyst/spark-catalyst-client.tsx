@@ -990,6 +990,69 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
               </div>
             ))}
           </div>
+
+          {/* Runnable Spark Experiments Crosswalk */}
+          <div className="mt-6 p-4 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500 dark:text-emerald-400">
+                  Hands-On Verification Labs
+                </span>
+                <h4 className="text-sm font-bold text-[var(--foreground)] mt-0.5">
+                  Spark Experiments: Runnable Optimization Notebooks
+                </h4>
+              </div>
+              <span className="text-[10px] font-mono text-[var(--muted-foreground)]">39.8M Row Datasets</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              {[
+                {
+                  title: "AQE Skew Join & Broadcast Joins",
+                  desc: "Benchmark 11.32s SMJ vs 9.62s AQE vs 2.78s Broadcast on 39.8M row skewed transactions.",
+                  file: "spark/1_data_skew/3_solving_data_skew_aqe_broadcast.ipynb",
+                  tag: "Skew Mitigation",
+                },
+                {
+                  title: "Two-Phase Key Salting",
+                  desc: "Redistribute 999,990 skewed partition rows into 3 balanced partitions with 333k rows each.",
+                  file: "spark/1_data_skew/4_salting.ipynb",
+                  tag: "Salting & Repartition",
+                },
+                {
+                  title: "Reading Catalyst Query Plans",
+                  desc: "Deconstruct unresolved, analyzed, optimized logical and physical plans with .explain(True).",
+                  file: "spark/2_reading_query_plans.ipynb",
+                  tag: "Query Plans",
+                },
+              ].map((lab, i) => (
+                <a
+                  key={i}
+                  href={`https://github.com/afaqueahmad7117/spark-experiments/blob/main/${lab.file}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] hover:border-emerald-500/40 transition-colors flex flex-col justify-between group cursor-pointer"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-medium text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                        {lab.tag}
+                      </span>
+                      <span className="text-[10px] text-[var(--muted-foreground)] group-hover:text-emerald-400 transition-colors">↗</span>
+                    </div>
+                    <div className="text-xs font-bold text-[var(--foreground)] group-hover:text-emerald-300 transition-colors">
+                      {lab.title}
+                    </div>
+                    <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
+                      {lab.desc}
+                    </p>
+                  </div>
+                  <div className="text-[9px] font-mono text-[var(--muted-foreground)] pt-2 mt-2 border-t border-[var(--border)] truncate">
+                    {lab.file}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

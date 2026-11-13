@@ -57,6 +57,7 @@ import { type ArchitectureDiagramItem } from "@/data/diagrams";
 import { useDiagramTheme } from "@/lib/diagram-theme";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
+import { LearningJourneyViewer } from "@/components/architecture/learning-journey-viewer";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Cpu,
@@ -93,7 +94,7 @@ export function WhiteboardsClient() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [theme] = useDiagramTheme();
   const isDark = theme === "dark";
-  const [modalTab, setModalTab] = useState<"architecture" | "personas" | "triage" | "governance">("architecture");
+  const [modalTab, setModalTab] = useState<"journey" | "architecture" | "personas" | "triage" | "governance">("journey");
   const [activePersona, setActivePersona] = useState<"architect" | "seniorDe" | "dataEngineer" | "steward" | "businessAnalyst">("architect");
 
   // Mastery Tracking (persisted in localStorage)
@@ -135,6 +136,45 @@ export function WhiteboardsClient() {
       // ignore
     }
   }, []);
+
+  // Bookmarks State & Sync
+  const [bookmarks, setBookmarks] = useState<string[]>([]);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("dataprep_bookmarks");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setBookmarks(parsed);
+        }
+      }
+    } catch {}
+  }, []);
+
+  const toggleBookmark = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = bookmarks.includes(id)
+      ? bookmarks.filter((b) => b !== id)
+      : [...bookmarks, id];
+    setBookmarks(updated);
+    try {
+      localStorage.setItem("dataprep_bookmarks", JSON.stringify(updated));
+      toast.success(bookmarks.includes(id) ? "Removed from bookmarks" : "Bookmarked diagram");
+    } catch {
+      toast.error("Could not update bookmarks");
+    }
+  };
+
+  const handleShareBlueprint = (id: string, title: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const url = `${window.location.origin}/whiteboards?diagram=${id}`;
+    navigator.clipboard.writeText(url);
+    setCopiedId(id);
+    toast.success(`Direct link to "${title}" copied to clipboard!`);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   // Update URL params when category or tab changes
   const updateUrl = useCallback(
@@ -947,7 +987,7 @@ export function WhiteboardsClient() {
                 >
                   {/* Canvas Container */}
                   <div
-                    style={{ position: "relative", minHeight: "200px" }}
+                    style={{ position: "relative", minHeight: "200px", height: "100%" }}
                     className={cn(
                       "relative aspect-[16/10] min-h-[200px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
@@ -974,15 +1014,51 @@ export function WhiteboardsClient() {
                   {/* Card Content */}
                   <div className="p-4 flex flex-col justify-between flex-1 space-y-3">
                     <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
-                          {diagram.category}
-                        </span>
-                        {diagram.personaBreakdown && (
-                          <span className="text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20">
-                            5 Roles
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+                            {diagram.category}
                           </span>
-                        )}
+                          {diagram.personaBreakdown && (
+                            <span className="text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20">
+                              5 Roles
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            onClick={(e) => toggleBookmark(diagram.id, e)}
+                            className={cn(
+                              "p-1 rounded-md transition-colors cursor-pointer",
+                              bookmarks.includes(diagram.id)
+                                ? "text-amber-400 bg-amber-500/10 hover:bg-amber-500/20"
+                                : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]"
+                            )}
+                            title={bookmarks.includes(diagram.id) ? "Remove Bookmark" : "Save Bookmark"}
+                            aria-label={bookmarks.includes(diagram.id) ? "Remove Bookmark" : "Save Bookmark"}
+                          >
+                            {bookmarks.includes(diagram.id) ? (
+                              <BookmarkCheck size={14} className="text-amber-400" />
+                            ) : (
+                              <Bookmark size={14} />
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => handleShareBlueprint(diagram.id, diagram.title, e)}
+                            className="p-1 rounded-md text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
+                            title="Share blueprint link"
+                            aria-label="Share blueprint link"
+                          >
+                            {copiedId === diagram.id ? (
+                              <Check size={14} className="text-green-400" />
+                            ) : (
+                              <Share2 size={14} />
+                            )}
+                          </button>
+                        </div>
                       </div>
                       <h4 className="text-sm font-bold text-[var(--foreground)] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-1">
                         {diagram.title}
@@ -1393,12 +1469,15 @@ export function WhiteboardsClient() {
       {/* ── HIGH-RESOLUTION BLUEPRINT LIGHTBOX MODAL ──────────────────────── */}
       {activeDiagram && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overscroll-contain"
           onClick={() => setActiveDiagram(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeDiagram.title}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-5xl max-h-[92vh] flex flex-col rounded-2xl sm:rounded-3xl border border-[var(--border)] bg-[var(--surface-1)] shadow-2xl overflow-hidden"
+            className="relative w-full max-w-5xl max-h-[92vh] flex flex-col rounded-2xl sm:rounded-3xl border border-[var(--border)] bg-[var(--surface-1)] shadow-2xl overflow-hidden overscroll-contain"
           >
             {/* Modal Header */}
             <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-[var(--border)] bg-[var(--surface-2)] shrink-0">
@@ -1416,8 +1495,42 @@ export function WhiteboardsClient() {
                 </p>
               </div>
 
-              {/* Controls: Theme Toggle + Zoom + Close */}
+              {/* Controls: Bookmark + Share + Theme Toggle + Zoom + Close */}
               <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={(e) => toggleBookmark(activeDiagram.id, e)}
+                  className={cn(
+                    "p-1.5 rounded-lg transition-colors cursor-pointer",
+                    bookmarks.includes(activeDiagram.id)
+                      ? "text-amber-400 bg-amber-500/10 hover:bg-amber-500/20"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]"
+                  )}
+                  title={bookmarks.includes(activeDiagram.id) ? "Remove Bookmark" : "Save Bookmark"}
+                  aria-label={bookmarks.includes(activeDiagram.id) ? "Remove Bookmark" : "Save Bookmark"}
+                >
+                  {bookmarks.includes(activeDiagram.id) ? (
+                    <BookmarkCheck size={16} className="text-amber-400" />
+                  ) : (
+                    <Bookmark size={16} />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => handleShareBlueprint(activeDiagram.id, activeDiagram.title, e)}
+                  className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
+                  title="Share blueprint link"
+                  aria-label="Share blueprint link"
+                >
+                  {copiedId === activeDiagram.id ? (
+                    <Check size={16} className="text-green-400" />
+                  ) : (
+                    <Share2 size={16} />
+                  )}
+                </button>
+
+                <div className="h-4 w-px bg-[var(--border)] mx-0.5" />
+
                 <div className="hidden sm:block">
                   <WhiteboardThemeToggle size="xs" showLabel={false} />
                 </div>
@@ -1489,6 +1602,21 @@ export function WhiteboardsClient() {
               {/* Modal Sub-Tabs */}
               <div className="flex items-center justify-between px-4 sm:px-6 py-2 border-b border-[var(--border)] bg-[var(--surface-1)] shrink-0 gap-2">
                 <div className="flex items-center gap-1 overflow-x-auto scrollbar-none">
+                  <button
+                    type="button"
+                    onClick={() => setModalTab("journey")}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
+                      modalTab === "journey"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                    )}
+                  >
+                    <Sparkles size={13} className="text-amber-400" />
+                    <span>8-Stage Journey (Map → Operate)</span>
+                    <span className="text-[10px] px-1 rounded bg-black/20 font-mono">8</span>
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => setModalTab("architecture")}
@@ -1579,6 +1707,11 @@ export function WhiteboardsClient() {
 
               {/* Tab Content Body (Scrollable) */}
               <div className="p-4 sm:p-6 overflow-y-auto space-y-4">
+                {/* 0. 8-Stage Learning Journey Tab */}
+                {modalTab === "journey" && (
+                  <LearningJourneyViewer diagram={activeDiagram} />
+                )}
+
                 {/* 1. Architecture & Pillars Tab */}
                 {modalTab === "architecture" && (
                   <div className="space-y-4">

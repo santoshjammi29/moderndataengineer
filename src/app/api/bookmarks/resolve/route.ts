@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { serverlessDb } from "@/lib/db";
+import { architectureDiagrams } from "@/data/diagrams";
 
 export const runtime = "nodejs";
 
@@ -48,6 +49,11 @@ export async function POST(request: Request) {
       const a = arch.find((item) => item.id === id);
       if (a) {
         resolved.push({ id: a.id, title: a.question, type: "scenario", href: "/architecture" });
+        continue;
+      }
+      const wb = architectureDiagrams.find((item) => item.id === id);
+      if (wb) {
+        resolved.push({ id: wb.id, title: wb.title, type: "whiteboard", href: `/whiteboards?diagram=${encodeURIComponent(wb.id)}` });
         continue;
       }
       if (code) {

@@ -43,37 +43,38 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
     render(<Sidebar />);
 
     // Check that primary navigation hubs across all groups are cleanly rendered and visible in the left sidebar
-    expect(screen.getByText("Cloud × Table Matrix")).toBeDefined();
-    expect(screen.getByText("Architecture Scenarios")).toBeDefined();
-    expect(screen.getByText("Spark Engine Lab")).toBeDefined();
-    expect(screen.getByText("DataOps & CI/CD")).toBeDefined();
-    expect(screen.getByText("Concepts Glossary")).toBeDefined();
+    expect(screen.getByText("Modern Stack")).toBeDefined();
+    expect(screen.getByText("Architecture")).toBeDefined();
+    expect(screen.getByText("Spark Lab")).toBeDefined();
+    expect(screen.getByText("DataOps")).toBeDefined();
+    expect(screen.getAllByText("Concepts")[0]).toBeDefined();
     expect(screen.getByText("Code Practice")).toBeDefined();
     expect(screen.getByText("Cheat Sheets")).toBeDefined();
-    expect(screen.getByText("Question Drill Bank")).toBeDefined();
+    expect(screen.getByText("Interview Practice")).toBeDefined();
     expect(screen.getByText("Guided Learning")).toBeDefined();
-    expect(screen.getByText("Target Company Intel")).toBeDefined();
+    expect(screen.getByText("Company Research")).toBeDefined();
     expect(screen.getByText("My Studio")).toBeDefined();
 
-    // Verify Target Company Intel is moved to the last of the list in Interviews & Roadmaps
-    const interviewItems = NAV_GROUPS[2].items.map((i) => i.label);
-    expect(interviewItems[interviewItems.length - 1]).toBe("Target Company Intel");
+    // Verify Company Research is in Assess and explore careers
+    const careerGroup = NAV_GROUPS.find((g) => g.title === "Assess and explore careers");
+    const careerItems = careerGroup!.items.map((i) => i.label);
+    expect(careerItems[careerItems.length - 1]).toBe("Company Research");
 
-    // Verify Concepts Mind Map is moved under Concepts Glossary
-    const conceptsItem = NAV_GROUPS[1].items.find((i) => i.label === "Concepts Glossary");
-    expect(conceptsItem?.subItems?.map((s) => s.label)).toContain("Concepts Mind Map");
+    // Verify Mind Map is moved under Concepts
+    const conceptsItem = NAV_GROUPS.find((g) => g.title === "Learn")?.items.find((i) => i.label === "Concepts");
+    expect(conceptsItem?.subItems?.map((s) => s.label)).toContain("Mind Map");
 
     // Verify Career Curricula is moved under Guided Learning
-    const guidedItem = NAV_GROUPS[2].items.find((i) => i.label === "Guided Learning");
+    const guidedItem = NAV_GROUPS.find((g) => g.title === "Learn")?.items.find((i) => i.label === "Guided Learning");
     expect(guidedItem?.subItems?.map((s) => s.label)).toContain("Career Curricula");
 
     // Verify Worker Deployments is removed from navigation
     const allLabels = NAV_GROUPS.flatMap((g) => g.items.map((i) => i.label));
     expect(allLabels).not.toContain("Worker Deployments");
 
-    // Verify Spark Engine Lab has Catalyst & Visualizer sub-item
-    const sparkItem = NAV_GROUPS[0].items.find((i) => i.label === "Spark Engine Lab");
-    expect(sparkItem?.subItems?.map((s) => s.label)).toContain("Catalyst & Visualizer");
+    // Verify Spark Lab has execution simulator sub-item
+    const sparkItem = NAV_GROUPS.find((g) => g.title === "Practise")?.items.find((i) => i.label === "Spark Lab");
+    expect(sparkItem?.subItems?.map((s) => s.label)).toContain("Execution Simulator");
   });
 
   it("renders AllPagesNav with the universal search bar and horizontal subpage navigation", () => {

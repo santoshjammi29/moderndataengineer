@@ -27,7 +27,7 @@ describe("Databricks Polyglot Coding Subpage (/code-practice/databricks)", () =>
       (p) => p.href === "/code-practice/databricks"
     );
     expect(flatSubpage).toBeDefined();
-    expect(flatSubpage?.category).toBe("Coding");
+    expect(flatSubpage?.category).toBe("Practise");
   });
 
   it("renders DatabricksCodingClient with 148+ total operations and hub title", () => {
@@ -95,5 +95,50 @@ describe("Databricks Polyglot Coding Subpage (/code-practice/databricks)", () =>
 
     fireEvent.change(input, { target: { value: "Liquid" } });
     expect(screen.getAllByText(/Liquid/i).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders advanced incident resolution playbooks (ConcurrentAppend, Photon Breakout, Null Skew)", () => {
+    render(
+      <DatabricksCodingClient
+        suiteData={databricksCheatsheetData}
+        operationsData={databricks100Data}
+      />
+    );
+
+    expect(
+      screen.getByText(/ConcurrentAppendException & Write Conflicts in Delta Lake/i)
+    ).toBeDefined();
+    expect(
+      screen.getByText(/Photon-to-Spark Transition Breakout/i)
+    ).toBeDefined();
+    expect(
+      screen.getByText(/Null Key Skew in Joins & Aggregations/i)
+    ).toBeDefined();
+  });
+
+  it("renders the Technical Manual tab and switches to manual view", () => {
+    render(
+      <DatabricksCodingClient
+        suiteData={databricksCheatsheetData}
+        operationsData={databricks100Data}
+      />
+    );
+
+    const manualTabButton = screen.getByRole("button", {
+      name: /Technical Manual \(Level 100–400\)/i,
+    });
+    expect(manualTabButton).toBeDefined();
+
+    fireEvent.click(manualTabButton);
+
+    expect(
+      screen.getByText(/Databricks Data Intelligence Platform: End-to-End Technical Manual/i)
+    ).toBeDefined();
+    expect(
+      screen.getByText(/Platform Architecture & Core Concepts/i)
+    ).toBeDefined();
+    expect(
+      screen.getByText(/Delta Lake Storage Internals & Optimization/i)
+    ).toBeDefined();
   });
 });

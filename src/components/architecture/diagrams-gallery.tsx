@@ -27,6 +27,7 @@ import { architectureDiagrams, type ArchitectureDiagramItem } from "@/data/diagr
 import { useDiagramTheme } from "@/lib/diagram-theme";
 import { WhiteboardCard } from "./whiteboard-card";
 import { WhiteboardThemeToggle } from "./whiteboard-theme-toggle";
+import { LearningJourneyViewer } from "./learning-journey-viewer";
 
 const CATEGORIES = [
   "All",
@@ -45,7 +46,7 @@ export function ArchitectureDiagramsGallery() {
   const [activeDiagram, setActiveDiagram] = useState<ArchitectureDiagramItem | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [theme] = useDiagramTheme();
-  const [modalTab, setModalTab] = useState<"architecture" | "personas" | "triage" | "governance">("architecture");
+  const [modalTab, setModalTab] = useState<"journey" | "architecture" | "personas" | "triage" | "governance">("journey");
   const [activePersona, setActivePersona] = useState<"architect" | "seniorDe" | "dataEngineer" | "steward" | "businessAnalyst">("architect");
 
   const isDark = theme === "dark";
@@ -183,14 +184,17 @@ export function ArchitectureDiagramsGallery() {
       {/* Fullscreen High-Resolution Lightbox Modal with Interactive Dark Mode Option */}
       {activeDiagram && (
         <div
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 animate-in fade-in duration-200 overscroll-contain"
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeDiagram.title}
           onClick={() => {
             setActiveDiagram(null);
             setZoomLevel(1);
           }}
         >
           <div
-            className="relative w-full max-w-6xl max-h-[96vh] sm:max-h-[92vh] bg-[var(--surface-1)] border border-[var(--border)] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col shadow-2xl"
+            className="relative w-full max-w-6xl max-h-[96vh] sm:max-h-[92vh] bg-[var(--surface-1)] border border-[var(--border)] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col shadow-2xl overscroll-contain"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -303,6 +307,21 @@ export function ArchitectureDiagramsGallery() {
               <div className="flex items-center gap-1 px-4 sm:px-6 py-2 border-b border-[var(--border)] bg-[var(--surface-1)] overflow-x-auto scrollbar-none shrink-0">
                 <button
                   type="button"
+                  onClick={() => setModalTab("journey")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
+                    modalTab === "journey"
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                  )}
+                >
+                  <Sparkles size={13} className="text-amber-400" />
+                  <span>8-Stage Journey (Map → Operate)</span>
+                  <span className="text-[10px] px-1 rounded bg-black/20 font-mono">8</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => setModalTab("architecture")}
                   className={cn(
                     "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
@@ -368,6 +387,11 @@ export function ArchitectureDiagramsGallery() {
 
               {/* Tab Content Body (Scrollable) */}
               <div className="p-4 sm:p-6 overflow-y-auto space-y-4">
+                {/* 0. 8-Stage Learning Journey Tab */}
+                {modalTab === "journey" && (
+                  <LearningJourneyViewer diagram={activeDiagram} />
+                )}
+
                 {/* 1. Architecture & Pillars Tab */}
                 {modalTab === "architecture" && (
                   <div className="space-y-4">

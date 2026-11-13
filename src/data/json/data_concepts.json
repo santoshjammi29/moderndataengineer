@@ -12578,5 +12578,239 @@
         "url": "https://openlineage.io/docs/spec/"
       }
     ]
+  },
+  {
+    "id": "databricks-split-plane-cloud-architecture",
+    "term": "Databricks Split-Plane Cloud Architecture",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A dual-plane cloud security model that segregates management/control infrastructure from distributed compute execution and persistent customer storage.",
+    "explanation": "Databricks implements a split-plane architecture comprising a Databricks-managed Control Plane and a customer-associated Compute Plane. The Control Plane hosts the workspace web interface, notebook management, cluster manager, job orchestration engine, and Unity Catalog metastore services. The Compute Plane contains Apache Spark worker nodes, Photon execution engines, and local ephemeral caches where data transformations actually execute. In Classic Compute, worker VMs are provisioned inside the customer cloud virtual network (Azure VNet, AWS VPC, GCP VPC). In Serverless Compute, containers are isolated inside Databricks-managed networks with secure reverse private links to customer storage. At no point does raw customer data transit or persist within the Control Plane, strictly preserving enterprise data residency and compliance boundaries.",
+    "keyPoints": [
+      "Control Plane manages metadata, authentication, orchestration, and UI without ever touching customer data.",
+      "Compute Plane executes transformations with direct IAM and storage credential access to cloud object storage.",
+      "Supports BYOVPC network injection, private endpoints, and reverse private link for zero public internet exposure.",
+      "Strictly satisfies HIPAA, SOC 2 Type II, and FedRAMP high compliance standards through architectural isolation."
+    ],
+    "relatedTerms": [
+      "Serverless Compute Plane",
+      "Unity Catalog Metastore",
+      "BYOVPC Injection",
+      "Control Plane"
+    ]
+  },
+  {
+    "id": "databricks-serverless-compute-plane",
+    "term": "Databricks Serverless Compute Plane",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A fully managed, instant-start compute tier running inside Databricks-managed cloud subscriptions with pre-warmed container fleets and sub-second elasticity.",
+    "explanation": "Unlike Classic Compute where clusters require 3 to 7 minutes for cloud provider VM provisioning, OS bootstrapping, and Spark initialization, Serverless Compute utilizes pre-warmed, multi-tenant secure container fleets that launch in 2 to 6 seconds. Workloads run inside hardened micro-VM isolation boundaries with dedicated network namespaces. Databricks manages all cluster rightsizing, node failure recovery, security patching, and runtime updates transparently. Serverless compute scales down to zero immediately upon job completion or query inactivity, eliminating idle cluster burn and delivering up to 40% TCO savings compared to standard always-on or auto-terminating classic clusters.",
+    "keyPoints": [
+      "Provisioning latency slashed from 3-7 minutes down to 2-6 seconds via pre-warmed container fleets.",
+      "Sub-second horizontal and vertical elasticity based on query backlog and execution memory pressure.",
+      "Versionless runtime automatically inherits the latest Photon C++ compiler optimizations and CVE patches.",
+      "Zero-idle compute cost model charges solely for exact execution duration down to the second."
+    ],
+    "relatedTerms": [
+      "Classic Compute Plane",
+      "Photon Vectorized Engine",
+      "FinOps DBU Economics"
+    ]
+  },
+  {
+    "id": "delta-lake-deletion-vectors-mor",
+    "term": "Delta Lake Deletion Vectors (Merge-on-Read)",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A storage optimization that shifts Delta Lake write operations from Copy-on-Write (CoW) to Merge-on-Read (MoR) using compact RoaringBitmap row tombstones.",
+    "explanation": "Under standard Copy-on-Write (CoW), updating or deleting a single row in a 512 MB Parquet file requires reading the entire file, rewriting the remaining rows into a brand-new 512 MB Parquet file, and committing an add and remove action to the Delta log. This produces massive write amplification and I/O drag. With Deletion Vectors (DVs enabled via delta.enableDeletionVectors = true), Delta Lake writes a lightweight secondary binary file containing a RoaringBitmap of deleted/updated row indices. The original Parquet file remains completely untouched. Readers scan the original Parquet file and apply the bitmap in memory, skipping deleted rows with near-zero latency. Asynchronous compaction jobs (OPTIMIZE / REORG TABLE ... APPLY PURGE) later reclaim physical storage during non-peak hours.",
+    "keyPoints": [
+      "Eliminates write amplification by avoiding full Parquet file rewrites for row updates and deletions.",
+      "Employs RoaringBitmap binary structures for microsecond row-skipping evaluation during scan phases.",
+      "Dramatically reduces ConcurrentAppendException write conflicts during concurrent streaming and batch operations.",
+      "Requires scheduled REORG TABLE ... APPLY PURGE or VACUUM to permanently purge tombstones for GDPR compliance."
+    ],
+    "relatedTerms": [
+      "Optimistic Concurrency Control",
+      "Liquid Clustering",
+      "Delta Lake ACID Log"
+    ]
+  },
+  {
+    "id": "delta-lake-liquid-clustering-hilbert",
+    "term": "Delta Lake Liquid Clustering & Space-Filling Curves",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A dynamic layout optimization using Hilbert space-filling curves that replaces rigid Hive-style directory partitioning and manual Z-Ordering.",
+    "explanation": "Traditional directory partitioning creates severe cardinality traps: high-cardinality keys generate millions of tiny files, while low-cardinality keys lead to massive data skew and partition hotspots. Z-Ordering alleviated some multi-dimensional indexing issues but suffered from severe dimensionality decay beyond 3-4 columns and required expensive full-table rewrites. Delta Lake Liquid Clustering (CLUSTER BY) applies space-filling curve algorithms (Hilbert curves) to lay out records across files without creating directory hierarchies. Crucially, Liquid Clustering keys can be redefined at any time without rewriting existing historical data files, and writes incrementally cluster new data during standard append/merge transactions without requiring global table locks.",
+    "keyPoints": [
+      "Eliminates static Hive directory paths and resolves small-file proliferation and partition skew.",
+      "Clustering keys can be altered dynamically via ALTER TABLE ... CLUSTER BY with zero data rewrites.",
+      "Applies Hilbert space-filling curves to provide multi-dimensional data skipping across up to 4 key columns.",
+      "Integrates with Databricks Predictive Optimization for automatic serverless background clustering."
+    ],
+    "relatedTerms": [
+      "Z-Ordering",
+      "Hive Partitioning",
+      "Data Skipping",
+      "Predictive Optimization"
+    ]
+  },
+  {
+    "id": "delta-lake-change-data-feed-cdc",
+    "term": "Delta Lake Change Data Feed (CDC & table_changes TVF)",
+    "category": "MODERN LAKEHOUSE",
+    "difficulty": "ARCHITECT",
+    "definition": "A native Delta table capability that exposes row-level change events (inserts, update pre-images, update post-images, deletes) between table versions.",
+    "explanation": "Delta Change Data Feed (enabled via delta.enableChangeDataFeed = true) records row-level mutation metadata alongside standard Parquet data files. When mutations occur via MERGE, UPDATE, or DELETE, Delta writes change data files that categorize modifications into four discrete types: insert, update_preimage, update_postimage, and delete. Downstream consumers can query changes via the table_changes() SQL table-valued function or stream changes continuously using readStream with readChangeFeed. This pattern forms the backbone of reliable Medallion lakehouse pipelines, allowing Silver and Gold aggregates to update incrementally without costly full-table reprocessing.",
+    "keyPoints": [
+      "Exposes 4 row-level event types: insert, update_preimage, update_postimage, and delete.",
+      "Enables incremental, stateful downstream ETL across Silver and Gold layers without full table scans.",
+      "Provides exact commit version numbers and commit timestamps for end-to-end auditability and compliance.",
+      "Can be consumed via SQL table-valued functions or Structured Streaming micro-batch DataFrames."
+    ],
+    "relatedTerms": [
+      "Medallion Architecture",
+      "Structured Streaming",
+      "SCD Type 2",
+      "Delta Lake ACID Log"
+    ]
+  },
+  {
+    "id": "lakeflow-spark-declarative-pipelines-dlt",
+    "term": "Lakeflow Spark Declarative Pipelines (DLT)",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A declarative framework for building, testing, and operating reliable lakehouse ETL pipelines with managed orchestration, state, and data quality expectations.",
+    "explanation": "Lakeflow Spark Declarative Pipelines abstract away low-level compute management, streaming checkpoints, and state recovery. Engineers define Bronze, Silver, and Gold transformations declaratively in SQL or Python using @dlt.table and @dlt.view decorators. The Lakeflow engine analyzes dataset dependencies, constructs a complete Directed Acyclic Graph (DAG), optimizes execution order, handles schema evolution, and manages cluster autoscaling. Built-in Data Quality Expectations allow data teams to enforce data contracts directly in the pipeline definition: EXPECT logs quality metrics, EXPECT ... ON VIOLATION DROP ROW filters invalid rows, and EXPECT ... ON VIOLATION FAIL UPDATE halts execution immediately on critical schema or business rule breaches.",
+    "keyPoints": [
+      "Declarative DAG definition automatically resolves cross-table dependencies and pipeline scheduling.",
+      "Native Data Quality Expectations with granular enforcement: warn, drop row, or fail pipeline.",
+      "Automates complex CDC processing and Slowly Changing Dimensions (SCD Type 1 & 2) via dlt.apply_changes.",
+      "Includes automatic error recovery, pipeline state management, and unified execution telemetry in event logs."
+    ],
+    "relatedTerms": [
+      "Data Quality Expectations",
+      "Medallion Architecture",
+      "Auto Loader",
+      "SCD Type 2"
+    ]
+  },
+  {
+    "id": "unity-catalog-row-column-governance",
+    "term": "Unity Catalog Dynamic Column Masking & Row Filters",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "Declarative SQL-based fine-grained access control policies enforced transparently at the Unity Catalog metadata layer.",
+    "explanation": "Enterprise compliance frameworks require restricting sensitive records and columns based on user identity, group membership, and geographic jurisdiction. Unity Catalog provides fine-grained access control through SQL User-Defined Functions (UDFs). Row filters inject predicate logic that filters rows based on functions like is_account_group_member(), restricting analysts to see only data for their authorized division. Column masks replace sensitive values (such as SSNs, credit card numbers, or PII emails) with SHA-256 hashes or masked strings unless the querying user possesses explicit privilege. Because policies are bound directly to the metastore catalog, they apply uniformly across SQL warehouses, Spark clusters, Python notebooks, and BI tools without code changes.",
+    "keyPoints": [
+      "Enforces row-level filtering and column-level masking transparently at query compilation time.",
+      "Governed by native SQL UDFs utilizing is_account_group_member() and session identity context.",
+      "Applies uniformly across all execution engines without duplicating logic.",
+      "Eliminates the proliferation of secured views and duplicated restricted tables across environments."
+    ],
+    "relatedTerms": [
+      "Unity Catalog 3-Level Namespace",
+      "Data Masking",
+      "Role-Based Access Control"
+    ]
+  },
+  {
+    "id": "photon-vectorized-cpp-engine",
+    "term": "Databricks Photon Vectorized Execution Engine",
+    "category": "SPARK & DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A native, high-performance vectorized query engine written in C++ designed to accelerate modern lakehouse SQL and DataFrame workloads.",
+    "explanation": "Traditional Apache Spark executes queries on the Java Virtual Machine (JVM) using Whole-Stage Java Code Generation (Tungsten). While Tungsten compiles expression trees into Java bytecode, it remains constrained by JVM garbage collection pauses, object memory layout overhead, and limited CPU SIMD exploitation. Photon completely replaces Tungsten execution engine with a ground-up C++ implementation. Photon operates directly on raw columnar memory buffers, exploiting CPU instruction-level parallelism, L1/L2 cache locality, and SIMD vector registers. It accelerates string manipulations, complex nested JSON parsing, joins, aggregations, and Parquet decoding, delivering 2x to 5x faster query performance while virtually eliminating JVM heap pressure.",
+    "keyPoints": [
+      "Replaces JVM execution with a vectorized C++ engine executing directly over off-heap columnar memory.",
+      "Harnesses modern CPU SIMD vector registers to process batches of hundreds of rows in single clock cycles.",
+      "Completely bypasses JVM Garbage Collection pauses for transformed data buffers and intermediate hash tables.",
+      "Seamlessly interoperates with Catalyst optimizer, automatically offloading supported operators to native C++."
+    ],
+    "relatedTerms": [
+      "Catalyst Optimizer",
+      "Tungsten Execution Engine",
+      "SIMD Vectorization",
+      "Off-Heap Memory"
+    ]
+  },
+  {
+    "id": "rocksdb-stateful-structured-streaming",
+    "term": "RocksDB State Store in Structured Streaming",
+    "category": "SPARK & DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "An embedded, disk-backed LSM-tree state store provider engineered to manage multi-gigabyte or multi-billion-key stateful streaming pipelines.",
+    "explanation": "By default, Apache Spark Structured Streaming uses an in-memory JVM heap state store for stateful stream processing operations (such as streaming deduplication, stream-stream joins, and windowed aggregations). When streaming state grows beyond a few million keys or several gigabytes, the default provider causes extreme JVM GC thrashing, executor out-of-memory errors (OOMs), and sluggish checkpoint commits. Configuring RocksDB offloads state to an embedded C++ LSM-tree on local NVMe disk with off-heap memory caching. State size is bounded only by available worker SSD storage rather than executor RAM, ensuring predictable sub-second micro-batch latencies even with massive 100GB+ state windows.",
+    "keyPoints": [
+      "Offloads stateful streaming keys from JVM heap to local SSD NVMe storage via embedded RocksDB LSM-tree.",
+      "Eliminates JVM garbage collection pauses and OutOfMemoryError exceptions on large stateful streaming jobs.",
+      "Enables retention of millions or billions of active state keys for long-window deduplication and joins.",
+      "Performs fast, asynchronous snapshot commits to cloud storage checkpoints (S3, ADLS Gen2, GCS)."
+    ],
+    "relatedTerms": [
+      "Event-Time Watermarking",
+      "Structured Streaming",
+      "Stream-Stream Joins"
+    ]
+  },
+  {
+    "id": "databricks-asset-bundles-dabs",
+    "term": "Databricks Asset Bundles (DABs) Infrastructure-as-Code",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A declarative Infrastructure-as-Code (IaC) standard for authoring, testing, deploying, and version-controlling Databricks data and AI projects.",
+    "explanation": "Databricks Asset Bundles (DABs) provide a programmatic CLI and YAML-based specification for defining all Databricks assets—including Lakeflow Jobs, DLT pipelines, notebooks, ML models, and cluster policies. Bundles structure project code and configuration into modular resources, supporting multi-target environment promotion (dev, staging, prod) with variable overrides and dedicated service principal execution. Developers validate configurations locally with databricks bundle validate, deploy resources into target workspaces via CI/CD pipelines with databricks bundle deploy, and trigger test executions with databricks bundle run. This establishes reproducible software engineering rigor and eliminates drift across enterprise workspaces.",
+    "keyPoints": [
+      "Declarative YAML specification for deploying Lakeflow jobs, DLT pipelines, and ML models.",
+      "Built-in environment targets (dev, staging, prod) with isolated permission boundaries and variable overrides.",
+      "Seamlessly integrates with GitHub Actions, GitLab CI, and Azure DevOps for automated pull request testing.",
+      "Prevents configuration drift and enforces immutable infrastructure practices across all enterprise workspaces."
+    ],
+    "relatedTerms": [
+      "Lakeflow Spark Declarative Pipelines",
+      "CI/CD Promotion",
+      "Terraform Provider"
+    ]
+  },
+  {
+    "id": "unity-catalog-system-tables-finops",
+    "term": "Unity Catalog System Tables for Lakehouse FinOps",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "Centrally governed, read-only analytical schemas providing real-time telemetry on compute usage, billing, audit access, and lineage across an entire account.",
+    "explanation": "Unity Catalog System Tables (hosted under the system catalog) provide enterprise data platform teams with programmatic SQL access to historical operational and financial telemetry. Schemas such as system.billing.usage and system.billing.list_prices expose detailed DBU consumption, SKU tiers, workspace IDs, and cluster tags. Platform engineers can join billing data with system.compute.clusters and system.query.history to attribute exact cloud spend to specific business units, identify runaway interactive clusters, detect un-optimized disk spill workloads, and set up automated alerts when spend thresholds are exceeded. System tables also power system.access.audit and system.lineage for automated compliance, data governance, and regulatory reporting.",
+    "keyPoints": [
+      "Provides governed SQL access to account-wide DBU consumption, pricing, cluster specs, and query metrics.",
+      "Enables automated chargeback and showback reporting by joining usage data with custom enterprise tags.",
+      "Facilitates proactive detection of inefficient queries suffering from disk spill or missing clustering keys.",
+      "Audits table access patterns and column lineage for automated data security compliance."
+    ],
+    "relatedTerms": [
+      "DBU Economics",
+      "FinOps Architecture",
+      "Unity Catalog Metastore",
+      "Query History"
+    ]
+  },
+  {
+    "id": "mosaic-ai-vector-search-delta-sync",
+    "term": "Mosaic AI Vector Search Continuous Delta Sync",
+    "category": "DATABRICKS",
+    "difficulty": "ARCHITECT",
+    "definition": "A serverless vector database integrated with Unity Catalog that automatically synchronizes vector embeddings with underlying Delta tables in real time.",
+    "explanation": "Building Production Retrieval-Augmented Generation (RAG) and semantic search architectures requires keeping vector indices synchronized with rapidly changing source data. Mosaic AI Vector Search solves this by indexing Unity Catalog Delta tables directly. Using Delta Change Data Feed (CDF), Vector Search operates in Delta Sync continuous or triggered mode: whenever rows are inserted, updated, or deleted in the base Delta table, the vector index automatically computes or updates embeddings and refreshes the approximate nearest neighbor (HNSW) index without manual pipeline orchestration. Furthermore, Vector Search automatically enforces Unity Catalog table-level, row-level, and column-level security filters on query results, guaranteeing that AI agents never retrieve documents or chunks that the querying user lacks permissions to view.",
+    "keyPoints": [
+      "Automatically updates vector index embeddings via Delta Change Data Feed (CDF) in real time.",
+      "Inherits Unity Catalog row and column governance policies, preventing unauthorized data leakage in RAG.",
+      "Supports managed embedding generation using state-of-the-art foundation models hosted on Databricks Model Serving.",
+      "Provides sub-50ms Approximate Nearest Neighbor (ANN) search via HNSW algorithms for production AI applications."
+    ],
+    "relatedTerms": [
+      "Retrieval-Augmented Generation",
+      "Delta Change Data Feed",
+      "Unity Catalog Governance"
+    ]
   }
 ]

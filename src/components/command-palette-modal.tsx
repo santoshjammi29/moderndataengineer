@@ -442,7 +442,7 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[8vh] sm:pt-[10vh] px-3 sm:px-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[8vh] sm:pt-[10vh] px-3 sm:px-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200 overscroll-contain"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -452,7 +452,7 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
     >
       <div
         ref={modalRef}
-        className="w-full max-w-3xl bg-[var(--surface-1)] border border-[var(--border)] rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[84vh]"
+        className="w-full max-w-3xl bg-[var(--surface-1)] border border-[var(--border)] rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[84vh] overscroll-contain"
       >
         {/* Search Input Bar */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[var(--border)] bg-[var(--surface-2)]">

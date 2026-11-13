@@ -252,7 +252,7 @@ export function StudioClient() {
           {bookmarkedItems.length === 0 ? (
             <div className="py-8 text-center text-xs text-[var(--muted-foreground)] space-y-1">
               <p>No bookmarks saved yet.</p>
-              <p>Click the bookmark ribbon on any Concept or Q&amp;A card to save it here for quick access.</p>
+              <p>Click the bookmark ribbon on any Concept, Scenario, Q&amp;A, or Whiteboard card to save it here for quick access.</p>
             </div>
           ) : (
             <div className="space-y-1.5 max-h-[400px] overflow-y-auto pr-1">

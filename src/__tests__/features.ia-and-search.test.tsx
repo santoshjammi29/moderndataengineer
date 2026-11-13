@@ -20,15 +20,17 @@ vi.mock('next/navigation', () => ({
 describe('Professional Reference Portal IA & Search Indexing', () => {
   it('renders reorganized sidebar with new professional navigation groups', () => {
     render(<Sidebar />);
-    expect(screen.getByText('Platform')).toBeDefined();
-    expect(screen.getByText('Knowledge & Drills')).toBeDefined();
-    expect(screen.getByText('Interviews & Roadmaps')).toBeDefined();
-    expect(screen.getByText('Workspace')).toBeDefined();
+    expect(screen.getByText('Start')).toBeDefined();
+    expect(screen.getByText('Learn')).toBeDefined();
+    expect(screen.getByText('Practise')).toBeDefined();
+    expect(screen.getByText('Build and operate')).toBeDefined();
+    expect(screen.getByText('Assess and explore careers')).toBeDefined();
+    expect(screen.getByText('Your workspace')).toBeDefined();
 
     // Check specific pill tags for streamlined primary hubs
     expect(screen.getByText('Matrix')).toBeDefined();
     expect(screen.getByText(`${formatContentCount(CONTENT_COUNTS.scenarios)}+`)).toBeDefined();
-    expect(screen.getByText(formatContentCount(CONTENT_COUNTS.concepts))).toBeDefined();
+    expect(screen.getAllByText(formatContentCount(CONTENT_COUNTS.concepts))[0]).toBeDefined();
     expect(screen.getByText(`${formatContentCount(CONTENT_COUNTS.qa)}+`)).toBeDefined();
   });
 

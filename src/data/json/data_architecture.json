@@ -30141,5 +30141,65 @@
         "url": "https://openlineage.io/docs/spec/"
       }
     ]
+  },
+  {
+    "id": "arch-scenario-databricks-metadata-driven-ingestion",
+    "source": "Architecture Hub",
+    "title": "Enterprise Metadata-Driven Lakehouse Ingestion Engine on Databricks",
+    "category": "Lakehouse Architecture & Medallion Design",
+    "niche": "Metadata-Driven Ingestion Engine",
+    "difficulty": "ARCHITECT",
+    "question": "An enterprise with 500+ source RDBMS tables across MySQL, Postgres, Oracle, and SQL Server needs to ingest data into Bronze Delta tables without maintaining 500 individual copy jobs or hardcoded notebooks. How do you design an elastic, metadata-driven ingestion engine on Databricks?",
+    "answer": "### Phase 1: Conceptual Foundation & Core Architecture\nAn enterprise metadata-driven ingestion architecture replaces hundreds of point-to-point ETL jobs with a centralized control table and a reusable parameterized PySpark execution harness. The framework stores ingestion metadata—source connection strings, source table names, primary keys, watermark columns, replication modes (FULL vs INCREMENTAL), target Bronze Delta table names, and batch schedules—in a governed Unity Catalog control table (`governance.metadata.ingestion_configs`).\n\n### Phase 2: Low-Level Mechanics & Implementation\n1. **Control Table DDL**:\n```sql\nCREATE TABLE governance.metadata.ingestion_configs (\n  config_id STRING NOT NULL,\n  source_system STRING NOT NULL,\n  source_table STRING NOT NULL,\n  target_table STRING NOT NULL,\n  primary_keys ARRAY<STRING>,\n  watermark_col STRING,\n  last_watermark_val STRING,\n  load_type STRING, -- 'FULL' or 'INCREMENTAL'\n  is_active BOOLEAN DEFAULT TRUE\n) USING DELTA CLUSTER BY (source_system, is_active);\n```\n2. **Parameterized Extraction Engine**:\n```python\nfrom concurrent.futures import ThreadPoolExecutor\nfrom pyspark.sql import functions as F\n\ndef ingest_table(cfg):\n    jdbc_url = dbutils.secrets.get(scope=\"lakehouse_creds\", key=f\"{cfg.source_system}_jdbc\")\n    query = f\"(SELECT * FROM {cfg.source_table} WHERE {cfg.watermark_col} > '{cfg.last_watermark_val}') as src\"\n    df_batch = spark.read.jdbc(url=jdbc_url, table=query)\n    \n    # Ingest into Bronze with lineage and ingestion timestamp\n    df_bronze = df_batch.withColumn(\"_ingested_at\", F.current_timestamp())\n    df_bronze.write.format(\"delta\").mode(\"append\").saveAsTable(cfg.target_table)\n\n# Multi-threaded execution across active configurations\nactive_configs = spark.table(\"governance.metadata.ingestion_configs\").filter(\"is_active = true\").collect()\nwith ThreadPoolExecutor(max_workers=8) as executor:\n    executor.map(ingest_table, active_configs)\n```\n\n### Phase 3: Production Hardening & Gotchas\n- **CDC vs Watermark**: High-frequency updates or physical deletes require Change Data Capture (Debezium/Qlik Replicate) landed via Auto Loader rather than simple JDBC watermark polling.\n- **Connection Pool Exhaustion**: Limit `max_workers` and partition bounds to avoid overwhelming source database connection pools.\n- **Optimistic Concurrency Control**: Ensure parallel writes target discrete target tables to prevent `ConcurrentAppendException`.",
+    "constraints": [
+      "Must support parallel table ingestion with controlled cluster concurrency.",
+      "Must capture watermark high-watermarks for incremental extraction.",
+      "Must handle schema drift and quarantine quarantined rows.",
+      "Must record audit run metrics (row counts, duration, status) in a central control table."
+    ],
+    "tradeoffs": [
+      "Generic metadata ingestion simplifies onboarding new tables in minutes via SQL INSERT, but cannot accommodate bespoke table-specific business transformations in the Bronze stage.",
+      "Threaded driver extraction increases parallelism but must be sized to prevent JVM memory exhaustion on the driver node."
+    ]
+  },
+  {
+    "id": "arch-scenario-databricks-finops-system-tables",
+    "source": "Architecture Hub",
+    "title": "Automated Lakehouse FinOps & DBU Attribution with Unity Catalog System Tables",
+    "category": "Cost Optimization & Platform FinOps",
+    "niche": "FinOps Attribution & System Tables",
+    "difficulty": "ARCHITECT",
+    "question": "A multinational organization spending $1.8M/year across 12 Databricks workspaces lacks cost visibility, experiencing unexpected month-end billing spikes and idle interactive cluster burn. How do you architect an automated FinOps attribution and alerting engine using Unity Catalog System Tables?",
+    "answer": "### Phase 1: Conceptual Foundation & Core Architecture\nUnity Catalog centralizes account-wide telemetry into read-only system schemas (`system.billing.usage`, `system.compute.clusters`, `system.query.history`, `system.access.audit`). A lakehouse FinOps architecture ingests this telemetry into a dedicated Gold reporting datamart that joins DBU consumption with custom cluster tags (`CostCenter`, `Project`, `Owner`) and applies contract list prices.\n\n### Phase 2: Low-Level Mechanics & Implementation\n1. **FinOps Attribution SQL Query**:\n```sql\nWITH tagged_usage AS (\n  SELECT\n    u.account_id,\n    u.workspace_id,\n    u.usage_date,\n    u.sku_name,\n    u.usage_quantity as dbus_consumed,\n    u.usage_quantity * p.pricing.default as list_cost_usd,\n    u.custom_tags['CostCenter'] as cost_center,\n    u.custom_tags['Project'] as project_name,\n    u.usage_metadata.cluster_id as cluster_id\n  FROM system.billing.usage u\n  JOIN system.billing.list_prices p\n    ON u.sku_name = p.sku_name\n   AND u.usage_date >= p.price_start_time\n   AND (p.price_end_time IS NULL OR u.usage_date < p.price_end_time)\n  WHERE u.usage_date >= current_date() - INTERVAL 30 DAYS\n)\nSELECT cost_center, project_name, sku_name, SUM(dbus_consumed) as total_dbus, SUM(list_cost_usd) as total_usd\nFROM tagged_usage\nGROUP BY cost_center, project_name, sku_name\nORDER BY total_usd DESC;\n```\n2. **Runaway Spill & Idle Cluster Alerting**:\nQuery `system.query.history` where `spilled_local_bytes > 50000000000` (50GB) to identify un-clustered queries thrashing SSDs, and schedule Lakeflow Jobs to send automated alerts via webhook.\n\n### Phase 3: Production Hardening & Gotchas\n- **Tag Enforcement via Cluster Policies**: Cluster creation must be governed by mandatory cluster policies that force users to provide `CostCenter` and `Environment` tags.\n- **Serverless vs Classic SKU Pricing**: Serverless SKUs bundle VM infrastructure and DBUs into a single unit, whereas Classic compute bills DBUs to Databricks and VM infrastructure to the cloud provider invoice.",
+    "constraints": [
+      "Must attribute 100% of compute cost to specific business cost centers and projects.",
+      "Must detect runaway interactive clusters exceeding 4 hours of idle run time.",
+      "Must identify un-optimized SQL queries spilling > 50 GB to disk.",
+      "Must generate automated daily Slack/email digest reports for department leads."
+    ],
+    "tradeoffs": [
+      "Enforcing strict cluster policies with mandatory tags prevents untagged shadow IT spend, but requires organizational change management and approval workflows for custom instance types.",
+      "System tables reflect billing data with a 1 to 4-hour ingestion latency, so real-time sub-minute budget circuit breakers require Databricks Budget APIs rather than SQL queries."
+    ]
+  },
+  {
+    "id": "arch-scenario-databricks-governed-agentic-rag",
+    "source": "Architecture Hub",
+    "title": "Enterprise Governed Agentic RAG Architecture with Mosaic AI & Unity Catalog",
+    "category": "AI & Machine Learning Architecture",
+    "niche": "Mosaic AI Governed Agentic RAG",
+    "difficulty": "ARCHITECT",
+    "question": "An enterprise financial institution needs to deploy generative AI agents that query internal investment prospectuses and regulatory disclosures while strictly adhering to compliance mandates: no data leakage across corporate divisions, automatic synchronization with updating documents, and verifiable citation lineages. How do you design this on Databricks?",
+    "answer": "### Phase 1: Conceptual Foundation & Core Architecture\nThe architecture decouples raw document ingestion, chunking, embedding generation, vector indexing, and agent orchestration using Unity Catalog as the single governance backbone. Document chunks are stored in a Silver Delta table with Change Data Feed (CDF) enabled. Mosaic AI Vector Search indexes this Delta table with Delta Sync continuous indexing. Agent queries execute through Databricks Model Serving, using MLflow 2.14+ Tracing for auditability.\n\n### Phase 2: Low-Level Mechanics & Implementation\n1. **Vector Search Continuous Index Provisioning**:\n```python\nfrom databricks.vector_search.client import VectorSearchClient\n\nvsc = VectorSearchClient()\nvsc.create_delta_sync_index(\n    endpoint_name=\"fin_vector_endpoint\",\n    index_name=\"prod_catalog.ai_silver.regulatory_docs_index\",\n    source_table_name=\"prod_catalog.ai_silver.chunked_documents\",\n    pipeline_type=\"CONTINUOUS\",\n    primary_key=\"chunk_id\",\n    embedding_source_column=\"chunk_text\",\n    embedding_model_endpoint_name=\"databricks-bge-large-en\"\n)\n```\n2. **Governed Query Execution & Security Context**:\nWhen the AI agent receives a query, it calls `index.similarity_search()`. Vector Search evaluates the calling user's Unity Catalog permissions and applies SQL row filter UDFs to the vector search result set before returning documents to the prompt context.\n3. **MLflow Tracing**:\nWrap agent execution with `@mlflow.trace` to capture input prompts, retrieved chunks, hallucination scores, token costs, and latency.\n\n### Phase 3: Production Hardening & Gotchas\n- **Chunking Strategy**: Naive 500-token fixed chunking fragments financial tables; use Markdown table-aware chunking or semantic recursive character splitters.\n- **Embedding Model Rate Limits**: For high-throughput backfills, use batch embedding inference via Databricks Model Serving rather than synchronous point-by-point calls.\n- **Index Refresh Latency**: Delta Sync continuous pipelines achieve sub-minute update latency; ensure checkpointing is configured on dedicated serverless endpoints.",
+    "constraints": [
+      "Must automatically synchronize vector indexes when source PDF/DOCX documents change in object storage.",
+      "Must enforce Unity Catalog row-level and column-level security filters on vector search query results.",
+      "Must trace multi-agent reasoning steps, tool calls, and LLM latency via MLflow Tracing.",
+      "Sub-100ms vector search latency for interactive executive query workflows."
+    ],
+    "tradeoffs": [
+      "Continuous Delta Sync guarantees near real-time document freshness for AI queries but incurs continuous serverless vector endpoint compute costs.",
+      "Enforcing Unity Catalog row filters at vector query time prevents authorization bypasses, but slightly increases ANN candidate filtering overhead compared to unguarded vector search."
+    ]
   }
 ]

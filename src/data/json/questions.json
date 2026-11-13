@@ -46832,5 +46832,53 @@
         "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
       }
     ]
+  },
+  {
+    "id": "databricks-l100-classic-vs-serverless",
+    "source": "Technical Manual",
+    "category": "Databricks",
+    "niche": "Classic vs Serverless Compute Architecture",
+    "difficulty": "HARD",
+    "question": "How does the Databricks Serverless compute plane differ architecturally from Classic compute in terms of network isolation, provisioning latency, and maintenance overhead?",
+    "answer": "In Databricks architecture, Classic and Serverless compute planes differ fundamentally across four dimensions:\n\n1. **Hosting & Provisioning Boundary**: Classic compute provisions virtual machines directly inside the customer cloud virtual network (Azure VNet / AWS VPC / GCP VPC). Provisioning requires 3 to 7 minutes due to cloud VM allocation, OS initialization, and Spark daemon startup. Serverless compute runs inside Databricks-managed cloud subscriptions using pre-warmed container fleets that start in 2 to 6 seconds.\n\n2. **Network Isolation**: In Classic compute, customers manage subnets, NAT gateways, Network Security Groups (NSGs), and route tables. In Serverless compute, containers run in hardened micro-VM isolation with secure private connectivity (e.g. Reverse Private Link / Azure Private Endpoints) ensuring that compute instances communicate with customer storage accounts over cloud backbones without public internet traversal.\n\n3. **Autoscaling & Sizing**: Classic clusters scale horizontally by launching full VMs, which takes minutes and often leads to over-provisioning. Serverless compute scales elastically in sub-second increments both vertically and horizontally based on query backlog and memory pressure, scaling to zero immediately when idle.\n\n4. **Runtime Upgrades**: Classic clusters require manual DBR version selection, maintenance windows, and manual driver tuning. Serverless compute is versionless and automatically applies the latest Photon C++ compiler optimizations, performance enhancements, and security patches without cluster downtime.",
+    "domain": "Databricks & Cloud Lakehouse",
+    "subdomain": "Classic vs Serverless Compute Architecture",
+    "linked_concept_id": "databricks-serverless-compute-plane"
+  },
+  {
+    "id": "databricks-l200-liquid-clustering-vs-zorder",
+    "source": "Technical Manual",
+    "category": "Databricks",
+    "niche": "Liquid Clustering vs Z-Ordering Physical Layout",
+    "difficulty": "HARD",
+    "question": "Why does Delta Lake Liquid Clustering outperform traditional Hive directory partitioning and Z-Ordering on high-cardinality multi-column datasets?",
+    "answer": "Delta Lake Liquid Clustering (`CLUSTER BY`) addresses the fundamental design bottlenecks of traditional Hive partitioning and Z-Ordering:\n\n1. **Elimination of Directory Hierarchies**: Hive partitioning (`PARTITIONED BY (date, country)`) creates nested physical folder trees on object storage. High-cardinality columns cause partition explosion (millions of tiny files and costly object storage list API overhead), while low-cardinality columns cause data skew. Liquid Clustering does not create folder trees; it keeps data in a flat directory and organizes records across Parquet files using multi-dimensional space-filling curves (Hilbert curves).\n\n2. **Dynamic Key Evolution**: In Hive partitioning, altering the partition strategy requires rewriting the entire historical dataset from scratch. In Z-Ordering, columns can only be specified during an `OPTIMIZE` command and full rewrites are required. With Liquid Clustering, table owners can redefine clustering keys at any time via `ALTER TABLE ... CLUSTER BY (...)` without touching historical data; subsequent incremental writes immediately adhere to the new clustering keys.\n\n3. **Incremental Write Clustering**: Z-Order indexing only organizes data when a heavyweight batch `OPTIMIZE table ZORDER BY (...)` is executed, creating high compute spikes. Liquid Clustering performs incremental clustering on newly appended data during standard writes, significantly reducing background compaction costs.\n\n4. **No Dimensionality Decay**: Z-Ordering suffers severe data skipping degradation when clustering on more than 3 or 4 columns. Liquid Clustering provides balanced, predictable multi-column data skipping across up to 4 columns without exponential degradation.",
+    "domain": "Databricks & Cloud Lakehouse",
+    "subdomain": "Liquid Clustering vs Z-Ordering Physical Layout",
+    "linked_concept_id": "delta-lake-liquid-clustering-hilbert"
+  },
+  {
+    "id": "databricks-l300-dvs-concurrency-conflicts",
+    "source": "Technical Manual",
+    "category": "Databricks",
+    "niche": "Delta Lake Concurrency & Deletion Vectors",
+    "difficulty": "ARCHITECT",
+    "question": "How do Delta Lake Deletion Vectors (DVs) resolve ConcurrentAppendException and write conflicts during simultaneous streaming writes and batch updates?",
+    "answer": "Under Delta Lake Optimistic Concurrency Control (OCC) protocol without Deletion Vectors, write transactions operate on Copy-on-Write (CoW). When a batch `UPDATE` or `DELETE` executes, it identifies the Parquet data files containing the affected rows, reads those entire files into memory, rewrites the un-modified rows into brand-new Parquet files, and commits `remove` actions for the old files and `add` actions for the new files.\n\nIf a streaming micro-batch or concurrent ETL pipeline appends new records to that same partition or table while the rewrite is in progress, the batch transaction detects that the physical files it read have changed, throwing a `ConcurrentAppendException` and failing the job.\n\nDeletion Vectors (DVs, enabled via `'delta.enableDeletionVectors' = true`) resolve this bottleneck through Merge-on-Read (MoR):\n1. **No Data File Rewrites**: When rows are updated or deleted, Delta Lake leaves the original Parquet files completely untouched. Instead, it writes a tiny secondary binary file containing a RoaringBitmap index of deleted row offsets.\n2. **Disjoint Commit Footprint**: Because the original Parquet files are never marked as `remove` in the Delta transaction log during row modification, concurrent append operations do not conflict with the transaction. Both transactions commit atomically to `_delta_log`.\n3. **Row-Level Concurrency**: In DBR 14+, Row-Level Concurrency (RLC) allows even two concurrent `UPDATE` statements on the same Parquet file to succeed simultaneously if their predicate filters target disjoint rows within that file.",
+    "domain": "Databricks & Cloud Lakehouse",
+    "subdomain": "Delta Lake Concurrency & Deletion Vectors",
+    "linked_concept_id": "delta-lake-deletion-vectors-mor"
+  },
+  {
+    "id": "databricks-l400-photon-vectorization-breakout",
+    "source": "Technical Manual",
+    "category": "Databricks",
+    "niche": "Photon Vectorized Engine & Breakout Diagnostics",
+    "difficulty": "ARCHITECT",
+    "question": "What is a Photon-to-Spark Transition Breakout in Databricks physical query execution, how do you diagnose it in query profiles, and how do you remediate it?",
+    "answer": "A Photon-to-Spark Transition Breakout occurs when a query executing within the native C++ Photon vectorized engine encounters an operator, expression, or data type that Photon does not support, forcing the execution engine to fall back to the JVM-based Spark Tungsten engine mid-query.\n\n### Diagnosis in Query Profile & Spark UI:\n1. Look for `PhotonToRow` (transferring columnar off-heap data to JVM row format) and `RowToPhoton` (re-columnarizing JVM rows into Photon buffers) operators in the Spark physical plan or SQL Query Profile.\n2. In the Spark UI Stage view, observe heavy CPU time spent in serialization/deserialization and high memory churn.\n3. Identify non-Photon operators such as `BatchEvalPython` (standard Python UDFs), unsupported Scala/Java UDFs, legacy complex type expressions, or unsupported window frame specifications.\n\n### Remediation Strategies:\n1. **Eliminate Row-by-Row Python UDFs**: Standard `@udf` decorators force data out of Photon, across the Py4J gateway, into a Python worker process row-by-row. Replace them with native Spark SQL functions (`substring_index`, `regexp_extract`, `transform`, `aggregate`) which run 100% in Photon C++.\n2. **Use Vectorized Arrow Pandas UDFs**: If custom Python transformations are strictly necessary, use `@pandas_udf` with Apache Arrow acceleration (`ArrowEvalPython`), which processes columnar arrow batches rather than deserializing individual rows.\n3. **Push Unsupported Operators to the Edge**: If an unsupported operator must be used, structure the query so that all heavy filtering, joins, and aggregations are performed by Photon first, applying the custom operator only on the final reduced result set.",
+    "domain": "Databricks & Cloud Lakehouse",
+    "subdomain": "Photon Vectorized Engine & Breakout Diagnostics",
+    "linked_concept_id": "photon-vectorized-cpp-engine"
   }
 ]

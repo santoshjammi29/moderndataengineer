@@ -521,6 +521,19 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Prevent page scroll chaining under vertical scrollable panels, modals, drawers, and sidebars */
+.overflow-y-auto {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+[role="dialog"],
+dialog,
+.modal-overlay,
+.drawer-content {
+  overscroll-behavior: contain;
+}
+
 /* Subtle edge fade mask for horizontal scroll indicators */
 .scroll-fade-mask {
   mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);

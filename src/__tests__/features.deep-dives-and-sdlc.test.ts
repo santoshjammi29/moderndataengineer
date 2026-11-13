@@ -105,9 +105,9 @@ describe("Master Lab & Learning Tree", () => {
 });
 
 describe("Platform Metadata & Hubs Alignment", () => {
-  it("has updated platform config with generated concepts and 42 whiteboards", () => {
+  it("has updated platform config with generated concepts and 52 whiteboards", () => {
     expect(PLATFORM_CONFIG.hubs.concepts.badge).toContain(`${CONTENT_COUNTS.concepts}`);
-    expect(PLATFORM_CONFIG.hubs.architecture.description).toContain("42 whiteboard blueprints");
+    expect(PLATFORM_CONFIG.hubs.architecture.description).toContain(`${CONTENT_COUNTS.whiteboards} whiteboard blueprints`);
   });
 
   it("verifies every SDLC control has a corresponding Drill QA in questions.json", async () => {

@@ -350,7 +350,7 @@ function SidebarInner() {
 
         {/* Navigation Tree — Independently Scrollable */}
         <nav
-          className="flex-1 overflow-y-auto py-2.5 sm:py-3 px-1 sm:px-2 scrollbar-thin min-h-0"
+          className="flex-1 overflow-y-auto py-2.5 sm:py-3 px-1 sm:px-2 scrollbar-thin min-h-0 overscroll-contain"
           aria-label="All sections and subpages"
         >
           {NAV_GROUPS.map((group, gi) => (

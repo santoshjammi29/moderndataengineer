@@ -188,7 +188,7 @@ function MobileHeaderInner() {
             role="dialog"
             aria-modal="true"
             aria-label="Study Navigation Drawer"
-            className="relative w-[85%] max-w-sm bg-[var(--surface-1)] border-r border-[var(--border)] h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-left duration-250"
+            className="relative w-[85%] max-w-sm bg-[var(--surface-1)] border-r border-[var(--border)] h-full flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-left duration-250 overscroll-contain"
           >
             {/* Drawer Header */}
             <div className="flex items-center justify-between h-14 px-4 border-b border-[var(--border)]">
@@ -240,7 +240,7 @@ function MobileHeaderInner() {
             </div>
 
             {/* Nav Groups List — All 20 Canonical Pages and Subpages Visible */}
-            <nav className="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-none" aria-label="Mobile study navigation">
+            <nav className="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-none overscroll-contain" aria-label="Mobile study navigation">
               {NAV_GROUPS.map((group) => (
                 <div key={group.title} className="space-y-1">
                   <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
