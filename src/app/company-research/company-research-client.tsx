@@ -841,7 +841,7 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-sm sm:text-base font-bold text-[var(--foreground)] truncate">
+                    <h2 className="text-sm sm:text-base font-bold text-[var(--foreground)] break-words">
                       {modalCompany.name}
                     </h2>
                     <span
@@ -933,7 +933,7 @@ function CompactCompanyCard({
               <TopicIcon topic={company.topicKey} size={16} />
             </div>
             <div className="min-w-0">
-              <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] truncate leading-snug">
+              <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] break-words leading-snug">
                 {company.name}
               </h3>
               <div className="flex items-center gap-1 text-[10px] text-[var(--muted-foreground)] truncate mt-0.5">
@@ -1005,7 +1005,7 @@ function CompactCompanyCard({
         {company.systemDesignArchetype && (
           <div className="p-1.5 rounded-md bg-[var(--surface-2)]/70 border border-[var(--border)] flex items-center gap-1.5 text-[10px]">
             <Layers size={11} className="text-blue-500 shrink-0" />
-            <span className="text-[var(--foreground)] truncate font-medium">
+            <span className="text-[var(--foreground)] break-words font-medium">
               {company.systemDesignArchetype}
             </span>
           </div>

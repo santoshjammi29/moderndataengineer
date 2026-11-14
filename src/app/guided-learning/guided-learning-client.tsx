@@ -722,7 +722,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-1">
-                          <h4 className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors leading-tight truncate">
+                          <h4 className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors leading-tight break-words">
                             {topic.label}
                           </h4>
                           <span className="text-[9px] font-mono text-[var(--muted-foreground)] shrink-0">
@@ -732,7 +732,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                         <div className="flex items-center gap-1.5 text-[10px] text-[var(--muted-foreground)] font-mono leading-none pt-0.5">
                           <span>{counts.total} items</span>
                           <span>•</span>
-                          <span className="truncate max-w-[90px]">{topic.domain}</span>
+                          <span className="break-words">{topic.domain}</span>
                         </div>
                       </div>
                       {trackPct > 0 ? (
@@ -779,7 +779,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     </div>
                     <h3 className="text-sm font-bold text-[var(--foreground)]">Apache Spark & Databricks Track</h3>
                   </div>
-                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed line-clamp-2">
+                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
                     Master Tungsten off-heap memory, Catalyst physical query plans, Adaptive Query Execution (AQE), Liquid Clustering, and Photon vectorization.
                   </p>
                 </div>
@@ -806,7 +806,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     </div>
                     <h3 className="text-sm font-bold text-[var(--foreground)]">Airflow & dbt Engineering Track</h3>
                   </div>
-                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed line-clamp-2">
+                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
                     Construct production DAGs with TaskFlow, Celery/K8s executors, async Triggerers, incremental merge models, and dbt Mesh governance.
                   </p>
                 </div>
@@ -833,7 +833,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     </div>
                     <h3 className="text-sm font-bold text-[var(--foreground)]">Microsoft Fabric & OneLake Track</h3>
                   </div>
-                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed line-clamp-2">
+                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
                     Explore OneLake zero-copy shortcuts, universal Delta Parquet storage, Direct Lake VertiPaq memory mapping, and cross-workspace governance.
                   </p>
                 </div>
@@ -886,11 +886,11 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                   >
                     <div className="flex items-center gap-1.5">
                       <TopicIcon topicKey={bp.key} size={14} />
-                      <div className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors truncate">
+                      <div className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors break-words">
                         {bp.title}
                       </div>
                     </div>
-                    <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 leading-tight">
+                    <p className="text-[10px] text-[var(--muted-foreground)] leading-tight">
                       {bp.desc}
                     </p>
                   </div>
@@ -1029,10 +1029,10 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     <Sparkles size={11} />
                     <span>Featured Whiteboard Architecture Blueprint</span>
                   </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] truncate">
+                  <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] break-words">
                     {featuredDiagram.title}
                   </h3>
-                  <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-1">
+                  <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
                     {featuredDiagram.subtitle}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 pt-0.5">
@@ -1097,10 +1097,10 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                         />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h5 className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors truncate">
+                        <h5 className="text-xs font-bold text-[var(--foreground)] group-hover:text-purple-400 transition-colors break-words">
                           {rd.title}
                         </h5>
-                        <p className="text-[10px] text-[var(--muted-foreground)] truncate">{rd.category}</p>
+                        <p className="text-[10px] text-[var(--muted-foreground)] break-words">{rd.category}</p>
                       </div>
                       <Maximize2 size={12} className="text-[var(--muted-foreground)] group-hover:text-purple-400 shrink-0" />
                     </button>
@@ -1139,11 +1139,11 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                           {stageDone}/{stageItems.length}
                         </span>
                       </div>
-                      <h4 className={cn("text-xs font-bold truncate", stg.color)}>
+                      <h4 className={cn("text-xs font-bold break-words", stg.color)}>
                         {stg.shortTitle}
                       </h4>
                       {stageDescription && (
-                        <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 leading-tight">
+                        <p className="text-[10px] text-[var(--muted-foreground)] leading-tight">
                           {stageDescription}
                         </p>
                       )}
@@ -1543,16 +1543,16 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative w-full max-w-5xl max-h-[92vh] flex flex-col rounded-2xl border border-[var(--border)] bg-[#101014] shadow-2xl overflow-hidden"
+              className="relative w-full max-w-5xl max-h-[92vh] flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--surface-0)] shadow-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-[var(--border)] bg-[var(--surface-1)]">
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] truncate">
+                  <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] break-words">
                     {activeDiagramModal.title}
                   </h3>
-                  <p className="text-xs text-[var(--muted-foreground)] truncate">
+                  <p className="text-xs text-[var(--muted-foreground)] break-words">
                     {activeDiagramModal.subtitle}
                   </p>
                 </div>

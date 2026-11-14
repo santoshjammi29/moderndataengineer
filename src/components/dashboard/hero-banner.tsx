@@ -3,7 +3,7 @@ import { TopicIcon } from "@/components/ui/topic-icon";
 
 export function HeroBanner() {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-slate-950 px-5 py-8 sm:px-8 sm:py-12 text-center sm:text-left isolate">
+    <div className="relative overflow-hidden rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] dark:bg-slate-950 px-5 py-8 sm:px-8 sm:py-12 text-center sm:text-left isolate">
       {/* Aurora Background */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-tr from-transparent via-blue-500/10 to-purple-500/10 opacity-50" />
@@ -12,19 +12,19 @@ export function HeroBanner() {
       </div>
 
       <div className="mx-auto max-w-4xl flex flex-col items-center sm:items-start space-y-4">
-        <span className="inline-flex items-center rounded-full border border-slate-700 bg-slate-800/50 px-3 py-1 text-xs font-medium text-slate-300 backdrop-blur-sm">
+        <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1 text-xs font-medium text-[var(--muted-foreground)]">
           Data Architect Studio · Learning OS
         </span>
 
-        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
-          <span className="bg-gradient-to-r from-sky-400 via-blue-400 to-emerald-400 bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)] leading-tight">
+          <span className="bg-gradient-to-r from-sky-500 via-blue-600 to-emerald-600 dark:from-sky-400 dark:via-blue-400 dark:to-emerald-400 bg-clip-text text-transparent [.light_&]:text-[var(--foreground)] [.e-ink_&]:text-[var(--foreground)] [.light_&]:bg-none [.e-ink_&]:bg-none">
             DataPlatform Architect
           </span>
           <br />
           Enterprise Fabric, Databricks &amp; Lakehouse Prep
         </h1>
 
-        <p className="text-sm sm:text-base text-slate-400 max-w-2xl leading-relaxed">
+        <p className="text-sm sm:text-base text-[var(--muted-foreground)] max-w-2xl leading-relaxed">
           {`Fabric DP-700 / DP-600, Databricks, Delta Lake, ${formatContentCount(CONTENT_COUNTS.qa)} Q&As`}
         </p>
 
@@ -38,7 +38,7 @@ export function HeroBanner() {
           ].map((badge) => (
             <div
               key={badge.label}
-              className="flex items-center gap-1.5 rounded-full border border-slate-700/50 bg-slate-800/40 px-3 py-1 text-xs font-medium text-slate-300 backdrop-blur-md transition-colors hover:bg-slate-700/50"
+              className="flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1 text-xs font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-3)]"
             >
               <TopicIcon topic={badge.topicKey} size={14} />
               <span>{badge.label}</span>

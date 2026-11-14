@@ -658,12 +658,12 @@ export function ConceptsMindmapView({
                                               <BookmarkCheck size={11} className="text-amber-400 shrink-0" />
                                             )}
                                           </div>
-                                          <h4 className="text-xs font-bold text-[var(--foreground)] tracking-tight line-clamp-1">
+                                          <h4 className="text-xs font-bold text-[var(--foreground)] tracking-tight break-words">
                                             {concept.term}
                                           </h4>
                                         </div>
 
-                                        <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
+                                        <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
                                           {concept.definition}
                                         </p>
 
@@ -672,7 +672,7 @@ export function ConceptsMindmapView({
                                             <span className="font-semibold text-blue-400 block text-[9px] uppercase tracking-wider">
                                               Deep Mechanism:
                                             </span>
-                                            <p className="line-clamp-2 italic">{concept.keyPoints[0]}</p>
+                                            <p className="italic">{concept.keyPoints[0]}</p>
                                           </div>
                                         )}
                                       </div>
@@ -723,7 +723,7 @@ export function ConceptsMindmapView({
                   {topic.subtopics.map((sub) => (
                     <div key={sub.id} className="p-2.5 rounded-xl bg-[var(--surface-2)]/60 border border-[var(--border)] space-y-1.5">
                       <div className="flex items-center justify-between gap-1 text-[11px]">
-                        <span className="font-semibold text-[var(--foreground)] line-clamp-1">{sub.title}</span>
+                        <span className="font-semibold text-[var(--foreground)] break-words">{sub.title}</span>
                         <span className="text-[10px] text-[var(--muted-foreground)] font-mono">({sub.concepts.length})</span>
                       </div>
                       <div className="flex items-center gap-1.5 flex-wrap">

@@ -146,7 +146,7 @@ function MobileHeaderInner() {
           <Link href="/" className="flex items-center gap-2.5 min-w-0" title="Modern Data Engineer">
             <BrandLogo size={28} className="rounded-lg shadow-xs" />
             <div className="min-w-0">
-              <h2 className="text-xs sm:text-sm font-bold text-[var(--foreground)] leading-tight truncate">
+              <h2 className="text-xs sm:text-sm font-bold text-[var(--foreground)] leading-tight break-words">
                 Modern Data Engineer
               </h2>
               <span className="text-[9px] sm:text-[10px] font-medium text-[var(--muted-foreground)] block -mt-0.5">
@@ -335,7 +335,7 @@ function MobileHeaderInner() {
                                           )}
                                           aria-hidden="true"
                                         />
-                                        <span className="truncate">{sub.label}</span>
+                                        <span className="break-words">{sub.label}</span>
                                       </div>
                                       {sub.badge && (
                                         <span

@@ -29,28 +29,28 @@ export function ArchitectDigest() {
   };
 
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-950/70 via-[#111126] to-blue-950/70 border border-purple-500/30 [.light_&]:from-purple-50 [.light_&]:via-white [.light_&]:to-blue-50 [.light_&]:border-purple-200 p-8 sm:p-10 isolate shadow-sm dark:shadow-none">
+    <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-950/70 via-[#111126] to-blue-950/70 border border-purple-500/30 [.light_&]:from-purple-50 [.light_&]:via-white [.light_&]:to-blue-50 [.light_&]:border-purple-200 [.e-ink_&]:from-[#eeebe3] [.e-ink_&]:via-[#f7f6f2] [.e-ink_&]:to-[#eeebe3] [.e-ink_&]:border-neutral-300 p-8 sm:p-10 isolate shadow-sm dark:shadow-none">
       {/* Ambient background glow — GPU-composited radial gradients */}
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-[radial-gradient(circle,rgba(147,51,234,0.18)_0%,transparent_70%)] pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[radial-gradient(circle,rgba(37,99,235,0.18)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="relative z-10 max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-8">
         <div className="space-y-3 max-w-xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 [.light_&]:bg-purple-100 [.light_&]:text-purple-800 [.light_&]:border-purple-200 text-xs font-bold uppercase tracking-wider">
-            <Sparkles size={13} className="text-purple-400 [.light_&]:text-purple-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 [.light_&]:bg-purple-100 [.light_&]:text-purple-800 [.light_&]:border-purple-200 [.e-ink_&]:bg-neutral-200 [.e-ink_&]:text-neutral-900 [.e-ink_&]:border-neutral-400 text-xs font-bold uppercase tracking-wider">
+            <Sparkles size={13} className="text-purple-400 [.light_&]:text-purple-600 [.e-ink_&]:text-neutral-900" />
             <span>Weekly Architect Digest</span>
           </div>
 
-          <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white [.light_&]:text-slate-900 leading-tight">
+          <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white [.light_&]:text-slate-900 [.e-ink_&]:text-neutral-900 leading-tight">
             Level Up from Senior Engineer to Principal Architect
           </h3>
 
-          <p className="text-xs sm:text-sm text-slate-300 [.light_&]:text-slate-600 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-300 [.light_&]:text-slate-600 [.e-ink_&]:text-neutral-800 leading-relaxed">
             Get curated weekly production blueprints, deep-dive Lakehouse trade-offs, and FAANG interview
             rubrics delivered directly with zero spam.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-300 [.light_&]:text-slate-600 pt-1">
+          <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-300 [.light_&]:text-slate-600 [.e-ink_&]:text-neutral-800 pt-1">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 size={14} className="text-green-400 [.light_&]:text-emerald-600" /> 100% Free Forever
             </span>

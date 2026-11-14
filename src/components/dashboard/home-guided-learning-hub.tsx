@@ -146,7 +146,7 @@ export function HomeGuidedLearningHub() {
                 EASY
               </span>
             </div>
-            <p className="text-[11px] text-[var(--foreground)] font-medium line-clamp-1">
+            <p className="text-[11px] text-[var(--foreground)] font-medium leading-snug">
               Prerequisites, APIs &amp; Basic Topologies
             </p>
           </div>
@@ -160,7 +160,7 @@ export function HomeGuidedLearningHub() {
                 MEDIUM
               </span>
             </div>
-            <p className="text-[11px] text-[var(--foreground)] font-medium line-clamp-1">
+            <p className="text-[11px] text-[var(--foreground)] font-medium leading-snug">
               Transformations, Joins &amp; Pipelines
             </p>
           </div>
@@ -174,7 +174,7 @@ export function HomeGuidedLearningHub() {
                 HARD
               </span>
             </div>
-            <p className="text-[11px] text-[var(--foreground)] font-medium line-clamp-1">
+            <p className="text-[11px] text-[var(--foreground)] font-medium leading-snug">
               Skew, AQE, Compaction &amp; CDF
             </p>
           </div>
@@ -188,7 +188,7 @@ export function HomeGuidedLearningHub() {
                 PRINCIPAL
               </span>
             </div>
-            <p className="text-[11px] text-[var(--foreground)] font-medium line-clamp-1">
+            <p className="text-[11px] text-[var(--foreground)] font-medium leading-snug">
               Multi-Cloud, FinOps &amp; Disaster Recovery
             </p>
           </div>
@@ -262,7 +262,7 @@ export function HomeGuidedLearningHub() {
                   </span>
                 </div>
 
-                <p className="text-xs text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
+                <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
                   {topic.description}
                 </p>
 
@@ -281,7 +281,7 @@ export function HomeGuidedLearningHub() {
                       <div className="text-[9px] font-mono uppercase text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1">
                         <Workflow size={10} /> Paired Whiteboard
                       </div>
-                      <div className="text-[11px] font-semibold text-[var(--foreground)] truncate">
+                      <div className="text-[11px] font-semibold text-[var(--foreground)] break-words">
                         {diagram.title}
                       </div>
                     </div>

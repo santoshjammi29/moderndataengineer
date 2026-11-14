@@ -274,4 +274,40 @@ describe("Theme System & WCAG 2.2 AA Contrast Remediation", () => {
       expect(globalsCss).toContain("Highlight");
     });
   });
+
+  describe("5. Unified Typography & Natural Wrapping Rules", () => {
+    it("consolidates heading and body to unified primary font and monospace companion", () => {
+      expect(globalsCss).toContain("--font-heading: var(--font-sans);");
+      expect(globalsCss).toContain("--font-sans:");
+      expect(globalsCss).toContain("--font-mono:");
+    });
+
+    it("declares fluid typography scale tokens (xs to 4xl) and semantic line heights", () => {
+      expect(globalsCss).toContain("--font-size-xs:");
+      expect(globalsCss).toContain("--font-size-base:");
+      expect(globalsCss).toContain("--font-size-4xl:");
+      expect(globalsCss).toContain("--line-height-heading:");
+      expect(globalsCss).toContain("--line-height-body:");
+    });
+
+    it("enforces global natural wrapping without text clipping", () => {
+      expect(globalsCss).toContain("overflow-wrap: anywhere;");
+      expect(globalsCss).toContain("text-wrap: balance;");
+      expect(globalsCss).toContain("text-wrap: pretty;");
+      expect(globalsCss).toContain("min-width: 0;");
+    });
+
+    it("verifies E-Ink syntax tokens amber and orange achieve WCAG AA contrast (>= 4.5:1)", () => {
+      const eInkPreBg = "#eeebe3";
+      const amberSyntax = "#78350f";
+      const orangeSyntax = "#9a3412";
+      expect(calculateContrastRatio(amberSyntax, eInkPreBg)).toBeGreaterThanOrEqual(7.0);
+      expect(calculateContrastRatio(orangeSyntax, eInkPreBg)).toBeGreaterThanOrEqual(6.0);
+    });
+
+    it("provides solid text fallback for text-clip gradients in light and e-ink themes", () => {
+      expect(globalsCss).toContain(".light .text-transparent.bg-clip-text");
+      expect(globalsCss).toContain(".e-ink .text-transparent.bg-clip-text");
+    });
+  });
 });

@@ -232,7 +232,7 @@ export function RoadmapGrid() {
                             <CheckCircle2 size={10} /> Completed
                           </span>
                         ) : !unlocked ? (
-                          <span className="inline-flex items-center gap-1 rounded-bl-xl bg-neutral-800 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400 border-l border-b border-neutral-700">
+                          <span className="inline-flex items-center gap-1 rounded-bl-xl bg-[var(--surface-3)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)] border-l border-b border-[var(--border)]">
                             <Lock size={10} /> Locked ({reviewedCount}/{item.unlockQas})
                           </span>
                         ) : isRecommended ? (
@@ -251,7 +251,7 @@ export function RoadmapGrid() {
                             "w-9 h-9 rounded-xl flex items-center justify-center border",
                             unlocked
                               ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                              : "bg-neutral-800 text-neutral-500 border-neutral-700"
+                              : "bg-[var(--surface-2)] text-[var(--muted-foreground)] border-[var(--border)]"
                           )}
                         >
                           {unlocked ? <Icon size={18} /> : <Lock size={16} />}
@@ -349,7 +349,7 @@ export function RoadmapGrid() {
                             <CheckCircle2 size={10} /> Completed
                           </span>
                         ) : !unlocked ? (
-                          <span className="inline-flex items-center gap-1 rounded-bl-xl bg-neutral-800 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400 border-l border-b border-neutral-700">
+                          <span className="inline-flex items-center gap-1 rounded-bl-xl bg-[var(--surface-3)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)] border-l border-b border-[var(--border)]">
                             <Lock size={10} /> Locked ({reviewedCount}/{item.unlockQas})
                           </span>
                         ) : isRecommended ? (
@@ -368,7 +368,7 @@ export function RoadmapGrid() {
                             "w-9 h-9 rounded-xl flex items-center justify-center border",
                             unlocked
                               ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                              : "bg-neutral-800 text-neutral-500 border-neutral-700"
+                              : "bg-[var(--surface-2)] text-[var(--muted-foreground)] border-[var(--border)]"
                           )}
                         >
                           {unlocked ? <Icon size={18} /> : <Lock size={16} />}
@@ -451,7 +451,7 @@ export function RoadmapGrid() {
                 >
                   <div className="absolute top-0 right-0">
                     {!unlocked ? (
-                      <span className="inline-flex items-center gap-1 rounded-bl-xl bg-neutral-800 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400 border-l border-b border-neutral-700">
+                      <span className="inline-flex items-center gap-1 rounded-bl-xl bg-[var(--surface-3)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)] border-l border-b border-[var(--border)]">
                         <Lock size={10} /> Locked ({reviewedCount}/{item.unlockQas})
                       </span>
                     ) : isRecommended ? (

@@ -733,7 +733,7 @@ resources:
                   <div className="font-bold text-xs text-[var(--foreground)] mt-2 break-words">
                     {stage.step}
                   </div>
-                  <div className="text-[10px] text-[var(--muted-foreground)] mt-0.5 truncate">
+                  <div className="text-[10px] text-[var(--muted-foreground)] mt-0.5 break-words">
                     {stage.tech.split("·")[0]}
                   </div>
                 </button>
@@ -855,10 +855,10 @@ resources:
                       Stage 0{stage.stageNum}
                     </span>
                   </div>
-                  <div className="font-bold text-xs text-[var(--foreground)] mt-1.5 line-clamp-1">
+                  <div className="font-bold text-xs text-[var(--foreground)] mt-1.5 break-words">
                     {stage.phase.split("&")[0]}
                   </div>
-                  <div className="text-[10px] text-[var(--muted-foreground)] mt-0.5 truncate">
+                  <div className="text-[10px] text-[var(--muted-foreground)] mt-0.5 break-words">
                     {stage.badge}
                   </div>
                 </button>

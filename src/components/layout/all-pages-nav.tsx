@@ -352,11 +352,11 @@ function AllPagesNavInner() {
                         >
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-1.5">
-                              <span className="truncate">{sub.label}</span>
+                              <span className="break-words">{sub.label}</span>
                               {isSubActive && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />}
                             </div>
                             {sub.description && (
-                              <p className="text-[10px] text-[var(--muted-foreground)] truncate mt-0.5 font-normal">
+                              <p className="text-[10px] text-[var(--muted-foreground)] break-words mt-0.5 font-normal">
                                 {sub.description}
                               </p>
                             )}

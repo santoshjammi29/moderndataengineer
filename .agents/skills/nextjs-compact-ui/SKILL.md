@@ -288,3 +288,19 @@ When rendering high-density multi-level navigation in the left sidebar:
 2. **Individual accordion chevrons**: Render an expand/collapse toggle chevron next to every parent item that contains subpages.
 3. **Global "All Subpages" toggle**: Include an "All Subpages / Collapse Subpages" button at the top of the sidebar navigation so users can review the entire platform site tree with a single click.
 4. **Indented visual tree branch guidelines**: Style expanded child items with `ml-5 pl-2.5 border-l-2 border-blue-500/25` for clear visual hierarchy.
+
+---
+
+## 12. Accessible Text Wrapping & Truncation Standards
+
+When building high-density, compact user interfaces:
+1. **Never hide primary content behind unexplained ellipses or line clamps**:
+   - Primary headings, card titles, stage concepts, and technical definitions must render in full by default.
+   - Use `break-words` and `overflow-wrap: anywhere` rather than `truncate` on card titles and navigation links.
+2. **Intentional Previews Require Accessible Disclosures**:
+   - If compact cards intentionally clamp secondary text (e.g. extensive architectural rationale or 500-word Q&A explanations), always pair with an interactive expander button.
+   - Buttons must provide explicit `aria-expanded={isExpanded}` and dynamic `aria-label` describing the specific item being expanded or collapsed.
+3. **Preserve Code Blocks**:
+   - Code blocks must never trigger page-level horizontal overflow.
+   - Constrain horizontal scrolling strictly inside the `<pre>` container with `overflow-x-auto`.
+   - Provide an accessible word-wrap toggle with `aria-pressed` for narrow screens.

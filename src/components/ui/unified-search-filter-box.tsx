@@ -172,13 +172,13 @@ export function UnifiedSearchFilterBox({
     },
     emerald: {
       border: "focus-within:border-emerald-500/60 focus-within:ring-emerald-500/20",
-      activeBg: "bg-emerald-600 border-emerald-500 text-white shadow-xs",
+      activeBg: "bg-emerald-700 border-emerald-600 text-white shadow-xs",
       badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
       indicator: "text-emerald-500",
     },
     cyan: {
       border: "focus-within:border-cyan-500/60 focus-within:ring-cyan-500/20",
-      activeBg: "bg-cyan-600 border-cyan-500 text-white shadow-xs",
+      activeBg: "bg-cyan-700 border-cyan-600 text-white shadow-xs",
       badge: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
       indicator: "text-cyan-500",
     },
@@ -197,11 +197,11 @@ export function UnifiedSearchFilterBox({
       case "purple":
         return "bg-purple-600 border-purple-500 text-white shadow-xs";
       case "emerald":
-        return "bg-emerald-600 border-emerald-500 text-white shadow-xs";
+        return "bg-emerald-700 border-emerald-600 text-white shadow-xs";
       case "amber":
-        return "bg-amber-600 border-amber-500 text-white shadow-xs";
+        return "bg-amber-700 border-amber-600 text-white shadow-xs";
       case "cyan":
-        return "bg-cyan-600 border-cyan-500 text-white shadow-xs";
+        return "bg-cyan-700 border-cyan-600 text-white shadow-xs";
       case "indigo":
         return "bg-indigo-600 border-indigo-500 text-white shadow-xs";
       case "blue":
@@ -218,13 +218,13 @@ export function UnifiedSearchFilterBox({
     switch (upper) {
       case "EASY":
       case "BEGINNER":
-        return "bg-emerald-600 text-white border-emerald-500 shadow-xs font-bold";
+        return "bg-emerald-700 text-white border-emerald-600 shadow-xs font-bold";
       case "MEDIUM":
       case "INTERMEDIATE":
-        return "bg-sky-600 text-white border-sky-500 shadow-xs font-bold";
+        return "bg-sky-700 text-white border-sky-600 shadow-xs font-bold";
       case "HARD":
       case "ADVANCED":
-        return "bg-amber-600 text-white border-amber-500 shadow-xs font-bold";
+        return "bg-amber-700 text-white border-amber-600 shadow-xs font-bold";
       case "ARCHITECT":
         return "bg-purple-600 text-white border-purple-500 shadow-xs font-bold";
       case "ALL":
@@ -316,7 +316,7 @@ export function UnifiedSearchFilterBox({
               className={cn(
                 "inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-xs whitespace-nowrap",
                 actions.readAll.isActive
-                  ? "bg-emerald-600 border-emerald-500 text-white shadow-emerald-500/20 font-bold"
+                  ? "bg-emerald-700 border-emerald-600 text-white shadow-emerald-700/20 font-bold"
                   : "bg-[var(--surface-2)] border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface-3)]"
               )}
               title="Toggle Read All continuous mode (Shortcut: Shift + E)"

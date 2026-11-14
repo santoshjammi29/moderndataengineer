@@ -557,12 +557,13 @@ export function CodeBlock({
             type="button"
             onClick={() => setLineNumbersEnabled((v) => !v)}
             title={lineNumbersEnabled ? "Hide line numbers" : "Show line numbers"}
-            aria-label="Toggle line numbers"
+            aria-label={lineNumbersEnabled ? "Hide line numbers" : "Show line numbers"}
+            aria-pressed={lineNumbersEnabled}
             className={cn(
               "h-6 px-1.5 py-0.5 rounded-md transition-all text-xs font-mono flex items-center gap-1 touch-manipulation cursor-pointer",
               lineNumbersEnabled
-                ? "bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 font-semibold"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+                ? "bg-blue-500/20 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold"
+                : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]"
             )}
           >
             <AlignLeft size={11} />
@@ -573,13 +574,14 @@ export function CodeBlock({
           <button
             type="button"
             onClick={() => setIsWrap((v) => !v)}
-            title={isWrap ? "Disable wrap (scroll)" : "Enable word wrap"}
-            aria-label="Toggle word wrap"
+            title={isWrap ? "Disable wrap (enable horizontal scroll)" : "Enable word wrap"}
+            aria-label={isWrap ? "Disable word wrap, enable horizontal scroll" : "Enable word wrap"}
+            aria-pressed={isWrap}
             className={cn(
               "h-6 px-2 py-0.5 rounded-md transition-all text-xs flex items-center gap-1 touch-manipulation cursor-pointer",
               isWrap
-                ? "bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 font-semibold"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+                ? "bg-blue-500/20 text-blue-700 dark:text-blue-400 border border-blue-500/30 font-semibold"
+                : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)]"
             )}
           >
             <WrapText size={11} />

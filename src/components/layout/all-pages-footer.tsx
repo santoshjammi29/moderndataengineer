@@ -102,7 +102,7 @@ function AllPagesFooterInner() {
                           href={page.href}
                           className="font-medium text-[var(--foreground)] hover:text-blue-500 transition-colors flex items-center gap-1.5"
                         >
-                          <span className="truncate">{page.label}</span>
+                          <span className="break-words">{page.label}</span>
                         </Link>
                         {page.badge && (
                           <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 shrink-0">
@@ -118,7 +118,7 @@ function AllPagesFooterInner() {
                             <li key={sub.href} className="flex items-center justify-between text-[11px] group">
                               <Link
                                 href={sub.href}
-                                className="text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] transition-colors truncate"
+                                className="text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] transition-colors break-words"
                               >
                                 {sub.label}
                               </Link>

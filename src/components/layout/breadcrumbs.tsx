@@ -273,6 +273,7 @@ function BreadcrumbsInner() {
               ) : isLast ? (
                 <span
                   aria-current="page"
+                  title={crumb.label}
                   className="font-semibold text-[var(--foreground)] max-w-[280px] sm:max-w-md truncate"
                 >
                   {crumb.label}
@@ -280,12 +281,13 @@ function BreadcrumbsInner() {
               ) : crumb.href ? (
                 <Link
                   href={crumb.href}
+                  title={crumb.label}
                   className="hover:text-[var(--foreground)] transition-colors truncate max-w-[200px]"
                 >
                   {crumb.label}
                 </Link>
               ) : (
-                <span className="truncate max-w-[200px]">{crumb.label}</span>
+                <span title={crumb.label} className="truncate max-w-[200px]">{crumb.label}</span>
               )}
             </li>
           );

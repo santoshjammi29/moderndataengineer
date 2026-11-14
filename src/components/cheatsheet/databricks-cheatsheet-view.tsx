@@ -194,38 +194,38 @@ export function DatabricksCheatsheetView({
       )}
 
       {/* Hero Header Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0c1427] via-[#080c15] to-[#120e24] border border-amber-500/20 p-4 sm:p-5 shadow-lg isolate">
+      <div className="relative overflow-hidden rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] dark:bg-gradient-to-br dark:from-[#0c1427] dark:via-[#080c15] dark:to-[#120e24] dark:border-amber-500/20 p-4 sm:p-5 shadow-lg isolate">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             {/* Databricks Badge */}
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
               <Flame size={13} />
               <span>DBR 15.4 / 16.0 LTS • Production Engineering Suite</span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--foreground)]">
               Databricks Architecture &amp;{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 dark:from-amber-400 dark:via-orange-400 dark:to-amber-300 [.light_&]:text-amber-800 [.e-ink_&]:text-[#111111] [.light_&]:bg-none [.e-ink_&]:bg-none">
                 Coding Cheat Sheets
               </span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl">
+            <p className="text-xs sm:text-sm text-[var(--muted-foreground)] leading-relaxed max-w-3xl">
               High-density, production-grade cheat sheets covering Spark SQL, PySpark, Spark Core &amp; Architecture Internals, and Python in Databricks. Complete with memory mechanics, shuffle formulas, code breakdowns, and vector PDFs.
             </p>
 
             {/* Quick Metrics Bar */}
-            <div className="pt-1 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-400">
-              <span className="flex items-center gap-1 text-slate-200 font-semibold bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/60">
-                <CheckCircle2 size={13} className="text-amber-400" />
+            <div className="pt-1 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-[var(--muted-foreground)]">
+              <span className="flex items-center gap-1 text-[var(--foreground)] font-semibold bg-[var(--surface-2)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
+                <CheckCircle2 size={13} className="text-amber-600 dark:text-amber-400" />
                 48 Production Cards
               </span>
-              <span className="flex items-center gap-1 text-slate-200 font-semibold bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/60">
-                <CheckCircle2 size={13} className="text-sky-400" />
+              <span className="flex items-center gap-1 text-[var(--foreground)] font-semibold bg-[var(--surface-2)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
+                <CheckCircle2 size={13} className="text-sky-600 dark:text-sky-400" />
                 5 Vector PDFs (Print-Ready)
               </span>
-              <span className="flex items-center gap-1 text-slate-200 font-semibold bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/60">
-                <CheckCircle2 size={13} className="text-purple-400" />
+              <span className="flex items-center gap-1 text-[var(--foreground)] font-semibold bg-[var(--surface-2)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
+                <CheckCircle2 size={13} className="text-purple-600 dark:text-purple-400" />
                 4 Panoramic Wall Posters (250 DPI)
               </span>
             </div>
@@ -469,12 +469,12 @@ export function DatabricksCheatsheetView({
         </div>
       ) : (
         /* Empty State */
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-[#0c1427] py-16 px-4 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 mb-4">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-1)] py-16 px-4 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 mb-4">
             <Search size={22} />
           </div>
-          <h3 className="text-base font-bold text-white">No Databricks Cheat Cards Found</h3>
-          <p className="mt-1 text-xs text-slate-400 max-w-sm">
+          <h3 className="text-base font-bold text-[var(--foreground)]">No Databricks Cheat Cards Found</h3>
+          <p className="mt-1 text-xs text-[var(--muted-foreground)] max-w-sm">
             We couldn&apos;t find any cards matching your active filters. Try searching for &quot;Liquid Clustering&quot;, &quot;Photon&quot;, &quot;AQE&quot;, &quot;Auto Loader&quot;, &quot;G1GC&quot;, or &quot;DABs&quot;.
           </p>
           <button

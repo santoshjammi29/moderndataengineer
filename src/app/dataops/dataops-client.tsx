@@ -718,7 +718,7 @@ export function DataOpsClient({ initialData }: DataOpsClientProps) {
                       {stage.phase.split("&")[0]}
                     </span>
                   </div>
-                  <div className="text-xs font-bold truncate w-full text-[var(--foreground)]">
+                  <div className="text-xs font-bold break-words w-full text-[var(--foreground)]">
                     {stage.stageName.split(":")[0]}
                   </div>
                 </button>

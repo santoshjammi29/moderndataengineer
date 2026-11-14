@@ -285,23 +285,23 @@ export function PdfDownloadsHub() {
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
       {/* Hero Banner: Single Roof PDF Library */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0c1427] via-[#080c15] to-[#120e24] border border-blue-500/30 p-4 sm:p-5 shadow-lg isolate">
+      <div className="relative overflow-hidden rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] dark:bg-gradient-to-br dark:from-[#0c1427] dark:via-[#080c15] dark:to-[#120e24] p-4 sm:p-5 shadow-lg isolate">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30">
                 <FileText size={12} />
                 <span>Single Roof A4 PDF Library</span>
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
                 <ShieldCheck size={11} />
                 <span>ISO 216 Standard A4 Format (210 × 297mm)</span>
               </span>
             </div>
-            <h2 className="text-base sm:text-xl font-bold tracking-tight text-white break-words">
+            <h2 className="text-base sm:text-xl font-bold tracking-tight text-[var(--foreground)] break-words">
               Data Engineering Architecture &amp; Coding Blocks — A4 PDF Reference Center
             </h2>
-            <p className="text-xs text-slate-300 max-w-3xl leading-relaxed">
+            <p className="text-xs text-[var(--muted-foreground)] max-w-3xl leading-relaxed">
               Every coding block, architecture pattern, and incident runbook converted and calibrated into
               crystal-clear, print-ready <strong>A4 format vector PDFs</strong>. Download complete master packages or
               individual domain suites with zero truncation and full vector crispness.
@@ -450,7 +450,7 @@ export function PdfDownloadsHub() {
                       {doc.highlights.map((h, i) => (
                         <li key={i} className="flex items-start gap-1.5 text-[11px] text-[var(--foreground)]">
                           <CheckCircle2 size={11} className="text-blue-500 dark:text-blue-400 mt-0.5 shrink-0" />
-                          <span className="line-clamp-1">{h}</span>
+                          <span className="break-words">{h}</span>
                         </li>
                       ))}
                     </ul>

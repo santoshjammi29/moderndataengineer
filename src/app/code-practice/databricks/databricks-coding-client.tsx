@@ -889,10 +889,10 @@ export function DatabricksCodingClient({
                           {item.category}
                         </span>
                       </div>
-                      <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)] truncate">
+                      <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)] break-words">
                         {item.concept}
                       </h4>
-                      <p className="text-xs text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
                         {item.summary}
                       </p>
                     </div>

@@ -78,9 +78,26 @@
   --color-chart-selected: var(--chart-selected);
   --color-chart-threshold: var(--chart-threshold);
 
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-inter), 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: var(--font-mono), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --font-heading: var(--font-outfit);
+  --font-heading: var(--font-sans);
+
+  /* Semantic Fluid Typography Scale Tokens */
+  --font-size-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+  --font-size-sm: clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem);
+  --font-size-base: clamp(0.9375rem, 0.9rem + 0.25vw, 1rem);
+  --font-size-lg: clamp(1.0625rem, 1rem + 0.35vw, 1.125rem);
+  --font-size-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --font-size-2xl: clamp(1.5rem, 1.35rem + 0.75vw, 1.875rem);
+  --font-size-3xl: clamp(1.875rem, 1.6rem + 1.25vw, 2.5rem);
+  --font-size-4xl: clamp(2.25rem, 1.9rem + 1.75vw, 3.5rem);
+
+  /* Semantic Line Height Tokens */
+  --line-height-heading: 1.25;
+  --line-height-body: 1.6;
+  --line-height-compact: 1.35;
+  --line-height-code: 1.7;
+
   --breakpoint-3xl: 120rem;
   --breakpoint-4xl: 160rem;
 }
@@ -124,7 +141,7 @@ html.dark {
   --text-inverse: #0A0A0B;
   --text-link: #60a5fa;
   --text-link-hover: #93c5fd;
-  --text-placeholder: #71798e;
+  --text-placeholder: #9ca3af;
   --text-code: #38bdf8;
   --text-on-status: #ffffff;
 
@@ -230,7 +247,7 @@ html.light {
   --text-inverse: #ffffff;
   --text-link: #1d4ed8;
   --text-link-hover: #1e40af;
-  --text-placeholder: #64748b;
+  --text-placeholder: #475569;
   --text-code: #0369a1;
   --text-on-status: #ffffff;
 
@@ -333,7 +350,7 @@ html.grey {
   --text-inverse: #18191c;
   --text-link: #60a5fa;
   --text-link-hover: #93c5fd;
-  --text-placeholder: #6b7280;
+  --text-placeholder: #9ca3af;
   --text-code: #38bdf8;
   --text-on-status: #ffffff;
 
@@ -587,6 +604,31 @@ h1, h2, h3, h4, h5, h6,
 p, span, div, a, button, input, textarea, select,
 [class*="card"], .glass-card, article, section, aside, nav, header, footer {
   font-family: inherit;
+}
+
+/* Headings: Balanced wrapping, consistent tight line height, and primary font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, var(--font-sans));
+  line-height: var(--line-height-heading, 1.25);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* Paragraphs & prose: Natural wrapping, comfortable line height */
+p, li, blockquote, dd {
+  line-height: var(--line-height-body, 1.6);
+  text-wrap: pretty;
+}
+
+/* Unbreakable long tokens (URLs, hashes, filenames, identifiers) wrap anywhere */
+p, span, h1, h2, h3, h4, h5, h6, li, td, th, figcaption {
+  overflow-wrap: anywhere;
+}
+
+/* Flexbox and grid children containing text must shrink below content min-width */
+.min-w-0-text,
+.flex-1 {
+  min-width: 0;
 }
 
 /* Code Sections & Monospace Blocks */
@@ -1263,7 +1305,7 @@ code:not(pre code) {
 .e-ink .text-green-500,
 .e-ink .text-green-400,
 .e-ink .text-green-300 {
-  color: #15803d !important; /* green-700: 5.1:1 contrast on white */
+  color: #166534 !important; /* green-800: 6.08:1 on surfaceRaised */
 }
 
 .light .text-emerald-500,
@@ -1285,7 +1327,7 @@ code:not(pre code) {
 .e-ink .text-orange-400,
 .e-ink .text-orange-300,
 .e-ink .text-orange-200 {
-  color: #c2410c !important; /* orange-700: 4.8:1 contrast on white */
+  color: #9a3412 !important; /* orange-800: 6.23:1 on surfaceRaised */
 }
 
 .light .text-amber-500,
@@ -1305,7 +1347,7 @@ code:not(pre code) {
 .e-ink .text-yellow-500,
 .e-ink .text-yellow-400,
 .e-ink .text-yellow-300 {
-  color: #a16207 !important; /* yellow-700: 4.9:1 contrast on white */
+  color: #854d0e !important; /* yellow-800: 5.84:1 on surfaceRaised */
 }
 
 .light .text-red-500,
@@ -1429,6 +1471,7 @@ code:not(pre code) {
 /* E-Ink: Protect white text on buttons and dark containers */
 .e-ink :where(
   button[class*="bg-"],
+  a[class*="bg-"],
   [class*="bg-blue-"],
   [class*="bg-purple-"],
   [class*="bg-emerald-"],
@@ -1438,10 +1481,12 @@ code:not(pre code) {
   [class*="bg-slate-900"],
   [class*="bg-slate-950"],
   [class*="bg-[#0"],
-  [class*="bg-[#1"]
-) :where(.text-white, span.text-white, svg.text-white),
+  [class*="bg-[#1"],
+  [class*="bg-gradient-"]
+) :where(.text-white, span.text-white, svg.text-white, h1.text-white, h2.text-white, h3.text-white, h4.text-white, p.text-white, div.text-white),
 .e-ink :where(
   button[class*="bg-"],
+  a[class*="bg-"],
   [class*="bg-blue-"],
   [class*="bg-purple-"],
   [class*="bg-emerald-"],
@@ -1451,9 +1496,20 @@ code:not(pre code) {
   [class*="bg-slate-900"],
   [class*="bg-slate-950"],
   [class*="bg-[#0"],
-  [class*="bg-[#1"]
+  [class*="bg-[#1"],
+  [class*="bg-gradient-"]
 ).text-white {
   color: #ffffff !important;
+}
+
+/* Light & E-Ink: Solid text fallback for text-clip gradients */
+.light .text-transparent.bg-clip-text,
+.e-ink .text-transparent.bg-clip-text,
+.light [class*="bg-clip-text"],
+.e-ink [class*="bg-clip-text"] {
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  color: var(--text-primary, #111111) !important;
 }
 
 .light .text-slate-500,
@@ -1985,7 +2041,7 @@ code:not(pre code) {
 .e-ink pre span.text-amber-200,
 .e-ink pre span.text-amber-300,
 .e-ink pre span.text-amber-400 {
-  color: #b45309 !important; /* Deep Amber-700 */
+  color: #78350f !important; /* Deep Amber-900: 7.69:1 contrast on #eeebe3 */
 }
 
 .e-ink pre span.text-pink-100,
@@ -1999,7 +2055,7 @@ code:not(pre code) {
 .e-ink pre span.text-orange-200,
 .e-ink pre span.text-orange-300,
 .e-ink pre span.text-orange-400 {
-  color: #c2410c !important; /* Deep Orange-700 */
+  color: #9a3412 !important; /* Deep Orange-800: 6.17:1 contrast on #eeebe3 */
 }
 
 .e-ink pre span.text-blue-100,

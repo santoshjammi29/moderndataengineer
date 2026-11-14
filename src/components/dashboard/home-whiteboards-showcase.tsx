@@ -252,7 +252,7 @@ export function HomeWhiteboardsShowcase() {
                 {featuredDiagram.keyPoints.slice(0, 4).map((kp, idx) => (
                   <li key={idx} className="flex items-start gap-1.5 leading-relaxed">
                     <CheckCircle2 size={13} className="text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="line-clamp-2">{kp}</span>
+                    <span className="break-words">{kp}</span>
                   </li>
                 ))}
               </ul>
@@ -348,11 +348,11 @@ export function HomeWhiteboardsShowcase() {
                       <Maximize2 size={11} className="text-[var(--muted-foreground)] group-hover:text-purple-400 transition-colors shrink-0" />
                     </div>
 
-                    <h4 className="text-xs font-bold text-[var(--foreground)] line-clamp-1 group-hover:text-purple-400 transition-colors">
+                    <h4 className="text-xs font-bold text-[var(--foreground)] break-words group-hover:text-purple-400 transition-colors">
                       {d.title}
                     </h4>
 
-                    <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
+                    <p className="text-[10px] text-[var(--muted-foreground)] leading-relaxed">
                       {d.subtitle}
                     </p>
 
@@ -412,11 +412,11 @@ export function HomeWhiteboardsShowcase() {
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30">
                       {activeModalDiagram.category}
                     </span>
-                    <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] truncate">
+                    <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] break-words">
                       {activeModalDiagram.title}
                     </h3>
                   </div>
-                  <p className="text-[11px] text-[var(--muted-foreground)] truncate hidden sm:block">
+                  <p className="text-[11px] text-[var(--muted-foreground)] break-words hidden sm:block">
                     {activeModalDiagram.subtitle}
                   </p>
                 </div>

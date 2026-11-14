@@ -951,7 +951,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                 </div>
                 <div
                   style={{ width: `${(userMemoryMB / totalHeapMB) * 100}%` }}
-                  className="bg-amber-600 flex items-center justify-center text-[10px] font-bold text-white transition-all truncate px-1"
+                  className="bg-amber-700 flex items-center justify-center text-[10px] font-bold text-white transition-all truncate px-1"
                   title="User Memory"
                 >
                   User
@@ -1173,11 +1173,11 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                   <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-purple-400 px-2 py-0.5 rounded-lg bg-purple-500/10 border border-purple-500/20 shrink-0">
                     {activeModalDiagram.category}
                   </span>
-                  <h3 className="text-sm sm:text-base md:text-lg font-bold text-[var(--foreground)] truncate">
+                  <h3 className="text-sm sm:text-base md:text-lg font-bold text-[var(--foreground)] break-words">
                     {activeModalDiagram.title}
                   </h3>
                 </div>
-                <p className="text-[10px] sm:text-xs text-[var(--muted-foreground)] truncate hidden xs:block">
+                <p className="text-[10px] sm:text-xs text-[var(--muted-foreground)] break-words hidden xs:block">
                   {activeModalDiagram.subtitle}
                 </p>
               </div>

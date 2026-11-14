@@ -141,14 +141,14 @@ const markdownComponents = {
   },
   li({ children }: { children?: React.ReactNode }) {
     return (
-      <li className="text-slate-700 dark:text-slate-200 leading-normal text-xs sm:text-sm [&>p:first-child]:inline [&>p+p]:block [&>p+p]:mt-1 [&>p]:my-0">
+      <li className="text-[var(--foreground)] leading-normal text-xs sm:text-sm [&>p:first-child]:inline [&>p+p]:block [&>p+p]:mt-1 [&>p]:my-0">
         {children}
       </li>
     );
   },
   blockquote({ children }: { children?: React.ReactNode }) {
     return (
-      <blockquote className="border-l-2 border-blue-500 pl-3 py-1 my-1.5 bg-blue-500/[0.04] rounded-r-lg text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
+      <blockquote className="border-l-2 border-blue-500 pl-3 py-1 my-1.5 bg-blue-500/[0.04] rounded-r-lg text-[var(--foreground)] text-xs sm:text-sm">
         {children}
       </blockquote>
     );
@@ -232,7 +232,7 @@ function PhaseSection({
       <div className="flex flex-wrap items-center justify-between gap-1.5 pb-1">
         <div className="flex items-center gap-1.5 min-w-0">
           {theme.icon}
-          <span className="font-bold text-xs sm:text-[13px] tracking-tight text-[var(--foreground)] truncate">
+          <span className="font-bold text-xs sm:text-[13px] tracking-tight text-[var(--foreground)] break-words">
             {title || `Phase ${phaseNum}`}
           </span>
         </div>

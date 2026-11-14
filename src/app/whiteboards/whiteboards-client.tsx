@@ -893,7 +893,7 @@ export function WhiteboardsClient() {
                           {concept.difficulty}
                         </span>
                       </div>
-                      <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
+                      <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
                         {concept.definition}
                       </p>
                     </div>
@@ -923,7 +923,7 @@ export function WhiteboardsClient() {
                       className="p-3 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] space-y-2"
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <h5 className="font-bold text-xs text-[var(--foreground)] line-clamp-1">
+                        <h5 className="font-bold text-xs text-[var(--foreground)] break-words">
                           {bp.title}
                         </h5>
                         <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold shrink-0">
@@ -972,14 +972,14 @@ export function WhiteboardsClient() {
                       className="p-3 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] space-y-1.5"
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] font-mono uppercase text-purple-600 dark:text-purple-400 font-bold truncate">
+                        <span className="text-[10px] font-mono uppercase text-purple-600 dark:text-purple-400 font-bold break-words">
                           {q.niche || q.category}
                         </span>
                         <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0">
                           {q.difficulty}
                         </span>
                       </div>
-                      <p className="text-xs font-semibold text-[var(--foreground)] line-clamp-2">
+                      <p className="text-xs font-semibold text-[var(--foreground)] leading-snug">
                         {q.question}
                       </p>
                     </div>
@@ -1096,10 +1096,10 @@ export function WhiteboardsClient() {
                           </button>
                         </div>
                       </div>
-                      <h4 className="text-sm font-bold text-[var(--foreground)] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-1">
+                      <h4 className="text-sm font-bold text-[var(--foreground)] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors break-words">
                         {diagram.title}
                       </h4>
-                      <p className="text-xs text-[var(--muted-foreground)] line-clamp-2">
+                      <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
                         {diagram.subtitle}
                       </p>
                     </div>
@@ -1365,6 +1365,8 @@ export function WhiteboardsClient() {
 
                         <button
                           onClick={() => toggleCardExpanded(scenario.id)}
+                          aria-expanded={isExpanded}
+                          aria-label={isExpanded ? `Collapse analysis for ${scenario.id}` : `Expand architectural rationale for ${scenario.id}`}
                           className="text-xs text-purple-600 dark:text-purple-400 hover:underline font-semibold cursor-pointer"
                         >
                           {isExpanded ? "Collapse Analysis" : "Expand Architectural Rationale →"}
@@ -1430,6 +1432,8 @@ export function WhiteboardsClient() {
                         </button>
                         <button
                           onClick={() => toggleCardExpanded(q.id)}
+                          aria-expanded={isExpanded}
+                          aria-label={isExpanded ? `Collapse question ${q.id}` : `Expand question ${q.id}`}
                           className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] transition-colors cursor-pointer"
                         >
                           {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -1450,6 +1454,8 @@ export function WhiteboardsClient() {
                     <div className="flex items-center justify-between text-xs pt-1">
                       <button
                         onClick={() => toggleCardExpanded(q.id)}
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? `Collapse answer for question ${q.id}` : `View comprehensive answer for question ${q.id}`}
                         className="text-purple-600 dark:text-purple-400 hover:underline font-semibold cursor-pointer"
                       >
                         {isExpanded ? "Collapse Answer" : "View Comprehensive Answer →"}
@@ -1522,11 +1528,11 @@ export function WhiteboardsClient() {
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30">
                     {activeDiagram.category}
                   </span>
-                  <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] truncate">
+                  <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] break-words">
                     {activeDiagram.title}
                   </h3>
                 </div>
-                <p className="text-[11px] text-[var(--muted-foreground)] truncate hidden sm:block">
+                <p className="text-[11px] text-[var(--muted-foreground)] break-words hidden sm:block">
                   {activeDiagram.subtitle}
                 </p>
               </div>

@@ -482,7 +482,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">Looking for visual system design blueprints?</h4>
-                  <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-1">Pair your code optimization with 28 high-resolution whiteboard architecture diagrams detailing Spark memory shuffles, Catalyst query plans, Delta Lake ACID commits, and Airflow distributed workers.</p>
+                  <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">Pair your code optimization with 28 high-resolution whiteboard architecture diagrams detailing Spark memory shuffles, Catalyst query plans, Delta Lake ACID commits, and Airflow distributed workers.</p>
                 </div>
               </div>
               <Link
