@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spark Catalyst Optimizer & Physical Execution Plan Triage Guide</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #080c15;
+  color: #e2e8f0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 7.2px;
+  line-height: 1.28;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  max-height: 297mm;
+  padding: 5mm 6.5mm 4.5mm 6.5mm;
+  background: #080c15;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  page-break-after: always;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Page Header */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f59e0b;
+  padding-bottom: 3.5px;
+  margin-bottom: 4px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.header-title-box h1 {
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header-title-box p {
+  font-size: 7.5px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.header-badges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 6.8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-primary { background: #f59e0b; color: #ffffff; }
+.badge-secondary { background: #1e293b; color: #38bdf8; border: 1px solid #334155; }
+.badge-dark { background: #0f172a; color: #a5b4fc; border: 1px solid #1e293b; }
+.badge-accent { background: #10b981; color: #042f2e; }
+
+/* Grid Layout: 3 Rows of 2 Cards */
+.content-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 3px;
+}
+
+.card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 5px;
+  padding: 4.5px 6.5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  height: 100%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 2.5px;
+  margin-bottom: 1px;
+}
+
+.card-title {
+  font-size: 8.8px;
+  font-weight: 700;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-tag {
+  font-size: 6.4px;
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 1.5px 4px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+/* Code Blocks */
+pre.code {
+  background: #040711;
+  border: 1px solid #141e33;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font-family: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+  font-size: 6.5px;
+  line-height: 1.24;
+  color: #e2e8f0;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Syntax Highlighting */
+.kw { color: #f43f5e; font-weight: 600; }    /* keywords */
+.fn { color: #38bdf8; font-weight: 600; }    /* functions */
+.str { color: #4ade80; }                     /* strings */
+.cm { color: #64748b; font-style: italic; }  /* comments */
+.num { color: #fb923c; }                     /* numbers */
+.cls { color: #fbbf24; font-weight: 600; }   /* classes/types */
+.var { color: #a78bfa; }                     /* variables */
+.typ { color: #facc15; }                     /* SQL types */
+
+/* Code Explanation Section (Below Every Code Block) */
+.code-explain {
+  background: rgba(4, 7, 17, 0.75);
+  border: 1px solid #1a253c;
+  border-left: 2px solid #f59e0b;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font-size: 6.4px;
+  line-height: 1.24;
+  color: #cbd5e1;
+}
+
+.explain-head {
+  font-size: 6.2px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.explain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8px;
+}
+
+.explain-list li {
+  position: relative;
+  padding-left: 7px;
+  font-size: 6.3px;
+  line-height: 1.23;
+  color: #cbd5e1;
+}
+
+.explain-list li::before {
+  content: "•";
+  position: absolute;
+  left: 1px;
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+.explain-list li strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.explain-list li code {
+  background: #1e293b;
+  padding: 0.5px 2.5px;
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 5.8px;
+  color: #38bdf8;
+}
+
+/* Mini Alert */
+.alert {
+  padding: 2.5px 4.5px;
+  border-radius: 2.5px;
+  font-size: 6.2px;
+  line-height: 1.22;
+  margin-top: 1.5px;
+}
+
+.alert-pri {
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 2px solid #f59e0b;
+  color: #fde68a;
+}
+
+.alert-sec {
+  background: rgba(56, 189, 248, 0.08);
+  border-left: 2px solid #38bdf8;
+  color: #bae6fd;
+}
+
+/* Footer */
+.page-footer {
+  border-top: 1px solid #1e293b;
+  padding-top: 2.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 6.8px;
+  color: #64748b;
+}
+
+.page-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-footer-right {
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: CATALYST PIPELINE & PLAN READING -->
+  <div class="page">
+    <div class="header-bar">
+      <div class="header-left">
+        <div class="header-title-box">
+          <h1>🔬 SPARK CATALYST & PHYSICAL EXECUTION PLAN GUIDE</h1>
+          <p>Production Reference: 5-Stage Catalyst Pipeline, EXPLAIN Plan Anatomy, Join Hierarchies & Optimizer Rules</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-primary">Spark 3.5+ / 4.0</span>
+        <span class="badge badge-secondary">Catalyst Internals</span>
+        <span class="badge badge-dark">Plan Anatomy</span>
+        <span class="badge badge-accent">ISO 216 A4</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Card 1: 5-Stage Catalyst Compiler Pipeline -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚙️ 5-Stage Catalyst Compiler Pipeline</span>
+          <span class="card-tag">Architecture</span>
+        </div>
+        <pre class="code"><span class="cm">-- Catalyst 5-Stage Transformation Flow</span>
+<span class="kw">SQL / DataFrame API</span>
+  ↳ <span class="cls">1. Unresolved Logical Plan</span> (AST syntax validated, types unverified)
+  ↳ <span class="cls">2. Analyzed Logical Plan</span> (Catalog resolution: schemas, tables, functions)
+  ↳ <span class="cls">3. Optimized Logical Plan</span> (Rule-based optimization: pruning, pushdowns)
+  ↳ <span class="cls">4. Physical Plans (CBO)</span> (Cost-Based Optimizer selects best strategy)
+  ↳ <span class="cls">5. Whole-Stage CodeGen (WSCG)</span> (Janino compiles Java bytecode RDDs)</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Compiler Mechanics & Invariants</div>
+          <ul class="explain-list">
+            <li><strong>Analyzer Phase:</strong> Uses <code>SessionCatalog</code> to verify column names and coerce mismatched data types.</li>
+            <li><strong>Rule Execution:</strong> Batches of idempotent tree-transformation rules run fixed-point iterations until tree stops mutating.</li>
+            <li><strong>CBO Cost Evaluation:</strong> Compares candidate physical plans using table row-counts, byte sizes, and column histograms.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 2: Anatomy of EXPLAIN FORMATTED -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📜 Anatomy of EXPLAIN FORMATTED & Output</span>
+          <span class="card-tag">Plan Reading</span>
+        </div>
+        <pre class="code"><span class="cm">-- Command to generate comprehensive operator tree</span>
+<span class="kw">EXPLAIN FORMATTED</span> <span class="kw">SELECT</span> c.id, <span class="fn">sum</span>(o.amt) <span class="kw">FROM</span> orders o
+<span class="kw">JOIN</span> customers c <span class="kw">ON</span> o.cust_id = c.id
+<span class="kw">WHERE</span> o.status = <span class="str">'COMPLETE'</span> <span class="kw">GROUP BY</span> c.id;
+
+<span class="cm">-- Tree Operator Output:</span>
+== Physical Plan ==
+* (3) HashAggregate(keys=[id#12], functions=[sum(amt#15)])
++- Exchange hashpartitioning(id#12, 200), ENSURE_REQUIREMENTS, [id=#84]
+   +- * (2) HashAggregate(keys=[id#12], functions=[partial_sum(amt#15)])
+      +- * (2) BroadcastHashJoin [cust_id#14], [id#12], Inner, BuildRight
+         :- * (2) Filter (isnotnull(status#16) AND (status#16 = COMPLETE))
+         :  +- FileScan parquet [cust_id#14,amt#15,status#16]
+         +- BroadcastExchange HashedRelationBroadcastMode [id=#78]
+            +- * (1) Filter isnotnull(id#12)
+               +- FileScan parquet [id#12]</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Node Decoupling & Conventions</div>
+          <ul class="explain-list">
+            <li><code>*(N) Stage ID:</code> Denotes operator runs inside WholeStageCodegen pipeline <code>N</code> in a single JVM loop.</li>
+            <li><code>Exchange:</code> Hard stage boundary forcing network shuffle across cluster; cuts code generation boundaries.</li>
+            <li><code>+- Tree Hierarchy:</code> Read bottom-to-top from leaf scans to root sink; colons <code>:-</code> mark build vs probe branches.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 3: Join Strategy Selection Hierarchy -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔀 Join Strategy Selection Hierarchy</span>
+          <span class="card-tag">Performance</span>
+        </div>
+        <pre class="code"><span class="cm">-- Spark Join Evaluation Order (Descending Preference)</span>
+1. <span class="cls">BroadcastHashJoin (BHJ):</span>
+   Equi-join & size &lt; <span class="num">spark.sql.autoBroadcastJoinThreshold</span> (<span class="num">10MB</span>). Zero shuffle.
+2. <span class="cls">ShuffleHashJoin (SHJ):</span>
+   Equi-join, 1 side significantly smaller than other, build fits in executor memory.
+3. <span class="cls">SortMergeJoin (SMJ):</span>
+   Default for large equi-joins. Requires both sides partitioned & sorted on join keys.
+4. <span class="cls">BroadcastNestedLoopJoin (BNLJ):</span>
+   <span class="kw">CRITICAL HAZARD:</span> Triggered on non-equi joins (e.g. <code>o.amt &gt; t.limit</code>). <code>O(M×N)</code> cartesian scan!
+5. <span class="cls">CartesianProduct:</span>
+   Explicit <code>CROSS JOIN</code> without conditions; catastrophic at scale.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Join Rules & Antidotes</div>
+          <ul class="explain-list">
+            <li><strong>Join Hints:</strong> Override optimizer with <code>/*+ BROADCAST(table) */</code> or <code>/*+ MERGE(table) */</code>.</li>
+            <li><strong>BNLJ Avoidance:</strong> Rewrite range joins with bucketed bounds or explode windowed intervals to restore equi-join hash mechanics.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 4: Core Catalyst Optimizer Rules -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚡ Core Catalyst Optimizer Rules</span>
+          <span class="card-tag">Optimization</span>
+        </div>
+        <pre class="code"><span class="cm">-- Key Transformation Rules in Optimizer Batch</span>
+<span class="cls">PushDownPredicates:</span>
+  Moves <code>Filter</code> below <code>Join</code> and <code>Aggregate</code> down to storage <code>FileScan</code>.
+<span class="cls">ColumnPruning:</span>
+  Drops unused columns immediately after file read, minimizing memory buffers.
+<span class="cls">ConstantFolding:</span>
+  Evaluates <code>1 + 1</code> or compile-time constants into literal values at planning.
+<span class="cls">ReplaceDeduplicateWithAggregate:</span>
+  Rewrites expensive <code>DISTINCT</code> or window deduplication into streaming aggregates.
+<span class="cls">CollapseRepartition:</span>
+  Merges consecutive <code>repartition()</code> or <code>coalesce()</code> into single exchange.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 PushedFilter Verification</div>
+          <ul class="explain-list">
+            <li><strong>Scan Check:</strong> Verify <code>PushedFilters: [IsNotNull(id), EqualTo(status, 'COMPLETE')]</code> in leaf scan metadata.</li>
+            <li><strong>Parquet Pruning:</strong> Predicates must match file statistics (min/max) to skip entire row groups without disk reads.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 5: Partitioning & Distribution Expressions -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📦 Partitioning & Distribution Expressions</span>
+          <span class="card-tag">Shuffling</span>
+        </div>
+        <pre class="code"><span class="cm">-- Spark Physical Data Distribution Operators</span>
+<span class="cls">HashPartitioning(keys, numPartitions):</span>
+  <code>Murmur3Hash(keys) % numPartitions</code>. Standard for joins and aggregations.
+<span class="cls">RangePartitioning(order, numPartitions):</span>
+  Samples key distribution to partition data into sorted buckets (used by <code>orderBy</code>).
+<span class="cls">SinglePartition:</span>
+  <span class="kw">DANGER:</span> Collects entire distributed dataset onto 1 executor! Triggered by <code>OVER ()</code>.
+<span class="cls">RoundRobinPartitioning(numPartitions):</span>
+  Uniformly scatters rows across tasks; disables join collocation optimizations.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Shuffle Invariant Rules</div>
+          <ul class="explain-list">
+            <li><strong>SinglePartition Triage:</strong> Never write <code>ROW_NUMBER() OVER (ORDER BY col)</code> without a <code>PARTITION BY</code> key.</li>
+            <li><strong>Co-partitioning:</strong> When two tables have identical hash partitioning, SMJ skips exchange completely.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 6: Whole-Stage Code Generation (WSCG) -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚡ Whole-Stage CodeGen (WSCG) Mechanics</span>
+          <span class="card-tag">Compilation</span>
+        </div>
+        <pre class="code"><span class="cm">-- Janino Java Code Compilation & Limits</span>
+<span class="kw">spark.sql.codegen.wholeStage</span> = <span class="str">true</span>  <span class="cm">-- Compiles tree into single Java loop</span>
+<span class="kw">spark.sql.codegen.maxFields</span>  = <span class="num">100</span>   <span class="cm">-- Schema threshold before disabling WSCG</span>
+
+<span class="cm">-- Symptom: Spark log warning "failed to compile: 64KB bytecode limit"</span>
+<span class="cm">-- Root Cause: Wide tables (>150 cols) generate gigantic Java methods.</span>
+<span class="cm">-- Remediation: Set config or project columns in stages:</span>
+<span class="kw">spark.conf.set</span>(<span class="str">"spark.sql.codegen.hugeMethodLimit"</span>, <span class="num">8000</span>)
+<span class="kw">spark.conf.set</span>(<span class="str">"spark.sql.codegen.splitExpressions.threshold"</span>, <span class="num">1024</span>)</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Fallback Indicators</div>
+          <ul class="explain-list">
+            <li><strong>Visual Missing Star:</strong> If operator lacks <code>*(N)</code> in plan, code runs in Volcano iterator mode (10x slower).</li>
+            <li><strong>Black Boxes:</strong> Python UDFs and non-vectorized Hive SerDes break WSCG blocks into multiple stages.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">
+        <span>Apache Spark Catalyst Optimizer Reference Guide</span>
+        <span>•</span>
+        <span>Section 1: Compiler Pipeline &amp; Plan Reading</span>
+      </div>
+      <div class="page-footer-right">
+        <span>Page 1 of 2 • Modern Data Engineer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: BOTTLENECKS, AQE & UI TRIAGE -->
+  <div class="page">
+    <div class="header-bar">
+      <div class="header-left">
+        <div class="header-title-box">
+          <h1>🔬 SPARK PHYSICAL BOTTLENECKS & AQE TRIAGE</h1>
+          <p>Production Reference: Adaptive Query Execution (AQE), Skew Joins, Exchange Bottlenecks & UI Metrics</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-primary">AQE 3.5+</span>
+        <span class="badge badge-secondary">Tuning &amp; Triage</span>
+        <span class="badge badge-dark">UI Metrics</span>
+        <span class="badge badge-accent">ISO 216 A4</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Card 7: AQE 3 Engine Pillars -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🤖 Adaptive Query Execution (AQE) 3 Pillars</span>
+          <span class="card-tag">Runtime Dynamic</span>
+        </div>
+        <pre class="code"><span class="cm">-- Enable Master Adaptive Query Execution</span>
+<span class="kw">SET</span> spark.sql.adaptive.enabled = <span class="str">true</span>;
+
+<span class="cm">-- Pillar 1: Dynamic Partition Coalescing</span>
+<span class="kw">SET</span> spark.sql.adaptive.coalescePartitions.enabled = <span class="str">true</span>;
+<span class="kw">SET</span> spark.sql.adaptive.advisoryPartitionSizeInBytes = <span class="num">134217728</span>; <span class="cm">-- 128MB</span>
+
+<span class="cm">-- Pillar 2: Dynamic Switching to Broadcast Join</span>
+<span class="kw">SET</span> spark.sql.adaptive.autoBroadcastJoinThreshold = <span class="num">20971520</span>;  <span class="cm">-- 20MB runtime</span>
+
+<span class="cm">-- Pillar 3: Dynamic Skew Join Elimination</span>
+<span class="kw">SET</span> spark.sql.adaptive.skewJoin.enabled = <span class="str">true</span>;
+<span class="kw">SET</span> spark.sql.adaptive.skewJoin.skewedPartitionFactor = <span class="num">5</span>;
+<span class="kw">SET</span> spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes = <span class="num">268435456</span>; <span class="cm">-- 256MB</span></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Runtime Feedback Mechanics</div>
+          <ul class="explain-list">
+            <li><strong>Stage Materialization:</strong> AQE pauses between shuffle stages, reads shuffle partition sizes, and re-optimizes physical plan.</li>
+            <li><strong>Initial Setting:</strong> Set <code>spark.sql.shuffle.partitions = 2000</code>; AQE collapses empty partitions down to ideal 128MB chunks.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 8: Exchange & Shuffle Bottleneck Elimination -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🌐 Exchange & Shuffle Bottleneck Elimination</span>
+          <span class="card-tag">Network I/O</span>
+        </div>
+        <pre class="code"><span class="cm">-- Symptoms: Stage takes 90% of job time on Exchange operator</span>
+<span class="cm">-- Diagnostic: Check Spark UI Shuffle Write Size vs Records Read</span>
+
+<span class="cm">-- 1. Redundant Exchange Elimination:</span>
+<span class="cm">-- BAD: Successive groupBy on different keys triggers 2 shuffles</span>
+df.groupBy(<span class="str">"country"</span>).agg(...)
+  .groupBy(<span class="str">"region"</span>).agg(...)  <span class="cm">-- 2 shuffles</span>
+
+<span class="cm">-- GOOD: Single multi-dimensional rollup/cube:</span>
+df.rollup(<span class="str">"region"</span>, <span class="str">"country"</span>).agg(...) <span class="cm">-- 1 shuffle only!</span>
+
+<span class="cm">-- 2. Bucketing Co-Location: Pre-shuffle on shared cluster key:</span>
+df.write.bucketBy(<span class="num">64</span>, <span class="str">"cust_id"</span>).sortBy(<span class="str">"cust_id"</span>).saveAsTable(...)
+<span class="cm">-- Joining two tables bucketed on same key generates zero Exchange nodes!</span></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Shuffle Write Triage</div>
+          <ul class="explain-list">
+            <li><strong>Spill to Disk:</strong> Indicates shuffle buffer memory exhausted; tasks write intermediate blocks to local NVMe disk.</li>
+            <li><strong>Remedy:</strong> Increase <code>spark.sql.shuffle.partitions</code> or increase executor memory to fit hash buffers in heap.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 9: Plan Anti-Patterns & Antidotes -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🚫 Plan Anti-Patterns & Production Antidotes</span>
+          <span class="card-tag">Triage</span>
+        </div>
+        <pre class="code"><span class="cm">-- Anti-Pattern 1: Non-Deterministic Python UDF Black Box</span>
+<span class="cm">-- BROKEN: @udf disables Catalyst predicate pushdown & vectorization</span>
+<span class="kw">@udf</span>(<span class="str">"string"</span>)
+<span class="kw">def</span> <span class="fn">clean</span>(val): <span class="kw">return</span> val.strip().lower() <span class="kw">if</span> val <span class="kw">else</span> <span class="str">""</span>
+<span class="cm">-- FIX: Use native Spark SQL higher-order or expressions:</span>
+df.withColumn(<span class="str">"clean"</span>, <span class="fn">trim</span>(<span class="fn">lower</span>(<span class="fn">col</span>(<span class="str">"val"</span>))))
+
+<span class="cm">-- Anti-Pattern 2: Uncorrelated Subquery Non-Pushdown</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> large_table
+<span class="kw">WHERE</span> event_date = (<span class="kw">SELECT</span> <span class="fn">max</span>(d) <span class="kw">FROM</span> dates);
+<span class="cm">-- FIX: Join directly or collect scalar date in driver prior to query:</span>
+max_d = dates_df.select(<span class="fn">max</span>(<span class="str">"d"</span>)).first()[<span class="num">0</span>]
+df.filter(<span class="fn">col</span>(<span class="str">"event_date"</span>) == max_d)  <span class="cm">-- Enables PartitionPruning!</span></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Query Plan Signals</div>
+          <ul class="explain-list">
+            <li><code>BatchEvalPython:</code> Py4J serialization boundary; replace with Pandas Vectorized UDF (<code>arrow</code>) or Spark SQL built-in.</li>
+            <li><code>SubqueryExec:</code> Subquery runs in sub-plan; evaluate whether dynamic partition pruning (DPP) is active.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 10: Skew Join Mitigation & Salting Plan -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚖️ Skew Join Mitigation & Two-Phase Salting</span>
+          <span class="card-tag">Data Skew</span>
+        </div>
+        <pre class="code"><span class="cm">-- Manual Salting when AQE cannot split (e.g. non-Spark 3.x or custom ops)</span>
+<span class="kw">from</span> pyspark.sql.functions <span class="kw">import</span> expr, lit, concat
+
+SALT_FACTOR = <span class="num">16</span>  <span class="cm">-- Splits skewed key across 16 parallel tasks</span>
+
+<span class="cm">-- 1. Salt the heavily skewed large table with random bucket [0..15]</span>
+skewed_df = large_df.withColumn(
+    <span class="str">"salt"</span>, <span class="fn">concat</span>(<span class="fn">col</span>(<span class="str">"join_key"</span>), <span class="fn">lit</span>(<span class="str">"_"</span>), (<span class="fn">expr</span>(<span class="str">"rand() * 16"</span>)).<span class="fn">cast</span>(<span class="str">"int"</span>))
+)
+
+<span class="cm">-- 2. Explode the small dimension table across all 16 buckets</span>
+replicated_dim = dim_df.withColumn(<span class="str">"salt_bucket"</span>, <span class="fn">expr</span>(<span class="str">"sequence(0, 15)"</span>))                        .selectExpr(<span class="str">"*"</span>, <span class="str">"explode(salt_bucket) as bucket"</span>)                        .withColumn(<span class="str">"salt"</span>, <span class="fn">concat</span>(<span class="fn">col</span>(<span class="str">"join_key"</span>), <span class="fn">lit</span>(<span class="str">"_"</span>), <span class="fn">col</span>(<span class="str">"bucket"</span>)))
+
+<span class="cm">-- 3. Join on salted key (100% uniform partition distribution, zero stragglers!)</span>
+joined_df = skewed_df.join(replicated_dim, on=<span class="str">"salt"</span>, how=<span class="str">"inner"</span>)</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Plan Verification</div>
+          <ul class="explain-list">
+            <li><strong>AQE Plan Output:</strong> Look for <code>SortMergeJoin(skew=true)</code> showing runtime split tasks.</li>
+            <li><strong>Straggler Indicator:</strong> In Spark UI, task 75th percentile runtime is 2s, but max task runtime is 25m (salting needed).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 11: Spark UI SQL Tab & Stage Graph Triage -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📊 Spark UI SQL Tab & Metric Triage</span>
+          <span class="card-tag">Observability</span>
+        </div>
+        <pre class="code"><span class="cm">-- Metric Formulas & Critical Thresholds</span>
+<span class="cls">1. GC Time Ratio:</span>
+   <code>GC Time / Task Duration &gt; 10%</code> ➔ Severe Heap Exhaustion.
+   <em>Action:</em> Increase executor memory or tune G1GC Region size (<code>-XX:G1HeapRegionSize=32m</code>).
+<span class="cls">2. Shuffle Spill Ratio:</span>
+   <code>Spill (Memory) / Spill (Disk) ≈ 2.5x to 4.0x</code> (due to Snappy/LZ4 compression).
+   <em>Action:</em> Partition count too small; increase <code>spark.sql.shuffle.partitions</code>.
+<span class="cls">3. Peak Execution Memory:</span>
+   Memory used by hash tables & sort buffers during stage execution.
+<span class="cls">4. Task Duration Distribution:</span>
+   <code>Max / Median &gt; 3.0x</code> indicates structural data skew in stage.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 DAG Visualization Inspection</div>
+          <ul class="explain-list">
+            <li><strong>Blue Rectangles:</strong> WholeStageCodegen blocks; click to reveal underlying operator pipeline details.</li>
+            <li><strong>Dotted Lines:</strong> Shuffle exchange stage boundaries; identify network transfers and partition counts.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 12: Memory & Execution Sizing Formulas -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📐 Memory & Execution Sizing Formulas</span>
+          <span class="card-tag">Sizing</span>
+        </div>
+        <pre class="code"><span class="cm">-- Production Formula: Executor Total Memory Budget</span>
+<span class="var">Total Container RAM</span> = <span class="cls">ExecutorMemory</span> + <span class="cls">MemoryOverhead</span> + <span class="cls">OffHeapMemory</span>
+
+<span class="cm">-- Sizing Calculation Rules:</span>
+<span class="cls">1. Memory Overhead:</span>
+   <code>max(384MB, 0.10 * executorMemory)</code> (Required by YARN / K8s).
+<span class="cls">2. Unified Memory Pool (spark.memory.fraction = 0.60):</span>
+   <code>Usable Memory = (executorMemory - 300MB) * 0.60</code>
+   ↳ <span class="fn">Storage Pool</span> (50%): DataFrame caching & broadcast variables.
+   ↳ <span class="fn">Execution Pool</span> (50%): Shuffle, join, and sort buffers.
+<span class="cls">3. Production Flags for 32GB Executor:</span>
+   <code>--executor-memory 28g --conf spark.executor.memoryOverhead=4096m</code>
+   <code>--conf spark.memory.offHeap.enabled=true --conf spark.memory.offHeap.size=2g</code></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 OOM Exit Code 137 Defense</div>
+          <ul class="explain-list">
+            <li><strong>Container Killed:</strong> YARN/K8s kills container when off-heap memory + JVM exceeds container limit.</li>
+            <li><strong>Remedy:</strong> Always size <code>memoryOverhead</code> to $\ge 15\%$ when using PyArrow, MLlib, or heavy Python UDFs.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">
+        <span>Apache Spark Catalyst Optimizer Reference Guide</span>
+        <span>•</span>
+        <span>Section 2: Bottlenecks, AQE Runtime &amp; UI Triage</span>
+      </div>
+      <div class="page-footer-right">
+        <span>Page 2 of 2 • Modern Data Engineer</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -6,17 +6,19 @@ description: |
   - Adding 50+ new entries to a JSON data array
   - Generating Q&As, concepts, architecture scenarios, company profiles, Databricks 100 days, cost playbooks, or code matrix examples in bulk
   - Appending to existing data files without corrupting them
-  - Validating schema constraints, unique kebab-case IDs, and JSON syntax integrity
+  - Validating schema constraints, unique kebab-case IDs, primary sources, and JSON syntax integrity
   - Running parallel data generation scripts across multiple files
+  - Publishing or compiling A4 reference PDFs and cheatsheets
+  - Managing collection shuffle controls and accessibility standards
 
   DO NOT trigger for:
   - Adding fewer than 10 entries (do it inline)
   - Schema design (use a data modeling skill instead)
 ---
 
-# Bulk Data Content Generation Skill
+# Bulk Data Content Generation & Publishing Skill
 
-Use this skill when generating and appending large numbers of structured data entries (50+) to JSON knowledge base files across data platforms, interview prep portals, and architecture repositories.
+Use this skill when generating and appending large numbers of structured data entries (50+) to JSON knowledge base files, managing source evidence schemas, operating the A4 PDF publishing engine, and maintaining WCAG-compliant collection shuffle controls.
 
 ---
 
@@ -28,9 +30,10 @@ Use this skill when generating and appending large numbers of structured data en
 1. Defines structured entries as native Python dictionaries.
 2. Loads the target JSON file from `src/data/json/`.
 3. Performs an $O(N)$ duplicate ID check against existing entries.
-4. Appends the new entries.
-5. Writes the file atomically with UTF-8 encoding and clean 2-space indentation.
-6. Asserts valid JSON parsing and reports before/after counts.
+4. Validates primary source metadata against `EvidenceSourceSchema`.
+5. Appends the new entries.
+6. Writes the file atomically with UTF-8 encoding and clean 2-space indentation.
+7. Asserts valid JSON parsing and reports before/after counts.
 
 ---
 
@@ -49,7 +52,7 @@ with open(FILE, 'r', encoding='utf-8') as f:
 before_count = len(data)
 print(f"Existing count: {before_count}")
 
-# Step 2: Validate ID uniqueness
+# Step 2: Validate ID uniqueness and schema
 existing_ids = {item['id'] for item in data}
 
 new_entries = [
@@ -65,7 +68,12 @@ new_entries = [
             "Eliminates partition skew and the small file problem caused by high-cardinality partitions.",
             "Allows redefining clustering columns instantly without requiring costly full table rewrites.",
             "Integrated with Databricks Predictive I/O for intelligent file pruning."
-        ]
+        ],
+        "source": {
+            "title": "Use liquid clustering for Delta tables",
+            "url": "https://docs.databricks.com/en/delta/clustering.html",
+            "publisher": "Databricks Documentation"
+        }
     }
 ]
 
@@ -73,6 +81,9 @@ for item in new_entries:
     assert item['id'] not in existing_ids, f"Duplicate ID detected: {item['id']}"
     assert item['term'].strip(), "Term cannot be empty"
     assert len(item['keyPoints']) >= 3, f"Need at least 3 keyPoints for {item['id']}"
+    if 'source' in item and isinstance(item['source'], dict):
+        assert item['source']['title'].strip(), "Source title required"
+        assert item['source']['url'].startswith("http"), "Source url must be http(s)"
 
 # Step 3: Append and write atomically
 data.extend(new_entries)
@@ -92,9 +103,9 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
 
 ---
 
-## 3. Supported Target Schemas
+## 3. Supported Target Schemas & Live Corpus Counts
 
-### Concept (`src/data/json/data_concepts.json` — 704 items)
+### Concept (`src/data/json/data_concepts.json` — 881 items)
 ```json
 {
   "id": "unique-kebab-slug",
@@ -108,11 +119,16 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
     "Key technical fact 2 with configuration or performance implications.",
     "Key technical fact 3 comparing against alternative patterns.",
     "Key technical fact 4 with production guardrail or SLA metric."
-  ]
+  ],
+  "source": {
+    "title": "Official Documentation Page Title",
+    "url": "https://docs.official-source.com/page",
+    "publisher": "Official Vendor / Open Source Project"
+  }
 }
 ```
 
-### Question (`src/data/json/questions.json` & `data_de.json` — 7,029 items)
+### Question (`src/data/json/questions.json` & `data_de.json` — 7,102 items)
 ```json
 {
   "id": "airflow-q-089",
@@ -123,11 +139,16 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
   "question": "How do you eliminate scheduler heartbeat timeouts in high-frequency multi-DAG environments?",
   "answer": "Detailed 2-3 paragraph answer explaining root cause (GIL contention, DB connection exhaustion), remediation settings (scheduler.heartbeat_sec, min_file_process_interval), and Celery/Kubernetes executor tuning.",
   "domain": "Compute & Orchestration",
-  "subdomain": "Airflow Scheduler"
+  "subdomain": "Airflow Scheduler",
+  "sourceMetadata": {
+    "title": "Apache Airflow Core Configuration Reference",
+    "url": "https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html",
+    "publisher": "Apache Software Foundation"
+  }
 }
 ```
 
-### Architecture Scenario (`src/data/json/data_architecture.json` — 3,214 items)
+### Architecture Scenario (`src/data/json/data_architecture.json` — 3,297 items)
 ```json
 {
   "id": "arch-fabric-045",
@@ -136,49 +157,104 @@ print(f"Successfully updated! New count: {len(verified_data)} (+{len(new_entries
   "niche": "Direct Lake Memory Guardrails",
   "difficulty": "ARCHITECT",
   "question": "How do you architect Direct Lake semantic models to guarantee they never fall back to DirectQuery under F64 capacity constraints?",
-  "answer": "Comprehensive architectural solution detailing VertiPaq memory paging limits (25 GB on F64), V-Order Parquet compaction schedules, surrogate key data type optimization (integer over string UUIDs), and framed refresh isolation."
-}
-```
-
-### Modern Code Matrix (`src/data/json/modern_code_matrix.json` — 15 comparative items)
-```json
-{
-  "id": "matrix-iceberg-rest-catalog",
-  "operation": "Register & Query External Iceberg Table via REST Catalog",
-  "description": "Multi-engine syntax comparison for querying Polaris/Unity catalog registered Apache Iceberg tables.",
-  "engines": {
-    "databricks": "CREATE FOREIGN CATALOG iceberg_cat USING CONNECTION polaris_conn ...",
-    "snowflake": "CREATE ICEBERG TABLE customer_iceberg EXTERNAL_VOLUME='iceberg_vol' ...",
-    "bigquery": "CREATE EXTERNAL TABLE lakehouse.customer_iceberg WITH CONNECTION ...",
-    "fabric": "-- Via OneLake Shortcut to ADLS Gen2 Iceberg metadata\nSELECT * FROM lakehouse.customer_iceberg",
-    "duckdb": "INSTALL iceberg; LOAD iceberg;\nSELECT * FROM iceberg_scan('s3://lake/metadata/v1.metadata.json')"
+  "answer": "Comprehensive architectural solution detailing VertiPaq memory paging limits (25 GB on F64), V-Order Parquet compaction schedules, surrogate key data type optimization (integer over string UUIDs), and framed refresh isolation.",
+  "primarySource": {
+    "title": "Learn about Direct Lake in Power BI and Microsoft Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+    "publisher": "Microsoft Learn"
   }
 }
 ```
 
+### Modern Code Matrix (`src/data/json/modern_code_matrix.json` — 15 comparative items)
 ### Modern Cost Playbook (`src/data/json/modern_cost_playbooks.json` — 15 playbooks)
-```json
-{
-  "id": "finops-spot-arbitrage-dlt",
-  "title": "Spot Compute Arbitrage in Delta Live Tables",
-  "platform": "Databricks",
-  "savingsPotential": "60% - 75%",
-  "implementationRisk": "Low",
-  "steps": [
-    "Configure DLT pipeline clusters with spot instance policies for worker nodes.",
-    "Retain on-demand instances exclusively for the cluster driver node to protect stream state.",
-    "Set max_retries and idempotent checkpoint storage on ADLS Gen2/S3."
-  ]
+
+---
+
+## 4. Evidence Source Schema & Version-Sensitive Research
+
+All knowledge base updates must cite current, official primary sources. Never rely on training memory or unverified summaries for version-sensitive behavior.
+
+### Target Engine Versions Checked:
+- **Apache Spark**: 3.5.x / 4.0.0 preview (Catalyst, AQE, Connect, Python UDFs)
+- **Delta Lake**: 3.2.x+ (Liquid Clustering, Deletion Vectors, UniForm, CDF)
+- **Apache Iceberg**: 1.5.x / 1.6.x (REST Catalog, Partition Transforms, Metadata DAG)
+- **Databricks Runtime**: DBR 15.4+ LTS / 16.x (Photon Vector Engine, Unity Catalog, DABs)
+- **Apache Airflow**: 2.10.x / 2.11.x (Task Execution, Dynamic Task Mapping, Asset Datasets)
+- **Microsoft Fabric**: OneLake, Direct Lake semantic models, Delta V-Order
+- **dbt-core**: 1.8.x / 1.9.x (Unit testing, contract enforcement, state deferral)
+
+### Source Metadata Contract:
+```typescript
+interface EvidenceSource {
+  title: string;       // Exact official page title
+  url: string;         // Canonical HTTPS documentation URL
+  publisher: string;   // Project / Vendor (e.g. "Apache Software Foundation", "Databricks Documentation")
+  retrievedAt?: string;// ISO timestamp
 }
 ```
 
 ---
 
-## 4. Bulk Generation Workflow & Safety Checklist
+## 5. Collection Shuffle Architecture & Accessibility Standards
+
+When surfacing large collections of practice materials, learners benefit from randomized card presentation while preserving canonical ordering by default.
+
+### Core Architecture:
+1. **Unbiased Fisher–Yates (Knuth) Algorithm** (`src/lib/shuffle.ts`):
+   - $O(N)$ non-mutating array permutation.
+   - Deterministic testing support via Mulberry32 seeded pseudo-random number generator (`createSeededRandom`).
+2. **Canonical Default Order (Zero Hydration Mismatch)**:
+   - Initial render **always** presents canonical order (`isShuffled = false`, `seed = 0`).
+   - Prevents SSR/CSR hydration errors and keeps deep-linked cards predictable.
+3. **Accessible UI Component** (`src/components/ui/shuffle-control.tsx`):
+   - Meets WCAG 2.2 AA standards with clear `aria-label` and `title`.
+   - Polite screen reader announcements via live region (`<span className="sr-only" aria-live="polite">`).
+   - Displays seed indicator and active "Reset Order" action.
+4. **Permitted Collections vs Explicit Invariant Exclusions**:
+   - **Shuffled**: `/qa-prep` (practice questions & flashcards), `/concepts` (glossary flashcards), `/architecture` (scenarios & runbooks), `/code-practice` (drills), `/cheat-sheet` (Databricks cards), `/whiteboards` (architecture blueprints).
+   - **Excluded (Must Remain Ordered)**:
+     - `/guided-learning`: Pedagogical curriculum progression (Prerequisites -> Advanced).
+     - `/stages`: Invariant 7-stage Lakehouse pipeline (Ingest -> Govern).
+     - `/search-topics` & `/api/search`: Relevance-ranked BM25 search scores.
+     - `/spark-engine` & `/spark-catalyst`: Compiler compiler execution pipeline (Logical -> Physical).
+     - `/deployments`: Chronological audit trail.
+
+---
+
+## 6. PDF Publishing Pipeline & Bookmark Enrichment
+
+The repository maintains a unified Single Roof A4 PDF Library of 10 vector documents (7 Databricks cheatsheets/runbooks + 3 architectural reference guides).
+
+### Production Scripts:
+- `scripts/generate_cheatsheets.py`: Compiles the 7 Databricks cheatsheet suites.
+- `scripts/generate_reference_guides.py`: Compiles the 3 new architecture & SDLC guides, and enriches all 10 PDFs with hierarchical TOC bookmarks and metadata.
+
+### Pipeline Requirements:
+1. **Headless Chrome Vector PDF Generation**:
+   - High-density dark mode ISO 216 A4 layout (210mm $\times$ 297mm).
+   - Zero truncation and zero page overflows.
+2. **PyMuPDF (fitz) Bookmark & Metadata Injection**:
+   - Every PDF must contain hierarchical TOC outline bookmarks (`doc.set_toc()`).
+   - Standard PDF metadata (`title`, `author`, `subject`, `keywords`, `creator`).
+3. **250 DPI Thumbnail & Panoramic Poster Rendering**:
+   - Generates page 1 PNGs for catalog cards and side-by-side panoramic posters.
+4. **Mirror Synchronization**:
+   - Synchronizes compiled assets across `public/cheatsheets/` and `public/_artifacts/cheat-sheets/`.
+5. **Download API Whitelist**:
+   - All downloadable PDFs must be registered in `ALLOWED_PDFS` in `src/app/api/download/pdf/[filename]/route.ts`.
+
+---
+
+## 7. Bulk Generation Workflow & Safety Checklist
 
 - [ ] **Batch Size**: 50–150 entries per script execution.
 - [ ] **ID Format**: strictly lowercase kebab-case (e.g., `fabric-purview-lineage-01`).
 - [ ] **Enums**: Check difficulty matches exact uppercase values (`EASY`, `MEDIUM`, `HARD`, `ARCHITECT`).
+- [ ] **Primary Sources**: Ensure every entry contains valid `source` or `primarySource` metadata.
 - [ ] **No Placeholders**: Never use `TODO`, `TBD`, or lorem ipsum text in answers or explanations.
 - [ ] **Encoding**: Always open with `encoding='utf-8'` and write with `ensure_ascii=False`.
-- [ ] **Automated Test Run**: Run `npm test` immediately after modifying datasets to verify all 58 test files (472 tests) pass.
+- [ ] **Validation Commands**:
+  - `npm run content:validate`: Asserts JSON schema, unique IDs, and type constraints.
+  - `npm run content:shard`: Re-indexes MiniSearch catalog.
+  - `npm test`: Runs the Vitest suite across 61 test files (501 tests).

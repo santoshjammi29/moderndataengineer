@@ -55,6 +55,8 @@ import {
   ModernStackQuestion,
 } from "@/types/data";
 import { recordLastTopic } from "@/lib/user-progress";
+import { fisherYatesShuffle, createSeededRandom } from "@/lib/shuffle";
+import { ShuffleControl } from "@/components/ui/shuffle-control";
 import dynamic from "next/dynamic";
 import { CodeBlock } from "@/components/ui/code-block";
 
@@ -500,6 +502,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
   const [visibleCount, setVisibleCount] = useState(initialBatch);
   const [isShuffled, setIsShuffled] = useState(false);
   const [shuffleSeed, setShuffleSeed] = useState(0);
+  const [statusAnnouncement, setStatusAnnouncement] = useState("");
 
   // Python Runbook filter states
   const [pySearch, setPySearch] = useState("");
@@ -519,6 +522,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
     setShuffleSeed((s) => s + 1);
     setVisibleCount(initialBatch);
     setPyPage(1);
+    setStatusAnnouncement("Shuffled architecture cards. Order randomized.");
     toast.success("Shuffled architecture cards");
   }, [initialBatch]);
 
@@ -526,6 +530,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
     setIsShuffled(false);
     setVisibleCount(initialBatch);
     setPyPage(1);
+    setStatusAnnouncement("Reset architecture cards to default order.");
     toast.info("Reset to default order");
   }, [initialBatch]);
 
@@ -780,16 +785,8 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
   }, [deferredSearch, selectedDifficulty, selectedCategory, selectedKeyword]);
 
   const displayedFilteredItems = useMemo(() => {
-    if (!isShuffled) return filteredItems;
-    const arr = [...filteredItems];
-    let m = arr.length, t, i;
-    let seed = shuffleSeed * 9301 + 49297;
-    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-    while (m) {
-      i = Math.floor(rnd() * m--);
-      t = arr[m]; arr[m] = arr[i]; arr[i] = t;
-    }
-    return arr;
+    if (!isShuffled || filteredItems.length <= 1) return filteredItems;
+    return fisherYatesShuffle(filteredItems, createSeededRandom(shuffleSeed));
   }, [filteredItems, isShuffled, shuffleSeed]);
 
   const paginatedItems = useMemo(() => {
@@ -824,16 +821,8 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
   }, [deferredPySearch, selectedPyLevel, selectedPyDomain, selectedPyFramework, showPyBookmarksOnly, pyBookmarks]);
 
   const displayedFilteredRunbooks = useMemo(() => {
-    if (!isShuffled) return filteredRunbooks;
-    const arr = [...filteredRunbooks];
-    let m = arr.length, t, i;
-    let seed = (shuffleSeed + 1337) * 9301 + 49297;
-    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-    while (m) {
-      i = Math.floor(rnd() * m--);
-      t = arr[m]; arr[m] = arr[i]; arr[i] = t;
-    }
-    return arr;
+    if (!isShuffled || filteredRunbooks.length <= 1) return filteredRunbooks;
+    return fisherYatesShuffle(filteredRunbooks, createSeededRandom(shuffleSeed + 1337));
   }, [filteredRunbooks, isShuffled, shuffleSeed]);
 
   const totalPyPages = Math.ceil(displayedFilteredRunbooks.length / pyPageSize) || 1;
@@ -1183,6 +1172,9 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
             shuffle: {
               isShuffled,
               onShuffle: handleShuffle,
+              onReset: handleResetOrder,
+              label: isShuffled ? "Reshuffle Scenarios" : "Shuffle Scenarios",
+              statusAnnouncement,
             },
             expandCollapse: {
               onExpandAll: handleExpandAllScenarios,
@@ -1372,27 +1364,15 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
                 Showing <strong className="text-[var(--foreground)]">{paginatedItems.length}</strong> of{" "}
                 <strong className="text-[var(--foreground)]">{filteredItems.length}</strong> scenarios
               </span>
-              <button
-                onClick={handleShuffle}
-                className={cn(
-                  "inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all shrink-0 cursor-pointer",
-                  isShuffled
-                    ? "bg-blue-600 text-white border-blue-500 shadow-xs"
-                    : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-blue-500/40 hover:bg-[var(--surface-2)]"
-                )}
-                title="Shuffle or randomize architecture scenarios"
-              >
-                <Shuffle size={12} className={cn(isShuffled && "rotate-180 transition-transform")} />
-                <span>{isShuffled ? "Reshuffle" : "Shuffle"}</span>
-              </button>
-              {isShuffled && (
-                <button
-                  onClick={handleResetOrder}
-                  className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] px-1.5 py-1 underline underline-offset-2"
-                >
-                  Reset Order
-                </button>
-              )}
+              <ShuffleControl
+                isShuffled={isShuffled}
+                onShuffle={handleShuffle}
+                onReset={handleResetOrder}
+                itemLabel="Scenarios"
+                count={filteredItems.length}
+                statusAnnouncement={statusAnnouncement}
+                size="sm"
+              />
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -1597,27 +1577,15 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
                 Showing <strong className="text-[var(--foreground)]">{paginatedRunbooks.length}</strong> of{" "}
                 <strong className="text-[var(--foreground)]">{filteredRunbooks.length}</strong> runbooks
               </span>
-              <button
-                onClick={handleShuffle}
-                className={cn(
-                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold border transition-all shrink-0",
-                  isShuffled
-                    ? "bg-purple-600 text-white border-purple-500 shadow-sm"
-                    : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/40 hover:bg-[var(--surface-2)]"
-                )}
-                title="Shuffle or randomize python runbooks"
-              >
-                <Shuffle size={13} className={cn(isShuffled && "rotate-180 transition-transform")} />
-                <span>{isShuffled ? "Reshuffle" : "Shuffle"}</span>
-              </button>
-              {isShuffled && (
-                <button
-                  onClick={handleResetOrder}
-                  className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] px-1.5 py-1 underline underline-offset-2"
-                >
-                  Reset Order
-                </button>
-              )}
+              <ShuffleControl
+                isShuffled={isShuffled}
+                onShuffle={handleShuffle}
+                onReset={handleResetOrder}
+                itemLabel="Runbooks"
+                count={filteredRunbooks.length}
+                statusAnnouncement={statusAnnouncement}
+                size="sm"
+              />
             </div>
             <div className="flex items-center gap-3">
               <button

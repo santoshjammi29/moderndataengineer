@@ -25,50 +25,50 @@ interface DatabricksCardProps {
 const DOMAIN_STYLES = {
   sparksql: {
     badgeBg: "bg-sky-500/10",
-    badgeText: "text-sky-400",
+    badgeText: "text-sky-700 dark:text-sky-400",
     border: "border-sky-500/30",
-    dot: "bg-sky-400",
+    dot: "bg-sky-600 dark:bg-sky-400",
   },
   pyspark: {
     badgeBg: "bg-amber-500/10",
-    badgeText: "text-amber-400",
+    badgeText: "text-amber-800 dark:text-amber-400",
     border: "border-amber-500/30",
-    dot: "bg-amber-400",
+    dot: "bg-amber-600 dark:bg-amber-400",
   },
   spark_core: {
     badgeBg: "bg-purple-500/10",
-    badgeText: "text-purple-400",
+    badgeText: "text-purple-700 dark:text-purple-400",
     border: "border-purple-500/30",
-    dot: "bg-purple-400",
+    dot: "bg-purple-600 dark:bg-purple-400",
   },
   python: {
     badgeBg: "bg-emerald-500/10",
-    badgeText: "text-emerald-400",
+    badgeText: "text-emerald-700 dark:text-emerald-400",
     border: "border-emerald-500/30",
-    dot: "bg-emerald-400",
+    dot: "bg-emerald-600 dark:bg-emerald-400",
   },
 };
 
 const ALERT_STYLES = {
   tip: {
     icon: Lightbulb,
-    container: "bg-sky-500/10 border-l-2 border-sky-400 text-sky-200",
-    iconColor: "text-sky-400",
+    container: "bg-sky-500/10 border-l-2 border-sky-500 text-sky-900 dark:text-sky-200",
+    iconColor: "text-sky-600 dark:text-sky-400",
   },
   perf: {
     icon: Zap,
-    container: "bg-emerald-500/10 border-l-2 border-emerald-400 text-emerald-200",
-    iconColor: "text-emerald-400",
+    container: "bg-emerald-500/10 border-l-2 border-emerald-500 text-emerald-950 dark:text-emerald-200",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
   },
   warn: {
     icon: AlertTriangle,
-    container: "bg-amber-500/10 border-l-2 border-amber-400 text-amber-200",
-    iconColor: "text-amber-400",
+    container: "bg-amber-500/10 border-l-2 border-amber-500 text-amber-950 dark:text-amber-200",
+    iconColor: "text-amber-600 dark:text-amber-400",
   },
   sec: {
     icon: Shield,
-    container: "bg-purple-500/10 border-l-2 border-purple-400 text-purple-200",
-    iconColor: "text-purple-400",
+    container: "bg-purple-500/10 border-l-2 border-purple-500 text-purple-950 dark:text-purple-200",
+    iconColor: "text-purple-600 dark:text-purple-400",
   },
 };
 
@@ -111,10 +111,10 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
     <article
       id={card.id}
       className={cn(
-        "group relative flex flex-col rounded-xl border bg-[#0d1424] text-slate-100 p-3 sm:p-4 transition-all duration-200 shadow-md hover:shadow-xl scroll-mt-24",
+        "group relative flex flex-col rounded-xl border bg-[var(--surface-1)] text-[var(--foreground)] p-3 sm:p-4 transition-all duration-200 shadow-xs hover:shadow-md scroll-mt-24",
         isHighlighted
-          ? "border-amber-500 ring-2 ring-amber-500/40 bg-[#10192e]"
-          : "border-slate-800 hover:border-slate-700"
+          ? "border-amber-500 ring-2 ring-amber-500/40 bg-[var(--surface-2)]"
+          : "border-[var(--border)] hover:border-[var(--border-hover)]"
       )}
     >
       {/* Top Header Row */}
@@ -134,12 +134,12 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
           </span>
 
           {/* Tag */}
-          <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-800/80 text-slate-300 border border-slate-700/60">
+          <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-[var(--surface-2)] text-[var(--muted-foreground)] border border-[var(--border)]">
             {card.tag}
           </span>
 
           {/* Page & Card Number */}
-          <span className="text-[10px] font-mono text-slate-500 font-semibold">
+          <span className="text-[10px] font-mono text-[var(--muted-foreground)]/80 font-semibold">
             P{card.page} • #{card.cardNumber}
           </span>
         </div>
@@ -151,12 +151,12 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
             onClick={handleCopyCode}
             aria-label="Copy code snippet"
             title="Copy code"
-            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition-colors cursor-pointer"
+            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)] border border-[var(--border)] transition-colors cursor-pointer"
           >
             {copied ? (
               <>
-                <Check size={12} className="text-emerald-400" />
-                <span className="text-emerald-400 font-semibold text-[10px]">Copied</span>
+                <Check size={12} className="text-emerald-600 dark:text-emerald-400" />
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-[10px]">Copied</span>
               </>
             ) : (
               <>
@@ -171,21 +171,21 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
             onClick={handleShare}
             aria-label="Copy card link"
             title="Share direct link"
-            className="p-1 rounded-md text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 transition-colors cursor-pointer"
+            className="p-1 rounded-md text-[var(--muted-foreground)] hover:text-[var(--foreground)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)] border border-[var(--border)] transition-colors cursor-pointer"
           >
-            {copiedLink ? <Check size={12} className="text-emerald-400" /> : <Share2 size={12} />}
+            {copiedLink ? <Check size={12} className="text-emerald-600 dark:text-emerald-400" /> : <Share2 size={12} />}
           </button>
         </div>
       </div>
 
       {/* Card Title */}
-      <h3 className="text-sm sm:text-[15px] font-bold text-white tracking-tight mb-2.5 leading-snug">
+      <h3 className="text-sm sm:text-[15px] font-bold text-[var(--foreground)] tracking-tight mb-2.5 leading-snug">
         {card.title}
       </h3>
 
       {/* Code Block Container */}
-      <div className="relative mb-3 rounded-lg border border-slate-800/90 bg-[#080c15] overflow-hidden">
-        <div className="flex items-center justify-between px-3 py-1 bg-slate-900/60 border-b border-slate-800/60 text-[10px] text-slate-400 font-mono">
+      <div className="relative mb-3 rounded-lg border border-[var(--border)] bg-[#080c15] overflow-hidden">
+        <div className="flex items-center justify-between px-3 py-1 bg-[#10141f] border-b border-slate-800/80 text-[10px] text-slate-400 font-mono">
           <div className="flex items-center gap-1.5">
             <FileCode2 size={11} className="text-slate-400" />
             <span>{card.language.toUpperCase()}</span>
@@ -199,30 +199,30 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
 
       {/* Code Breakdown & Mechanics Section */}
       {card.explain && card.explain.length > 0 && (
-        <div className="mt-auto mb-2.5 rounded-lg border border-slate-800/70 bg-[#090e1c] p-2.5">
+        <div className="mt-auto mb-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-2.5">
           <button
             type="button"
             onClick={() => setIsExplainOpen(!isExplainOpen)}
             className="w-full flex items-center justify-between text-left cursor-pointer group/exp"
           >
-            <span className="text-[11px] font-bold text-sky-400 flex items-center gap-1.5">
+            <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1.5">
               <span>🔍 Code Breakdown &amp; Engine Mechanics</span>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-300 font-mono">
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-700 dark:text-sky-300 font-mono">
                 {card.explain.length} Points
               </span>
             </span>
-            <span className="text-slate-400 group-hover/exp:text-white transition-colors">
+            <span className="text-[var(--muted-foreground)] group-hover/exp:text-[var(--foreground)] transition-colors">
               {isExplainOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
             </span>
           </button>
 
           {isExplainOpen && (
-            <ul className="mt-2 space-y-1.5 text-[11px] leading-relaxed text-slate-300 border-t border-slate-800/60 pt-2">
+            <ul className="mt-2 space-y-1.5 text-[11px] leading-relaxed text-[var(--foreground)]/90 border-t border-[var(--border)] pt-2">
               {card.explain.map((exp, idx) => (
                 <li key={idx} className="flex items-start gap-1.5">
-                  <span className="text-sky-400 shrink-0 font-bold select-none">•</span>
+                  <span className="text-sky-600 dark:text-sky-400 shrink-0 font-bold select-none">•</span>
                   <div
-                    className="[&>b]:text-white [&>b]:font-semibold [&>code]:font-mono [&>code]:text-[10px] [&>code]:text-sky-300 [&>code]:bg-slate-800/90 [&>code]:px-1 [&>code]:py-0.2 [&>code]:rounded"
+                    className="[&>b]:text-[var(--foreground)] [&>b]:font-semibold [&>code]:font-mono [&>code]:text-[10px] [&>code]:text-sky-700 dark:[&>code]:text-sky-300 [&>code]:bg-[var(--surface-3)] [&>code]:px-1 [&>code]:py-0.2 [&>code]:rounded"
                     dangerouslySetInnerHTML={{ __html: exp.html || exp.text }}
                   />
                 </li>
@@ -242,7 +242,7 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
         >
           <AlertIcon size={14} className={cn("shrink-0 mt-0.5", alertConfig.iconColor)} />
           <div
-            className="[&>b]:font-bold [&>b]:text-white [&>code]:font-mono [&>code]:text-[10px] [&>code]:bg-black/30 [&>code]:px-1 [&>code]:rounded"
+            className="[&>b]:font-bold [&>b]:text-[var(--foreground)] [&>code]:font-mono [&>code]:text-[10px] [&>code]:bg-black/10 dark:[&>code]:bg-black/30 [&>code]:px-1 [&>code]:rounded"
             dangerouslySetInnerHTML={{ __html: card.alert.html || card.alert.text }}
           />
         </div>

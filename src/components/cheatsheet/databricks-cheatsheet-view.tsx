@@ -28,6 +28,9 @@ import type {
   DatabricksDomainMeta,
 } from "@/types/data";
 import { DatabricksCard } from "@/components/cheatsheet/databricks-card";
+import { toast } from "sonner";
+import { fisherYatesShuffle, createSeededRandom } from "@/lib/shuffle";
+import { ShuffleControl } from "@/components/ui/shuffle-control";
 import { PosterLightbox } from "@/components/cheatsheet/poster-lightbox";
 import { cn } from "@/lib/utils";
 
@@ -82,6 +85,24 @@ export function DatabricksCheatsheetView({
     pdfUrl: string;
   } | null>(null);
 
+  // Shuffle state
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [shuffleSeed, setShuffleSeed] = useState(0);
+  const [statusAnnouncement, setStatusAnnouncement] = useState("");
+
+  const handleShuffle = () => {
+    setIsShuffled(true);
+    setShuffleSeed((s) => s + 1);
+    setStatusAnnouncement(`Shuffled Databricks cheat cards (${filteredCards.length} cards). Order randomized.`);
+    toast.success("Shuffled Databricks cards");
+  };
+
+  const handleResetOrder = () => {
+    setIsShuffled(false);
+    setStatusAnnouncement("Reset Databricks cards to default order.");
+    toast.info("Reset to default order");
+  };
+
   // Auto-scroll to card if initialCardId exists
   useEffect(() => {
     if (initialCardId) {
@@ -134,6 +155,11 @@ export function DatabricksCheatsheetView({
     });
   }, [data.cards, selectedDomain, selectedPage, searchQuery]);
 
+  const displayedCards = useMemo(() => {
+    if (!isShuffled || filteredCards.length <= 1) return filteredCards;
+    return fisherYatesShuffle(filteredCards, createSeededRandom(shuffleSeed));
+  }, [filteredCards, isShuffled, shuffleSeed]);
+
   const handleOpenPoster = (domainMeta?: DatabricksDomainMeta) => {
     const target = domainMeta || activeDomainMeta || data.domains[0];
     setLightboxPoster({
@@ -150,6 +176,7 @@ export function DatabricksCheatsheetView({
     setSelectedPage("ALL");
     setSearchQuery("");
     setHighlightedCardId(null);
+    setIsShuffled(false);
   };
 
   return (
@@ -238,7 +265,7 @@ export function DatabricksCheatsheetView({
       </div>
 
       {/* Domain Navigation Pills */}
-      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#0c1427] border border-slate-800 overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] overflow-x-auto scrollbar-none">
         {/* All Cards pill */}
         <button
           type="button"
@@ -246,8 +273,8 @@ export function DatabricksCheatsheetView({
           className={cn(
             "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer",
             selectedDomain === "ALL"
-              ? "bg-blue-600 text-white font-semibold shadow-sm"
-              : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+              ? "bg-blue-600 text-white font-semibold shadow-xs"
+              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
           )}
         >
           <Layers size={13} />
@@ -266,8 +293,8 @@ export function DatabricksCheatsheetView({
               className={cn(
                 "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer",
                 isActive
-                  ? "bg-slate-800 text-white font-semibold border border-slate-600 shadow-sm"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                  ? "bg-[var(--surface-2)] text-[var(--foreground)] font-semibold border border-[var(--border)] shadow-xs"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
               )}
             >
               <Icon
@@ -276,7 +303,7 @@ export function DatabricksCheatsheetView({
               />
               <span>{dom.shortTitle}</span>
               <span
-                className="text-[10px] px-1.5 py-0.2 rounded-full font-mono"
+                className="text-[10px] px-1.5 py-0.2 rounded-full font-mono font-semibold"
                 style={{
                   backgroundColor: `${dom.accentColor}20`,
                   color: dom.accentColor,
@@ -291,35 +318,35 @@ export function DatabricksCheatsheetView({
 
       {/* Active Domain Spotlight Bar (if a specific domain is selected) */}
       {activeDomainMeta && (
-        <div className="p-3 sm:p-4 rounded-xl border border-slate-800 bg-[#0d1424] flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div className="p-3 sm:p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-1)] flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+              <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)] flex items-center gap-2">
                 <span
                   className="w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: activeDomainMeta.accentColor }}
                 />
                 {activeDomainMeta.title}
               </h3>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] text-[var(--muted-foreground)] border border-[var(--border)]">
                 {activeDomainMeta.badge}
               </span>
             </div>
-            <p className="text-xs text-slate-400">{activeDomainMeta.subtitle}</p>
+            <p className="text-xs text-[var(--muted-foreground)]">{activeDomainMeta.subtitle}</p>
           </div>
 
           {/* Domain Action Buttons */}
           <div className="flex items-center gap-2 shrink-0 flex-wrap w-full md:w-auto">
             {/* Page 1 vs Page 2 filter pills */}
-            <div className="flex items-center gap-1 bg-slate-900/90 border border-slate-800 rounded-lg p-0.5 text-xs">
+            <div className="flex items-center gap-1 bg-[var(--surface-2)] border border-[var(--border)] rounded-lg p-0.5 text-xs">
               <button
                 type="button"
                 onClick={() => setSelectedPage("ALL")}
                 className={cn(
                   "px-2.5 py-1 rounded-md transition-colors cursor-pointer",
                   selectedPage === "ALL"
-                    ? "bg-slate-800 text-white font-semibold"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 )}
               >
                 All 12
@@ -330,8 +357,8 @@ export function DatabricksCheatsheetView({
                 className={cn(
                   "px-2.5 py-1 rounded-md transition-colors cursor-pointer",
                   selectedPage === 1
-                    ? "bg-slate-800 text-white font-semibold"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 )}
               >
                 Page 1 (#1-#6)
@@ -342,8 +369,8 @@ export function DatabricksCheatsheetView({
                 className={cn(
                   "px-2.5 py-1 rounded-md transition-colors cursor-pointer",
                   selectedPage === 2
-                    ? "bg-slate-800 text-white font-semibold"
-                    : "text-slate-400 hover:text-white"
+                    ? "bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                 )}
               >
                 Page 2 (#7-#12)
@@ -354,9 +381,9 @@ export function DatabricksCheatsheetView({
             <a
               href={`/api/download/pdf/${activeDomainMeta.pdf.split('/').pop()}`}
               download={activeDomainMeta.pdf.split('/').pop()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--foreground)] text-xs font-semibold border border-[var(--border)] transition-colors cursor-pointer"
             >
-              <Download size={13} className="text-sky-400" />
+              <Download size={13} className="text-sky-600 dark:text-sky-400" />
               <span>PDF ({activeDomainMeta.pdfSize})</span>
             </a>
 
@@ -364,7 +391,7 @@ export function DatabricksCheatsheetView({
             <button
               type="button"
               onClick={() => handleOpenPoster(activeDomainMeta)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-xs font-semibold border border-amber-500/30 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 text-xs font-semibold border border-amber-500/30 transition-colors cursor-pointer"
             >
               <Maximize2 size={13} />
               <span>Wall Poster</span>
@@ -379,49 +406,60 @@ export function DatabricksCheatsheetView({
         <div className="relative flex-1">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]"
           />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search all 48 cards by title, tag, code syntax, or engine mechanics..."
-            className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0c1427] border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
+            className="w-full pl-9 pr-8 py-2 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] text-xs text-[var(--foreground)] placeholder-[var(--muted-foreground)] focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] text-xs"
             >
               &times;
             </button>
           )}
         </div>
 
-        {/* Results count & reset */}
-        <div className="flex items-center justify-between sm:justify-end gap-3 text-xs text-slate-400 shrink-0">
+        {/* Results count, shuffle & reset */}
+        <div className="flex items-center justify-between sm:justify-end gap-3 text-xs text-[var(--muted-foreground)] shrink-0 flex-wrap">
           <span>
-            Showing <strong className="text-white font-mono">{filteredCards.length}</strong> of{" "}
-            <strong className="text-slate-300 font-mono">{data.cards.length}</strong> cards
+            Showing <strong className="text-[var(--foreground)] font-mono">{displayedCards.length}</strong> of{" "}
+            <strong className="text-[var(--muted-foreground)] font-mono">{data.cards.length}</strong> cards
           </span>
-          {(searchQuery || selectedDomain !== "ALL" || selectedPage !== "ALL") && (
+
+          <ShuffleControl
+            isShuffled={isShuffled}
+            onShuffle={handleShuffle}
+            onReset={handleResetOrder}
+            itemLabel="Cards"
+            count={filteredCards.length}
+            statusAnnouncement={statusAnnouncement}
+            size="sm"
+          />
+
+          {(searchQuery || selectedDomain !== "ALL" || selectedPage !== "ALL" || isShuffled) && (
             <button
               type="button"
               onClick={handleResetFilters}
-              className="flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+              className="flex items-center gap-1 text-xs text-amber-500 hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300 transition-colors cursor-pointer"
             >
               <RefreshCw size={11} />
-              <span>Reset</span>
+              <span>Reset All</span>
             </button>
           )}
         </div>
       </div>
 
       {/* Grid of Cards */}
-      {filteredCards.length > 0 ? (
+      {displayedCards.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3.5 sm:gap-4">
-          {filteredCards.map((card) => (
+          {displayedCards.map((card) => (
             <DatabricksCard
               key={card.id}
               card={card}

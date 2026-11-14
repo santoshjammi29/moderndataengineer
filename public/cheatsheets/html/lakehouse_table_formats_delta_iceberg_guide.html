@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lakehouse Table Formats Architecture & Migration Guide: Delta Lake vs Apache Iceberg</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #080c15;
+  color: #e2e8f0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 7.2px;
+  line-height: 1.28;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  max-height: 297mm;
+  padding: 5mm 6.5mm 4.5mm 6.5mm;
+  background: #080c15;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  page-break-after: always;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Page Header */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #06b6d4;
+  padding-bottom: 3.5px;
+  margin-bottom: 4px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.header-title-box h1 {
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header-title-box p {
+  font-size: 7.5px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.header-badges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 6.8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-primary { background: #06b6d4; color: #ffffff; }
+.badge-secondary { background: #1e293b; color: #38bdf8; border: 1px solid #334155; }
+.badge-dark { background: #0f172a; color: #a5b4fc; border: 1px solid #1e293b; }
+.badge-accent { background: #10b981; color: #042f2e; }
+
+/* Grid Layout: 3 Rows of 2 Cards */
+.content-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 3px;
+}
+
+.card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 5px;
+  padding: 4.5px 6.5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  height: 100%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 2.5px;
+  margin-bottom: 1px;
+}
+
+.card-title {
+  font-size: 8.8px;
+  font-weight: 700;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-tag {
+  font-size: 6.4px;
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 1.5px 4px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+/* Code Blocks */
+pre.code {
+  background: #040711;
+  border: 1px solid #141e33;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font-family: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+  font-size: 6.5px;
+  line-height: 1.24;
+  color: #e2e8f0;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Syntax Highlighting */
+.kw { color: #f43f5e; font-weight: 600; }    /* keywords */
+.fn { color: #38bdf8; font-weight: 600; }    /* functions */
+.str { color: #4ade80; }                     /* strings */
+.cm { color: #64748b; font-style: italic; }  /* comments */
+.num { color: #fb923c; }                     /* numbers */
+.cls { color: #fbbf24; font-weight: 600; }   /* classes/types */
+.var { color: #a78bfa; }                     /* variables */
+.typ { color: #facc15; }                     /* SQL types */
+
+/* Code Explanation Section (Below Every Code Block) */
+.code-explain {
+  background: rgba(4, 7, 17, 0.75);
+  border: 1px solid #1a253c;
+  border-left: 2px solid #06b6d4;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font-size: 6.4px;
+  line-height: 1.24;
+  color: #cbd5e1;
+}
+
+.explain-head {
+  font-size: 6.2px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.explain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8px;
+}
+
+.explain-list li {
+  position: relative;
+  padding-left: 7px;
+  font-size: 6.3px;
+  line-height: 1.23;
+  color: #cbd5e1;
+}
+
+.explain-list li::before {
+  content: "•";
+  position: absolute;
+  left: 1px;
+  color: #06b6d4;
+  font-weight: bold;
+}
+
+.explain-list li strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.explain-list li code {
+  background: #1e293b;
+  padding: 0.5px 2.5px;
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 5.8px;
+  color: #38bdf8;
+}
+
+/* Mini Alert */
+.alert {
+  padding: 2.5px 4.5px;
+  border-radius: 2.5px;
+  font-size: 6.2px;
+  line-height: 1.22;
+  margin-top: 1.5px;
+}
+
+.alert-pri {
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 2px solid #06b6d4;
+  color: #fde68a;
+}
+
+.alert-sec {
+  background: rgba(56, 189, 248, 0.08);
+  border-left: 2px solid #38bdf8;
+  color: #bae6fd;
+}
+
+/* Footer */
+.page-footer {
+  border-top: 1px solid #1e293b;
+  padding-top: 2.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 6.8px;
+  color: #64748b;
+}
+
+.page-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-footer-right {
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: TRANSACTION LOGS, CONCURRENCY & DELETION VECTORS -->
+  <div class="page">
+    <div class="header-bar">
+      <div class="header-left">
+        <div class="header-title-box">
+          <h1>🏛️ LAKEHOUSE TABLE FORMATS: DELTA VS ICEBERG</h1>
+          <p>Production Reference: Transaction Logs, Concurrency Control, Deletion Vectors & Physical File Layouts</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-primary">Delta Lake 3.2+</span>
+        <span class="badge badge-secondary">Apache Iceberg 1.5+</span>
+        <span class="badge badge-dark">UniForm Interop</span>
+        <span class="badge badge-accent">ISO 216 A4</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Card 1: Transaction Log Architecture -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📜 Transaction Log Architecture: Delta vs Iceberg</span>
+          <span class="card-tag">Storage Engine</span>
+        </div>
+        <pre class="code"><span class="cm">-- DELTA LAKE LOG STRUCTURE (_delta_log/)</span>
+table_root/
+  ├── _delta_log/
+  │   ├── 00000000000000000000.json     <span class="cm">-- Atomic commit record</span>
+  │   ├── 00000000000000000001.json
+  │   └── 00000000000000000010.checkpoint.parquet <span class="cm">-- Compacted state every 10 commits</span>
+  └── part-00000-xxxx.parquet
+
+<span class="cm">-- APACHE ICEBERG METADATA TREE (metadata/)</span>
+table_root/
+  ├── metadata/
+  │   ├── v1.metadata.json              <span class="cm">-- Table schema, partitions, snapshots</span>
+  │   ├── snap-102938475.avro           <span class="cm">-- Manifest list: links all active manifests</span>
+  │   └── manifest-uuid-1.avro          <span class="cm">-- Manifest file: individual data file stats</span>
+  └── data/
+      └── part-00000-yyyy.parquet</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Log Mechanics Comparison</div>
+          <ul class="explain-list">
+            <li><strong>Delta Lake:</strong> Linear JSON chain with periodic Parquet checkpoints; linear replay reconstructed forward.</li>
+            <li><strong>Apache Iceberg:</strong> Hierarchical directed acyclic graph (DAG) of Avro manifests; permits zero-scan partition pruning.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 2: Concurrency & Snapshot Isolation -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔒 Concurrency Control & Snapshot Isolation</span>
+          <span class="card-tag">ACID Transactions</span>
+        </div>
+        <pre class="code"><span class="cm">-- Optimistic Concurrency Control (OCC) Collision Rules</span>
+<span class="cls">1. Delta Lake OCC:</span>
+   - Reads current table state version <code>V</code>.
+   - Attempts to write commit file <code>V+1.json</code>.
+   - If collision occurs, executes mutual conflict resolution:
+     ↳ Checks if concurrent transaction modified disjoint files/partitions.
+     ↳ If disjoint, re-bases and commits as <code>V+2.json</code> without failing!
+<span class="cls">2. Apache Iceberg OCC:</span>
+   - Validates snapshot <code>S_current</code> at catalog root.
+   - Commits new snapshot <code>S_new</code> via atomic compare-and-swap (CAS).
+   - Catalogs: REST Catalog, AWS Glue, DynamoDB, JDBC, or Hive Metastore.
+<span class="cls">3. Cloud Store Mutex Requirements:</span>
+   - S3 requires catalog lock or DynamoDB lock-manager (due to lack of put-if-absent).
+   - Azure ADLS Gen2 & Google Cloud Storage support native conditional writes.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Concurrency Invariants</div>
+          <ul class="explain-list">
+            <li><strong>Write Conflict Rule:</strong> Concurrent <code>UPDATE</code> or <code>MERGE</code> on overlapping partitions fails with <code>ConcurrentModificationException</code>.</li>
+            <li><strong>Concurrent Append:</strong> Multiple concurrent append jobs commit seamlessly without retry in both formats.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 3: Deletion Mechanics: COW vs MOR vs Vectors -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🗑️ Deletion Mechanics: COW vs MOR vs Vectors</span>
+          <span class="card-tag">Row Mutation</span>
+        </div>
+        <pre class="code"><span class="cm">-- Row-Level Modification Mechanics</span>
+<span class="cls">1. Copy-On-Write (COW):</span>
+   - Rewrites entire Parquet file containing modified/deleted row.
+   - High write amplification, maximum read performance.
+<span class="cls">2. Iceberg Merge-On-Read (MOR):</span>
+   - Positional Deletes: Avro file stores (data_file_path, row_position).
+   - Equality Deletes: Stores equality predicate (e.g. <code>id = 100</code>).
+   - Read penalty: Engine must join data files with delete files on scan.
+<span class="cls">3. Delta Lake Deletion Vectors (DVs):</span>
+   - Roaring Bitmap written to small sibling Parquet file.
+   - Indicates deleted row indexes within 1 Parquet file (1 bit per row).
+   - Zero file rewrites on DELETE/UPDATE; amortized 10x faster writes!</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Deletion Vector Enablement</div>
+          <ul class="explain-list">
+            <li><strong>Enable Delta DVs:</strong> <code>ALTER TABLE tbl SET TBLPROPERTIES ('delta.enableDeletionVectors' = true);</code></li>
+            <li><strong>Compaction Trigger:</strong> <code>OPTIMIZE tbl;</code> merges deletion vectors back into clean full Parquet files.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 4: Layout Optimization: Liquid vs Z-Order vs Iceberg -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚡ Layout Optimization: Liquid vs Transforms</span>
+          <span class="card-tag">Clustering</span>
+        </div>
+        <pre class="code"><span class="cm">-- DELTA LAKE LIQUID CLUSTERING (DBR 13.3+ LTS)</span>
+<span class="kw">CREATE TABLE</span> gold_events (
+  event_id <span class="typ">STRING</span>, cust_id <span class="typ">BIGINT</span>, event_time <span class="typ">TIMESTAMP</span>, payload <span class="typ">STRING</span>
+) <span class="kw">USING DELTA</span>
+<span class="kw">CLUSTER BY</span> (cust_id, event_time); <span class="cm">-- Replaces rigid Hive partitioning & Z-Order!</span>
+
+<span class="cm">-- APACHE ICEBERG HIDDEN PARTITIONING & TRANSFORMS</span>
+<span class="kw">CREATE TABLE</span> iceberg_events (
+  event_id <span class="typ">string</span>, cust_id <span class="typ">bigint</span>, event_time <span class="typ">timestamp</span>, payload <span class="typ">string</span>
+) <span class="kw">USING ICEBERG</span>
+<span class="kw">PARTITIONED BY</span> (
+  <span class="fn">days</span>(event_time),      <span class="cm">-- Hidden transform: no synthetic col required!</span>
+  <span class="fn">bucket</span>(<span class="num">16</span>, cust_id)     <span class="cm">-- Murmur3 hash bucket transform</span>
+);</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Clustering Superiority</div>
+          <ul class="explain-list">
+            <li><strong>Liquid Clustering:</strong> Non-destructive; keys can be changed anytime via <code>ALTER TABLE ... CLUSTER BY</code> without rewriting data.</li>
+            <li><strong>Hidden Partitioning:</strong> Iceberg prevents consumer query errors; <code>WHERE event_time &gt; '2026-01-01'</code> automatically prunes day partitions.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 5: Schema Evolution & Column Mapping -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🧬 Schema Evolution & Column Mapping</span>
+          <span class="card-tag">Schema Governance</span>
+        </div>
+        <pre class="code"><span class="cm">-- 1. Delta Lake Column Mapping (Physical ID vs Logical Name)</span>
+<span class="kw">ALTER TABLE</span> delta_orders <span class="kw">SET TBLPROPERTIES</span> (
+  <span class="str">'delta.columnMapping.mode'</span> = <span class="str">'name'</span>,
+  <span class="str">'delta.minReaderVersion'</span> = <span class="str">'2'</span>,
+  <span class="str">'delta.minWriterVersion'</span> = <span class="str">'5'</span>
+);
+<span class="kw">ALTER TABLE</span> delta_orders <span class="kw">RENAME COLUMN</span> old_cust_id <span class="kw">TO</span> customer_id; <span class="cm">-- Zero data rewrite!</span>
+
+<span class="cm">-- 2. Iceberg Native Field-ID Architecture</span>
+<span class="cm">-- Iceberg schemas use immutable Integer field-ids in Parquet metadata.</span>
+<span class="kw">ALTER TABLE</span> ice_orders <span class="kw">RENAME COLUMN</span> cust_id <span class="kw">TO</span> customer_id;
+<span class="kw">ALTER TABLE</span> ice_orders <span class="kw">ALTER COLUMN</span> amount <span class="kw">TYPE DOUBLE</span>; <span class="cm">-- Safe widening (int ➔ long ➔ double)</span></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Evolution Invariants</div>
+          <ul class="explain-list">
+            <li><strong>Safe Widening:</strong> Both formats permit widening conversions without file rewrites. Narrowing is forbidden.</li>
+            <li><strong>Column Drop:</strong> Dropping columns marks field as tombstoned in metadata; data is reclaimed during subsequent <code>OPTIMIZE / VACUUM</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 6: Time Travel & Historical Snapshot Auditing -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⏳ Time Travel & Snapshot Auditing</span>
+          <span class="card-tag">Auditability</span>
+        </div>
+        <pre class="code"><span class="cm">-- DELTA LAKE TIME TRAVEL</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> silver_orders <span class="kw">VERSION AS OF</span> <span class="num">15</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> silver_orders <span class="kw">TIMESTAMP AS OF</span> <span class="str">'2026-11-10 12:00:00'</span>;
+<span class="kw">RESTORE TABLE</span> silver_orders <span class="kw">TO VERSION AS OF</span> <span class="num">14</span>; <span class="cm">-- Instant rollback!</span>
+
+<span class="cm">-- APACHE ICEBERG TIME TRAVEL & TAGS</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> ice_orders <span class="kw">FOR SYSTEM_VERSION AS OF</span> <span class="num">102938475892</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> ice_orders <span class="kw">FOR SYSTEM_TIME AS OF</span> <span class="str">'2026-11-10 12:00:00'</span>;
+
+<span class="cm">-- Iceberg Snapshot Tagging (Releases & Audits):</span>
+<span class="kw">ALTER TABLE</span> ice_orders <span class="kw">CREATE TAG</span> audited_q3_2026 <span class="kw">RETAIN</span> <span class="num">365</span> <span class="kw">DAYS</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> ice_orders.tag_audited_q3_2026;</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Point-in-Time Mechanics</div>
+          <ul class="explain-list">
+            <li><strong>Metadata Pointers:</strong> Time travel reconstructs active files by reading historical snapshot records without moving data files.</li>
+            <li><strong>Retention Dependency:</strong> Time travel is strictly bounded by <code>VACUUM</code> or <code>expire_snapshots</code> retention policies.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">
+        <span>Lakehouse Table Formats: Delta Lake vs Apache Iceberg</span>
+        <span>•</span>
+        <span>Section 1: Architecture &amp; Mutation Mechanics</span>
+      </div>
+      <div class="page-footer-right">
+        <span>Page 1 of 2 • Modern Data Engineer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: OPERATIONS, UNIFORM & DECISION MATRIX -->
+  <div class="page">
+    <div class="header-bar">
+      <div class="header-left">
+        <div class="header-title-box">
+          <h1>🏛️ DELTA & ICEBERG OPERATIONS & UNIFORM GUIDE</h1>
+          <p>Production Reference: Compaction Runbooks, Delta UniForm, Zero-Copy Migrations & Architectural Decision Matrix</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-primary">Operations</span>
+        <span class="badge badge-secondary">Delta UniForm</span>
+        <span class="badge badge-dark">Migration</span>
+        <span class="badge badge-accent">ISO 216 A4</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Card 7: Maintenance & Retention Runbook -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🧹 Table Compaction & Maintenance Runbook</span>
+          <span class="card-tag">FinOps / Hygiene</span>
+        </div>
+        <pre class="code"><span class="cm">-- DELTA LAKE MAINTENANCE PROTOCOL</span>
+<span class="cm">-- 1. Compact small files into 128MB-1GB Parquet files</span>
+<span class="kw">OPTIMIZE</span> delta_tbl <span class="kw">WHERE</span> event_date &gt;= <span class="fn">current_date</span>() - <span class="num">7</span>;
+<span class="cm">-- 2. Dry-run safety check before permanently deleting tombstoned files</span>
+<span class="kw">VACUUM</span> delta_tbl <span class="kw">RETAIN</span> <span class="num">168</span> <span class="kw">HOURS DRY RUN</span>;
+<span class="kw">VACUUM</span> delta_tbl <span class="kw">RETAIN</span> <span class="num">168</span> <span class="kw">HOURS</span>; <span class="cm">-- Default 7-day retention safety threshold</span>
+
+<span class="cm">-- APACHE ICEBERG MAINTENANCE (Spark Stored Procedures)</span>
+<span class="kw">CALL</span> spark_catalog.system.rewrite_data_files(
+  table =&gt; <span class="str">'prod.orders'</span>, strategy =&gt; <span class="str">'binpack'</span>,
+  options =&gt; <span class="fn">map</span>(<span class="str">'target-file-size-bytes'</span>, <span class="str">'536870912'</span>) <span class="cm">-- 512MB</span>
+);
+<span class="kw">CALL</span> spark_catalog.system.expire_snapshots(
+  table =&gt; <span class="str">'prod.orders'</span>, older_than =&gt; <span class="fn">TIMESTAMP</span> <span class="str">'2026-11-01 00:00:00'</span>, retain_last =&gt; <span class="num">10</span>
+);
+<span class="kw">CALL</span> spark_catalog.system.remove_orphan_files(table =&gt; <span class="str">'prod.orders'</span>);</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Retention Caution</div>
+          <ul class="explain-list">
+            <li><strong>Safety Override:</strong> Never set <code>spark.databricks.delta.vacuum.parallelDelete.enabled</code> with zero retention unless restoring corrupted stages.</li>
+            <li><strong>Orphan Removal:</strong> <code>remove_orphan_files</code> purges uncommitted staging files left by killed executor tasks.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 8: Delta UniForm (Universal Format) Deep Dive -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🌐 Delta UniForm (Universal Format) Deep Dive</span>
+          <span class="card-tag">Cross-Engine</span>
+        </div>
+        <pre class="code"><span class="cm">-- Enable Delta Universal Format for Iceberg Clients</span>
+<span class="kw">CREATE TABLE</span> uniform_telemetry (
+  device_id <span class="typ">STRING</span>, temp <span class="typ">DOUBLE</span>, ts <span class="typ">TIMESTAMP</span>
+) <span class="kw">USING DELTA</span>
+<span class="kw">TBLPROPERTIES</span> (
+  <span class="str">'delta.universalFormat.enabledFormats'</span> = <span class="str">'iceberg'</span>,
+  <span class="str">'delta.enableDeletionVectors'</span> = <span class="str">'true'</span>
+);
+
+<span class="cm">-- Under the Hood Mechanics:</span>
+1. Spark writes native Delta Lake Parquet files & <code>_delta_log/*.json</code>.
+2. Async catalog task automatically generates Apache Iceberg metadata:
+   - Converts Delta log commit into <code>vN.metadata.json</code> & Avro manifests.
+3. Snowflake, AWS Athena, BigQuery, & Presto query identical Parquet files!
+<span class="cm">-- Zero data duplication, zero dual-write overhead, 100% vector speeds!</span></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Querying from Remote Engines</div>
+          <ul class="explain-list">
+            <li><strong>Snowflake External Table:</strong> Point Snowflake to Iceberg metadata location generated by UniForm; full read-performance.</li>
+            <li><strong>UniForm Supported Features:</strong> Supports Deletion Vectors (translated to Iceberg positional deletes) and column mapping.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 9: In-Place Migration Blueprint -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔄 In-Place Zero-Copy Migration Blueprint</span>
+          <span class="card-tag">Migration</span>
+        </div>
+        <pre class="code"><span class="cm">-- 1. Migrate Parquet Table to Delta Lake in-place (Zero copy!)</span>
+<span class="kw">CONVERT TO DELTA</span> parquet.`s3://prod-lake/legacy_orders/`
+<span class="kw">PARTITIONED BY</span> (order_year <span class="typ">INT</span>, order_month <span class="typ">INT</span>);
+
+<span class="cm">-- 2. Migrate Parquet Table to Apache Iceberg via Stored Procedure</span>
+<span class="kw">CALL</span> spark_catalog.system.migrate(table =&gt; <span class="str">'hive_prod.legacy_orders'</span>);
+<span class="cm">-- Or Non-destructive Snapshot migration (keeps original table intact):</span>
+<span class="kw">CALL</span> spark_catalog.system.snapshot(
+  source_table =&gt; <span class="str">'hive_prod.legacy_orders'</span>, table =&gt; <span class="str">'iceberg_prod.orders_ice'</span>
+);
+
+<span class="cm">-- 3. Ingesting Loose External Parquet Files into Iceberg Table</span>
+<span class="kw">CALL</span> spark_catalog.system.add_files(
+  table =&gt; <span class="str">'iceberg_prod.orders_ice'</span>,
+  dir =&gt; <span class="str">'s3://external-bucket/incoming_parquet/'</span>
+);</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Migration Invariants</div>
+          <ul class="explain-list">
+            <li><strong>Parquet Compatibility:</strong> Existing Parquet files must have consistent column types; no data re-write occurs during <code>CONVERT</code>.</li>
+            <li><strong>Rollback Protocol:</strong> Snapshot migration generates an isolated metadata branch, preserving the original Hive table untouched.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 10: Streaming I/O & Change Data Feed (CDF) -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📡 Streaming I/O & Change Data Feed (CDF)</span>
+          <span class="card-tag">Streaming CDC</span>
+        </div>
+        <pre class="code"><span class="cm">-- 1. Delta Lake Change Data Feed (CDF)</span>
+<span class="kw">ALTER TABLE</span> silver_customers <span class="kw">SET TBLPROPERTIES</span> (<span class="str">'delta.enableChangeDataFeed'</span> = <span class="str">'true'</span>);
+
+<span class="cm">-- Read CDC stream in PySpark:</span>
+cdc_stream = spark.readStream.format(<span class="str">"delta"</span>)   .option(<span class="str">"readChangeFeed"</span>, <span class="str">"true"</span>)   .option(<span class="str">"startingVersion"</span>, <span class="num">10</span>)   .table(<span class="str">"silver_customers"</span>)
+<span class="cm">-- Emits: _change_type ('insert', 'update_preimage', 'update_postimage', 'delete')</span>
+
+<span class="cm">-- 2. Apache Iceberg Incremental & CDC Reads</span>
+ice_stream = spark.readStream.format(<span class="str">"iceberg"</span>)   .option(<span class="str">"streaming-skip-delete-markers"</span>, <span class="str">"true"</span>)   .load(<span class="str">"prod.customers"</span>)</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Downstream Propagation</div>
+          <ul class="explain-list">
+            <li><strong>Silver-to-Gold Pipeline:</strong> Consume <code>update_postimage</code> to maintain synchronized downstream materialized views.</li>
+            <li><strong>Watermarking:</strong> Delta CDF supports stateful structured streaming watermarks on commit timestamp (<code>_commit_timestamp</code>).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 11: Multi-Engine Ecosystem & Catalog Matrix -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🏛️ Multi-Engine Catalog Integration</span>
+          <span class="card-tag">Ecosystem</span>
+        </div>
+        <pre class="code"><span class="cm">-- Lakehouse Open Catalog Architectures</span>
+<span class="cls">1. Unity Catalog (Delta & UniForm Iceberg):</span>
+   - Centralized RBAC across Databricks, external Spark, & UniForm clients.
+   - Native column-level masking, row-level filters, and lineage tracking.
+<span class="cls">2. Apache Iceberg REST Catalog Standard:</span>
+   - Open OpenAPI HTTP specification for table snapshot transactions.
+   - Implementations: Apache Polaris, Project Nessie, AWS Glue, Tabular.
+   - PyIceberg (Python native client) connects without Java/JVM runtime!
+<span class="cls">3. Cross-Cloud Engine Query Compatibility:</span>
+   - <span class="fn">Snowflake:</span> Reads Iceberg via REST Catalog; reads Delta via UniForm.
+   - <span class="fn">Google BigQuery:</span> BigLake native integration for Iceberg & Delta.
+   - <span class="fn">AWS Athena / EMR:</span> Native read/write on both formats via AWS Glue.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Catalog Protocol</div>
+          <ul class="explain-list">
+            <li><strong>Vendor Neutrality:</strong> Iceberg REST catalog protocol prevents cloud vendor lock-in with standard HTTP commit calls.</li>
+            <li><strong>PyIceberg:</strong> Enables lightweight AWS Lambda / Cloud Functions to execute ACID queries without starting Spark clusters.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 12: Architectural Decision Matrix -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚖️ Head-to-Head Architectural Decision Matrix</span>
+          <span class="card-tag">Strategy</span>
+        </div>
+        <pre class="code"><span class="cm">-- Architectural Evaluation: Delta Lake vs Apache Iceberg</span>
+┌───────────────────────┬──────────────────────────┬──────────────────────────┐
+│ <span class="cls">Capability</span>            │ <span class="fn">Delta Lake 3.2+</span>          │ <span class="var">Apache Iceberg 1.5+</span>      │
+├───────────────────────┼──────────────────────────┼──────────────────────────┤
+│ Primary Engine        │ Spark / Photon Vector    │ Multi-Engine (Trino/Flin)│
+│ Log Structure         │ Linear JSON + Checkpoint │ DAG of Avro Manifests    │
+│ Row Mutations         │ Deletion Vectors (Bitmaps│ Positional/Equality Avro │
+│ Layout Optimization   │ Liquid Clustering        │ Hidden Partitions + Sort │
+│ Partition Evolution   │ Rewrite required         │ Native In-Place Metadata │
+│ Catalog Requirement   │ Optional on cloud storage│ Mandatory (REST/Glue)    │
+│ Multi-Engine Interop  │ UniForm (generates Ice)  │ Native across all engines│
+│ Python Client         │ delta-rs (Rust/Python)   │ PyIceberg (Pure Python)  │
+└───────────────────────┴──────────────────────────┴──────────────────────────┘</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Selection Recommendation</div>
+          <ul class="explain-list">
+            <li><strong>Choose Delta Lake:</strong> If primary compute is Databricks/Spark and workloads demand highest single-engine Photon throughput.</li>
+            <li><strong>Choose Iceberg:</strong> If architecture spans heterogeneous engines (Trino, Flink, Snowflake, Spark) with dynamic partition evolution.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">
+        <span>Lakehouse Table Formats: Delta Lake vs Apache Iceberg</span>
+        <span>•</span>
+        <span>Section 2: Operations, UniForm &amp; Decision Matrix</span>
+      </div>
+      <div class="page-footer-right">
+        <span>Page 2 of 2 • Modern Data Engineer</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

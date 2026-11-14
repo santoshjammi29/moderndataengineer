@@ -67,7 +67,7 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
         regex.test(part) ? (
           <mark
             key={i}
-            className="bg-purple-500/25 text-purple-200 font-semibold px-0.5 rounded"
+            className="bg-purple-500/20 text-purple-700 dark:text-purple-200 font-semibold px-0.5 rounded"
           >
             {part}
           </mark>
@@ -527,17 +527,17 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
 
         {/* Instant Navigational Jump Card */}
         {navigationalJump && query && (
-          <div className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-r from-blue-950/40 via-indigo-950/40 to-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-3 shadow-md">
+          <div className="mx-3 my-2 p-2.5 rounded-xl bg-blue-50/80 dark:bg-gradient-to-r dark:from-blue-950/40 dark:via-indigo-950/40 dark:to-blue-950/40 border border-blue-500/30 flex items-center justify-between gap-3 shadow-xs">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <div className="p-1.5 rounded-lg bg-blue-500/20 text-blue-300 shrink-0">
+              <div className="p-1.5 rounded-lg bg-blue-500/15 text-blue-600 dark:text-blue-300 shrink-0">
                 <Zap size={16} />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-blue-200">
+                  <span className="text-xs font-bold text-blue-700 dark:text-blue-200">
                     {navigationalJump.title}
                   </span>
-                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-900/60 text-blue-300 border border-blue-500/30">
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-500/30">
                     {navigationalJump.badge}
                   </span>
                 </div>
@@ -562,13 +562,13 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
 
         {/* Topic Identification Spotlight Card */}
         {identifiedTopics.length > 0 && (
-          <div className="p-3 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border-b border-purple-500/20">
+          <div className="p-3 bg-purple-50/80 dark:bg-gradient-to-r dark:from-purple-950/40 dark:via-indigo-950/30 dark:to-purple-950/40 border-b border-purple-500/20">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-semibold tracking-wider uppercase text-purple-400 flex items-center gap-1.5">
-                <Sparkles size={12} className="text-purple-400 animate-spin" />
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-purple-700 dark:text-purple-400 flex items-center gap-1.5">
+                <Sparkles size={12} className="text-purple-600 dark:text-purple-400 animate-spin" />
                 Topic Identified
               </span>
-              <span className="text-[10px] text-purple-300/70 font-mono">Cross-Page Discovery</span>
+              <span className="text-[10px] text-purple-700/80 dark:text-purple-300/70 font-mono">Cross-Page Discovery</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {identifiedTopics.map((topic) => (
@@ -578,14 +578,14 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
                     onClose();
                     router.push(topic.href);
                   }}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-xs text-purple-200 transition-all group"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-xs text-purple-700 dark:text-purple-200 transition-all group"
                 >
                   <span className="text-sm">{topic.icon}</span>
                   <span className="font-semibold">{topic.label}</span>
-                  <span className="text-[10px] text-purple-300/80 px-1.5 py-0.5 rounded bg-purple-900/60">
+                  <span className="text-[10px] text-purple-700 dark:text-purple-300/80 px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/60">
                     {topic.domain}
                   </span>
-                  <ChevronRight size={13} className="text-purple-400 group-hover:translate-x-0.5 transition-transform" />
+                  <ChevronRight size={13} className="text-purple-600 dark:text-purple-400 group-hover:translate-x-0.5 transition-transform" />
                 </button>
               ))}
             </div>
@@ -604,7 +604,7 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
                 className={cn(
                   "px-2.5 py-1 rounded-lg font-medium whitespace-nowrap transition-colors",
                   isActive
-                    ? "bg-purple-600/20 text-purple-300 border border-purple-500/40"
+                    ? "bg-purple-600/20 text-purple-700 dark:text-purple-300 border border-purple-500/40"
                     : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
                 )}
               >
@@ -649,7 +649,7 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
                   className={cn(
                     "flex items-start justify-between w-full px-3.5 py-2.5 rounded-xl text-left text-sm transition-all group",
                     isSelected
-                      ? "bg-purple-600/15 text-purple-300 border border-purple-500/30 shadow-sm"
+                      ? "bg-purple-600/15 text-purple-700 dark:text-purple-300 border border-purple-500/30 shadow-xs"
                       : "text-[var(--foreground)] hover:bg-[var(--surface-2)] border border-transparent"
                   )}
                 >
@@ -658,7 +658,7 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
                       className={cn(
                         "p-2 rounded-lg shrink-0 mt-0.5",
                         isSelected
-                          ? "bg-purple-500/20 text-purple-300"
+                          ? "bg-purple-500/20 text-purple-700 dark:text-purple-300"
                           : "bg-[var(--surface-3)] text-[var(--muted-foreground)]"
                       )}
                     >
@@ -666,7 +666,7 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
                     </div>
                     <div className="min-w-0 flex-1 pr-2">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-sm truncate text-[var(--foreground)] group-hover:text-purple-300 transition-colors">
+                        <span className="font-semibold text-sm truncate text-[var(--foreground)] group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
                           <HighlightMatch text={item.title} query={query} />
                         </span>
                         {item.page && (

@@ -34,6 +34,8 @@ import { EvidenceSources } from "@/components/ui/evidence-sources";
 import { UnifiedQuestion, Difficulty, STANDARDIZED_DOMAINS } from "@/types/data";
 import { ArchitectureDiagramItem } from "@/data/diagrams";
 import { InterviewDefenseFlow } from "@/components/qa-prep/interview-defense-flow";
+import { fisherYatesShuffle, createSeededRandom } from "@/lib/shuffle";
+import { ShuffleControl } from "@/components/ui/shuffle-control";
 import dynamic from "next/dynamic";
 import {
   TECH_ECOSYSTEMS,
@@ -187,6 +189,7 @@ export function QaPrepClient({
   const [collapsedInReadMode, setCollapsedInReadMode] = useState<Set<string>>(new Set());
   const [isShuffled, setIsShuffled] = useState(false);
   const [shuffleSeed, setShuffleSeed] = useState(0);
+  const [statusAnnouncement, setStatusAnnouncement] = useState("");
 
   // Study Mode State (Flashcards)
   const [isStudyMode, setIsStudyMode] = useState(false);
@@ -325,11 +328,13 @@ export function QaPrepClient({
   const handleShuffle = useCallback(() => {
     setIsShuffled(true);
     setShuffleSeed((s) => s + 1);
+    setStatusAnnouncement(`Shuffled questions order. Shuffled ${questions.length} items.`);
     toast.success("Shuffled questions order");
-  }, []);
+  }, [questions.length]);
 
   const handleResetOrder = useCallback(() => {
     setIsShuffled(false);
+    setStatusAnnouncement("Reset questions to default order.");
     toast.info("Reset to default order");
   }, []);
 
@@ -391,13 +396,9 @@ export function QaPrepClient({
       });
     }
 
-    // 6. Shuffled Order
-    if (isShuffled) {
-      result = [...result].sort((a, b) => {
-        const hashA = (a.id.length * 37 + shuffleSeed) % 100;
-        const hashB = (b.id.length * 37 + shuffleSeed) % 100;
-        return hashA - hashB;
-      });
+    // 6. Shuffled Order (Unbiased Fisher–Yates)
+    if (isShuffled && result.length > 1) {
+      result = fisherYatesShuffle(result, createSeededRandom(shuffleSeed));
     }
 
     return result;
@@ -599,6 +600,13 @@ export function QaPrepClient({
             isActive: isStudyMode,
             onToggle: () => setIsStudyMode(!isStudyMode),
           },
+          shuffle: {
+            isShuffled,
+            onShuffle: handleShuffle,
+            onReset: handleResetOrder,
+            label: isShuffled ? "Reshuffle Questions" : "Shuffle Questions",
+            statusAnnouncement,
+          },
           expandCollapse: {
             onExpandAll: handleExpandAll,
             onCollapseAll: handleCollapseAll,
@@ -690,7 +698,18 @@ export function QaPrepClient({
             <span className="font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[11px]">
               Question {studyIndex + 1} of {filteredQuestions.length.toLocaleString()}
             </span>
-            <span className="font-mono text-[10px]">{currentStudyCard.category}</span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] hidden sm:inline">{currentStudyCard.category}</span>
+              <ShuffleControl
+                isShuffled={isShuffled}
+                onShuffle={handleShuffle}
+                onReset={handleResetOrder}
+                itemLabel="Cards"
+                count={filteredQuestions.length}
+                statusAnnouncement={statusAnnouncement}
+                size="sm"
+              />
+            </div>
           </div>
 
           <div
@@ -746,21 +765,15 @@ export function QaPrepClient({
               Showing <strong className="text-[var(--foreground)]">{filteredQuestions.length.toLocaleString()}</strong> matching questions
             </span>
             <div className="flex items-center gap-2">
-              <button
-                onClick={handleShuffle}
-                className={cn(
-                  "inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold border transition-all cursor-pointer",
-                  isShuffled ? "bg-blue-600 text-white border-blue-500" : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)]"
-                )}
-              >
-                <Shuffle size={12} />
-                <span>{isShuffled ? "Reshuffle" : "Shuffle"}</span>
-              </button>
-              {isShuffled && (
-                <button onClick={handleResetOrder} className="text-xs underline text-[var(--muted-foreground)] hover:text-[var(--foreground)] cursor-pointer">
-                  Reset
-                </button>
-              )}
+              <ShuffleControl
+                isShuffled={isShuffled}
+                onShuffle={handleShuffle}
+                onReset={handleResetOrder}
+                itemLabel="Questions"
+                count={filteredQuestions.length}
+                statusAnnouncement={statusAnnouncement}
+                size="sm"
+              />
             </div>
           </div>
 

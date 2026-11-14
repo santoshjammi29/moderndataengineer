@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Engineering SDLC, Data Contracts & Testing Pyramid Reference Guide</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #080c15;
+  color: #e2e8f0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 7.2px;
+  line-height: 1.28;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  max-height: 297mm;
+  padding: 5mm 6.5mm 4.5mm 6.5mm;
+  background: #080c15;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  page-break-after: always;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Page Header */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #10b981;
+  padding-bottom: 3.5px;
+  margin-bottom: 4px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.header-title-box h1 {
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header-title-box p {
+  font-size: 7.5px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.header-badges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 6.8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-primary { background: #10b981; color: #ffffff; }
+.badge-secondary { background: #1e293b; color: #38bdf8; border: 1px solid #334155; }
+.badge-dark { background: #0f172a; color: #a5b4fc; border: 1px solid #1e293b; }
+.badge-accent { background: #10b981; color: #042f2e; }
+
+/* Grid Layout: 3 Rows of 2 Cards */
+.content-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 3px;
+}
+
+.card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 5px;
+  padding: 4.5px 6.5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  height: 100%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 2.5px;
+  margin-bottom: 1px;
+}
+
+.card-title {
+  font-size: 8.8px;
+  font-weight: 700;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-tag {
+  font-size: 6.4px;
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 1.5px 4px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+/* Code Blocks */
+pre.code {
+  background: #040711;
+  border: 1px solid #141e33;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font-family: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+  font-size: 6.5px;
+  line-height: 1.24;
+  color: #e2e8f0;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Syntax Highlighting */
+.kw { color: #f43f5e; font-weight: 600; }    /* keywords */
+.fn { color: #38bdf8; font-weight: 600; }    /* functions */
+.str { color: #4ade80; }                     /* strings */
+.cm { color: #64748b; font-style: italic; }  /* comments */
+.num { color: #fb923c; }                     /* numbers */
+.cls { color: #fbbf24; font-weight: 600; }   /* classes/types */
+.var { color: #a78bfa; }                     /* variables */
+.typ { color: #facc15; }                     /* SQL types */
+
+/* Code Explanation Section (Below Every Code Block) */
+.code-explain {
+  background: rgba(4, 7, 17, 0.75);
+  border: 1px solid #1a253c;
+  border-left: 2px solid #10b981;
+  border-radius: 3px;
+  padding: 3px 5px;
+  font-size: 6.4px;
+  line-height: 1.24;
+  color: #cbd5e1;
+}
+
+.explain-head {
+  font-size: 6.2px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.explain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8px;
+}
+
+.explain-list li {
+  position: relative;
+  padding-left: 7px;
+  font-size: 6.3px;
+  line-height: 1.23;
+  color: #cbd5e1;
+}
+
+.explain-list li::before {
+  content: "•";
+  position: absolute;
+  left: 1px;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.explain-list li strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.explain-list li code {
+  background: #1e293b;
+  padding: 0.5px 2.5px;
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 5.8px;
+  color: #38bdf8;
+}
+
+/* Mini Alert */
+.alert {
+  padding: 2.5px 4.5px;
+  border-radius: 2.5px;
+  font-size: 6.2px;
+  line-height: 1.22;
+  margin-top: 1.5px;
+}
+
+.alert-pri {
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 2px solid #10b981;
+  color: #fde68a;
+}
+
+.alert-sec {
+  background: rgba(56, 189, 248, 0.08);
+  border-left: 2px solid #38bdf8;
+  color: #bae6fd;
+}
+
+/* Footer */
+.page-footer {
+  border-top: 1px solid #1e293b;
+  padding-top: 2.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 6.8px;
+  color: #64748b;
+}
+
+.page-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-footer-right {
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: ODCS V3 CONTRACTS & TESTING PYRAMID -->
+  <div class="page">
+    <div class="header-bar">
+      <div class="header-left">
+        <div class="header-title-box">
+          <h1>🛡️ DATA ENGINEERING SDLC & DATA CONTRACTS</h1>
+          <p>Production Reference: Open Data Contract Standard (ODCS v3), Semantic Versioning & Shift-Left Testing Pyramid</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-primary">ODCS v3.0</span>
+        <span class="badge badge-secondary">Shift-Left Testing</span>
+        <span class="badge badge-dark">Data Contracts</span>
+        <span class="badge badge-accent">ISO 216 A4</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Card 1: ODCS v3 Data Contract Specification -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📜 Open Data Contract Standard (ODCS v3)</span>
+          <span class="card-tag">Interface Design</span>
+        </div>
+        <pre class="code"><span class="cm"># orders_contract.yaml - Open Data Contract Standard v3</span>
+<span class="kw">version:</span> <span class="str">"3.0.0"</span>
+<span class="kw">dataset:</span> <span class="str">"prod_lakehouse.silver_ecommerce.orders"</span>
+<span class="kw">owner:</span> <span class="str">"checkout-team@enterprise.com"</span>
+<span class="kw">schema:</span>
+  - <span class="var">name:</span> order_id
+    <span class="var">type:</span> string
+    <span class="var">required:</span> <span class="kw">true</span>
+    <span class="var">unique:</span> <span class="kw">true</span>
+  - <span class="var">name:</span> total_amount
+    <span class="var">type:</span> decimal(18,2)
+    <span class="var">required:</span> <span class="kw">true</span>
+    <span class="var">logical_bounds:</span> { min: 0.01, max: 1000000.00 }
+  - <span class="var">name:</span> order_status
+    <span class="var">type:</span> string
+    <span class="var">enum:</span> [<span class="str">"PENDING"</span>, <span class="str">"AUTHORIZED"</span>, <span class="str">"SHIPPED"</span>, <span class="str">"REFUNDED"</span>]
+<span class="kw">sla:</span>
+  <span class="var">freshness:</span> <span class="str">"15m"</span>        <span class="cm"># Maximum allowed pipeline delay</span>
+  <span class="var">expected_daily_volume:</span> { min: 50000, max: 2000000 }</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Contract Primitives</div>
+          <ul class="explain-list">
+            <li><strong>Producer Responsibility:</strong> Upstream services validate against contract prior to landing payloads in Bronze Kafka/S3.</li>
+            <li><strong>Automated Tooling:</strong> Parsed by CI/CD to generate JSONSchema, Great Expectations suites, and dbt schema yaml.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 2: Semantic Versioning for Data Assets -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🏷️ Semantic Versioning for Data Assets</span>
+          <span class="card-tag">Governance</span>
+        </div>
+        <pre class="code"><span class="cm">-- Dataset SemVer Guidelines (MAJOR.MINOR.PATCH)</span>
+<span class="cls">1. MAJOR Version Bump (v1.0.0 ➔ v2.0.0) [BREAKING]:</span>
+   - Column removal or column rename.
+   - Type narrowing (e.g. <code>DOUBLE</code> ➔ <code>INT</code>, or widening that breaks target systems).
+   - Making previously nullable column <code>NOT NULL</code>.
+   - Removing enum members or changing business definition of metric.
+   <em>Protocol:</em> Dual-write to <code>orders_v1</code> and <code>orders_v2</code> for 90-day deprecation grace.
+
+<span class="cls">2. MINOR Version Bump (v1.1.0 ➔ v1.2.0) [BACKWARD COMPATIBLE]:</span>
+   - Adding new nullable column with default value.
+   - Adding new valid enum members (if consumers handle open enums).
+   - Relaxing constraint (e.g. <code>NOT NULL</code> ➔ nullable).
+
+<span class="cls">3. PATCH Version Bump (v1.1.1 ➔ v1.1.2) [METADATA ONLY]:</span>
+   - Documentation, description, or data dictionary updates.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Migration Governance</div>
+          <ul class="explain-list">
+            <li><strong>Zero Breaking In-Place:</strong> Breaking changes in production without dual-write violates data contracts and triggers P1 outage.</li>
+            <li><strong>Deprecation Alerting:</strong> Monitor audit logs to verify all consumers migrated before dropping <code>v1</code> endpoints.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 3: Shift-Left Testing Pyramid for Lakehouse -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔺 Shift-Left Testing Pyramid for Lakehouse</span>
+          <span class="card-tag">Quality Engineering</span>
+        </div>
+        <pre class="code"><span class="cm">-- 4-Tier Lakehouse Testing Architecture</span>
+┌────────────────────────────────────────────────────────┐
+│ <span class="cls">Tier 4: Reconciliation & Anomaly Detection</span>             │
+│ Production monitoring: Volume drift, distribution shift│
+├────────────────────────────────────────────────────────┤
+│ <span class="fn">Tier 3: Medallion Integration Tests</span>                   │
+│ Silver/Gold table assertions: End-to-end ACID pipeline │
+├────────────────────────────────────────────────────────┤
+│ <span class="var">Tier 2: Ingress Contract Verification</span>                  │
+│ Schema validation, null checks, enum conformance (DLQ) │
+├────────────────────────────────────────────────────────┤
+│ <span class="str">Tier 1: Fast Local Unit Tests (80% of test suite)</span>      │
+│ Pure business logic functions tested with PyTest/Chispa│
+└────────────────────────────────────────────────────────┘</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Testing Pyramid Distribution</div>
+          <ul class="explain-list">
+            <li><strong>Unit Testing (PyTest + Chispa):</strong> Runs locally in &lt;15 seconds using mock DataFrames without spinning up cloud clusters.</li>
+            <li><strong>Fast Feedback:</strong> 95% of logic bugs caught at Tier 1 before pushing git commit to remote branch.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 4: Dead Letter Queue (DLQ) & Quarantine -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🛡️ Dead Letter Queue (DLQ) & Quarantine</span>
+          <span class="card-tag">Fault Tolerance</span>
+        </div>
+        <pre class="code"><span class="cm">-- PySpark Streaming Schema Quarantine & DLQ Flow</span>
+valid_records = raw_df.filter(
+    <span class="fn">col</span>(<span class="str">"order_id"</span>).isNotNull() &
+    (<span class="fn">col</span>(<span class="str">"total_amount"</span>) &gt; <span class="num">0</span>) &
+    <span class="fn">col</span>(<span class="str">"order_status"</span>).isin(<span class="str">"PENDING"</span>, <span class="str">"AUTHORIZED"</span>, <span class="str">"SHIPPED"</span>)
+)
+
+quarantined_records = raw_df.filter(
+    <span class="fn">col</span>(<span class="str">"order_id"</span>).isNull() |
+    (<span class="fn">col</span>(<span class="str">"total_amount"</span>) &lt;= <span class="num">0</span>) |
+    ~<span class="fn">col</span>(<span class="str">"order_status"</span>).isin(<span class="str">"PENDING"</span>, <span class="str">"AUTHORIZED"</span>, <span class="str">"SHIPPED"</span>)
+).withColumn(<span class="str">"rejection_reason"</span>, <span class="fn">lit</span>(<span class="str">"FAILED_CONTRACT_RULES"</span>))  .withColumn(<span class="str">"rejected_at"</span>, <span class="fn">current_timestamp</span>())
+
+<span class="cm">-- Divert invalid payloads to Bronze quarantine table; pipeline never crashes!</span>
+quarantined_records.write.format(<span class="str">"delta"</span>).mode(<span class="str">"append"</span>).saveAsTable(<span class="str">"bronze.orders_dlq"</span>)</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Quarantine Principles</div>
+          <ul class="explain-list">
+            <li><strong>Non-Stop Pipeline:</strong> Corrupt source records are quarantined without blocking processing of valid downstream rows.</li>
+            <li><strong>Automated PagerDuty:</strong> If <code>dlq_rate &gt; 1.5%</code> over 10-minute window, trigger emergency alert to source upstream.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 5: Pre-Commit & Local Developer Tooling -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💻 Pre-Commit & Local Developer Tooling</span>
+          <span class="card-tag">Developer Velocity</span>
+        </div>
+        <pre class="code"><span class="cm"># .pre-commit-config.yaml - Enforce quality locally before git push</span>
+<span class="kw">repos:</span>
+  - <span class="var">repo:</span> https://github.com/sqlfluff/sqlfluff
+    <span class="var">rev:</span> 3.0.0
+    <span class="var">hooks:</span>
+      - <span class="var">id:</span> sqlfluff-lint
+        <span class="var">args:</span> [<span class="str">"--dialect"</span>, <span class="str">"databricks"</span>]
+  - <span class="var">repo:</span> https://github.com/astral-sh/ruff-pre-commit
+    <span class="var">rev:</span> v0.4.0
+    <span class="var">hooks:</span>
+      - <span class="var">id:</span> ruff
+        <span class="var">args:</span> [<span class="str">"--fix"</span>]
+  - <span class="var">repo:</span> local
+    <span class="var">hooks:</span>
+      - <span class="var">id:</span> pytest-unit
+        <span class="var">name:</span> PyTest Fast Logic Unit Tests
+        <span class="var">entry:</span> pytest tests/unit -m <span class="str">"not slow"</span>
+        <span class="var">language:</span> system
+        <span class="var">pass_filenames:</span> <span class="kw">false</span></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Dialect Rule Enforcement</div>
+          <ul class="explain-list">
+            <li><strong>SQLFluff Dialect:</strong> Enforces lowercase keywords, comma placement, explicit column aliasing, and qualified table references.</li>
+            <li><strong>Ruff Speed:</strong> Executes Python linting and code formatting in &lt;50ms across entire repository.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 6: Contract-Driven Ingestion Verification -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔍 Contract-Driven Ingestion Verification</span>
+          <span class="card-tag">Automated Verification</span>
+        </div>
+        <pre class="code"><span class="cm"># Python Pydantic / Pandera Ingestion Gate</span>
+<span class="kw">from</span> pandera.pyspark <span class="kw">import</span> DataFrameModel, Field
+<span class="kw">from</span> pyspark.sql.types <span class="kw">import</span> StringType, DecimalType
+
+<span class="kw">class</span> <span class="cls">OrdersContractModel</span>(DataFrameModel):
+    order_id: StringType = Field(nullable=<span class="kw">False</span>, unique=<span class="kw">True</span>)
+    customer_id: StringType = Field(nullable=<span class="kw">False</span>)
+    total_amount: DecimalType = Field(ge=<span class="num">0.01</span>, le=<span class="num">1000000.0</span>)
+    order_status: StringType = Field(isin=[<span class="str">"PENDING"</span>, <span class="str">"AUTHORIZED"</span>, <span class="str">"SHIPPED"</span>])
+
+<span class="cm"># Validate Ingested DataFrame:</span>
+<span class="kw">try</span>:
+    validated_df = OrdersContractModel.validate(raw_df)
+<span class="kw">except</span> <span class="cls">SchemaError</span> <span class="kw">as</span> err:
+    logger.error(<span class="str">f"Contract breached: {err}"</span>)
+    send_slack_alert(channel=<span class="str">"#data-ops"</span>, msg=str(err))</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Schema Verification Benefits</div>
+          <ul class="explain-list">
+            <li><strong>Type Strictness:</strong> Catches unexpected string floats, null IDs, and unmapped status codes before entering Silver tier.</li>
+            <li><strong>Living Documentation:</strong> Pydantic/Pandera models serve as executable code contracts checked into version control.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">
+        <span>Data Engineering SDLC &amp; Data Contracts Reference Guide</span>
+        <span>•</span>
+        <span>Section 1: ODCS Contracts &amp; Shift-Left Testing</span>
+      </div>
+      <div class="page-footer-right">
+        <span>Page 1 of 2 • Modern Data Engineer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: CI/CD GATES, BLUE/GREEN & TRIAGE -->
+  <div class="page">
+    <div class="header-bar">
+      <div class="header-left">
+        <div class="header-title-box">
+          <h1>🛡️ CI/CD GATES, BLUE/GREEN & INCIDENT RUNBOOK</h1>
+          <p>Production Reference: Ephemeral Slim CI, Zero-Downtime Blue/Green Swaps & SLA Breach Emergency Protocol</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-primary">CI/CD Gates</span>
+        <span class="badge badge-secondary">Blue/Green Deploy</span>
+        <span class="badge badge-dark">Slim CI</span>
+        <span class="badge badge-accent">ISO 216 A4</span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Card 7: Automated Ephemeral Slim CI Gates -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🚀 Automated Ephemeral Slim CI Gates</span>
+          <span class="card-tag">CI/CD Pipeline</span>
+        </div>
+        <pre class="code"><span class="cm"># GitHub Actions: dbt Slim CI against Ephemeral Schema</span>
+<span class="kw">name:</span> Pull Request Data Pipeline Gate
+<span class="kw">on:</span> [pull_request]
+<span class="kw">jobs:</span>
+  <span class="var">slim_ci:</span>
+    <span class="var">runs-on:</span> ubuntu-latest
+    <span class="var">steps:</span>
+      - <span class="var">uses:</span> actions/checkout@v4
+      - <span class="var">name:</span> Download Production Manifest
+        <span class="var">run:</span> aws s3 cp s3://prod-manifests/manifest.json ./prod-manifest.json
+      - <span class="var">name:</span> Run Modified Models & First-Degree Downstream
+        <span class="var">run:</span> |
+          dbt build --target ci             --select "state:modified+"             --defer --state ./             --vars 'schema_suffix: pr_${{ github.event.number }}'
+      - <span class="var">name:</span> Teardown Ephemeral Schema on Merge/Close
+        <span class="kw">if:</span> always()
+        <span class="var">run:</span> dbt run-operation drop_pr_schema --args '{"pr_id": "${{ github.event.number }}"}'</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Slim CI Mechanics</div>
+          <ul class="explain-list">
+            <li><strong>State Deferral:</strong> Unmodified upstream models read production tables directly without recomputing historical data.</li>
+            <li><strong>Cost Elimination:</strong> PR validation finishes in &lt;3 minutes while verifying exact column dependencies.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 8: Zero-Downtime Blue/Green Table Deployment -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔄 Zero-Downtime Blue/Green Table Deployment</span>
+          <span class="card-tag">Deployment</span>
+        </div>
+        <pre class="code"><span class="cm">-- 1. Create Staging Clone (Zero data copy via Delta Shallow Clone)</span>
+<span class="kw">CREATE TABLE</span> gold_orders_green <span class="kw">SHALLOW CLONE</span> gold_orders_blue;
+
+<span class="cm">-- 2. Execute High-Impact Transform & Backfill on Green Table</span>
+<span class="kw">INSERT INTO</span> gold_orders_green <span class="kw">SELECT</span> ... <span class="kw">FROM</span> silver_orders_v2;
+
+<span class="cm">-- 3. Execute Automated Acceptance Validation Suite on Green:</span>
+<span class="kw">ASSERT</span> (<span class="kw">SELECT count</span>(*) <span class="kw">FROM</span> gold_orders_green) &gt; <span class="num">100000</span>;
+<span class="kw">ASSERT</span> (<span class="kw">SELECT count</span>(*) <span class="kw">FROM</span> gold_orders_green <span class="kw">WHERE</span> id <span class="kw">IS NULL</span>) = <span class="num">0</span>;
+
+<span class="cm">-- 4. Atomic View Pointer Swap (Zero downtime, sub-millisecond switch!)</span>
+<span class="kw">CREATE OR REPLACE VIEW</span> gold.orders <span class="kw">AS SELECT</span> * <span class="kw">FROM</span> gold_orders_green;
+
+<span class="cm">-- 5. Instant Rollback Capability (if metric anomaly surfaces):</span>
+<span class="kw">CREATE OR REPLACE VIEW</span> gold.orders <span class="kw">AS SELECT</span> * <span class="kw">FROM</span> gold_orders_blue;</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Deployment Safeguards</div>
+          <ul class="explain-list">
+            <li><strong>Consumer Isolation:</strong> BI dashboards and ML inference services query stable <code>gold.orders</code> view; zero connection drops.</li>
+            <li><strong>Blue Retention:</strong> Retain blue table for 48 hours before dropping storage to permit instantaneous rollback.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 9: Automated Schema Drift Detection -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📡 Automated Schema Drift Detection</span>
+          <span class="card-tag">Observability</span>
+        </div>
+        <pre class="code"><span class="cm">-- Delta Lake Auto-Merge Schema Evolution vs Drift Trap</span>
+<span class="cm">-- SAFE: Controlled additive column evolution:</span>
+<span class="kw">spark.conf.set</span>(<span class="str">"spark.databricks.delta.schema.autoMerge.enabled"</span>, <span class="str">"false"</span>)
+<span class="cm">-- Keep autoMerge DISABLED in production to prevent silent corruption!</span>
+
+<span class="cm">-- Explicit Drift Trap Detection Query:</span>
+incoming_cols = set(incoming_df.columns)
+contract_cols = set(contract.get_columns())
+
+<span class="kw">if not</span> incoming_cols.issubset(contract_cols):
+    unexpected_cols = incoming_cols - contract_cols
+    logger.warn(<span class="str">f"UNAUTHORIZED SCHEMA DRIFT: {unexpected_cols}"</span>)
+    divert_to_unmapped_payload(incoming_df)
+<span class="kw">elif</span> missing := contract_cols - incoming_cols:
+    <span class="kw">raise</span> <span class="cls">ContractViolationException</span>(<span class="str">f"Missing required contract columns: {missing}"</span>)</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Drift Prevention Rules</div>
+          <ul class="explain-list">
+            <li><strong>AutoMerge Hazard:</strong> Enabling <code>autoMerge=true</code> indiscriminately turns typos like <code>cusotmer_id</code> into permanent columns.</li>
+            <li><strong>Alert Webhooks:</strong> Transmit schema drift anomalies directly to data platform Slack channel with author attribution.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 10: Data Product Lifecycle & Deprecation -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📦 Data Product Lifecycle & Deprecation</span>
+          <span class="card-tag">Product Management</span>
+        </div>
+        <pre class="code"><span class="cm">-- 4-Stage Deprecation Protocol</span>
+<span class="cls">Phase 1: Announcement (T - 90 Days)</span>
+  - Publish contract notice in Data Catalog (Unity Catalog / Purview).
+  - Add tag <code>lifecycle: "deprecated"</code> and <code>sunset_date: "2027-02-15"</code>.
+<span class="cls">Phase 2: Active Dual-Write (T - 60 Days)</span>
+  - Ingestion pipeline mirrors writes to both <code>v1</code> and <code>v2</code> tables.
+<span class="cls">Phase 3: Brownout Testing (T - 14 Days)</span>
+  - Temporarily disable <code>v1</code> access for 4 hours during non-peak business window.
+  - Surfaces undocumented or silent consumer pipelines before hard cutoff!
+<span class="cls">Phase 4: Sunset & Archival (T = 0)</span>
+  - Revoke read permissions on <code>v1</code>, snapshot final state, archive to cold tier.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Brownout Best Practice</div>
+          <ul class="explain-list">
+            <li><strong>The Brownout Test:</strong> The only 100% reliable method to find legacy cron jobs and rogue spreadsheets querying deprecated assets.</li>
+            <li><strong>Contact Registration:</strong> Maintain consumer owner metadata inside catalog for automated notifications.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 11: Production Contract Breach Protocol -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🚨 Production Contract Breach Protocol</span>
+          <span class="card-tag">Emergency Ops</span>
+        </div>
+        <pre class="code"><span class="cm">-- Emergency Triage Sequence for Broken Data SLAs / Schemas</span>
+<span class="kw">Step 1: Isolate & Divert</span>
+  - Halt automated ingestion to Silver tables immediately:
+    <code>ALTER PIPELINE orders_pipeline PAUSE;</code>
+  - Divert raw incoming Kafka records to dead letter storage bucket.
+<span class="kw">Step 2: Stakeholder Notification</span>
+  - Post P1 incident ticket to status page: <em>"Silver Orders Degraded"</em>.
+<span class="kw">Step 3: Root-Cause Classification</span>
+  - Check whether failure is: (A) Source payload mutation, (B) Compute cluster OOM, or (C) Upstream database outage.
+<span class="kw">Step 4: Remediation & Backfill</span>
+  - Patch contract validation rules, run idempotent backfill:
+    <code>REPLACE INTO silver_orders SELECT ... FROM raw_quarantine;</code></pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 Incident Ownership</div>
+          <ul class="explain-list">
+            <li><strong>Producer Responsibility:</strong> When source teams mutate schemas unannounced, source team owns MTTR resolution.</li>
+            <li><strong>SLA Impact:</strong> Document exact downstream dashboard impact and downtime minutes in post-mortem.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 12: FinOps & Lakehouse CI/CD Optimization -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💰 FinOps & Lakehouse CI/CD Cost Controls</span>
+          <span class="card-tag">Cost Engineering</span>
+        </div>
+        <pre class="code"><span class="cm">-- Lakehouse CI/CD Resource Rightsizing Rules</span>
+<span class="cls">1. Auto-Termination for Test Clusters:</span>
+   - Enforce <code>autotermination_minutes: 10</code> on all PR evaluation clusters.
+<span class="cls">2. Ephemeral Serverless SQL Warehouses:</span>
+   - Use Serverless 2X-Small warehouses for dbt testing; scales down in 5s!
+<span class="cls">3. Partition Pruning in CI Suites:</span>
+   - Restrict integration testing datasets to last 3 days:
+   <code>dbt test --vars 'test_start_date: 2026-11-10'</code>
+<span class="cls">4. Cache Layer Reuse:</span>
+   - Cache Python virtual environments, dbt packages, and dependencies in CI.
+<span class="cls">5. GitHub Actions Concurrency Cancellation:</span>
+   - Cancel outdated PR builds when new commits are pushed to same branch.</pre>
+        <div class="code-explain">
+          <div class="explain-head">🔍 FinOps Invariants</div>
+          <ul class="explain-list">
+            <li><strong>Cost Savings:</strong> Slim CI + 10-minute auto-termination cuts monthly data engineering compute spend by 65%.</li>
+            <li><strong>Budget Alerts:</strong> Set daily workspace spend anomaly detection alerts at $200 variance.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">
+        <span>Data Engineering SDLC &amp; Data Contracts Reference Guide</span>
+        <span>•</span>
+        <span>Section 2: CI/CD Gates, Blue/Green &amp; Emergency Protocol</span>
+      </div>
+      <div class="page-footer-right">
+        <span>Page 2 of 2 • Modern Data Engineer</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -17,6 +17,7 @@ import {
   Layers,
   ArrowRight,
   Search,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +31,7 @@ export interface PdfDocumentMeta {
   pdfUrl: string;
   htmlUrl: string;
   thumbnailUrl: string;
-  category: "master" | "sparksql" | "pyspark" | "spark_core" | "python" | "runbooks";
+  category: "master" | "sparksql" | "pyspark" | "spark_core" | "python" | "runbooks" | "guides";
   badge: string;
   badgeColor: string;
   highlights: string[];
@@ -192,6 +193,72 @@ export const MASTER_PDF_SUITES: PdfDocumentMeta[] = [
     ],
     cardsCount: 76,
   },
+  {
+    id: "spark_catalyst",
+    title: "Apache Spark Catalyst Optimizer & Physical Execution Plan Triage Guide",
+    subtitle: "2-Page A4 Vector PDF · 12 High-Impact Plan Reading & Bottleneck Cards",
+    description:
+      "Production reference for Spark query compilation & execution: 5-Stage Catalyst pipeline, EXPLAIN FORMATTED node trees, Join strategy hierarchy (BHJ vs SMJ vs BNLJ), AQE runtime partition coalescing, and Spark UI metrics.",
+    pages: 2,
+    fileSize: "762 KB",
+    pdfUrl: "/cheatsheets/pdf/spark_execution_plan_and_catalyst_triage_guide.pdf",
+    htmlUrl: "/cheatsheets/html/spark_execution_plan_and_catalyst_triage_guide.html",
+    thumbnailUrl: "/cheatsheets/images/spark_catalyst_plan_page_1.png",
+    category: "guides",
+    badge: "Catalyst & Plans",
+    badgeColor: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+    highlights: [
+      "5-Stage Catalyst Compiler Pipeline",
+      "EXPLAIN FORMATTED Plan Tree Reading",
+      "Join Hierarchy & BNLJ Elimination",
+      "AQE Dynamic Skew & Coalescing",
+    ],
+    cardsCount: 12,
+  },
+  {
+    id: "delta_iceberg",
+    title: "Lakehouse Table Formats Architecture & Migration Guide: Delta Lake vs Apache Iceberg",
+    subtitle: "2-Page A4 Vector PDF · 12 High-Impact Storage Format & Interop Cards",
+    description:
+      "Definitive comparative technical specification: Transaction log internals (_delta_log vs metadata DAG), Concurrency control (OCC), Deletion Vectors vs Positional Deletes, Liquid Clustering, Delta UniForm, and in-place zero-copy migrations.",
+    pages: 2,
+    fileSize: "749 KB",
+    pdfUrl: "/cheatsheets/pdf/lakehouse_table_formats_delta_iceberg_guide.pdf",
+    htmlUrl: "/cheatsheets/html/lakehouse_table_formats_delta_iceberg_guide.html",
+    thumbnailUrl: "/cheatsheets/images/lakehouse_table_formats_page_1.png",
+    category: "guides",
+    badge: "Delta vs Iceberg",
+    badgeColor: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
+    highlights: [
+      "_delta_log vs Iceberg Metadata DAG",
+      "Deletion Vectors vs Positional Deletes",
+      "Delta UniForm Multi-Engine Reads",
+      "In-Place CONVERT & Migration Blueprint",
+    ],
+    cardsCount: 12,
+  },
+  {
+    id: "data_sdlc",
+    title: "Data Engineering SDLC, Data Contracts & Testing Pyramid Reference Guide",
+    subtitle: "2-Page A4 Vector PDF · 12 High-Impact Quality Engineering Cards",
+    description:
+      "Production engineering standards: Open Data Contract Standard (ODCS v3), Semantic Versioning for data assets, 4-tier shift-left testing pyramid (Unit, Contract, Integration, Reconciliation), Ephemeral Slim CI with dbt state deferral, and Blue/Green table swaps.",
+    pages: 2,
+    fileSize: "730 KB",
+    pdfUrl: "/cheatsheets/pdf/data_engineering_sdlc_and_data_contracts_guide.pdf",
+    htmlUrl: "/cheatsheets/html/data_engineering_sdlc_and_data_contracts_guide.html",
+    thumbnailUrl: "/cheatsheets/images/data_sdlc_contracts_page_1.png",
+    category: "guides",
+    badge: "Data SDLC & Contracts",
+    badgeColor: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+    highlights: [
+      "ODCS v3 Data Contract YAML Specs",
+      "Shift-Left 4-Tier Testing Pyramid",
+      "Ephemeral Slim CI/CD with dbt Defer",
+      "Zero-Downtime Blue/Green Table Swaps",
+    ],
+    cardsCount: 12,
+  },
 ];
 
 export function PdfDownloadsHub() {
@@ -280,7 +347,8 @@ export function PdfDownloadsHub() {
         {/* Category Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
           {[
-            { id: "ALL", label: "All PDF Suites (7)", icon: Layers },
+            { id: "ALL", label: "All PDF Suites (10)", icon: Layers },
+            { id: "guides", label: "Reference Guides (3)", icon: BookOpen },
             { id: "master", label: "Master Editions", icon: Sparkles },
             { id: "sparksql", label: "Spark SQL", icon: Terminal },
             { id: "pyspark", label: "PySpark", icon: Flame },

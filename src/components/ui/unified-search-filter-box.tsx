@@ -76,7 +76,9 @@ export interface SearchActionButtons {
   shuffle?: {
     isShuffled: boolean;
     onShuffle: () => void;
+    onReset?: () => void;
     label?: string;
+    statusAnnouncement?: string;
   };
   customActions?: React.ReactNode;
 }
@@ -356,20 +358,40 @@ export function UnifiedSearchFilterBox({
 
           {/* Action: Shuffle Button */}
           {actions?.shuffle && (
-            <button
-              type="button"
-              onClick={actions.shuffle.onShuffle}
-              className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-xs whitespace-nowrap",
-                actions.shuffle.isShuffled
-                  ? "bg-purple-600 border-purple-500 text-white"
-                  : "bg-[var(--surface-2)] border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface-3)]"
+            <div className="inline-flex items-center gap-1">
+              {actions.shuffle.statusAnnouncement && (
+                <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+                  {actions.shuffle.statusAnnouncement}
+                </div>
               )}
-              title="Shuffle or randomize questions order"
-            >
-              <Shuffle size={12} className={cn(actions.shuffle.isShuffled && "rotate-180 transition-transform")} />
-              <span>{actions.shuffle.label || (actions.shuffle.isShuffled ? "Reshuffle" : "Shuffle")}</span>
-            </button>
+              <button
+                type="button"
+                onClick={actions.shuffle.onShuffle}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-xs whitespace-nowrap",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-indicator)]",
+                  actions.shuffle.isShuffled
+                    ? "bg-purple-600 border-purple-500 text-white"
+                    : "bg-[var(--surface-2)] border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface-3)]"
+                )}
+                aria-label={actions.shuffle.label || (actions.shuffle.isShuffled ? "Reshuffle items order" : "Shuffle items order")}
+                title={actions.shuffle.label || (actions.shuffle.isShuffled ? "Reshuffle items order" : "Shuffle items order")}
+              >
+                <Shuffle size={12} className={cn(actions.shuffle.isShuffled && "rotate-180 transition-transform duration-300 motion-reduce:transition-none")} aria-hidden="true" />
+                <span>{actions.shuffle.label || (actions.shuffle.isShuffled ? "Reshuffle" : "Shuffle")}</span>
+              </button>
+              {actions.shuffle.isShuffled && actions.shuffle.onReset && (
+                <button
+                  type="button"
+                  onClick={actions.shuffle.onReset}
+                  className="px-2 py-1 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] underline underline-offset-2 cursor-pointer"
+                  title="Reset to default canonical order"
+                  aria-label="Reset to default canonical order"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
           )}
 
           {/* Action: Expand / Collapse All */}

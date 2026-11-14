@@ -15,11 +15,69 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-card-hover: var(--card-hover);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  /* Semantic Page and Surface Tokens */
+  --color-page-background: var(--page-background);
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-selected: var(--surface-selected);
+
+  /* Semantic Text Tokens */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+  --color-text-link: var(--text-link);
+  --color-text-link-hover: var(--text-link-hover);
+  --color-text-placeholder: var(--text-placeholder);
+  --color-text-code: var(--text-code);
+  --color-text-on-status: var(--text-on-status);
+
+  /* Semantic Border and State Tokens */
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-border-interactive: var(--border-interactive);
+  --color-focus-indicator: var(--focus-indicator);
+  --color-divider: var(--divider);
+  --color-selection-background: var(--selection-background);
+  --color-selection-foreground: var(--selection-foreground);
+
+  /* Status Tokens */
+  --color-status-success-fg: var(--status-success-fg);
+  --color-status-success-bg: var(--status-success-bg);
+  --color-status-success-border: var(--status-success-border);
+  --color-status-warning-fg: var(--status-warning-fg);
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-warning-border: var(--status-warning-border);
+  --color-status-danger-fg: var(--status-danger-fg);
+  --color-status-danger-bg: var(--status-danger-bg);
+  --color-status-danger-border: var(--status-danger-border);
+  --color-status-info-fg: var(--status-info-fg);
+  --color-status-info-bg: var(--status-info-bg);
+  --color-status-info-border: var(--status-info-border);
+
+  /* Visualization Tokens */
+  --color-chart-axis: var(--chart-axis);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-tooltip-bg: var(--chart-tooltip-bg);
+  --color-chart-tooltip-fg: var(--chart-tooltip-fg);
+  --color-chart-series-1: var(--chart-series-1);
+  --color-chart-series-2: var(--chart-series-2);
+  --color-chart-series-3: var(--chart-series-3);
+  --color-chart-series-4: var(--chart-series-4);
+  --color-chart-selected: var(--chart-selected);
+  --color-chart-threshold: var(--chart-threshold);
+
   --font-sans: var(--font-inter);
   --font-mono: var(--font-mono), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-heading: var(--font-outfit);
@@ -45,14 +103,67 @@ html.dark {
   --accent-foreground: #ffffff;
   --accent-gradient: linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%);
   
-  /* Surface layers — Obsidian System */
+  /* Semantic Page & Surface Tokens */
+  --page-background: #0A0A0B;
   --surface-0: #0A0A0B;
   --surface-1: #161618;
   --surface-2: #1C1C20;
   --surface-3: #242429;
   --surface-4: #2D2D34;
-  
-  /* Semantic accents */
+  --surface-primary: #161618;
+  --surface-secondary: #1C1C20;
+  --surface-raised: #242429;
+  --surface-sunken: #0e0e10;
+  --surface-overlay: rgba(22, 22, 24, 0.88);
+  --surface-selected: rgba(59, 130, 246, 0.16);
+
+  /* Semantic Text Tokens */
+  --text-primary: #f0f0f5;
+  --text-secondary: #cbd5e1;
+  --text-muted: #9da4b4;
+  --text-inverse: #0A0A0B;
+  --text-link: #60a5fa;
+  --text-link-hover: #93c5fd;
+  --text-placeholder: #71798e;
+  --text-code: #38bdf8;
+  --text-on-status: #ffffff;
+
+  /* Semantic Border and State Tokens */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-interactive: rgba(59, 130, 246, 0.5);
+  --focus-indicator: #3B82F6;
+  --divider: rgba(255, 255, 255, 0.08);
+  --selection-background: rgba(139, 92, 246, 0.3);
+  --selection-foreground: #f0f0f5;
+
+  /* Status Tokens (WCAG 2.2 AA / AAA Compliant) */
+  --status-success-fg: #4ade80;
+  --status-success-bg: rgba(34, 197, 94, 0.12);
+  --status-success-border: rgba(34, 197, 94, 0.3);
+  --status-warning-fg: #fbbf24;
+  --status-warning-bg: rgba(245, 158, 11, 0.12);
+  --status-warning-border: rgba(245, 158, 11, 0.3);
+  --status-danger-fg: #f87171;
+  --status-danger-bg: rgba(239, 68, 68, 0.12);
+  --status-danger-border: rgba(239, 68, 68, 0.3);
+  --status-info-fg: #60a5fa;
+  --status-info-bg: rgba(59, 130, 246, 0.12);
+  --status-info-border: rgba(59, 130, 246, 0.3);
+
+  /* Visualization Tokens */
+  --chart-axis: #9da4b4;
+  --chart-grid: rgba(255, 255, 255, 0.08);
+  --chart-tooltip-bg: #1C1C20;
+  --chart-tooltip-fg: #f0f0f5;
+  --chart-series-1: #38bdf8;
+  --chart-series-2: #a855f7;
+  --chart-series-3: #34d399;
+  --chart-series-4: #fb923c;
+  --chart-selected: #60a5fa;
+  --chart-threshold: #ef4444;
+
+  /* Legacy semantic accents */
   --color-easy: #22c55e;
   --color-medium: #3b82f6;
   --color-hard: #f97316;
@@ -86,26 +197,97 @@ html.dark {
 html.light {
   color-scheme: light;
   --background: #f8f8fc;
-  --foreground: #1a1a2e;
+  --foreground: #0f172a;
   --card: #ffffff;
-  --card-foreground: #1a1a2e;
+  --card-foreground: #0f172a;
   --card-hover: #f5f5ff;
   --muted: #f0effc;
-  --muted-foreground: #596172;
-  --border: rgba(0, 0, 0, 0.08);
-  --border-hover: rgba(0, 0, 0, 0.15);
+  --muted-foreground: #475569;
+  --border: rgba(0, 0, 0, 0.09);
+  --border-hover: rgba(0, 0, 0, 0.18);
   --accent: #2563EB;
   --accent-foreground: #ffffff;
   --accent-gradient: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #60A5FA 100%);
   
+  /* Semantic Page & Surface Tokens */
+  --page-background: #f8f8fc;
   --surface-0: #f8f8fc;
   --surface-1: #ffffff;
-  --surface-2: #f5f5ff;
+  --surface-2: #f1f3f9;
   --surface-3: #ebebf5;
   --surface-4: #e0e0f0;
-  
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.06);
+  --surface-primary: #ffffff;
+  --surface-secondary: #f1f3f9;
+  --surface-raised: #e9edf5;
+  --surface-sunken: #f4f4f9;
+  --surface-overlay: rgba(255, 255, 255, 0.94);
+  --surface-selected: rgba(37, 99, 235, 0.10);
+
+  /* Semantic Text Tokens */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+  --text-inverse: #ffffff;
+  --text-link: #1d4ed8;
+  --text-link-hover: #1e40af;
+  --text-placeholder: #64748b;
+  --text-code: #0369a1;
+  --text-on-status: #ffffff;
+
+  /* Semantic Border and State Tokens */
+  --border-subtle: rgba(0, 0, 0, 0.09);
+  --border-strong: rgba(0, 0, 0, 0.20);
+  --border-interactive: rgba(37, 99, 235, 0.45);
+  --focus-indicator: #2563EB;
+  --divider: rgba(0, 0, 0, 0.09);
+  --selection-background: rgba(37, 99, 235, 0.18);
+  --selection-foreground: #0f172a;
+
+  /* Status Tokens (WCAG 2.2 AA / AAA Compliant) */
+  --status-success-fg: #15803d;
+  --status-success-bg: #dcfce7;
+  --status-success-border: #86efac;
+  --status-warning-fg: #92400e;
+  --status-warning-bg: #fef3c7;
+  --status-warning-border: #fcd34d;
+  --status-danger-fg: #b91c1c;
+  --status-danger-bg: #fee2e2;
+  --status-danger-border: #fca5a5;
+  --status-info-fg: #1d4ed8;
+  --status-info-bg: #dbeafe;
+  --status-info-border: #93c5fd;
+
+  /* Visualization Tokens */
+  --chart-axis: #475569;
+  --chart-grid: rgba(0, 0, 0, 0.08);
+  --chart-tooltip-bg: #0f172a;
+  --chart-tooltip-fg: #ffffff;
+  --chart-series-1: #0284c7;
+  --chart-series-2: #7e22ce;
+  --chart-series-3: #15803d;
+  --chart-series-4: #c2410c;
+  --chart-selected: #1d4ed8;
+  --chart-threshold: #dc2626;
+
+  /* Semantic accents */
+  --color-easy: #15803d;
+  --color-medium: #1d4ed8;
+  --color-hard: #c2410c;
+  --color-architect: #6b21a8;
+  --color-success: #15803d;
+  --color-warning: #92400e;
+  --color-danger: #b91c1c;
+  --color-info: #1d4ed8;
+
+  --stat-green: #15803d;
+  --stat-orange: #c2410c;
+  --stat-amber: #b45309;
+  --stat-indigo: #4338ca;
+  --stat-purple: #6b21a8;
+  --stat-sky: #0369a1;
+
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
   
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -118,9 +300,9 @@ html.light {
 html.grey {
   color-scheme: dark;
   --background: #18191c;
-  --foreground: #e4e4e9;
+  --foreground: #f3f4f6;
   --card: #202227;
-  --card-foreground: #e4e4e9;
+  --card-foreground: #f3f4f6;
   --card-hover: #262930;
   --muted: #24262d;
   --muted-foreground: #9ca3af;
@@ -130,11 +312,65 @@ html.grey {
   --accent-foreground: #ffffff;
   --accent-gradient: linear-gradient(135deg, #64748b 0%, #475569 50%, #334155 100%);
 
+  /* Semantic Page & Surface Tokens */
+  --page-background: #18191c;
   --surface-0: #18191c;
   --surface-1: #202227;
   --surface-2: #282a31;
   --surface-3: #30333b;
   --surface-4: #393d47;
+  --surface-primary: #202227;
+  --surface-secondary: #282a31;
+  --surface-raised: #30333b;
+  --surface-sunken: #141518;
+  --surface-overlay: rgba(32, 34, 39, 0.94);
+  --surface-selected: rgba(96, 165, 250, 0.18);
+
+  /* Semantic Text Tokens */
+  --text-primary: #f3f4f6;
+  --text-secondary: #cbd5e1;
+  --text-muted: #9ca3af;
+  --text-inverse: #18191c;
+  --text-link: #60a5fa;
+  --text-link-hover: #93c5fd;
+  --text-placeholder: #6b7280;
+  --text-code: #38bdf8;
+  --text-on-status: #ffffff;
+
+  /* Semantic Border and State Tokens */
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.20);
+  --border-interactive: rgba(96, 165, 250, 0.45);
+  --focus-indicator: #60a5fa;
+  --divider: rgba(255, 255, 255, 0.10);
+  --selection-background: rgba(96, 165, 250, 0.25);
+  --selection-foreground: #f3f4f6;
+
+  /* Status Tokens (WCAG 2.2 AA / AAA Compliant) */
+  --status-success-fg: #34d399;
+  --status-success-bg: rgba(52, 211, 153, 0.15);
+  --status-success-border: rgba(52, 211, 153, 0.35);
+  --status-warning-fg: #fbbf24;
+  --status-warning-bg: rgba(251, 191, 36, 0.15);
+  --status-warning-border: rgba(251, 191, 36, 0.35);
+  --status-danger-fg: #f87171;
+  --status-danger-bg: rgba(248, 113, 113, 0.15);
+  --status-danger-border: rgba(248, 113, 113, 0.35);
+  --status-info-fg: #60a5fa;
+  --status-info-bg: rgba(96, 165, 250, 0.15);
+  --status-info-border: rgba(96, 165, 250, 0.35);
+
+  /* Visualization Tokens */
+  --chart-axis: #9ca3af;
+  --chart-grid: rgba(255, 255, 255, 0.10);
+  --chart-tooltip-bg: #282a31;
+  --chart-tooltip-fg: #f3f4f6;
+  --chart-series-1: #60a5fa;
+  --chart-series-2: #a78bfa;
+  --chart-series-3: #34d399;
+  --chart-series-4: #fb923c;
+  --chart-selected: #60a5fa;
+  --chart-threshold: #f87171;
 
   --color-easy: #34d399;
   --color-medium: #60a5fa;
@@ -171,18 +407,72 @@ html.e-ink {
   --card-foreground: #111111;
   --card-hover: #f0eee6;
   --muted: #eae8e0;
-  --muted-foreground: #444444;
-  --border: rgba(0, 0, 0, 0.18);
-  --border-hover: rgba(0, 0, 0, 0.35);
+  --muted-foreground: #3a3a3a;
+  --border: rgba(0, 0, 0, 0.22);
+  --border-hover: rgba(0, 0, 0, 0.45);
   --accent: #111111;
   --accent-foreground: #ffffff;
   --accent-gradient: linear-gradient(135deg, #111111 0%, #333333 100%);
 
+  /* Semantic Page & Surface Tokens */
+  --page-background: #f7f6f2;
   --surface-0: #f7f6f2;
   --surface-1: #ffffff;
   --surface-2: #eeebe3;
   --surface-3: #e3dfd5;
   --surface-4: #d8d3c7;
+  --surface-primary: #ffffff;
+  --surface-secondary: #eeebe3;
+  --surface-raised: #e3dfd5;
+  --surface-sunken: #eeebe3;
+  --surface-overlay: rgba(247, 246, 242, 0.98);
+  --surface-selected: #111111;
+
+  /* Semantic Text Tokens */
+  --text-primary: #111111;
+  --text-secondary: #262626;
+  --text-muted: #3a3a3a;
+  --text-inverse: #ffffff;
+  --text-link: #111111;
+  --text-link-hover: #000000;
+  --text-placeholder: #555555;
+  --text-code: #111111;
+  --text-on-status: #ffffff;
+
+  /* Semantic Border and State Tokens */
+  --border-subtle: rgba(0, 0, 0, 0.22);
+  --border-strong: rgba(0, 0, 0, 0.45);
+  --border-interactive: #111111;
+  --focus-indicator: #111111;
+  --divider: rgba(0, 0, 0, 0.22);
+  --selection-background: #d8d3c7;
+  --selection-foreground: #111111;
+
+  /* Status Tokens (Ultra High-Contrast Monochrome / Deep Ink) */
+  --status-success-fg: #14532d;
+  --status-success-bg: #f0fdf4;
+  --status-success-border: #14532d;
+  --status-warning-fg: #78350f;
+  --status-warning-bg: #fffbeb;
+  --status-warning-border: #78350f;
+  --status-danger-fg: #7f1d1d;
+  --status-danger-bg: #fef2f2;
+  --status-danger-border: #7f1d1d;
+  --status-info-fg: #1e3a8a;
+  --status-info-bg: #eff6ff;
+  --status-info-border: #1e3a8a;
+
+  /* Visualization Tokens */
+  --chart-axis: #111111;
+  --chart-grid: rgba(0, 0, 0, 0.20);
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-fg: #111111;
+  --chart-series-1: #111111;
+  --chart-series-2: #444444;
+  --chart-series-3: #777777;
+  --chart-series-4: #222222;
+  --chart-selected: #000000;
+  --chart-threshold: #111111;
 
   --color-easy: #156525;
   --color-medium: #114273;
@@ -885,7 +1175,7 @@ code:not(pre code) {
 .light code:not(pre code) {
   background-color: #f1f5f9;
   border-color: #cbd5e1;
-  color: #0284c7;
+  color: #0369a1;
 }
 
 .code-block {
@@ -945,88 +1235,188 @@ code:not(pre code) {
    ═══════════════════════════════════════════════════════ */
 
 /* ── Light Mode High-Contrast Text Tokens ─────────── */
+.light .text-purple-500,
 .light .text-purple-400,
 .light .text-purple-300,
+.light .text-purple-200,
+.e-ink .text-purple-500,
 .e-ink .text-purple-400,
-.e-ink .text-purple-300 {
+.e-ink .text-purple-300,
+.e-ink .text-purple-200 {
   color: #6b21a8 !important; /* purple-800: 7.8:1 contrast on white */
 }
 
+.light .text-blue-500,
 .light .text-blue-400,
 .light .text-blue-300,
+.light .text-blue-200,
+.e-ink .text-blue-500,
 .e-ink .text-blue-400,
-.e-ink .text-blue-300 {
+.e-ink .text-blue-300,
+.e-ink .text-blue-200 {
   color: #1d4ed8 !important; /* blue-700: 6.2:1 contrast on white */
 }
 
+.light .text-green-500,
 .light .text-green-400,
 .light .text-green-300,
+.e-ink .text-green-500,
 .e-ink .text-green-400,
 .e-ink .text-green-300 {
   color: #15803d !important; /* green-700: 5.1:1 contrast on white */
 }
 
+.light .text-emerald-500,
 .light .text-emerald-400,
 .light .text-emerald-300,
+.light .text-emerald-200,
+.e-ink .text-emerald-500,
 .e-ink .text-emerald-400,
-.e-ink .text-emerald-300 {
-  color: #047857 !important; /* emerald-700 */
+.e-ink .text-emerald-300,
+.e-ink .text-emerald-200 {
+  color: #047857 !important; /* emerald-700: 5.8:1 contrast on white */
 }
 
+.light .text-orange-500,
 .light .text-orange-400,
 .light .text-orange-300,
+.light .text-orange-200,
+.e-ink .text-orange-500,
 .e-ink .text-orange-400,
-.e-ink .text-orange-300 {
+.e-ink .text-orange-300,
+.e-ink .text-orange-200 {
   color: #c2410c !important; /* orange-700: 4.8:1 contrast on white */
 }
 
+.light .text-amber-500,
 .light .text-amber-400,
 .light .text-amber-300,
+.light .text-amber-200,
+.e-ink .text-amber-500,
 .e-ink .text-amber-400,
-.e-ink .text-amber-300 {
-  color: #b45309 !important; /* amber-700: 5.3:1 contrast on white */
+.e-ink .text-amber-300,
+.e-ink .text-amber-200 {
+  color: #92400e !important; /* amber-800: 6.0:1 contrast on white */
 }
 
+.light .text-yellow-500,
 .light .text-yellow-400,
 .light .text-yellow-300,
+.e-ink .text-yellow-500,
 .e-ink .text-yellow-400,
 .e-ink .text-yellow-300 {
-  color: #a16207 !important; /* yellow-700 */
+  color: #a16207 !important; /* yellow-700: 4.9:1 contrast on white */
 }
 
+.light .text-red-500,
 .light .text-red-400,
 .light .text-red-300,
+.e-ink .text-red-500,
 .e-ink .text-red-400,
 .e-ink .text-red-300 {
   color: #b91c1c !important; /* red-700: 6.1:1 contrast on white */
 }
 
+.light .text-pink-500,
 .light .text-pink-400,
 .light .text-pink-300,
+.e-ink .text-pink-500,
 .e-ink .text-pink-400,
 .e-ink .text-pink-300 {
   color: #be185d !important; /* pink-700: 5.6:1 contrast on white */
 }
 
+.light .text-cyan-500,
 .light .text-cyan-400,
 .light .text-cyan-300,
+.light .text-cyan-200,
+.e-ink .text-cyan-500,
 .e-ink .text-cyan-400,
-.e-ink .text-cyan-300 {
+.e-ink .text-cyan-300,
+.e-ink .text-cyan-200 {
   color: #0e7490 !important; /* cyan-700: 5.2:1 contrast on white */
 }
 
+.light .text-sky-500,
 .light .text-sky-400,
 .light .text-sky-300,
+.light .text-sky-200,
+.e-ink .text-sky-500,
 .e-ink .text-sky-400,
-.e-ink .text-sky-300 {
-  color: #0369a1 !important; /* sky-700 */
+.e-ink .text-sky-300,
+.e-ink .text-sky-200 {
+  color: #0369a1 !important; /* sky-700: 5.2:1 contrast on white */
 }
 
+.light .text-teal-500,
+.light .text-teal-400,
+.light .text-teal-300,
+.e-ink .text-teal-500,
+.e-ink .text-teal-400,
+.e-ink .text-teal-300 {
+  color: #0f766e !important; /* teal-700: 5.4:1 contrast on white */
+}
+
+.light .text-indigo-500,
 .light .text-indigo-400,
 .light .text-indigo-300,
+.e-ink .text-indigo-500,
 .e-ink .text-indigo-400,
 .e-ink .text-indigo-300 {
-  color: #4338ca !important; /* indigo-700 */
+  color: #4338ca !important; /* indigo-700: 5.8:1 contrast on white */
+}
+
+/* Opacity-modified colored text classes in Light & E-Ink modes */
+.light [class*="text-purple-200\\/"],
+.light [class*="text-purple-300\\/"],
+.light [class*="text-purple-400\\/"],
+.e-ink [class*="text-purple-200\\/"],
+.e-ink [class*="text-purple-300\\/"],
+.e-ink [class*="text-purple-400\\/"] {
+  color: #6b21a8 !important;
+}
+
+.light [class*="text-blue-500\\/"],
+.light [class*="text-blue-400\\/"],
+.e-ink [class*="text-blue-500\\/"],
+.e-ink [class*="text-blue-400\\/"] {
+  color: #1d4ed8 !important;
+}
+
+.light [class*="text-emerald-200\\/"],
+.light [class*="text-emerald-300\\/"],
+.e-ink [class*="text-emerald-200\\/"],
+.e-ink [class*="text-emerald-300\\/"] {
+  color: #047857 !important;
+}
+
+.light [class*="text-amber-300\\/"],
+.light [class*="text-amber-400\\/"],
+.e-ink [class*="text-amber-300\\/"],
+.e-ink [class*="text-amber-400\\/"] {
+  color: #92400e !important;
+}
+
+.light [class*="text-orange-200\\/"],
+.light [class*="text-orange-300\\/"],
+.e-ink [class*="text-orange-200\\/"],
+.e-ink [class*="text-orange-300\\/"] {
+  color: #c2410c !important;
+}
+
+.light [class*="text-green-300\\/"],
+.e-ink [class*="text-green-300\\/"] {
+  color: #15803d !important;
+}
+
+.light [class*="text-pink-300\\/"],
+.e-ink [class*="text-pink-300\\/"] {
+  color: #be185d !important;
+}
+
+.light [class*="text-slate-400\\/"],
+.e-ink [class*="text-slate-400\\/"] {
+  color: #475569 !important;
 }
 
 .e-ink .text-slate-100,
@@ -1036,35 +1426,58 @@ code:not(pre code) {
   color: #111111 !important; /* Deep carbon black ink */
 }
 
+/* E-Ink: Protect white text on buttons and dark containers */
+.e-ink :where(
+  button[class*="bg-"],
+  [class*="bg-blue-"],
+  [class*="bg-purple-"],
+  [class*="bg-emerald-"],
+  [class*="bg-cyan-"],
+  [class*="bg-red-"],
+  [class*="bg-black"],
+  [class*="bg-slate-900"],
+  [class*="bg-slate-950"],
+  [class*="bg-[#0"],
+  [class*="bg-[#1"]
+) :where(.text-white, span.text-white, svg.text-white),
+.e-ink :where(
+  button[class*="bg-"],
+  [class*="bg-blue-"],
+  [class*="bg-purple-"],
+  [class*="bg-emerald-"],
+  [class*="bg-cyan-"],
+  [class*="bg-red-"],
+  [class*="bg-black"],
+  [class*="bg-slate-900"],
+  [class*="bg-slate-950"],
+  [class*="bg-[#0"],
+  [class*="bg-[#1"]
+).text-white {
+  color: #ffffff !important;
+}
+
+.light .text-slate-500,
 .light .text-slate-400,
 .e-ink .text-slate-400 {
-  color: #475569 !important; /* slate-600 */
+  color: #475569 !important; /* slate-600: 7.19:1 contrast on white */
 }
 
 .light .text-slate-300,
 .e-ink .text-slate-300 {
-  color: #334155 !important; /* slate-700 */
+  color: #334155 !important; /* slate-700: 10.1:1 contrast on white */
 }
 
 .e-ink .text-slate-500 {
   color: #555555 !important;
 }
 
-.light .text-cyan-200,
-.e-ink .text-cyan-200 {
-  color: #0e7490 !important; /* deep cyan-700 */
-}
-
-.light .text-sky-200,
-.e-ink .text-sky-200 {
-  color: #0369a1 !important; /* deep sky-700 */
-}
-
+.light .text-gray-500,
 .light .text-gray-400,
 .e-ink .text-gray-400 {
   color: #4b5563 !important; /* gray-600 */
 }
 
+.light .text-zinc-500,
 .light .text-zinc-400,
 .e-ink .text-zinc-400 {
   color: #52525b !important; /* zinc-600 */
@@ -1668,12 +2081,14 @@ code:not(pre code) {
 }
 
 /* Whiteboard Blueprint Themes (Interactive Dark Mode / Light Canvas) */
-.whiteboard-dark {
+.whiteboard-dark,
+.whiteboard-image-dark {
   filter: invert(0.92) hue-rotate(180deg) contrast(1.12) brightness(1.02);
   transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.whiteboard-light {
+.whiteboard-light,
+.whiteboard-image-light {
   filter: none;
   transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1686,6 +2101,67 @@ code:not(pre code) {
 .whiteboard-container-light {
   background-color: #FFFFFF !important;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Forced Colors / High Contrast Mode (Windows High Contrast & WCAG 2.2 Forced Colors) */
+@media (forced-colors: active) {
+  :root,
+  html.dark,
+  html.light,
+  html.grey,
+  html.e-ink {
+    --page-background: Canvas;
+    --surface-0: Canvas;
+    --surface-1: Canvas;
+    --surface-2: Canvas;
+    --surface-3: Canvas;
+    --surface-4: Canvas;
+    --surface-primary: Canvas;
+    --surface-secondary: Canvas;
+    --surface-raised: Canvas;
+    --surface-sunken: Canvas;
+    --surface-overlay: Canvas;
+    --surface-selected: Highlight;
+    
+    --foreground: CanvasText;
+    --card: Canvas;
+    --card-foreground: CanvasText;
+    --muted: Canvas;
+    --muted-foreground: CanvasText;
+    --border: ButtonBorder;
+    --border-subtle: ButtonBorder;
+    --border-strong: ButtonBorder;
+    --border-interactive: Highlight;
+    --focus-indicator: Highlight;
+    --divider: ButtonBorder;
+
+    --text-primary: CanvasText;
+    --text-secondary: CanvasText;
+    --text-muted: CanvasText;
+    --text-inverse: Canvas;
+    --text-link: LinkText;
+    --text-link-hover: Highlight;
+    --text-placeholder: CanvasText;
+    --text-code: CanvasText;
+    --text-on-status: CanvasText;
+    --accent: Highlight;
+    --accent-foreground: HighlightText;
+  }
+
+  :focus-visible {
+    outline: 3px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
+
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"],
+  article,
+  .magazine-card {
+    border: 1px solid ButtonBorder !important;
+  }
 }
 
 [id^="question-"],

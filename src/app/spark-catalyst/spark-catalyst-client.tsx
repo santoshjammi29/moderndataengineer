@@ -608,7 +608,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                     <span className="text-[9px] text-amber-400 font-bold px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-800">
                       STEP {simStep} OF 3
                     </span>
-                    <span className="text-[9px] text-purple-400 font-bold px-1.5 py-0.5 rounded bg-purple-950/80 border border-purple-800">
+                    <span className="text-[9px] text-purple-700 dark:text-purple-400 font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950/80 border border-purple-300 dark:border-purple-800">
                       LIVE CLUSTER
                     </span>
                   </div>
@@ -618,7 +618,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-center">
                   {/* Column 1: Input Storage Partitions */}
                   <div className="space-y-1.5">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    <div className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase tracking-wider">
                       1. Storage Slices (S3/OneLake)
                     </div>
                     {[0, 1, 2].map((i) => (
@@ -627,14 +627,14 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                         className={cn(
                           "p-2.5 rounded-lg border transition-all text-xs",
                           simStep >= 1
-                            ? "bg-blue-950/70 border-blue-500/60 text-blue-300 shadow-[0_0_12px_rgba(59,130,246,0.3)] scale-[1.02]"
-                            : "bg-slate-900/60 border-white/5 text-slate-400"
+                            ? "bg-blue-50 dark:bg-blue-950/70 border-blue-500/60 text-blue-700 dark:text-blue-300 shadow-xs scale-[1.02]"
+                            : "bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]"
                         )}
                       >
                         <div className="font-semibold">Parquet Slice P{i}</div>
-                        <div className="text-[9px] opacity-70">128MB RowGroup</div>
+                        <div className="text-[9px] opacity-75">128MB RowGroup</div>
                         {simStep >= 1 && (
-                          <div className="text-[9px] text-blue-400 font-mono mt-0.5">Scan Ingested ✔</div>
+                          <div className="text-[9px] text-blue-600 dark:text-blue-400 font-mono mt-0.5">Scan Ingested ✔</div>
                         )}
                       </div>
                     ))}
@@ -642,7 +642,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
 
                   {/* Column 2: Executor CPU Cores */}
                   <div className="space-y-1.5">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    <div className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase tracking-wider">
                       2. Executor JVM Cores
                     </div>
                     {[1, 2].map((i) => (
@@ -651,14 +651,14 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                         className={cn(
                           "p-3 rounded-lg border transition-all text-xs flex flex-col items-center justify-center min-h-[70px]",
                           simStep === 2
-                            ? "bg-purple-950/80 border-purple-500 text-purple-200 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse"
+                            ? "bg-purple-50 dark:bg-purple-950/80 border-purple-500 text-purple-700 dark:text-purple-200 shadow-xs animate-pulse"
                             : simStep > 2
-                            ? "bg-purple-950/40 border-purple-500/40 text-purple-300"
-                            : "bg-slate-900/60 border-white/5 text-slate-400"
+                            ? "bg-purple-50/60 dark:bg-purple-950/40 border-purple-500/40 text-purple-700 dark:text-purple-300"
+                            : "bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]"
                         )}
                       >
                         <span className="flex items-center gap-1 font-semibold">
-                          <Cpu size={12} className="text-purple-400" /> Executor Core #{i}
+                          <Cpu size={12} className="text-purple-600 dark:text-purple-400" /> Executor Core #{i}
                         </span>
                         <span className="text-[9px] opacity-80 mt-1">
                           {simStep === 2
@@ -673,7 +673,7 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
 
                   {/* Column 3: Tungsten Memory & Targets */}
                   <div className="space-y-1.5">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    <div className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase tracking-wider">
                       3. Tungsten Memory Buffers
                     </div>
                     {[0, 1].map((i) => (
@@ -682,16 +682,16 @@ export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps
                         className={cn(
                           "p-2.5 rounded-lg border transition-all text-xs",
                           simStep === 3
-                            ? "bg-green-950/70 border-green-500/70 text-green-300 shadow-[0_0_12px_rgba(34,197,94,0.3)] scale-[1.02]"
-                            : "bg-slate-900/60 border-white/5 text-slate-400"
+                            ? "bg-emerald-50 dark:bg-green-950/70 border-emerald-500/70 text-emerald-800 dark:text-green-300 shadow-xs scale-[1.02]"
+                            : "bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]"
                         )}
                       >
                         <div className="font-semibold">Target Partition #{i}</div>
-                        <div className="text-[9px] opacity-70">
+                        <div className="text-[9px] opacity-75">
                           {simStep === 3 ? "UnsafeRow Binary Format" : "Memory Buffer Standby"}
                         </div>
                         {simStep === 3 && (
-                          <div className="text-[9px] text-green-400 font-mono mt-0.5">Materialized ✔</div>
+                          <div className="text-[9px] text-emerald-600 dark:text-green-400 font-mono mt-0.5">Materialized ✔</div>
                         )}
                       </div>
                     ))}

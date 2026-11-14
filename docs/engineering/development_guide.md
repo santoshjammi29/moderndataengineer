@@ -20,7 +20,7 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 │   │   ├── architecture/            # Architecture scenarios (3,294 scenarios) + 36-keyword filter + 42 blueprints
 │   │   ├── code-practice/           # Consolidated Coding Hub (326+ operations across Drills, Databricks, Matrix, Runbooks)
 │   │   │   └── databricks/          # Dedicated Databricks coding subpage (148+ operations & memory triage)
-│   │   ├── cheat-sheet/             # 7 Master Vector PDFs, posters, and 86 operational cheatsheet cards
+│   │   ├── cheat-sheet/             # 10 Master Vector PDFs, posters, and 86 operational cheatsheet cards
 │   │   ├── modern-stack/            # Cloud Platforms & 10-Engine Matrix, FinOps playbooks, 6 interactive simulators
 │   │   ├── spark-engine/            # Spark memory, shuffle, Catalyst & Photon (with Spark 3.5 AQE skew join splitting)
 │   │   ├── spark-catalyst/          # Catalyst physical plan inspector with 7 production scenarios
@@ -42,10 +42,10 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 │   │   ├── redis.ts                 # Bounded LRU cache
 │   │   └── guided-learning.ts       # Cross-section aggregation engine
 │   ├── workers/                     # Web Workers for SIMD vector compute
-│   └── __tests__/                   # 58 Vitest test suites (472 tests)
+│   └── __tests__/                   # 61 Vitest test suites (501 tests)
 ├── public/
 │   ├── diagrams/                    # Lossless WebP, AVIF, and JPG whiteboard blueprints
-│   └── cheatsheets/pdf/             # 7 Master Vector PDFs & printable incident runbooks
+│   └── cheatsheets/pdf/             # 10 Master Vector PDFs & printable incident runbooks
 └── docs/                            # Deep-dive guides, Sourced Research Ledger & Knowledge Base
 ```
 
@@ -98,14 +98,17 @@ Search requests are powered by an in-memory BM25F ranking engine with title ($3\
 ### 3.4 TanStack Virtual List Rendering
 Lists containing hundreds or thousands of cards (`/qa-prep`, `/concepts`, `/architecture`) consume `@tanstack/react-virtual` with dynamic row heights, guaranteeing smooth 60 FPS scrolling and minimal DOM nodes.
 
+### 3.5 Accessible Collection Shuffle Engine
+Interactive practice collections (`/qa-prep`, `/concepts`, `/architecture`, `/code-practice`, `/cheat-sheet`, `/whiteboards`) integrate an unbiased Knuth Fisher–Yates shuffle algorithm (`src/lib/shuffle.ts`) with deterministic PRNG seed testing (`createSeededRandom`). To eliminate hydration mismatches, cards maintain their canonical order by default upon initial render. UI controls (`src/components/ui/shuffle-control.tsx`) provide WCAG 2.2 AA compliant `aria-live="polite"` status announcements and explicit reset capabilities.
+
 ---
 
 ## 4. Automated Testing Suite (Vitest)
 
-Our automated verification suite enforces 100% test passing across 53 test files before any pull request or deployment:
+Our automated verification suite enforces 100% test passing across 61 test files before any pull request or deployment:
 
 ```bash
-# Run all 53 test suites
+# Run all 61 test suites
 npm test
 ```
 
@@ -117,8 +120,10 @@ npm test
 5. **Keyword Filter Bar (`src/__tests__/features.architecture-keyword-filters.test.tsx`)**: 36-keyword scenario filter logic across 6 domain groups.
 6. **Databricks Coding Hub (`src/__tests__/features.code-practice-databricks.test.tsx`)**: Unified operations, memory triage views, and category filtering.
 7. **Target Company Intel Hub (`src/__tests__/features.company-research-client.test.tsx` & `features.company-research.test.tsx`)**: Triple view modes (Compact Grid, Split Workbench, Comparison Table), in-card drawer tabs, GCC hub filtering, and 1-click clipboard prompt copying.
-8. **PDF Download API Route (`src/__tests__/features.pdf-download-route.test.ts`)**: Security against path traversal, attachment headers, and streaming responses.
-9. **Progress API & Redis Bounded Cache (`src/__tests__/features.api-progress-security.test.ts` & `features.redis-cache-bounded.test.ts`)**: Bounded memory limits, cache eviction, and authentication verification.
+8. **PDF Download API Route (`src/__tests__/features.pdf-download-route.test.ts`)**: Security against path traversal, attachment headers, and streaming responses across all 10 approved PDFs.
+9. **Collection Shuffle Engine (`src/__tests__/features.shuffle-engine.test.ts`)**: Unbiased Knuth Fisher–Yates distribution, deterministic seed repeatability, and non-mutating array operations.
+10. **Theme & WCAG Accessibility (`src/__tests__/features.theme-accessibility-wcag.test.ts`)**: Semantic design tokens, 4.5:1 contrast ratios across light and dark modes, and ARIA attributes.
+11. **Progress API & Redis Bounded Cache (`src/__tests__/features.api-progress-security.test.ts` & `features.redis-cache-bounded.test.ts`)**: Bounded memory limits, cache eviction, and authentication verification.
 
 ---
 

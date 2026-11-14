@@ -33,6 +33,8 @@ import { CodeSheetItem, CodeLevel, DatabricksSuiteData, Databricks100Concept } f
 import { PipelineExecutionFlow } from "@/components/code-practice/pipeline-execution-flow";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
+import { fisherYatesShuffle, createSeededRandom } from "@/lib/shuffle";
+import { ShuffleControl } from "@/components/ui/shuffle-control";
 import { recordLastTopic } from "@/lib/user-progress";
 import { TopicIcon } from "@/components/ui/topic-icon";
 import { UnifiedSearchFilterBox } from "@/components/ui/unified-search-filter-box";
@@ -91,6 +93,7 @@ export function CodePracticeClient({
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [isShuffled, setIsShuffled] = useState(false);
   const [shuffleSeed, setShuffleSeed] = useState(0);
+  const [statusAnnouncement, setStatusAnnouncement] = useState("");
 
   // Polyglot Matrix state
   const [matrixSearch, setMatrixSearch] = useState("");
@@ -183,11 +186,13 @@ export function CodePracticeClient({
   const handleShuffle = () => {
     setIsShuffled(true);
     setShuffleSeed((s) => s + 1);
+    setStatusAnnouncement(`Shuffled ${languageConfigs[activeLang].name} templates. Order randomized.`);
     toast.success(`Shuffled ${languageConfigs[activeLang].name} templates`);
   };
 
   const handleResetOrder = () => {
     setIsShuffled(false);
+    setStatusAnnouncement(`Reset ${languageConfigs[activeLang].name} templates to default order.`);
     toast.info("Reset to default order");
   };
 
@@ -252,22 +257,11 @@ export function CodePracticeClient({
       return true;
     });
 
-    if (isShuffled) {
-      result = [...result];
-      let mLen = result.length,
-        t,
-        i;
-      let seed = (shuffleSeed + activeLang.charCodeAt(0)) * 9301 + 49297;
-      const rnd = () => {
-        seed = (seed * 9301 + 49297) % 233280;
-        return seed / 233280;
-      };
-      while (mLen) {
-        i = Math.floor(rnd() * mLen--);
-        t = result[mLen];
-        result[mLen] = result[i];
-        result[i] = t;
-      }
+    if (isShuffled && result.length > 1) {
+      result = fisherYatesShuffle(
+        result,
+        createSeededRandom(shuffleSeed + activeLang.charCodeAt(0))
+      );
     }
     return result;
   }, [currentItems, selectedLevel, searchQuery, isShuffled, shuffleSeed, activeLang]);
@@ -496,13 +490,15 @@ export function CodePracticeClient({
                 </button>
               ))}
 
-              <button
-                onClick={handleShuffle}
-                className="p-1.5 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
-                title="Shuffle Order"
-              >
-                <Shuffle size={14} />
-              </button>
+              <ShuffleControl
+                isShuffled={isShuffled}
+                onShuffle={handleShuffle}
+                onReset={handleResetOrder}
+                itemLabel="Drills"
+                count={filteredDrills.length}
+                statusAnnouncement={statusAnnouncement}
+                size="sm"
+              />
             </div>
           </div>
 

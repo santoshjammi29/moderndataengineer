@@ -58,6 +58,8 @@ import { useDiagramTheme } from "@/lib/diagram-theme";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
 import { LearningJourneyViewer } from "@/components/architecture/learning-journey-viewer";
+import { fisherYatesShuffle, createSeededRandom } from "@/lib/shuffle";
+import { ShuffleControl } from "@/components/ui/shuffle-control";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Cpu,
@@ -251,6 +253,24 @@ export function WhiteboardsClient() {
     return WHITEBOARD_CATEGORIES[idx];
   }, [currentIndex]);
 
+  // Shuffle state for blueprints
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [shuffleSeed, setShuffleSeed] = useState(0);
+  const [statusAnnouncement, setStatusAnnouncement] = useState("");
+
+  const handleShuffle = () => {
+    setIsShuffled(true);
+    setShuffleSeed((s) => s + 1);
+    setStatusAnnouncement(`Shuffled ${currentCategory.shortTitle} whiteboard blueprints.`);
+    toast.success("Shuffled blueprints order");
+  };
+
+  const handleResetOrder = () => {
+    setIsShuffled(false);
+    setStatusAnnouncement("Reset blueprints to default order.");
+    toast.info("Reset to default order");
+  };
+
   // Filtered Items within the current category
   const query = searchQuery.trim().toLowerCase();
 
@@ -266,6 +286,11 @@ export function WhiteboardsClient() {
       );
     });
   }, [currentCategory.diagrams, query]);
+
+  const displayedDiagrams = useMemo(() => {
+    if (!isShuffled || filteredDiagrams.length <= 1) return filteredDiagrams;
+    return fisherYatesShuffle(filteredDiagrams, createSeededRandom(shuffleSeed));
+  }, [filteredDiagrams, isShuffled, shuffleSeed]);
 
   const filteredConcepts = useMemo(() => {
     return currentCategory.concepts.filter((c) => {
@@ -968,17 +993,28 @@ export function WhiteboardsClient() {
         {/* ── TAB 2: WHITEBOARD DIAGRAMS ────────────────────────────────────── */}
         {activeTab === "diagrams" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
               <h3 className="text-sm sm:text-base font-bold text-[var(--foreground)]">
-                Showing {filteredDiagrams.length} Whiteboard Blueprints for {currentCategory.shortTitle}
+                Showing {displayedDiagrams.length} Whiteboard Blueprints for {currentCategory.shortTitle}
               </h3>
-              <div className="text-xs text-[var(--muted-foreground)]">
-                Click any blueprint to inspect with zoom &amp; dark mode
+              <div className="flex items-center gap-3">
+                <ShuffleControl
+                  isShuffled={isShuffled}
+                  onShuffle={handleShuffle}
+                  onReset={handleResetOrder}
+                  itemLabel="Blueprints"
+                  count={filteredDiagrams.length}
+                  statusAnnouncement={statusAnnouncement}
+                  size="sm"
+                />
+                <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">
+                  Click any blueprint to inspect with zoom &amp; dark mode
+                </span>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredDiagrams.map((diagram) => (
+              {displayedDiagrams.map((diagram) => (
                 <div
                   key={diagram.id}
                   id={`diagram-${diagram.id}`}

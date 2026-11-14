@@ -10,6 +10,18 @@
       "Built on Azure Data Lake Storage (ADLS) Gen2 using the Open Delta Lake format.",
       "Supports cross-workspace shortcuts to prevent data duplication.",
       "Universal security policies can be applied across all workspaces and personas."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -23,6 +35,13 @@
       "No data duplication or data movement cost.",
       "Supports ADLS Gen2, Amazon S3, Google Cloud Storage, and Microsoft Dataverse.",
       "Secured via OneLake security model or inherited credentials."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -36,6 +55,18 @@
       "Separates storage (Delta Parquet in OneLake) from compute.",
       "Automatically provides a Read-Only SQL Analytics Endpoint for standard T-SQL querying.",
       "Allows data curation using Python/Scala Spark notebooks."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -49,6 +80,23 @@
       "Bypasses the SQL translation layer entirely, reading Parquet files directly.",
       "Eliminates dataset refresh scheduling and synchronization lag.",
       "Fallback behavior automatically switches to DirectQuery if the capacity memory limit is exceeded."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -88,6 +136,13 @@
       "Applies advanced column-sorting optimizations when writing Parquet data.",
       "Native to Fabric engines but fully compliant with the open Parquet specification.",
       "Significantly reduces query execution times in Direct Lake mode."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -101,6 +156,13 @@
       "Reads Power BI data directly into Pandas or Spark DataFrames.",
       "Exposes measures, hierarchies, and security models directly to Python logic.",
       "Enables automated data quality validation against defined business measures."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -127,6 +189,18 @@
       "Continuously replicates operational data (inserts, updates, deletes) in near real-time.",
       "Stores replicas in open Delta Lake format directly in OneLake.",
       "Supports Direct Lake mode in Power BI to analyze operational data without imports."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -153,6 +227,18 @@
       "Purpose-built for time-series, log, and IoT streaming analytics.",
       "Uses Kusto Query Language (KQL) for high-speed, pipe-based ad-hoc queries.",
       "Exposes data as Delta format in OneLake for cross-engine analytical joins."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -166,6 +252,13 @@
       "VertiPaq engine compresses data using dictionary encoding and run-length limits.",
       "Fastest query performance due to memory-resident columnar structures.",
       "Dataset size is constrained by capacity memory limits (e.g., Pro has 1GB limit)."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -452,6 +545,13 @@
       "Provides a fully managed, scalable Apache Airflow environment inside Azure.",
       "Allows engineers to write pipeline orchestrations as standard Python code (DAGs).",
       "Natively integrates with Azure Active Directory (Microsoft Entra ID) and Key Vault."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -673,6 +773,13 @@
       "Uses a JSON transaction log to maintain state and coordinate write concurrency.",
       "Supports Upsert (Merge) operations to update existing records cleanly.",
       "Enables schema validation to prevent corrupt data writes."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -686,6 +793,13 @@
       "Prevents write job failures when schemas shift over time.",
       "Automatically updates the transaction log catalog with new fields.",
       "Keeps data historical files intact without expensive reprocessing."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -725,6 +839,13 @@
       "Default behavior in Delta Lake to protect data quality.",
       "Prevents column contamination and database corruption.",
       "Can be overridden using schema merging options if the change is approved."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -738,6 +859,13 @@
       "Queries historical data using syntax like `VERSION AS OF` or `TIMESTAMP AS OF`.",
       "Relies on the log history and file retention window configured on the table.",
       "Old files are deleted permanently only when running the `VACUUM` command."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -751,6 +879,13 @@
       "Tracks table state using metadata files instead of relying on folder paths.",
       "Enables hidden partitioning to eliminate manual partition pruning in queries.",
       "Supports ACID transactions and schema evolution across multiple compute engines."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Schema & Partition Evolution Guide",
+        "url": "https://iceberg.apache.org/docs/latest/evolution/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -764,6 +899,18 @@
       "Enables multi-engine read capabilities on a single physical dataset.",
       "Generates Iceberg metadata on-the-fly alongside standard Delta transaction logs.",
       "Eliminates data replication and file conversion pipelines between formats."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -777,6 +924,18 @@
       "Dynamically groups data based on defined clustering keys as new files are written.",
       "Reduces layout optimization costs compared to full Z-Order rewrites.",
       "Allows modifying clustering columns without restructuring historical tables."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -855,6 +1014,13 @@
       "Dynamically coalesces post-shuffle partition sizes to prevent overhead.",
       "Converts Sort-Merge Joins into Broadcast Hash Joins on-the-fly.",
       "Detects and mitigates data skew by dividing skewed partitions into smaller sub-tasks."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -868,6 +1034,13 @@
       "Direct off-heap memory management to bypass JVM garbage collection latency.",
       "Uses Cache-aware computation to store data arrays directly inside L1/L2 CPU cache.",
       "Whole-Stage Code Generation compiles multiple execution steps into a single Java function."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -894,6 +1067,13 @@
       "Centralized governance system; decouples data security policies from specific workspaces.",
       "Provides automated table-level and column-level data lineage tracking.",
       "Enables row-level filtering and column-level masking rules."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -907,6 +1087,13 @@
       "Vectorized execution engine written in C++ to bypass JVM garbage collection.",
       "Fully compatible with standard Spark SQL and DataFrame operations.",
       "Significantly accelerates ETL processing speeds and reduces cloud compute costs."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -946,6 +1133,13 @@
       "ETL: Historically popular; protects target databases from unvalidated data load.",
       "ELT: Dominant in modern cloud data warehousing; maximizes ingestion speed.",
       "ELT utilizes target SQL or Spark engines to perform processing on-demand."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1011,6 +1205,13 @@
       "Defines tasks as Directed Acyclic Graphs (DAGs) to enforce dependencies.",
       "Provides central tracking, logging, and retry policies for data pipelines.",
       "Coordinates cross-system activities (e.g. running a copy task, then triggering a Spark notebook)."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1141,6 +1342,18 @@
       "Consolidates Eventstreams, KQL databases, and Reflex triggers in a single pane.",
       "Supports sub-second response times on ad-hoc queries over telemetry feeds.",
       "Auto-syncs tables to Delta format in OneLake for cross-engine analytical joins."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1167,6 +1380,13 @@
       "Stores data in memory using a highly optimized columnar data layout.",
       "Applies Value, Dictionary, and Run-Length Encoding to compress data.",
       "Executes visual queries using multi-threaded parallel operations."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1284,6 +1504,13 @@
       "Histograms tracking column values to estimate row counts for execution queries.",
       "Out-of-date statistics lead to parameter sniffing regressions and poor join choices.",
       "Should be updated regularly using AUTO_UPDATE_STATISTICS or manual maintenance jobs."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1310,6 +1537,13 @@
       "Shares live tables across cloud platforms and applications without data duplication.",
       "Uses a secure, keyless token model to authenticate external data consumers.",
       "Supported natively by Databricks, Microsoft Fabric, and open source clients."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -1323,6 +1557,13 @@
       "Decouples table structure from physical partition folders; enables hidden partitioning.",
       "Maintains snapshots using hierarchical metadata manifest trees.",
       "Ensures ACID transactions and atomic schema evolutions across analytical engines."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Schema & Partition Evolution Guide",
+        "url": "https://iceberg.apache.org/docs/latest/evolution/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1336,6 +1577,13 @@
       "Tiny files overload the file metadata catalog and degrade Spark file-seek speeds.",
       "Caused by high-frequency streaming ingestion or over-partitioned tables.",
       "Resolved by scheduling compaction jobs to consolidate blocks into optimal sizes."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Compaction & Maintenance Operations",
+        "url": "https://iceberg.apache.org/docs/latest/maintenance/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1362,6 +1610,13 @@
       "Avoids repeating expensive DataFrame transform operations on subsequent actions.",
       "cache() defaults to MEMORY_AND_DISK serialization formats.",
       "persist() supports fine-grained control over serialization and disk storage levels."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1375,6 +1630,13 @@
       "Triggered when executor partition sizes exceed JVM execution memory space.",
       "Causes severe query performance drops due to serialization and disk I/O latency.",
       "Resolved by increasing partition count (reducing partition size) or upgrading executor RAM."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1427,6 +1689,18 @@
       "Eliminates data silos by unifying batch, streaming, SQL, and machine learning.",
       "Provides ACID transactions, time travel, and schema validation over object storage.",
       "Reduces licensing and infrastructure costs by decoupling storage and compute."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1466,6 +1740,13 @@
       "Background jobs are smoothed over 24-hour sliding windows; interactive queries are evaluated over 5-minute windows.",
       "Throttling stages progress from latency delays to hard rejection once cumulative capacity debt surpasses recovery thresholds.",
       "Proactive workload isolation across multiple dedicated F-SKU capacities prevents ad-hoc data science pipelines from degrading executive dashboards."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1479,6 +1760,23 @@
       "Eliminates traditional Import scheduled refresh latencies and DirectQuery translation overhead.",
       "Silent fallback to DirectQuery occurs if model size exceeds SKU RAM limits, view definitions are queried, or RLS is enforced at SQL layer.",
       "V-Order columnar sorting must be enforced during upstream Spark/Warehouse writes to optimize dictionary encoding for sub-second VertiPaq paging."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1492,6 +1790,13 @@
       "Establishes decentralized domain ownership while maintaining unified global metadata discovery via OneLake catalog.",
       "Certified and Promoted endorsement workflows distinguish production-grade enterprise data products from experimental artifacts.",
       "OneLake Shortcuts allow cross-domain consumption with zero file duplication and zero cross-capacity egress charges."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1505,6 +1810,13 @@
       "Serializes workspace artifacts into version-controlled Git branches, enabling branching, code review, and automated rollbacks.",
       "Deployment pipeline parameter rules automatically re-point Lakehouse shortcuts to production storage without manual script edits.",
       "Fabric REST API webhooks enable fully automated continuous integration (CI) and continuous delivery (CD) orchestration."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1518,6 +1830,13 @@
       "Combines blazing VertiPaq in-memory speed for historical records with real-time DirectQuery for sub-second current transactions.",
       "Dual storage mode allows dimension tables to bridge Import and DirectQuery fact tables without triggering cross-island performance penalties.",
       "User-defined aggregations intercept high-level executive queries and serve them directly from memory, shielding source databases."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1544,6 +1863,13 @@
       "Column cardinality directly dictates dictionary size; high-cardinality columns consume 80%+ of total semantic model memory.",
       "Formula Engine (FE) is single-threaded; Storage Engine (SE) is multi-threaded, columnar, and orders of magnitude faster.",
       "Splitting high-precision timestamp columns into separate Date and Time attributes reduces distinct value combinations exponentially."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1570,6 +1896,18 @@
       "A single generic pipeline handles hundreds of source tables via dynamic runtime parameter injection.",
       "Watermark metadata tracking guarantees precise delta extraction without hardcoded date filter logic.",
       "Execution telemetry logging captures row counts, duration, and error codes into centralized audit tables for operational observability."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -1661,6 +1999,18 @@
       "Clustering keys can be redefined at any time without requiring massive historical dataset re-writes or downtime.",
       "Prevents small-file proliferation and data skew common with traditional high-cardinality directory partitioning schemes.",
       "Supports continuous, incremental clustering during standard write transactions, slashing compute overhead compared to Z-Order."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -1674,6 +2024,13 @@
       "Atomic commit protocol records intended changes in ordered _delta_log JSON files using cloud object storage conditional writes.",
       "Partition-level write isolation allows concurrent writers to commit to distinct partitions simultaneously with zero lock contention.",
       "Exponential backoff retry algorithms prevent transient concurrent modification errors in distributed micro-batch streaming pipelines."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -1700,6 +2057,23 @@
       "Lambda architecture forces maintenance of two distinct codebases across speed and batch layers, leading to metric discrepancies.",
       "Kappa architecture processes both real-time telemetry and historical replays through a single unified streaming codebase.",
       "Modern ACID lakehouse storage formats (Delta Lake, Iceberg) provide the snapshot isolation necessary to make Kappa architecture production-grade."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      },
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1713,6 +2087,13 @@
       "Inspects actual post-shuffle partition sizes at runtime stage boundaries, eliminating static spark.sql.shuffle.partitions guesswork.",
       "Dynamically converts Sort-Merge Joins to lightning-fast Broadcast Hash Joins when post-filtered dataset sizes fall below broadcast thresholds.",
       "Detects and automatically splits skewed partitions into multiple parallel sub-tasks, eliminating trailing zombie tasks."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1726,6 +2107,13 @@
       "Execution memory (joins, aggregations, shuffles) takes absolute priority and can forcibly evict cached Storage memory to disk.",
       "Storage memory (cached RDDs and DataFrames) is borrowing-only and can never evict active Execution memory.",
       "Project Tungsten off-heap memory manages binary data off the JVM heap, completely avoiding costly Java Garbage Collection pauses."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1739,6 +2127,18 @@
       "Write-Ahead Log (WAL) in checkpoint directory records planned micro-batch offsets to persistent storage prior to execution.",
       "State store versioning preserves stateful aggregations (e.g., watermarked sliding windows) across cluster restart events.",
       "True exactly-once requires three unified components: replayable source, deterministic engine, and transactional/idempotent sink."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1831,6 +2231,13 @@
       "Acyclic topology guarantees execution terminates without infinite recursive dependency loops.",
       "Parsed continuously by the DagFileProcessor to synchronize execution schedules and DAG state in the metadata database.",
       "Serves as the fundamental unit of scheduling, isolation, and monitoring in the Airflow ecosystem."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1845,6 +2252,13 @@
       "Can be defined using classic Operators or TaskFlow API (@task decorator).",
       "Executes in worker environments (Celery workers, Kubernetes pods) isolated from the Airflow scheduler.",
       "Maintains lifecycle states (queued, running, success, failed, upstream_failed) tracked in the metadata DB."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1859,6 +2273,13 @@
       "Categorized into Action operators, Transfer operators, and Sensor operators.",
       "Should always adhere to idempotency principles to guarantee safe automated retries.",
       "Extended by community provider packages (e.g., apache-airflow-providers-databricks, amazon, google)."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1873,6 +2294,13 @@
       "Runs in an active-active HA model in Airflow 2.x+, eliminating single points of failure.",
       "Delegates task execution to executors (Local, Celery, Kubernetes) without running worker compute itself.",
       "Tunes scheduling throughput via parameters like parallelism, dag_concurrency, and max_active_runs."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1887,6 +2315,13 @@
       "Pulls task assignments from message brokers or receives container dispatches from the Kubernetes API.",
       "Streams live logs to centralized object storage (S3, GCS, CloudWatch) for web UI inspection.",
       "Scales horizontally via KEDA or Celery autoscaling policies based on queue depth metrics."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1901,6 +2336,13 @@
       "Stored by default in the metadata database as serialized JSON blobs with size limits (typically <48KB).",
       "Can be configured with Custom XCom Backends (S3, GCS, Azure Blob) to handle larger serialized payloads.",
       "Accessed programmatically via task_instance.xcom_push() and task_instance.xcom_pull() or return values in @task."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1915,6 +2357,13 @@
       "Accessible in Python via Variable.get() or inside templates using {{ var.value.key }}.",
       "Must never be called at top-level DAG script scope to prevent saturating metadata DB connection pools.",
       "Can be stored in HashiCorp Vault, AWS SSM, or GCP Secret Manager using custom secret backends."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1929,6 +2378,13 @@
       "Referenced by Hooks and Operators using a clean conn_id string (e.g. conn_id='databricks_default').",
       "Supports fernet-key encryption at rest in the metadata database for sensitive credentials.",
       "Can be sourced dynamically from enterprise secret managers (AWS Secrets Manager, Azure Key Vault)."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1943,6 +2399,13 @@
       "Holds execution metadata including try_number, duration, worker_host, and state transitions.",
       "Can be cleared individually in the UI or CLI to trigger targeted task reruns without rerunning the entire DAG.",
       "Exposes execution context (execution_date, params, ti) to Jinja templates and Python Callables."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1957,6 +2420,13 @@
       "Identified by run_id (e.g., scheduled__2026-09-30T00:00:00+00:00 or manual__...).",
       "Evaluates to success only when all leaf tasks complete in allowed states according to trigger rules.",
       "Controlled by max_active_runs to prevent scheduling pile-ups during downstream latency spikes."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1971,6 +2441,13 @@
       "Defaults to 'all_success', which halts downstream branches whenever an upstream task fails.",
       "'all_done' ensures cleanup/teardown tasks run regardless of upstream success or failure.",
       "'none_failed_min_one_success' is the standard rule for downstream tasks after a BranchPythonOperator."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1985,6 +2462,13 @@
       "Measured relative to the logical execution date / scheduled start of the DagRun, not task start time.",
       "Triggers automated notifications via email or custom sla_miss_callback functions.",
       "Visible in the Airflow UI under Browse -> SLA Misses for platform operational compliance auditing."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -1999,6 +2483,13 @@
       "Requires a production RDBMS (PostgreSQL/MySQL) supporting concurrent connection pools.",
       "Eliminates the operational overhead of managing external Celery brokers or Kubernetes clusters.",
       "Vertically bounded: scaling is constrained by the physical CPU and RAM of the single host."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2013,6 +2504,13 @@
       "Relies on a message broker (RabbitMQ or Redis) for queue management and task dispatch.",
       "Supports task routing to specialized worker queues (e.g., GPU queues, memory-optimized queues).",
       "Requires robust broker monitoring and process recycling to prevent worker memory leaks."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2041,6 +2539,13 @@
       "Provides collapsible visual nesting in the Airflow Grid and Graph views for large enterprise DAGs.",
       "Maintains a clean namespacing prefix (group_id.task_id) to prevent task ID collisions.",
       "Purely client-side UI abstraction that introduces zero scheduler or execution engine overhead."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2069,6 +2574,13 @@
       "Automatically resolves connection details and credentials from the Airflow Connections database.",
       "Used internally by Operators to separate orchestration workflows from transport/API protocols.",
       "Exposes high-level helper methods (e.g., run(), get_pandas_df(), upload_file()) with built-in retries."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2097,6 +2609,13 @@
       "Eliminates anti-pattern top-level database queries previously used for dynamic DAG generation.",
       "Scheduler dynamically scales mapped task instances at runtime while tracking individual TI states.",
       "Integrates seamlessly with TaskFlow API decorators (@task) to map across lists and dictionaries."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2111,6 +2630,13 @@
       "Producer tasks declare outputs using outlets=[Dataset('uri')]; consumer DAGs schedule on those Datasets.",
       "Replaces brittle ExternalTaskSensors and manual TriggerDagRunOperators across pipeline boundaries.",
       "Visualized in the Airflow UI under the Datasets tab, showing an enterprise data dependency graph."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow Documentation: Data-Aware Scheduling & Datasets",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2139,6 +2665,13 @@
       "Configured via the Airflow UI under Admin -> Pools with assigned integer slot capacities.",
       "Tasks declare pool='pool_name' and optionally pool_slots=N to occupy multiple slots per task.",
       "Queued tasks yield slots dynamically upon completion, preventing external system saturation."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2153,6 +2686,13 @@
       "Defaults to weight_rule='downstream', prioritizing tasks that unlock the longest downstream dependency chains.",
       "Alternative weight rules include 'upstream' and 'absolute' for manual static prioritization.",
       "Critical for guaranteeing that high-priority operational SLAs are met ahead of long batch reports."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2167,6 +2707,13 @@
       "Completely decouples the Airflow Webserver from the local file system and raw Python execution.",
       "Eliminates webserver CPU spikes and secures the cluster against arbitrary code execution in the UI.",
       "Synchronized automatically by the DagProcessor whenever Python source files are updated on disk."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2181,6 +2728,13 @@
       "Requires dedicated connection pooling layers like PgBouncer to handle distributed worker connection spikes.",
       "Enforces scheduled table pruning via airflow db clean to prevent multi-million row table bloat.",
       "Tunes query execution plans by optimizing autovacuum and indexing on task_instance and dag_run tables."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2195,6 +2749,13 @@
       "Leverages database-native row-level locking (SELECT FOR UPDATE SKIP LOCKED) to avoid race conditions.",
       "Eliminates the single point of failure (SPOF) present in legacy single-scheduler architectures.",
       "Distributes DAG parsing and task scheduling loads across multiple compute nodes seamlessly."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2223,6 +2784,13 @@
       "Provides complete dependency isolation: pipelines can run conflicting library versions and custom runtimes.",
       "Protects the Airflow worker infrastructure from catastrophic out-of-memory (OOM) failures.",
       "Supports native Kubernetes primitives including nodeAffinity, tolerations, volumeMounts, and ConfigMaps."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2237,6 +2805,13 @@
       "Utilizes git-sync sidecar containers to continuously synchronize DAG repositories into local volumes.",
       "Can leverage S3/GCS object stores with lifecycle sync scripts to distribute pipeline code across clusters.",
       "Requires robust branch protection and automated linting in CI to prevent deploying broken DAG files."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2265,6 +2840,13 @@
       "Renders hierarchical TaskGroups with drill-down capabilities for multi-hundred task pipelines.",
       "Displays historical execution duration sparklines to immediately spot anomalous run delays.",
       "Enables one-click task clearing, log downloading, and variable/XCom state inspection."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2279,6 +2861,13 @@
       "Crucial metrics include dag_processing.total_parse_time and scheduler.critical_section_duration.",
       "Tracks executor queue saturation and scheduling delays to trigger automated infrastructure scaling.",
       "Enables platform engineers to set SLA alerts and identify poorly optimized DAG scripts."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2293,6 +2882,13 @@
       "Receives comprehensive diagnostic context including dag, task_list, blocking_task_list, and slas.",
       "Enables programmatic dispatch to incident response systems (PagerDuty, Opsgenie, Slack webhooks).",
       "Executes within the scheduler process; must remain lightweight to avoid blocking scheduling loops."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2307,6 +2903,13 @@
       "Enables scheduling based on financial calendars, market trading days, and country-specific holidays.",
       "Explicitly controls the logical data interval (data_interval_start/end) independently of trigger time.",
       "Implemented by subclassing Timetable and registering the plugin in the Airflow plugins directory."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2321,6 +2924,13 @@
       "Soft multi-tenancy utilizes RBAC, designated Pools, and custom namespaces on a shared cluster.",
       "Hard multi-tenancy deploys independent containerized Airflow instances per tenant using Kubernetes/Helm.",
       "Prevents noisy-neighbor compute starvation and eliminates cross-tenant secret leakage vulnerabilities."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2335,6 +2945,13 @@
       "Protects the scheduling engine from crashing when poorly written DAG code triggers CPU or memory spikes.",
       "Improves scheduling throughput by enabling schedulers to operate purely on serialized DB records.",
       "Supports running DagProcessor in isolated network zones with restricted metadata DB privileges."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2363,6 +2980,13 @@
       "Supports DAG-level access controls: users can view and trigger only assigned pipeline namespaces.",
       "Federates with corporate enterprise IdPs using SAML, OAuth2, Okta, and Azure Active Directory.",
       "Restricts sensitive actions such as editing Connections, clearing tasks, and downloading worker logs."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2377,6 +3001,13 @@
       "Eliminates the storage of sensitive plaintext or fernet-encrypted credentials in the metadata database.",
       "Enforces centralized secret rotation without requiring Airflow connection updates or DAG redeployments.",
       "Includes local caching to prevent rate-limiting and API costs from external secret providers."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2391,6 +3022,13 @@
       "Decouples pipeline execution schedules: downstream DAGs run only when prerequisite data is fresh.",
       "Provides an enterprise-wide data lineage graph rendered automatically in the Airflow UI.",
       "Supports multi-dataset boolean conditions (e.g. trigger when Dataset A AND Dataset B update)."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: dbt Mesh & Multi-Project Governance",
+        "url": "https://docs.getdbt.com/docs/collaborate/govern/about-model-governance",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -2433,6 +3071,13 @@
       "Integrates external event streams (Kafka, AWS EventBridge, webhooks) with the Airflow REST API.",
       "Utilizes Deferrable Operators and Triggers to wait for external events with zero worker slot overhead.",
       "Enables sub-minute data freshness SLAs for critical financial and operational downstream consumers."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow Documentation: Deferrable Operators & Triggerer",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2447,6 +3092,13 @@
       "Enables polyglot task authoring (TypeScript, Go, Rust) running natively alongside Python tasks.",
       "Deepens native event-driven orchestration with first-class streaming and real-time trigger primitives.",
       "Delivers an upgraded, high-performance web architecture built on modern React and REST APIs."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2517,6 +3169,13 @@
       "Defined declaratively within schema YAML configuration files alongside model documentation.",
       "Executed via dbt test or dbt build; queries count failing records and return non-zero exit codes on breach.",
       "Supports severity thresholds (warn vs error) to prevent pipeline aborts on non-critical data quality anomalies."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -2587,6 +3246,13 @@
       "Serves as the data dictionary that populates automated interactive documentation in dbt Docs.",
       "Enforces column-level data contracts and schema constraints when contract: {enforced: true} is enabled.",
       "Maintains modular organization by collocating YAML files alongside model SQL files in directory trees."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -2881,6 +3547,13 @@
       "Defined in Jinja macros decorated with {% materialization <name>, adapter %}.",
       "Controls low-level warehouse DDL/DML, transaction savepoints, and post-materialization indexing.",
       "Used to implement specialized lakehouse formats (Iceberg, Hudi) and custom streaming upsert mechanics."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2923,6 +3596,13 @@
       "Generated in the target/ directory during dbt compile, dbt run, or dbt build executions.",
       "Contains detailed node definitions including compiled_code, raw_code, depends_on, and schema contracts.",
       "Ingested by enterprise data catalogs (Atlan, Purview, DataHub) to extract automated end-to-end data lineage."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: dbt Mesh & Multi-Project Governance",
+        "url": "https://docs.getdbt.com/docs/collaborate/govern/about-model-governance",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -2951,6 +3631,13 @@
       "dbt Cloud delivers an enterprise control plane with turnkey Slim CI, browser IDE, and managed Semantic Layer APIs.",
       "Core requires internal DevOps investment for Docker containerization, CI/CD pipelines, and secret rotation.",
       "Architects balance engineering headcount maintenance costs against SaaS subscription investment."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -2965,6 +3652,13 @@
       "Utilizes cross-project refs (ref('upstream_project', 'public_model')) across repository boundaries.",
       "Enforces Model Contracts (schema contracts, versions) to prevent breaking changes on downstream domain consumers.",
       "Provides decentralized ownership, independent CI/CD release cycles, and isolated compute billing."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -2993,6 +3687,13 @@
       "Multi-project aligns with Data Mesh principles, giving autonomous domains independent release velocity.",
       "Multi-project requires formal Model Contracts and cross-project CI dependencies to prevent breaking changes.",
       "Transition threshold typically occurs when monorepo compile times and Git merge conflicts hinder developer velocity."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -3021,6 +3722,33 @@
       "Fully integrates with Unity Catalog's 3-level namespace (catalog.schema.table) and fine-grained access control.",
       "Leverages Delta Lake capabilities including Liquid Clustering, Change Data Feed, and OPTIMIZE within dbt models.",
       "Employs Photon engine execution for high-throughput vectorized data transformations."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -3063,6 +3791,13 @@
       "Mandates incremental materialization and partition pruning for large tables to prevent redundant data processing.",
       "Routes models dynamically to appropriate warehouse compute sizes based on workload complexity.",
       "Audits model runtime trends using dbt artifacts (run_results.json) to identify runaway query costs."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: dbt Mesh & Multi-Project Governance",
+        "url": "https://docs.getdbt.com/docs/collaborate/govern/about-model-governance",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -3077,6 +3812,13 @@
       "Leverages dbt 1.8+ Unit Tests to validate transformation logic against mock data prior to warehouse execution.",
       "Enforces structural schema constraints (unique, not_null, accepted_values) across 100% of staging models.",
       "Implements end-to-end data quality gates that prevent corrupted data from reaching operational dashboards."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -3091,6 +3833,13 @@
       "Operates via a decoupled architecture: Databricks-managed control plane and customer-hosted data plane.",
       "Provides role-based access control (RBAC) and single sign-on (SSO) integration via corporate identity providers.",
       "Acts as the deployment container for compute clusters, notebooks, workflows, and Unity Catalog catalogs."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3147,6 +3896,13 @@
       "Allows standard POSIX and Spark file operations (dbutils.fs.ls, spark.read.csv) over distributed cloud storage.",
       "Legacy DBFS root and mounts lack fine-grained data governance across multi-team workspaces.",
       "Superseded by Unity Catalog Volumes for secure, governed, and audited file access in modern architectures."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3161,6 +3917,13 @@
       "Provides full ACID transactions and serializable snapshot isolation across concurrent batch and streaming jobs.",
       "Enforces strict schema validation on write with optional automated schema evolution (mergeSchema).",
       "Powers core Lakehouse features including Time Travel, Change Data Feed, and OPTIMIZE file compaction."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3175,6 +3938,13 @@
       "Enforces a standard three-level namespace: catalog.schema.table_or_volume across all SQL and PySpark code.",
       "Provides fine-grained row-level filtering and column masking policies managed via standard SQL GRANTs.",
       "Captures automated, end-to-end table and column-level lineage without third-party agent instrumentation."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3189,6 +3959,13 @@
       "Legacy Hive Metastore (HMS) is bound locally to individual workspaces and lacks cross-cloud governance.",
       "Unity Catalog Metastore operates at the account level, governing multiple workspaces in a cloud region.",
       "Binds managed cloud storage credentials to logical data assets, isolating physical IAM roles from end users."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3203,6 +3980,18 @@
       "Displays column types, descriptions, sample data previews, and physical table storage properties.",
       "Visualizes automated interactive data lineage diagrams showing upstream sources and downstream consumers.",
       "Enables point-and-click permission management (GRANT/REVOKE) for data owners and administrators."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3231,6 +4020,13 @@
       "%sh allows running bash shell commands and terminal utilities directly on the cluster driver node.",
       "%pip installs Python wheel packages and dependencies scoped specifically to the current notebook session.",
       "%run includes and executes an external notebook's functions and variables in the current session."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3301,6 +4097,13 @@
       "Automatically orchestrates pipeline DAG dependencies and dynamically optimizes cluster compute resources.",
       "Natively integrates DLT Expectations for automated row-level data quality validation and quarantine routing.",
       "Provides real-time pipeline monitoring, automated failure recovery, and unified event log tracking."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3329,6 +4132,13 @@
       "Provides change type metadata including update_preimage (before) and update_postimage (after).",
       "Enables efficient downstream incremental processing without re-reading entire source tables.",
       "Powers regulatory compliance patterns such as cascading GDPR 'Right to be Forgotten' deletions."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3357,6 +4167,13 @@
       "Drastically improves query read throughput by eliminating cloud storage API metadata request latency.",
       "Executed non-destructively: writes new consolidated files and commits an atomic transaction to the Delta log.",
       "Can be scheduled periodically or managed automatically via Databricks Predictive Optimization."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3371,6 +4188,13 @@
       "Enforces a default safety retention period of 7 days (168 hours) to prevent deleting files needed by active queries.",
       "Disables Time Travel to commits older than the configured VACUUM retention threshold.",
       "Requires careful coordination: vacuuming too aggressively can cause concurrent read query failures."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3385,6 +4209,13 @@
       "Enables instant rollback of accidental bad writes or corruptions using RESTORE TABLE target TO VERSION AS OF N.",
       "Guarantees exact reproducibility for machine learning model training datasets.",
       "Accessible as long as underlying historical files have not been permanently purged by VACUUM."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3399,6 +4230,13 @@
       "Shallow Clones complete near-instantly; ideal for ephemeral testing sandboxes and staging validations.",
       "Deep Clone physically copies all data files, creating a fully autonomous, isolated copy of the source table.",
       "Deep Clones are essential for disaster recovery, cross-region replication, and regulatory data separation."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3441,6 +4279,13 @@
       "Supports stage transitions and deployment aliases (e.g. champion, challenger) for automated CI/CD scoring.",
       "Integrated into Unity Catalog (Models in UC) for unified access control and cross-workspace governance.",
       "Underpins Databricks Serverless Model Serving for low-latency real-time REST API inference."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3455,6 +4300,18 @@
       "Eliminates training-serving skew by providing consistent feature extraction logic across batch and online inference.",
       "Synchronizes Delta offline feature tables to high-speed online stores for sub-millisecond REST serving.",
       "Automatically tracks feature lineage from raw lakehouse ingestion to production model inference."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3469,6 +4326,13 @@
       "Leverages CPU hardware instruction parallelism (SIMD) and modern cache-aware memory management.",
       "Provides 2x-8x performance acceleration for SQL aggregations, scans, and high-frequency Delta MERGE operations.",
       "Transparently compatible with Spark DataFrame and Spark SQL APIs without requiring application code changes."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3483,6 +4347,13 @@
       "Features Serverless compute options with sub-second cluster startup and automatic rapid scale-down.",
       "Automatically scales multi-cluster concurrency to absorb traffic spikes from hundreds of simultaneous BI users.",
       "Optimized for external connectivity with native Power BI DirectQuery and Tableau connectors."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3497,6 +4368,18 @@
       "Features Delta Sync Indexes that automatically re-index vectors as underlying Delta tables update.",
       "Provides sub-50ms REST API query latency for semantic similarity search in RAG and GenAI applications.",
       "Integrated with Databricks Foundation Model APIs for automated real-time text-to-embedding generation."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3511,6 +4394,13 @@
       "Implemented using standard SQL User-Defined Functions (UDFs) attached via CREATE TABLE or ALTER TABLE.",
       "Evaluates user identity (current_user()) and group membership (is_account_group_member()) dynamically at query time.",
       "Applies consistently across all languages (SQL, Python, R, Scala) and all external BI connectors."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3525,6 +4415,13 @@
       "Mounts external systems as native Foreign Catalogs within Unity Catalog's three-tier namespace.",
       "Pushes compute predicates (filters, joins, projections) down to the remote database to minimize data transfer.",
       "Unifies access control policies and data discovery across fragmented multi-cloud enterprise data estates."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3539,6 +4436,18 @@
       "Allows non-Databricks recipients to consume shared data using open-source Python, Spark, and Power BI connectors.",
       "Eliminates slow, expensive SFTP and custom API export pipelines for external partner data exchanges.",
       "Governed entirely within Unity Catalog with recipient token lifecycle management and detailed access audits."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3553,6 +4462,18 @@
       "Provides end-to-end exactly-once fault-tolerant processing semantics backed by Delta Lake sinks.",
       "Leverages RocksDB state store providers to scale arbitrary stateful streaming operations to millions of keys.",
       "Features Trigger.AvailableNow for cost-effective micro-batch processing of accumulated streaming data."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -3595,6 +4516,13 @@
       "Defines jobs, pipelines, permissions, and compute settings declaratively in version-controlled YAML files.",
       "Automates multi-environment promotions (dev, staging, prod) within enterprise CI/CD pipelines (GitHub Actions, Azure DevOps).",
       "Validates asset configurations locally before deployment, catching syntax and configuration errors early."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Databricks Asset Bundles (DABs) Guide",
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3609,6 +4537,13 @@
       "Centrally manages user lifecycle: revoking an employee's corporate account instantly terminates their Databricks access.",
       "Synchronizes nested security groups to enforce consistent access privileges across workspaces.",
       "Underpins account-level identity federation required for enterprise Unity Catalog deployments."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3623,6 +4558,18 @@
       "Delivered natively as queryable Delta tables within the system.access.audit catalog schema in Unity Catalog.",
       "Enables automated compliance reporting and real-time security alerting for anomalous data access patterns.",
       "Integrates with enterprise SIEM platforms (Splunk, Microsoft Sentinel) for centralized enterprise security monitoring."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3637,6 +4584,13 @@
       "Defines validation rules using SQL boolean expressions (e.g., expect_or_drop('valid_email', 'email IS NOT NULL')).",
       "Provides three distinct action strategies: retain with warning, drop invalid records, or fail the pipeline immediately.",
       "Logs row-level validation metrics to the DLT event log for automated data quality monitoring and SLAs."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -3651,6 +4605,13 @@
       "Automatically determines the optimal schedule for running OPTIMIZE file compaction and VACUUM cleanup.",
       "Eliminates manual maintenance DAGs and cron scripts previously authored by data engineering teams.",
       "Balances warehouse query performance gains against the compute cost of running optimization operations."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3665,6 +4626,18 @@
       "system.billing.usage provides granular DBU consumption metrics for automated chargeback and cost governance.",
       "system.access.table_lineage maps automated end-to-end data lineage across the enterprise estate.",
       "Enables building automated SQL alerts for budget overruns, orphaned compute, and suspicious access spikes."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3679,6 +4652,18 @@
       "Enables changing clustering columns over time without requiring expensive full-table data rewrites.",
       "Clusters data incrementally during write and optimization operations, avoiding heavy multi-hour Z-Order jobs.",
       "Supports up to 4 clustering keys across high-cardinality and low-cardinality columns simultaneously."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3721,6 +4706,13 @@
       "Snowflake is historically rooted in proprietary storage with a managed SQL-first data warehouse user experience.",
       "Databricks excels at petabyte-scale unstructured data processing, streaming, and generative AI/ML workloads.",
       "Snowflake traditionally excels at turnkey SaaS administration, predictable SQL concurrency, and data marketplace sharing."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -3735,6 +4727,13 @@
       "Enforces Workspace Binding policies to restrict sensitive production catalogs strictly to production workspaces.",
       "Centralizes corporate identity, access auditing, and data governance policies at the account level.",
       "Enables cross-workspace data sharing and lineage tracking without creating duplicate data pipelines."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3749,6 +4748,13 @@
       "Enforces the use of ephemeral Job clusters (cheaper DBU tier) over interactive All-Purpose clusters for ETL.",
       "Queries system.billing.usage system tables to power real-time departmental chargeback dashboards.",
       "Implements automated anomaly detection to alert platform owners when daily DBU burn rates exceed budget thresholds."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3763,6 +4769,18 @@
       "Standardizes infrastructure deployments using cloud-agnostic Infrastructure as Code (Terraform, DABs).",
       "Leverages Delta Sharing to synchronize data assets across cloud boundaries without proprietary ETL connectors.",
       "Preserves open data sovereignty: underlying storage remains open Parquet and Delta Lake in customer-owned buckets."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Databricks Asset Bundles (DABs) Guide",
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3777,6 +4795,33 @@
       "Deploys models directly into Unity Catalog's three-tier hierarchy (catalog.schema.table) with full RBAC.",
       "Leverages advanced Delta Lake optimizations including Liquid Clustering and Change Data Feed natively in dbt SQL.",
       "Integrates into enterprise CI/CD using Slim CI to test strictly modified dbt models against production lakehouses."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -3791,6 +4836,13 @@
       "Apache Airflow provides broader multi-platform orchestration across heterogeneous enterprise IT systems.",
       "Workflows provides native UI monitoring, automatic job cluster reuse, and seamless DLT integration.",
       "Common enterprise hybrid pattern: Airflow orchestrates cross-system ingress/egress, delegating compute to Workflows."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -3805,6 +4857,23 @@
       "Applies Liquid Clustering to ensure uniform data distribution and maximize query partition skipping.",
       "Configures Spark Adaptive Query Execution (AQE) to dynamically coalesce shuffle partitions and mitigate key skew.",
       "Tunes Delta Lake MERGE operations with partition pruning predicates to restrict scan boundaries to modified partitions."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -3819,6 +4888,18 @@
       "Uses Unity Catalog Catalogs to represent distinct business domains with decentralized administrative ownership.",
       "Enforces formal data contracts and schema validation on data products published for cross-domain consumption.",
       "Provides a global data catalog and automated cross-domain lineage via Unity Catalog Data Explorer."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3833,6 +4914,13 @@
       "Synchronizes metadata, data classifications, and column-level lineage into Purview via Apache Atlas API bridges.",
       "Enables corporate compliance teams to enforce unified data retention and privacy policies across all platforms.",
       "Bridges data discovery between analytical lakehouse assets and operational source systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3847,6 +4935,13 @@
       "Leverages MLflow and Unity Catalog to enforce model governance, approval workflows, and lineage tracking.",
       "Deploys models to Databricks Serverless Real-Time Serving with sub-50ms latency and automated scaling.",
       "Integrates Lakehouse Monitoring to detect data drift, concept drift, and model performance degradation in production."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3861,6 +4956,13 @@
       "Ingests high-throughput streaming events from Kafka or Azure Event Hubs directly into Bronze Delta tables.",
       "Leverages RocksDB state stores and incremental micro-batches to achieve sub-minute end-to-end data freshness.",
       "Enforces ACID consistency and exactly-once processing guarantees across concurrent real-time writers and readers."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -3875,6 +4977,13 @@
       "Integrates into GitHub Actions or Azure DevOps with multi-stage approval gates (dev -> staging -> prod).",
       "Executes automated unit and integration tests using Databricks Connect before code merge.",
       "Deploys production jobs authenticated via cloud Service Principals rather than individual user credentials."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Databricks Asset Bundles (DABs) Guide",
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3889,6 +4998,18 @@
       "Replicates critical Delta tables across regions using Delta Deep Clone or cloud storage geo-replication.",
       "Maintains synchronized workspace infrastructure, jobs, and policies in secondary regions using Terraform/DABs.",
       "Leverages Unity Catalog multi-workspace regional configurations to enable rapid traffic cutover during outages."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Databricks Asset Bundles (DABs) Guide",
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3903,6 +5024,18 @@
       "Enforces data quality contracts, schema versioning, and Service Level Objectives (SLOs) on published datasets.",
       "Provides self-service discovery and business documentation directly within Unity Catalog Data Explorer.",
       "Distributes data products seamlessly to internal departments and external partners using open Delta Sharing."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -3917,6 +5050,13 @@
       "Enforces automated metadata classification tagging (PII, confidential, GDPR) across tables and columns.",
       "Leverages Unity Catalog system tables (system.access.audit) for continuous compliance auditing and monitoring.",
       "Integrates with enterprise identity providers via SCIM to maintain synchronized access revocation across the enterprise."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -4043,6 +5183,13 @@
       "Exit code 137 in Kubernetes containers indicates the Linux kernel cgroup OOM killer terminated the Python process",
       "objgraph.show_most_common_types() reveals runaway dictionary, DataFrame, or custom record object accumulations",
       "Avoid unbounded global caches; use functools.lru_cache(maxsize=1024) or cachetools.TTLCache with explicit evictions"
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -4057,6 +5204,13 @@
       "Directly outputs PyArrow Tables and Polars DataFrames for instant zero-copy in-memory processing",
       "Supports optimistic concurrency control (OCC) protocols using cloud storage atomic operations (S3 PutObject conditional, Azure ETag)",
       "Ideal for cost-efficient serverless ETL architectures where spinning up a Databricks or Spark cluster is cost-prohibitive"
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -4225,6 +5379,13 @@
       "Range Sharding preserves contiguous range queries but suffers from leading-edge write hotspots.",
       "Entity-Group Sharding co-locates relational child rows on the same physical shard to avoid expensive cross-shard distributed 2PC.",
       "Live re-sharding leverages continuous binlog replication and atomic metadata cutover to split shards without maintenance windows."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -4309,6 +5470,13 @@
       "Copy-on-Write (CoW) ensures child branches consume storage only for newly modified and inserted delta pages.",
       "Integrates with CI/CD pipelines to run integration tests and automated migrations against ephemeral preview environments.",
       "Guarantees 100% isolation; destructive operations (DROP TABLE) inside a branch never impact the production parent."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -4323,6 +5491,13 @@
       "Throttles migration copy speed dynamically based on database CPU utilization, memory pressure, and replica lag.",
       "Captures concurrent mutations via binary log (CDC) replay rather than expensive and lock-prone database triggers.",
       "Executes an atomic RENAME TABLE cutover in <10ms with instantaneous rollback capability if anomalies occur."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -4390,6 +5565,13 @@
       "Stream Aggregate requires pre-sorted input and executes with negligible memory overhead.",
       "Hash Aggregate constructs an in-memory hash table, ideal for unsorted, high-cardinality data.",
       "Insufficient query memory grants trigger hash table spilling to disk (tempdb / scratch space)."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -4520,6 +5702,13 @@
       "Transforms declarative relational calculus into an imperative tree of physical iterator operators.",
       "EXPLAIN displays compile-time cost estimates; EXPLAIN ANALYZE records actual runtime telemetry.",
       "Discrepancies between estimated and actual row counts expose stale statistics or bad optimizer assumptions."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -5133,6 +6322,13 @@
       "Permits temporary constraint violations during intermediate statements within an open transaction.",
       "Postpones physical integrity validation until the final COMMIT phase of the transaction.",
       "Crucial for resolving circular foreign key dependencies and bulk reordering unique sequence indexes."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow Documentation: Deferrable Operators & Triggerer",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -5185,6 +6381,13 @@
       "Vectorized execution passes batches of contiguous column arrays (vectors) between physical operators.",
       "Amortizes virtual function dispatch calls and maximizes CPU L1/L2 instruction and data cache locality.",
       "Hardware SIMD utilizes 256-bit and 512-bit CPU vector registers (AVX-512) for single-cycle operations."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -5731,6 +6934,13 @@
       "Append-only JSON commit files in _delta_log/ record exact file additions, removals, and schema changes atomically.",
       "Every 10 commits, a multi-part Parquet checkpoint consolidates state for instant snapshot reconstruction.",
       "Provides Serializable / WriteSerializable isolation on top of eventually consistent cloud object storage."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -5744,6 +6954,13 @@
       "4-tier hierarchy: Catalog -> Metadata JSON -> Snapshot Manifest List (Avro) -> Manifest Files -> Data Files (Parquet).",
       "Hidden partitioning: Users query by standard timestamp columns while Iceberg automatically prunes days/months under the hood.",
       "Field ID mapping: Schema columns are tracked by unique numeric IDs, allowing seamless renames and reordering."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Schema & Partition Evolution Guide",
+        "url": "https://iceberg.apache.org/docs/latest/evolution/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -5757,6 +6974,18 @@
       "Caused by high-frequency streaming writes producing millions of sub-10MB files in lake storage.",
       "Saturates cloud storage IOPS/TPS limits, inducing HTTP 503 SlowDown errors and network connection stalls.",
       "Remediated via bin-packing compaction (target 128MB-512MB file size) using Delta OPTIMIZE or Iceberg compaction."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Compaction & Maintenance Operations",
+        "url": "https://iceberg.apache.org/docs/latest/maintenance/",
+        "publisher": "Apache Software Foundation"
+      },
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -5770,6 +6999,13 @@
       "Default smallrc (~100MB RAM) starves columnstore encoders during large Parquet bulk ingestion.",
       "Insufficient memory forces premature row group trimming (<100K rows) and massive TempDB spill latencies.",
       "Production loaders must use largerc / xlargerc or staticrc60 to guarantee 1,048,576-row compressed rowgroups."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -5809,6 +7045,13 @@
       "Soft-delete mechanism: Writes tiny Roaring Bitmap index files rather than rewriting entire 500MB Parquet files.",
       "Reduces write amplification during SQL MERGE and DELETE operations by up to 99%.",
       "Read-side penalty is minimal (sub-millisecond bitmap lookup in RAM); compacted during scheduled maintenance."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Deletion Vectors Specification & Guide",
+        "url": "https://docs.delta.io/latest/delta-deletion-vectors.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -5822,6 +7065,18 @@
       "Bypasses SQL relational staging entirely: VertiPaq memory-maps Delta Parquet files directly from OneLake.",
       "Eliminates latency between data landing and reporting: Power BI reports reflect Spark/DLT commits immediately.",
       "V-Order sorting applied at write time enables zero-recompression column paging straight into server RAM."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -5848,6 +7103,23 @@
       "Standardized HTTP OpenAPI specification decoupling engine execution from metadata catalog storage.",
       "Enables Snowflake, Databricks, Trino, and Fabric to read and write the exact same underlying Parquet files.",
       "Optimistic Concurrency Control (OCC) at the catalog endpoint ensures atomic commits and snapshot integrity."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -5874,6 +7146,13 @@
       "Eliminates write amplification by avoiding rewriting full 100MB+ Parquet files for single-row mutations.",
       "Employs compressed Roaring Bitmaps to record deleted row offsets within individual Parquet files.",
       "Merged into base files during routine compaction (`OPTIMIZE`) to ensure zero read-side scan degradation over time."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Deletion Vectors Specification & Guide",
+        "url": "https://docs.delta.io/latest/delta-deletion-vectors.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -5913,6 +7192,18 @@
       "Strict 3-level namespace hierarchy: `catalog.schema.table` governed by a single Metastore per cloud region.",
       "Decoupled cloud security using Access Connectors and Storage Credentials instead of cluster-level keys.",
       "Native automated data lineage, column/row-level security filters, and cross-workspace access control."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -5926,6 +7217,13 @@
       "Sub-second to 5-second cold-start latency compared to 3-5 minutes for classic customer-plane compute.",
       "Aggressive auto-stop (1–2 minutes) eliminates idle cluster billing when dashboard traffic ceases.",
       "Automated multi-cluster load balancing scales compute up and down dynamically to handle concurrent query spikes."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -5939,6 +7237,13 @@
       "Atomic transactional state recorded in ordered JSON commit logs with Parquet checkpoints generated every 10 commits.",
       "Time Travel allows querying historical data via `VERSION AS OF` or `TIMESTAMP AS OF` without restoring backups.",
       "Enables instant disaster recovery using `RESTORE TABLE db.table TO VERSION AS OF <version>` to undo accidental data corruption."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -5965,6 +7270,18 @@
       "ADF Mapping Data Flows: Visual, no-code/low-code Spark execution ideal for straightforward transformations and quick builds.",
       "Azure Databricks: Full code-first flexibility, custom Python libraries, fine-grained cluster tuning, and advanced Delta features.",
       "Best-of-breed pattern: ADF orchestrates pipeline schedules, triggers, and alerts while invoking Databricks for core processing."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -6004,6 +7321,13 @@
       "Guarantees that re-running a failed or delayed pipeline job produces the exact same output without data corruption.",
       "Implemented via atomic Delta `MERGE INTO`, partition-level overwrite (`insertOverwrite` / `replaceWhere`), or staging deduplication.",
       "Prevents duplicate metrics and inflated revenue calculations caused by automated pipeline retry policies."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -6017,6 +7341,18 @@
       "Converts natural language business questions into executable SQL against Unity Catalog Delta tables.",
       "Grounded in enterprise semantics using Unity Catalog column descriptions, primary/foreign key relationships, and query history.",
       "Empowers non-technical business stakeholders with self-service analytics while maintaining centralized governance."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -6030,6 +7366,13 @@
       "Deletes unreferenced orphan Parquet data files older than the safety retention threshold (default 7 days).",
       "Limits Time Travel availability to the retention window (queries beyond the vacuum horizon will fail).",
       "Safety checks prevent zero-hour retention to ensure concurrent active read/write jobs are not corrupted."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -6075,6 +7418,18 @@
       "Used in: Redis Cluster, Cassandra, DynamoDB, Memcached, CDN edge caches",
       "Hash ring uses SHA-256 or MD5 as the hash function for node/key placement",
       "Amazon DynamoDB uses consistent hashing as its core partitioning mechanism"
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -6809,6 +8164,13 @@
       "CBO uses table statistics (`ANALYZE TABLE`) to pick optimal join strategies; without statistics it falls back to heuristics.",
       "AQE (Adaptive Query Execution) can override physical plan decisions at runtime based on actual shuffle sizes.",
       "The final plan is inspected with `df.explain(mode='formatted')` — reading the physical plan is a core production debugging skill."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -6822,6 +8184,13 @@
       "Eliminates per-row virtual function dispatch by collapsing multiple operators into one compiled Java method.",
       "Enabled by default; disable with `spark.sql.codegen.wholeStage=false` for debugging unexpected behaviour.",
       "The star (*) prefix on operators in the Spark UI physical plan (e.g., *Filter, *HashAggregate) indicates WSCG is active."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -6835,6 +8204,13 @@
       "Stores rows as compact byte arrays off-heap using `sun.misc.Unsafe`, bypassing GC pressure entirely.",
       "Sorting and hashing operate directly on binary data without deserialisation — a 2–3× speedup for sort-heavy operations.",
       "Inspecting UnsafeRow layouts helps explain why Tungsten-era Spark significantly outperforms earlier RDD-based code."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -6848,6 +8224,13 @@
       "Enable with `spark.memory.offHeap.enabled=true` and `spark.memory.offHeap.size=<bytes>`.",
       "Eliminates GC pressure for Tungsten operations — critical for executors processing large, long-lived datasets.",
       "Total container memory = `spark.executor.memory` (heap) + `spark.executor.memoryOverhead` + `spark.memory.offHeap.size`."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -6874,6 +8257,13 @@
       "Preferred over `MEMORY_ONLY` for DataFrames that exceed available executor memory — avoids full recomputation.",
       "Spilled partitions are deserialized from local disk on re-access — factor in disk I/O latency vs recomputation time.",
       "Always call `df.unpersist()` when the cached DataFrame is no longer needed to free both memory and disk space."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -6900,6 +8290,13 @@
       "Visible in Spark UI Stages tab as 'Shuffle Spill (Memory)' and 'Shuffle Spill (Disk)' columns — high values indicate memory pressure.",
       "Increasing `spark.executor.memory` or reducing `spark.sql.shuffle.partitions` (fewer, larger partitions use less shuffle memory overhead) reduces spills.",
       "Local NVMe SSDs reduce spill impact dramatically compared to network-attached EBS/Azure Managed Disks."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7069,6 +8466,18 @@
       "Enable with `spark.sql.adaptive.enabled=true` (default true in Spark 3.2+); coalescing kicks in automatically.",
       "Target partition size: `spark.sql.adaptive.advisoryPartitionSizeInBytes` (default 64MB) — increase for memory-intensive downstream stages.",
       "Inspect AQE's decisions in the Spark UI physical plan: coalesced partitions show as `CustomShuffleReader` nodes."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      },
+      {
+        "title": "Apache Airflow Documentation: Data-Aware Scheduling & Datasets",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7108,6 +8517,13 @@
       "JSON commit files are append-only and never mutated — atomicity is guaranteed by the filesystem's atomic rename operation.",
       "Checkpoint every 10 commits (configurable via `delta.checkpointInterval`) — long tables with millions of commits become slow to read without frequent checkpoints.",
       "Table metadata, schema, partitioning, and statistics are all encoded in the transaction log — the Parquet data files themselves carry no Delta metadata."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7121,6 +8537,13 @@
       "SQL: `SELECT * FROM my_table VERSION AS OF 5` or `TIMESTAMP AS OF '2024-01-15 10:00:00'`.",
       "PySpark: `spark.read.format('delta').option('versionAsOf', 5).load('path')`.",
       "VACUUM removes physical files older than the retention window — run `VACUUM RETAIN 168 HOURS` to keep 7 days of history minimum."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7134,6 +8557,13 @@
       "Default retention: 7 days (`delta.deletedFileRetentionDuration=interval 7 days`) — never lower below your longest streaming checkpoint lag.",
       "Always dry-run first: `VACUUM my_table DRY RUN` — review the file list before committing destructive deletes.",
       "Bypassing retention check (`retentionDurationCheck.enabled=false`) can break active streaming readers still pointing to old checkpoint files."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7160,6 +8590,18 @@
       "Enable at create time: `CREATE TABLE t (...) USING DELTA CLUSTER BY (event_date, region)`.",
       "OPTIMIZE runs incrementally — only files that are not yet clustered are rewritten, making it cheap to run frequently.",
       "Clustering columns can be changed with `ALTER TABLE t CLUSTER BY (new_col)` without rewriting existing data immediately."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -7186,6 +8628,13 @@
       "Enable per-write: `df.write.format('delta').option('mergeSchema', 'true').mode('append').save(path)`.",
       "Only additive changes allowed: new columns, nullable → not-null widening — type changes (String → Integer) fail even with mergeSchema.",
       "Set globally with `spark.databricks.delta.schema.autoMerge.enabled=true` for Databricks MERGE operations."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7212,6 +8661,13 @@
       "Shallow clone is instant but fragile — VACUUM on the source can delete files still referenced by the clone.",
       "Deep clone is slow (copies all data) but fully independent — the clone table can be VACUUMed and modified without affecting source.",
       "Both clones are differential — a second `CREATE OR REPLACE ... DEEP CLONE` only copies new/changed files since the last clone."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7225,6 +8681,13 @@
       "Enabled by default on Databricks Runtime with Photon (DRT-photon clusters); no code changes required.",
       "Most effective for: `SELECT/GROUP BY/JOIN` over large Delta tables — can be 2–8× faster than standard Spark SQL.",
       "Does NOT accelerate: Python UDFs, PySpark-only operations, ML/DL training, or streaming micro-batch overhead."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -7290,6 +8753,13 @@
       "Never call `collect()` on large DataFrames — use `take(N)`, `show()`, or write to storage instead.",
       "Set broadcast threshold conservatively: `spark.sql.autoBroadcastJoinThreshold=50m` — driver must hold the entire broadcast table in memory.",
       "Increase driver heap: `spark.driver.memory=8g`; separate from executor memory and not proportional to data volume."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7303,6 +8773,13 @@
       "Diagnose via Spark UI Stages tab: look for tasks with disproportionately large 'Input Size' compared to others (data skew signature).",
       "`GC overhead limit exceeded` is a precursor — the executor is spending >98% in GC before the final OOM crash.",
       "Increase `spark.sql.shuffle.partitions` and enable `spark.sql.adaptive.skewJoin.enabled=true` as first-line remediation."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7330,6 +8807,13 @@
       "Verify pushdown with `df.explain()` — look for `PushedFilters` in the scan operator; if absent, the filter runs post-read.",
       "Partition pruning (most powerful): `WHERE date='2024-01-15'` on a table partitioned by `date` skips entire directories.",
       "Delta data skipping uses transaction log min/max statistics to skip files even for non-partitioned columns — requires Z-ORDER or Liquid Clustering for full effect."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -7395,6 +8879,13 @@
       "Statistics are collected for first 32 columns by default; adjust with `delta.dataSkippingNumIndexedCols` table property.",
       "Effectiveness depends on data clustering — random-order data has wide min/max ranges that rarely allow skipping.",
       "Z-ORDER or Liquid Clustering tightens per-file min/max ranges, enabling data skipping to skip 90%+ of files for selective queries."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7486,6 +8977,18 @@
       "Symptoms: slow `DESCRIBE DETAIL`, high driver CPU during query planning, Spark UI showing thousands of small input tasks.",
       "Fix: `OPTIMIZE my_table` (compaction to ~1GB files); run periodically via scheduled Databricks Job.",
       "Prevention: avoid streaming + Delta unless using Auto Loader with trigger.availableNow; use `coalesce()` before writes to control file count."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -7499,6 +9002,13 @@
       "Use `format('cloudFiles').option('cloudFiles.format', 'parquet')` — specify the underlying file format separately.",
       "File Notification mode (`cloudFiles.useNotifications=true`) handles billions of files with no listing overhead — requires cloud storage event subscription setup.",
       "Schema evolution: Auto Loader with `cloudFiles.inferColumnTypes=true` detects new columns and can merge them into the target Delta table automatically."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7512,6 +9022,13 @@
       "Set with `.option('checkpointLocation', 'dbfs:/checkpoints/my-stream')` — must point to durable storage (DBFS, ADLS, S3).",
       "Never delete or reuse a checkpoint directory for a different query — mismatched checkpoints cause incorrect state recovery.",
       "Schema changes to the streaming source or query require manual checkpoint migration or a full restart from the beginning of the source."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7525,6 +9042,13 @@
       "Define with `.withWatermark('event_time', '10 minutes')` — events arriving >10 min late are dropped from the window aggregate.",
       "Required for stateful operations (dropDuplicates, mapGroupsWithState) to prevent unbounded state accumulation.",
       "Watermark threshold is a data-quality trade-off: too tight (drop valid late data), too loose (large memory state, slow processing)."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7564,6 +9088,13 @@
       "Delta Lake enforces ACID semantics on top of raw object storage (S3, ADLS Gen2, GCS).",
       "Uses Optimistic Concurrency Control (OCC) to detect write-write conflicts at commit time.",
       "Eliminates dirty reads and partial failures by committing changes atomically to the transaction log."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7577,6 +9108,13 @@
       "_delta_log holds sequential JSON commit files tracking added, modified, and deleted Parquet files.",
       "Every 10 commits, Delta automatically writes a multi-part Parquet checkpoint file for fast state reconstruction.",
       "Snapshot isolation allows concurrent readers to query consistent states without acquiring file locks."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7590,6 +9128,18 @@
       "OPTIMIZE performs bin-packing to coalesce small 1MB-10MB files into optimal ~1GB target files.",
       "Significantly reduces cloud object storage API calls and query scanning latency.",
       "Predictive Optimization in Unity Catalog automates OPTIMIZE runs without manual cron jobs."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -7616,6 +9166,13 @@
       "delta.minReaderVersion / minWriterVersion govern engine compatibility and protocols.",
       "delta.columnMapping.mode = 'name' allows renaming and dropping columns without rewriting underlying Parquet files.",
       "delta.checkpointInterval tunes the frequency of Parquet checkpoint generation (default every 10 commits)."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -7642,6 +9199,18 @@
       "Broadcast Hash Join (BHJ): Copies small table (<10MB default) to all executors, eliminating network shuffle entirely.",
       "Sort-Merge Join (SMJ): Standard distributed join for large datasets; requires full key sorting and hash partitioning.",
       "Shuffle Hash Join (SHJ): Hashes one side into memory per partition when sorting overhead exceeds hash build cost."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7655,6 +9224,13 @@
       "Spark UI Stages tab reveals task duration percentiles; high Max vs Median indicates data skew.",
       "Spill (Memory) vs Spill (Disk) indicates executor memory exhaustion during shuffles or aggregations.",
       "SQL tab provides graphical Directed Acyclic Graphs (DAGs) with row counts and scan durations."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7668,6 +9244,13 @@
       "Data skew concentrates disproportionate data volume on a few worker tasks, causing 99% single-task stragglers.",
       "AQE Skew Join optimization dynamically splits skewed partitions at runtime without code changes.",
       "Manual key salting appends randomized suffixes to disperse hot keys evenly across all worker cores."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7681,6 +9264,13 @@
       "Spark Unified Memory dynamically shares memory between Execution (shuffles/joins) and Storage (caching).",
       "When memory pool is exhausted, Spark spills excess in-memory buffers to local NVMe/SSD disks.",
       "Spill severely degrades performance due to serialization and disk I/O; mitigate by tuning partition counts."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7772,6 +9362,18 @@
       "Core production concept in Databricks SQL & DataFrames.",
       "The MERGE syntax for insert/update/delete in one statement. Clause ordering (MATCHED before NOT MATCHED). Write amplification and why MERGE rewrites entire files. Optimization: match on Liquid Clustering keys. How deletion vectors reduce cost.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -7798,6 +9400,13 @@
       "Core production concept in Databricks Data Ingestion.",
       "Governed access to non-tabular files (CSVs, images, ML models) within Unity Catalog. Managed vs. external volumes. Using Volumes as landing zones and staging areas.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -7811,6 +9420,13 @@
       "Core production concept in Databricks Data Ingestion.",
       "Processing only new/changed data. Techniques: Auto Loader (file-level), Change Data Feed (row-level), watermark-based (time-based), merge keys (hash-based). Cost vs. latency tradeoffs for each.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7837,6 +9453,13 @@
       "Core production concept in Databricks Streaming.",
       "How Structured Streaming on Databricks uses Delta Lake as both source and sink. The `readStream`/`writeStream` API. Why Delta-to-Delta streaming is the most common production pattern. Integration with Auto Loader as a file source.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7876,6 +9499,13 @@
       "Core production concept in Databricks Streaming.",
       "Tumbling windows (fixed, non-overlapping), sliding windows (fixed, overlapping), session windows (gap-based). Combining windows with watermarks for bounded state.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7902,6 +9532,13 @@
       "Core production concept in Databricks Streaming.",
       "How `withWatermark()` bounds how late data can arrive. The tradeoff: longer watermark = more complete results but higher memory/state. How Spark drops state for expired windows.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -7915,6 +9552,13 @@
       "Core production concept in Databricks Streaming.",
       "Joining two streaming DataFrames. Watermark requirements for state cleanup. Inner, left outer, and right outer join semantics. State management implications.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8006,6 +9650,13 @@
       "Core production concept in Databricks Performance & Cost.",
       "When a join is the bottleneck: reading shuffle sizes, spill metrics, and task skew in Spark UI for join stages. Tuning `spark.sql.autoBroadcastJoinThreshold`. Choosing between forcing broadcast hints vs. redesigning the query. When to pre-aggregate or filter before joining to reduce shuffle volume.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8019,6 +9670,18 @@
       "Core production concept in Databricks Performance & Cost.",
       "Why MERGE rewrites entire files containing matched rows. Optimization: match on Liquid Clustering keys, leverage deletion vectors, right-size target files. Measuring amplification with `DESCRIBE HISTORY`.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8032,6 +9695,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "`catalog.schema.table` hierarchy. How it maps to organizational structure. Default catalog and schema settings. Migrating from the legacy Hive Metastore.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8045,6 +9715,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "How privileges cascade down (catalog -> schema -> table). Key privileges: USE CATALOG, USE SCHEMA, SELECT, MODIFY, CREATE TABLE. Owner vs. granted access. GRANT and REVOKE syntax.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8058,6 +9735,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "Using `CURRENT_USER()` and `IS_MEMBER()` in view definitions. Column masking patterns (full SSN for HR, masked for everyone else). When to use dynamic views vs. row filters/column masks.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8071,6 +9755,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "How Unity Catalog automatically tracks column-level lineage across notebooks, jobs, and SQL. Viewing lineage in Catalog Explorer. Using lineage for impact analysis before schema changes.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8084,6 +9775,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "Querying `system.information_schema.tables`, `.columns`, `.table_privileges` to discover and audit catalog contents. Building compliance reports from metadata. Automating governance checks.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8097,6 +9795,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "Mapping cloud storage paths to Unity Catalog governance. Storage credentials (IAM roles, service principals). When to use managed vs. external tables based on data ownership requirements.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8110,6 +9815,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "Using service principals for automated jobs instead of personal credentials. Managed identity on Azure, instance profiles on AWS. Why production workloads must never run under personal accounts.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8123,6 +9835,13 @@
       "Core production concept in Databricks Unity Catalog & Governance.",
       "Applying row-level and column-level security directly to tables via SQL UDFs. `ALTER TABLE SET ROW FILTER`. `ALTER TABLE ALTER COLUMN SET MASK`. When to use these vs. dynamic views.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8188,6 +9907,13 @@
       "Core production concept in Databricks Workflows, CI/CD & Operations.",
       "Serverless compute as the default for new jobs (no cluster management, Photon auto-enabled). When to use job clusters instead (custom init scripts, GPU workloads, unsupported task types). Why all-purpose clusters are for development, not production. Instance pools for fast classic cluster startup.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8305,6 +10031,18 @@
       "Core production concept in Databricks Architecture & Advanced Patterns.",
       "How UniForm enables a single Delta table to be read as Apache Iceberg or Apache Hudi. When to use UniForm vs. Delta Sharing vs. Lakehouse Federation for cross-platform access. Enabling and configuring.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8344,6 +10082,13 @@
       "Core production concept in Databricks Architecture & Advanced Patterns.",
       "When to use one workspace vs. many (team isolation, compliance boundaries, regional deployment). Sharing Unity Catalog metastore across workspaces. Cross-workspace job orchestration. Account-level vs. workspace-level governance.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8357,6 +10102,13 @@
       "Core production concept in Databricks Architecture & Advanced Patterns.",
       "A structured approach to diagnosing slow pipelines: check Spark UI stage breakdown, identify shuffle/spill bottlenecks, examine query plan for full scans or bad joins, verify clustering/statistics, check cluster utilization. Building runbooks for common performance patterns.",
       "Essential architectural pattern for enterprise lakehouse systems."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8371,6 +10123,23 @@
       "Automated PII classification detects sensitive attributes (SSNs, emails, credit cards) across OneLake Delta Parquet files.",
       "Sensitivity labels provide persistent downstream protection, ensuring export restrictions and encryption persist in Power BI and Office apps.",
       "Comprehensive data lineage enables GDPR right-to-be-forgotten tracking and regulatory audit defense."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8385,6 +10154,18 @@
       "Schema Evolution: Enables safe, non-blocking additions and modifications to table schemas over time.",
       "Cross-Engine Interoperability: Directly accessible by Spark, T-SQL, Presto/Trino, and Power BI VertiPaq without data copies.",
       "Delta Parquet foundation eliminates the dichotomy between high-concurrency relational databases and scalable data lakes."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8413,6 +10194,13 @@
       "Eventstream Processor performs stateless and windowed in-flight cleansing and format normalization.",
       "Eventstream Output writes Delta Lake Parquet tables directly to OneLake for unified batch and streaming queries.",
       "Eliminates complex Spark Structured Streaming infrastructure for standard ingestion and routing patterns."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8441,6 +10229,13 @@
       "Ingests directly from ADLS Gen2 storage accounts into OneLake Warehouse tables with minimal compute overhead.",
       "Superior to INSERT...VALUES and single-threaded BULK INSERT for multi-gigabyte to terabyte bulk loads.",
       "Supports flexible authentication methods including Managed Identity and Shared Access Signatures (SAS)."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8483,6 +10278,13 @@
       "Project Tungsten manages off-heap binary data layout, eliminating JVM object header bloat and GC pauses.",
       "Tungsten whole-stage code generation compiles expression trees into compact assembly-like bytecode.",
       "DataFrames provide declarative abstractions far more maintainable and performant than imperative RDD loops."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8497,6 +10299,13 @@
       "Setting spark.databricks.delta.schema.autoMerge.enabled = true enables automatic schema expansion during MERGE.",
       "Guarantees ACID transaction atomicity, ensuring concurrent queries never see partial or corrupted updates.",
       "Integrates with Delta Change Data Feed (CDF) to propagate row-level modifications downstream."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -8511,6 +10320,18 @@
       "Only newly ingested telemetry following activation is automatically formatted as Delta Parquet in OneLake.",
       "Eliminates duplicate storage consumption and compute bursts on existing eventhouse tables.",
       "Enables downstream Spark and Power BI Direct Lake access to ongoing streaming feeds."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8567,6 +10388,23 @@
       "VertiPaq directly memory-maps OneLake Delta Parquet columns into RAM on-demand without data duplication.",
       "Direct Lake queries automatically fall back to DirectQuery if memory thresholds or feature limits are breached.",
       "Delta tables must be optimized with V-Order to achieve native sub-second VertiPaq query speeds."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8608,6 +10446,13 @@
       "Workspaces provide logical organization and RBAC boundaries, not physical storage isolation.",
       "Capacities provide compute resources only; all capacities share the single underlying OneLake storage layer.",
       "Shortcuts virtualize internal and external data (S3, GCS) with zero copying, supporting enterprise Data Mesh."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8622,6 +10467,13 @@
       "Historical partition files are never rewritten when new columns are added, saving massive compute.",
       "The query engine reconciles partition schemas at read time, automatically populating missing columns with NULL.",
       "All changes are atomically recorded in the Delta transaction log, preserving ACID integrity."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -8636,6 +10488,13 @@
       "GetMetadata activity dynamically retrieves column structures, types, and file existence properties at runtime.",
       "Centralized Lakehouse control tables maintain source configurations, load schedules, and watermark timestamps.",
       "Dynamic expressions (@item().propertyName) eliminate hardcoded dataset paths and promote modular design."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8650,6 +10509,13 @@
       "Late arrival tolerance (up to 20 days) allows streams to wait for delayed telemetry before closing windows.",
       "Out-of-order tolerance (up to 59 seconds) reorders slightly shuffled events in memory.",
       "Late events that exceed tolerance windows should be routed to a secondary output for reprocessing."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8664,6 +10530,18 @@
       "Fabric Lakehouse pairs Delta Lake format with Apache Spark and a read-only SQL Analytics Endpoint.",
       "KQL Database (Eventhouse) specializes in real-time log, telemetry, and time-series streaming analytics.",
       "OneLake is the unified storage substrate for the tenant, not an independent compute workload."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8703,6 +10581,13 @@
       "Compression technique that replaces repeating values with smaller numeric identifiers and stores a lookup dictionary.",
       "Dramatically compresses low-to-medium cardinality columns by replacing repeated string literals with 1-byte to 4-byte integer keys.",
       "Accelerates query performance by allowing vectorized execution engines to filter and aggregate directly against dictionary IDs."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8755,6 +10640,13 @@
       "Column with many distinct values (like CustomerID with millions of unique customers).",
       "Degrades Columnstore and VertiPaq dictionary compression ratios and inflates memory footprint.",
       "Best supported by traditional rowstore B-tree indexes, Bloom filter indices, or partitioned into dedicated dimension tables."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8768,6 +10660,13 @@
       "Column with few distinct values (like ProductCategory with only 15 categories).",
       "Yields extreme compression ratios when paired with Dictionary Encoding, Bit-Packing, and Run-Length Encoding (RLE).",
       "Prime candidate for sort-key and clustering optimization (Z-Order, Liquid Clustering, or Clustered Columnstore order)."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8834,6 +10733,13 @@
       "Metadata synchronization between systems should be avoided; use native integration.",
       "Custom metadata solutions create technical debt and maintenance burden across evolving data platforms.",
       "Azure Data Catalog is deprecated; all new implementations should use Purview."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8848,6 +10754,18 @@
       "Table properties in Fabric are limited compared to Purviews rich metadata model.",
       "Business glossary changes may take time to reflect in search results (cache refresh).",
       "Guarantees that business stewardship and compliance tagging never trigger schema mutations or pipeline outages."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -8876,6 +10794,23 @@
       "Compute execution against OneLake Delta tables is delegated to Fabric Spark, Data Factory, or external test frameworks.",
       "Execution telemetry and quality scores are reported back to the Purview Data Map for unified executive dashboards.",
       "Custom metadata solutions create technical debt and maintenance burden; use native integration."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "dbt Docs: dbt Mesh & Multi-Project Governance",
+        "url": "https://docs.getdbt.com/docs/collaborate/govern/about-model-governance",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -8902,6 +10837,13 @@
       "Row group metadata with min/max statistics enables disk and I/O pruning before reading columnar data.",
       "SIMD vectorized decoding loads dictionary-compressed values directly into CPU registers.",
       "Eliminates row-by-row deserialization overhead in modern vectorized query engines like Photon and Polars."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8915,6 +10857,13 @@
       "Decouples partition transforms (days, hours, bucket) from physical storage folder structures.",
       "Hierarchical metadata tree (Snapshot -> Manifest List -> Manifest -> Data Files) prevents Hive directory scans.",
       "Allows partition evolution over time without rewriting historical data files or breaking existing queries."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8928,6 +10877,13 @@
       "Dynamically coalesces small shuffle partitions into optimal target sizes (default 64MB-128MB).",
       "Converts Sort-Merge Joins into Broadcast Hash Joins on the fly when stage statistics drop below threshold.",
       "Splits skewed partitions into smaller sub-partitions to eliminate long-tail single-task stragglers."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8941,6 +10897,13 @@
       "Decouples cluster lifecycle from workload execution with instant startup from pre-warmed virtual machine pools.",
       "Native C++ execution completely eliminates JVM garbage collection pauses on large memory workloads.",
       "Vectorized columnar execution processes data in batches across CPU registers using AVX-512 hardware instructions."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -8954,6 +10917,13 @@
       "Monitors max event time seen minus the allowed lateness window to establish an event-time moving boundary.",
       "Prunes expired intermediate state from RocksDB/HDFS state stores to avoid unbounded memory growth.",
       "Late events arriving behind the watermark threshold are dropped from continuous aggregation calculations."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -8967,6 +10937,13 @@
       "Replaces costly Parquet file re-writes on single-row updates/deletes with compact Roaring Bitmap files.",
       "Accelerates DML write operations, reducing MERGE/DELETE commit latency by up to 10x.",
       "Deferred physical compaction cleans up tombstoned records during scheduled OPTIMIZE runs."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Deletion Vectors Specification & Guide",
+        "url": "https://docs.delta.io/latest/delta-deletion-vectors.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -8993,6 +10970,13 @@
       "Three-level namespace (catalog.schema.table) standardizes asset discovery across workspaces.",
       "Attribute-Based Access Control (ABAC) dynamically governs access via metadata tags (e.g. tag:PII).",
       "Centralized row-level security and dynamic column masking apply uniformly to all compute engines."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -9006,6 +10990,13 @@
       "Replaces brittle cron timers with data-driven scheduling that triggers downstream DAGs on table updates.",
       "Deferrable operators release worker slots while waiting on external jobs, yielding up to 90% resource savings.",
       "Asynchronous triggerers monitor polling loops via Python asyncio event loops without occupying worker threads."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow Documentation: Deferrable Operators & Triggerer",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/deferring.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9032,6 +11023,13 @@
       "Version-controlled databricks.yml defines clusters, jobs, Delta Live Tables, and permissions as code.",
       "Automates environment promotion across dev, staging, and production using parameterized target blocks.",
       "Integrates with GitHub Actions and Azure DevOps to enforce automated linting, testing, and deployment."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Databricks Asset Bundles (DABs) Guide",
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -9071,6 +11069,18 @@
       "Eliminates data duplication by mapping OneLake Delta Parquet files straight into VertiPaq memory.",
       "Provides Import-mode interactive DAX performance without requiring scheduled dataset refresh pipelines.",
       "Gracefully falls back to DirectQuery only if capacity memory limits or unsupported DAX features are triggered."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -9183,6 +11193,13 @@
       "Architecture Governance",
       "Design Patterns",
       "GitOps"
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9364,6 +11381,13 @@
       "Catalyst Optimizer",
       "Shuffle Exchange",
       "Query Optimization"
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9384,6 +11408,13 @@
       "Partition Sizing",
       "Shuffle Tuning",
       "Driver Overhead"
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9404,6 +11435,13 @@
       "Straggler Tasks",
       "Spark AQE",
       "Join Optimization"
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9425,6 +11463,18 @@
       "Z-Order",
       "Data Skipping",
       "Databricks"
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -9639,6 +11689,18 @@
       "Asynchronously generates Iceberg v2 and Hudi metadata layers alongside Delta transaction log commits.",
       "Enables zero-copy cross-engine analytics across Databricks, Snowflake, BigQuery, and Athena.",
       "Eliminates dual-ingestion pipelines and reduces cloud storage duplication by 50%."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9653,6 +11715,18 @@
       "Standardizes atomic table commit coordination and linear snapshot progression over HTTP.",
       "Vends scoped, temporary cloud storage credentials (AWS IAM role tokens / Azure SAS) per query.",
       "Supported natively by Apache Polaris, Unity Catalog, Snowflake, Starburst Trino, and DuckDB."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -9667,6 +11741,13 @@
       "Supports cross-engine read/write concurrency with optimistic concurrency control.",
       "Eliminates vendor lock-in by decoupling metadata governance from compute warehouse providers.",
       "Provides fine-grained role-based access control (RBAC) across multi-cloud object stores."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9681,6 +11762,18 @@
       "Native changelog producer generating before-and-after row images directly for downstream streaming.",
       "Deep integration with Apache Flink SQL, supporting lookup joins and dynamic bucket routing.",
       "Supports partial update merge engines and aggregation merge engines out of the box."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9695,6 +11788,13 @@
       "Enables instantaneous column drop (`ALTER TABLE table DROP COLUMN col`) without rewriting data.",
       "Allows special characters, spaces, and punctuation in column names supported by Parquet.",
       "Prerequisite for advanced lakehouse features including Delta Deletion Vectors."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -9709,6 +11809,18 @@
       "Equality Deletes write filter expressions, requiring expensive hash joins during query execution.",
       "Modern lakehouse engines prefer Position Deletes to maintain high read throughput.",
       "Compaction maintenance jobs rewrite delete files into clean, compacted Parquet files."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Deletion Vectors Specification & Guide",
+        "url": "https://docs.delta.io/latest/delta-deletion-vectors.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9737,6 +11849,13 @@
       "Parses `_delta_log/` commits and checkpoints to construct point-in-time table state.",
       "Used by connectors such as Kafka Connect Delta Lake Sink and custom ingest microservices.",
       "Guarantees ACID transaction semantics and optimistic concurrency control."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -9751,6 +11870,18 @@
       "Utilizes vectorized data processing and CPU SIMD registers to process data in hardware pipelines.",
       "Eliminates JVM heap memory management and garbage collection stalls during heavy aggregations.",
       "Delivers 2x–5x performance acceleration on scans, aggregations, hash joins, and write operations."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9765,6 +11896,13 @@
       "Dynamically converts SortMergeJoin to BroadcastHashJoin if data size drops below threshold.",
       "Eliminates network shuffle, sorting, and disk spill for small-to-medium join datasets.",
       "Controlled by `spark.sql.adaptive.autoBroadcastJoinThreshold`."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9779,6 +11917,13 @@
       "Identifies partitions exceeding median size by factor of `spark.sql.adaptive.skewJoin.skewedPartitionFactor` (default 5).",
       "Splits oversized partitions into multiple parallel sub-tasks.",
       "Eliminates the single-task bottleneck without requiring manual key salting in code."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Performance Tuning Guide",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9793,6 +11938,13 @@
       "Eliminates object header bloat and pointer overhead, doubling effective memory density.",
       "Completely eliminates JVM Garbage Collection (GC) pauses for stored shuffle data.",
       "Enabled via `spark.memory.offHeap.enabled = true` and `spark.memory.offHeap.size`."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -9821,6 +11973,18 @@
       "Provides built-in multi-target isolation (`mode: development` vs `mode: production`).",
       "Integrates with Databricks CLI (`bundle validate`, `bundle deploy`, `bundle run`).",
       "Eliminates hardcoded credentials via native Service Principal (OAuth M2M) and OIDC integration."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Databricks Documentation: Databricks Asset Bundles (DABs) Guide",
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -9849,6 +12013,13 @@
       "Row Filters restrict visible rows based on `IS_ACCOUNT_GROUP_MEMBER()` conditions.",
       "Column Masks redact sensitive attributes (SSN, credit card, email) for unauthorized callers.",
       "Applies universally across all compute engines (SQL Warehouses, Spark, Photon, Databricks Apps)."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -9863,6 +12034,13 @@
       "Managed Volumes store data in the metastore default storage path; deleted when dropped.",
       "External Volumes point to existing cloud object storage locations without moving files.",
       "Accessible via standard Python OS file APIs (`open()`, `os.walk()`) and SQL `directory()` functions."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -9919,6 +12097,13 @@
       "Adding or removing nodes requires moving only $1/N$ keys on average.",
       "Virtual nodes (e.g. 100-200 vnodes per physical host) eliminate non-uniform data skew.",
       "Underpins distributed databases like Apache Cassandra, Amazon DynamoDB, and Memcached."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -9975,6 +12160,13 @@
       "Supports incremental checkpoints: only uploads newly mutated SSTables to durable storage.",
       "Eliminates JVM GC pauses on large-scale stateful joins and window aggregations.",
       "Industry standard for high-volume streaming state management at Netflix, Uber, and Stripe."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10059,6 +12251,13 @@
       "Provides uniform interfaces for Resources (read data), Prompts (templates), and Tools (actions).",
       "Eliminates proprietary tool schemas, providing secure and auditable agent execution boundaries.",
       "Rapidly adopted across modern AI developer ecosystems, IDEs, and lakehouse platforms."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -10115,6 +12314,13 @@
       "Allows jobs to burst up to 16x provisioned capacity without immediate failure.",
       "Unmanaged cumulative compute debt causes capacity throttling and interactive lockout.",
       "Monitored via Microsoft Fabric Capacity Metrics App and automated Logic App alerts."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -10129,6 +12335,13 @@
       "Provides granular attribution down to `job_id`, `cluster_id`, `run_as`, and custom tags.",
       "Enables automated monthly chargeback models and cost anomaly detection alerts.",
       "Essential for monitoring serverless SQL warehouse efficiency and spot instance savings."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -10143,6 +12356,13 @@
       "Enforces model access boundaries (`access: private`, `protected`, or `public`).",
       "Requires model contracts on public interfaces to prevent breaking downstream consumers.",
       "Decouples CI/CD compilation and reduces execution times by up to 70%."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -10171,6 +12391,13 @@
       "Enables isolated task retries for failed models without re-running the entire project.",
       "Provides granular task-level timing, logs, and failure alerting directly in the Airflow UI.",
       "Supports execution via local virtual environments, Docker containers, or Kubernetes pods."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow Documentation: Data-Aware Scheduling & Datasets",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10185,6 +12412,13 @@
       "Triggers downstream DAGs immediately when upstream producer tasks succeed.",
       "Supports boolean expressions (e.g. `schedule=(dataset_a & dataset_b)`).",
       "Creates visual cross-DAG dataset dependency graphs in the Airflow UI."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow Documentation: Data-Aware Scheduling & Datasets",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/datasets.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10227,6 +12461,13 @@
       "Vectorized columnar engine processing chunks of 1024 vectors in CPU cache registers.",
       "Direct query execution over remote Parquet and Iceberg tables via HTTP/S3 with byte-range requests.",
       "Ideal for local testing, CI/CD validation pipelines, and data app backends."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10241,6 +12482,18 @@
       "Delivers the raw in-memory performance of Import mode over petabyte-scale lakehouse tables.",
       "Eliminates duplicate storage by reading OneLake Delta Parquet files directly.",
       "Automatically manages memory paging within provisioned Fabric Capacity (F-SKU) limits."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      },
+      {
+        "title": "Microsoft Learn: Power BI Direct Lake Mode & VertiPaq Engine",
+        "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -10269,6 +12522,13 @@
       "Control Table governs source endpoints, incremental watermark timestamps, and concurrency limits.",
       "Onboarding a new table requires adding a SQL configuration row with zero pipeline redeployment.",
       "Standard architecture for enterprise lakehouse migrations across Fortune 500 GCCs."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Structured Streaming Programming Guide",
+        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10283,6 +12543,13 @@
       "Purging historical Iceberg table metadata and unreferenced Parquet data files to reclaim cloud storage and bound manifest list scan latency.",
       "Iceberg maintains snapshot history; expired snapshots purge manifest files and orphan data blocks.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10311,6 +12578,18 @@
       "The background asynchronous daemon in Delta Lake that converts Delta action commits into Apache Iceberg metadata manifest trees.",
       "Translates Delta transaction log JSON into Iceberg snapshot manifests without reading physical Parquet files.",
       "Standardized for production implementation at ARCHITECT competency level."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Apache Iceberg Table Specification V2",
+        "url": "https://iceberg.apache.org/spec/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10325,6 +12604,13 @@
       "A table format capability that updates partitioning schemas (e.g. from month to day) without rewriting historical data or invalidating existing queries.",
       "Iceberg tracks partition specs per data file; queries seamlessly combine partition strategies.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "Apache Iceberg Schema & Partition Evolution Guide",
+        "url": "https://iceberg.apache.org/docs/latest/evolution/",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10339,6 +12625,13 @@
       "Binary vector files recording deleted row positions, decoupling mutations from 500MB Parquet rewrites.",
       "Reduces write amplification during GDPR/CCPA compliance and frequent CDC updates by up to 85%.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Deletion Vectors Specification & Guide",
+        "url": "https://docs.delta.io/latest/delta-deletion-vectors.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -10381,6 +12674,13 @@
       "Cross-engine interoperability standard converting Delta commit logs into Apache Hudi timeline commit files.",
       "Allows Hudi readers to consume Delta-managed storage natively.",
       "Standardized for production implementation at ARCHITECT competency level."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -10395,6 +12695,13 @@
       "Collapsing an entire physical query execution stage of multiple operators into a single optimized Java bytecode loop.",
       "Eliminates virtual function dispatch overhead and keeps intermediate data in CPU registers.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10465,6 +12772,13 @@
       "Allocating native off-heap memory via `spark.executor.memoryOverhead` for PyArrow, C++ libraries, and OS buffers.",
       "Prevents container killed exit code 137 failures in Kubernetes and YARN environments.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10521,6 +12835,13 @@
       "Native managed SaaS and database ingestion connectors for Salesforce, Workday, ServiceNow, and SQL databases into Unity Catalog.",
       "Provides automated serverless ingestion with schema discovery and CDC tracking.",
       "Standardized for production implementation at ARCHITECT competency level."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -10535,6 +12856,13 @@
       "A natural language conversational interface translating business questions into certified SQL over Unity Catalog metric views.",
       "Leverages semantic layers, metadata descriptions, and compound AI tools for accurate self-serve analytics.",
       "Standardized for production implementation at ARCHITECT competency level."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -10577,6 +12905,13 @@
       "Automated capture of column-level and table-level data flow across queries, jobs, and dashboards.",
       "Provides end-to-end visual lineage graphs for governance audits and impact analysis.",
       "Standardized for production implementation at MEDIUM competency level."
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -10675,6 +13010,13 @@
       "Writing transaction intent to append-only disk logs before mutating in-memory database pages, ensuring crash recovery.",
       "Foundational persistence protocol behind relational databases, Delta Lake, and Kafka.",
       "Standardized for production implementation at MEDIUM competency level."
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -10773,6 +13115,13 @@
       "Zero-copy virtualization pointers linking external ADLS Gen2, AWS S3, or Google Cloud Storage buckets into OneLake.",
       "Allows Fabric engines to query cross-cloud data without ingestion or data duplication.",
       "Standardized for production implementation at ARCHITECT competency level."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -10787,6 +13136,13 @@
       "A unified SaaS event streaming hub capturing, transforming, and routing streaming data to OneLake and KQL databases.",
       "Enables codeless streaming ingestion from Azure Event Hubs, IoT Hubs, and Kafka.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "Microsoft Learn: Microsoft Fabric OneLake Architecture Overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+        "publisher": "Microsoft"
+      }
     ]
   },
   {
@@ -10843,6 +13199,13 @@
       "Explicit schema constraints enforced by dbt at build time, guaranteeing column names, data types, and nullability.",
       "Fails builds before writing invalid schemas, protecting downstream operational consumers.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "dbt Docs: Model Contracts & Schema Guarantees",
+        "url": "https://docs.getdbt.com/docs/build/model-contracts",
+        "publisher": "dbt Labs"
+      }
     ]
   },
   {
@@ -10885,6 +13248,13 @@
       "Dynamically generating parallel task instances at runtime based on the output of an upstream task.",
       "Enables processing dynamic file lists or partitions without hardcoding task instances.",
       "Standardized for production implementation at HARD competency level."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -10913,6 +13283,13 @@
       "Storing Airflow database and API connections in cloud secret managers (HashiCorp Vault, AWS Secrets Manager).",
       "Removes sensitive connection credentials from the Airflow metadata database.",
       "Standardized for production implementation at MEDIUM competency level."
+    ],
+    "sources": [
+      {
+        "title": "Apache Airflow High Availability Scheduler Architecture",
+        "url": "https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/scheduler.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -12597,6 +14974,18 @@
       "Unity Catalog Metastore",
       "BYOVPC Injection",
       "Control Plane"
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -12635,6 +15024,13 @@
       "Optimistic Concurrency Control",
       "Liquid Clustering",
       "Delta Lake ACID Log"
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Deletion Vectors Specification & Guide",
+        "url": "https://docs.delta.io/latest/delta-deletion-vectors.html",
+        "publisher": "Delta Lake Project"
+      }
     ]
   },
   {
@@ -12655,6 +15051,18 @@
       "Hive Partitioning",
       "Data Skipping",
       "Predictive Optimization"
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Official Liquid Clustering Guide",
+        "url": "https://docs.delta.io/latest/delta-clustering.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Use Liquid Clustering for Delta Tables",
+        "url": "https://docs.databricks.com/en/optimizations/liquid-clustering.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -12714,6 +15122,18 @@
       "Unity Catalog 3-Level Namespace",
       "Data Masking",
       "Role-Based Access Control"
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake Universal Format (UniForm) Guide",
+        "url": "https://docs.delta.io/latest/delta-uniform.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -12734,6 +15154,18 @@
       "Tungsten Execution Engine",
       "SIMD Vectorization",
       "Off-Heap Memory"
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Photon Vector Engine Architecture",
+        "url": "https://docs.databricks.com/en/compute/photon.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -12753,6 +15185,13 @@
       "Event-Time Watermarking",
       "Structured Streaming",
       "Stream-Stream Joins"
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -12772,6 +15211,13 @@
       "Lakeflow Spark Declarative Pipelines",
       "CI/CD Promotion",
       "Terraform Provider"
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Databricks Asset Bundles (DABs) Guide",
+        "url": "https://docs.databricks.com/en/dev-tools/bundles/index.html",
+        "publisher": "Databricks"
+      }
     ]
   },
   {
@@ -12792,6 +15238,18 @@
       "FinOps Architecture",
       "Unity Catalog Metastore",
       "Query History"
+    ],
+    "sources": [
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      },
+      {
+        "title": "Apache Spark Official Memory Management & Configuration Guide",
+        "url": "https://spark.apache.org/docs/latest/tuning.html",
+        "publisher": "Apache Software Foundation"
+      }
     ]
   },
   {
@@ -12811,6 +15269,18 @@
       "Retrieval-Augmented Generation",
       "Delta Change Data Feed",
       "Unity Catalog Governance"
+    ],
+    "sources": [
+      {
+        "title": "Delta Lake ACID Transaction Protocol & Concurrency Control",
+        "url": "https://docs.delta.io/latest/concurrency-control.html",
+        "publisher": "Delta Lake Project"
+      },
+      {
+        "title": "Databricks Documentation: Unity Catalog 3-Tier Namespace & Governance",
+        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+        "publisher": "Databricks"
+      }
     ]
   }
 ]

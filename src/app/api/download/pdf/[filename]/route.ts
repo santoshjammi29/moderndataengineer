@@ -12,6 +12,9 @@ const ALLOWED_PDFS = new Set([
   'databricks_python_cheatsheet.pdf',
   'incident_runbooks.pdf',
   'lakehouse_enterprise_master_reference.pdf',
+  'spark_execution_plan_and_catalyst_triage_guide.pdf',
+  'lakehouse_table_formats_delta_iceberg_guide.pdf',
+  'data_engineering_sdlc_and_data_contracts_guide.pdf',
 ]);
 
 const ALLOWED_ORIGINS = new Set([

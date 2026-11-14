@@ -727,38 +727,38 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-center">
                 {/* Column 1: Input Partitions */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Input Slices (S3/ADLS)</div>
+                  <div className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase">Input Slices (S3/ADLS)</div>
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
                       className={cn(
                         "p-2 rounded-lg border transition-all text-xs",
                         simStep >= 1
-                          ? "bg-blue-950/60 border-blue-500/50 text-blue-300 shadow-[0_0_10px_rgba(59,130,246,0.2)]"
-                          : "bg-slate-900/60 border-white/5 text-slate-400"
+                          ? "bg-blue-50 dark:bg-blue-950/60 border-blue-500/50 text-blue-700 dark:text-blue-300 shadow-xs"
+                          : "bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]"
                       )}
                     >
                       Partition A{i}
-                      <div className="text-[9px] opacity-60">Block 128MB</div>
+                      <div className="text-[9px] opacity-75">Block 128MB</div>
                     </div>
                   ))}
                 </div>
 
                 {/* Column 2: Executor Cores */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Executor Cores</div>
+                  <div className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase">Executor Cores</div>
                   {[1, 2].map((i) => (
                     <div
                       key={i}
                       className={cn(
                         "p-3 rounded-lg border transition-all text-xs flex flex-col items-center justify-center",
                         simStep === 2
-                          ? "bg-purple-950/80 border-purple-500 text-purple-200 shadow-[0_0_15px_rgba(168,85,247,0.3)] animate-pulse"
-                          : "bg-slate-900/60 border-white/5 text-slate-400"
+                          ? "bg-purple-50 dark:bg-purple-950/80 border-purple-500 text-purple-700 dark:text-purple-200 shadow-xs animate-pulse"
+                          : "bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]"
                       )}
                     >
-                      <span className="flex items-center gap-1"><Cpu size={12} className="text-purple-400" /> Core #{i}</span>
-                      <span className="text-[9px] opacity-70 mt-0.5">
+                      <span className="flex items-center gap-1"><Cpu size={12} className="text-purple-600 dark:text-purple-400" /> Core #{i}</span>
+                      <span className="text-[9px] opacity-80 mt-0.5">
                         {simStep === 2 ? "Compiling Bytecode..." : simStep === 3 ? "Idle" : "Ready"}
                       </span>
                     </div>
@@ -767,19 +767,19 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
 
                 {/* Column 3: Tungsten Targets */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Tungsten Memory</div>
+                  <div className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase">Tungsten Memory</div>
                   {[0, 1].map((i) => (
                     <div
                       key={i}
                       className={cn(
                         "p-2 rounded-lg border transition-all text-xs",
                         simStep === 3
-                          ? "bg-green-950/60 border-green-500/60 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]"
-                          : "bg-slate-900/60 border-white/5 text-slate-400"
+                          ? "bg-emerald-50 dark:bg-green-950/60 border-emerald-500/60 text-emerald-800 dark:text-green-300 shadow-xs"
+                          : "bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]"
                       )}
                     >
                       Out Partition #{i}
-                      <div className="text-[9px] opacity-60">
+                      <div className="text-[9px] opacity-75">
                         {simStep === 3 ? "✓ Materialized" : "Pending"}
                       </div>
                     </div>
