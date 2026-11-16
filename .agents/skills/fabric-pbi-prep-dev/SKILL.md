@@ -97,7 +97,7 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── guided-learning.ts             # Topic-based cross-dataset aggregation
 │   │   └── diagram-theme.ts               # Whiteboard blueprint styling & asset links
 │   ├── types/data.ts                      # TypeScript interfaces & types
-│   └── __tests__/                         # Vitest test suite (58 test files, 472 unit/integration tests)
+│   └── __tests__/                         # Vitest test suite (61 test files, 509 unit/integration tests)
 ├── public/
 │   ├── diagrams/                          # 42 Whiteboard Architecture Blueprints (.webp, .avif, .jpg)
 │   └── cheatsheets/pdf/                   # 7 Master Vector PDFs & printable incident runbooks
@@ -198,26 +198,53 @@ All 42 blueprints follow the hand-drawn digital whiteboard sketch style with 100
 ## 4. Standard Dev Commands, Testing & Cloudflare Deployment
 
 ```bash
-# 1. Run full test suite (must ALWAYS pass all 58 test files and 472 tests)
+# 1. Run full test suite (must ALWAYS pass all 61 test files and 509 tests)
 npm test
 
-# 2. Production build check (OpenNext Cloudflare build)
-npm run build:cf
+# 2. Run tests in watch mode during development
+npx vitest
 
-# 3. Deploy full platform to Cloudflare OpenNext with idempotent R2 sync
-npm run deploy:cf
+# 3. Validate canonical content schemas (11,280+ assets)
+npm run content:validate
 
-# 4. Fast-track code deployment (~35 seconds, skips R2 uploads)
+# 4. Shard catalog and generate MiniSearch inverted index
+npm run content:shard
+
+# 5. Full 4-Step Cloudflare OpenNext Production Deployment
+npm run content:validate && npm run content:shard   # Step 1: Validate schemas & build search shards
+npm run build:worker                                 # Step 2: OpenNext Cloudflare bundle compilation
+npm run r2:sync:remote                               # Step 3: Idempotent R2 asset sync (106+ objects)
+npm run deploy:worker                                # Step 4: Cloudflare Worker deploy via Wrangler
+
+# 6. Fast-track code deployment (~35 seconds, skips R2 uploads)
 npm run deploy:quick
 
-# 5. Verify JSON integrity
+# 7. Verify JSON integrity
 python3 -c "import json; d=json.load(open('src/data/json/data_concepts.json')); print('Concepts:', len(d))"
-
-# 6. Git commit & sync to repository
-git add -A
-git commit -m "feat/fix/chore(scope): detailed description"
-git push origin main
 ```
+
+### 4.1 Critical Failure Prevention & Accessibility Rules
+
+1. **Tool Invocation Invariant (`read_file`)**:
+   - `StartLine` must ALWAYS be $\le$ `EndLine` (e.g. `StartLine: 240, EndLine: 300`). Inverting line numbers causes immediate tool failure.
+2. **TypeScript Property Verification**:
+   - Never assume property names on JSON data items without inspecting `src/types/data.ts`.
+   - `ArchitectureQuestion` uses `.question` and `.id`, NOT `.title`. Setting `aria-label={scenario.title}` breaks TypeScript compilation.
+3. **E-Ink Mode Inversion & Dark Container Protection**:
+   - In E-Ink mode, `.text-white` inverts to `#111111`. If wrapped in a hardcoded dark background (`bg-slate-950`, `bg-[#0c1427]`), text becomes black-on-black and invisible.
+   - Always ensure `.e-ink :where(...)` covers links styled as buttons (`a[class*="bg-"]`) and reset dark container surfaces in E-Ink.
+   - Code syntax tokens on `#eeebe3` paper background in E-Ink must use high-contrast dark ink tokens (`#78350f` Amber: 7.69:1; `#9a3412` Orange: 6.17:1).
+4. **Light Mode & E-Ink Text-Transparent Gradient Fallback**:
+   - Gradient clipped text (`.text-transparent.bg-clip-text`) with bright stops washes out on light surfaces. Always enforce a solid fallback to `var(--text-primary)`.
+5. **Badge & Status Pill Contrast (700 vs 600 Shades)**:
+   - White text on Tailwind 600 shades (`amber-600` 3.19:1, `emerald-600` 3.77:1, `sky-600` 4.10:1, `cyan-600` 4.09:1) fails WCAG 2.2 AA.
+   - Always use 700 shades (`amber-700` 5.02:1, `emerald-700` 5.48:1, `sky-700` 5.93:1, `cyan-700` 5.56:1) for white text on colored badges and active filter pills.
+6. **Natural Text Wrapping & Zero Unrevealed Truncation**:
+   - Prevent arbitrary `truncate` or `line-clamp` on primary content, titles, and descriptions.
+   - Use `overflow-wrap: anywhere` and `text-wrap: pretty` for body text, `text-wrap: balance` for headings, and `min-width: 0` on flex/grid children containing text.
+   - Always pair intentional line-clamps with accessible expand triggers (`aria-expanded={isExpanded}` and dynamic `aria-label`).
+7. **Cloudflare Deployment Sequence**:
+   - Always run the 4-step pipeline (`content:validate && content:shard` $\rightarrow$ `build:worker` $\rightarrow$ `r2:sync:remote` $\rightarrow$ `deploy:worker`) to avoid missing assets or cache mismatches.
 
 ---
 
@@ -325,3 +352,11 @@ Combines 704 concepts and the 14-pillar mind map into a single roof with a 3-way
 ### 15. Spark Catalyst Optimizer & Execution Visualizer
 - `/spark-catalyst` and `/visualizer`: Interactive 5-stage Catalyst query planning simulator and AST graph visualizer.
 - `/spark-engine`: Physical Spark 4.0 execution simulator, Tungsten memory layout, off-heap buffers, and AQE skew join resolution.
+
+### 16. Unified Typography Architecture & WCAG 2.2 AA Compliance
+- **Primary Typeface (`--font-sans` & `--font-heading`)**: Inter with robust system fallbacks (`system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`) across all headings, body copy, navigation, buttons, controls, cards, badges, and ordinary content. Never introduce separate heading fonts or decorative font services.
+- **Monospace Family (`--font-mono`)**: Reserved strictly for code blocks, inline code, terminal outputs, queries, logs, and fixed tabular counters (`JetBrains Mono`, `Fira Code`, `ui-monospace`, `Menlo`, `Monaco`, `monospace`).
+- **Contrast Ratios**: Exceed WCAG 2.2 AA across all 4 themes (`dark`, `light`, `grey`, `e-ink`):
+  - Normal text: $\ge 4.5:1$
+  - Large text & interactive components: $\ge 3.0:1$
+- **Wrapping & Shrinking**: `overflow-wrap: anywhere`, `text-wrap: pretty`, headings `text-wrap: balance`, and `min-width: 0` on flex/grid text containers. Never use arbitrary `truncate` or `line-clamp` on primary content. Provide accessible `aria-expanded` toggle buttons for intentional previews.

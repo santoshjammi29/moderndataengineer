@@ -97,37 +97,37 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── guided-learning.ts             # Topic-based cross-dataset aggregation
 │   │   └── diagram-theme.ts               # Whiteboard blueprint styling & asset links
 │   ├── types/data.ts                      # TypeScript interfaces & types
-│   └── __tests__/                         # Vitest test suite (58 test files, 472 unit/integration tests)
+│   └── __tests__/                         # Vitest test suite (61 test files, 509 unit/integration tests)
 ```
 
 ---
 
-## 2. Key Commands
+## 2. Key Commands & Cloudflare Deployment Pipeline
 
 ```bash
 # Development server (port 3000)
 npm run dev
 
-# Run all 58 test files (472 unit & integration tests)
+# Run all 61 test files (509 unit & integration tests)
 npm test
 
 # Run tests in watch mode during development
 npx vitest
 
-# Production build (Typecheck + Next.js build + OpenNext bundle)
-npm run build
+# Validate search catalog integrity (11,280+ assets)
+npm run content:validate
 
-# Cloudflare OpenNext preview build
-npm run preview
+# Reshard & optimize BM25F search index
+npm run content:shard
 
-# Deploy to Cloudflare Workers via Wrangler
-npm run deploy
+# Full 4-Step Cloudflare OpenNext Production Deployment
+npm run content:validate && npm run content:shard   # 1. Validate & shard
+npm run build:worker                                 # 2. OpenNext Cloudflare bundle
+npm run r2:sync:remote                               # 3. Idempotent R2 asset sync (106+ objects)
+npm run deploy:worker                                # 4. Cloudflare Worker deploy via Wrangler
 
-# Validate search catalog integrity
-npx tsx scripts/validate-catalog.ts
-
-# Reshard & optimize search index
-npx tsx scripts/generate-search-shards.ts
+# Fast-track worker deploy (~35 seconds, skips R2 sync)
+npm run deploy:quick
 ```
 
 ---
@@ -137,4 +137,68 @@ npx tsx scripts/generate-search-shards.ts
 1. **Strict Server/Client Boundary**: Every page has `page.tsx` (Server Component for ISR/metadata) + `*-client.tsx` (Client Component for interactivity).
 2. **Never bundle giant JSON directly into client chunks**: Load datasets via `src/lib/dal.ts` on server, or stream from R2 via `/api/artifacts/[shard]` on client.
 3. **Responsive Display Scaling**: Use `w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto` to scale beautifully from laptops to 4K and 3440px ultrawide displays.
-4. **Preserve Tests**: Always run `npm test` after modifying components, types, or data access code.
+4. **Preserve Tests**: Always run `npm test` after modifying components, types, or data access code. All 61 test files (509 tests) must pass with 100% success.
+
+---
+
+## 4. Critical Failure Prevention & Accessibility Rules
+
+### 1. Tool Invocation Invariant (`read_file`)
+- When invoking `read_file`, **never invert line ranges** (e.g. `StartLine: 240, EndLine: 100`). `StartLine` must ALWAYS be less than or equal to `EndLine`. Inverted line arguments cause immediate tool validation errors.
+
+### 2. TypeScript Property Verification
+- **Never guess or assume property names** on JSON items when writing JSX or component logic.
+- Always inspect the canonical definitions in `src/types/data.ts` first:
+  - `ArchitectureQuestion` uses `.question` and `.id` (it does **NOT** have a `.title` property!). Setting `aria-label={scenario.title}` causes `TS2339: Property 'title' does not exist on type 'ArchitectureQuestion'`.
+  - `Question` uses `.question`, `.answer`, `.category`, `.difficulty`, `.niche`, `.domain`.
+  - `Concept` uses `.term`, `.definition`, `.explanation`, `.keyPoints`.
+  - `CompanyProfile` uses `.company`, `.tier`, `.hiringBar`, `.techStack`.
+
+### 3. E-Ink Mode Inversion & Dark Container Protection
+- In E-Ink mode, `.e-ink .text-white { color: #111111 !important; }` inverts standard white text to near-black.
+- **Trap**: Placing `.text-white` inside a hardcoded dark background (`bg-slate-950`, `bg-[#0c1427]`, `from-purple-950`) without theme scoping results in completely unreadable black-on-black text in E-Ink.
+- **Rules**:
+  1. Never hardcode dark container backgrounds without an explicit light/e-ink alternative (e.g. `bg-surface-raised` or `bg-slate-900 e-ink:bg-transparent`).
+  2. The white text protection selector `.e-ink :where(...)` in `globals.css` must include `a[class*="bg-"]` and `[class*="bg-gradient-"]` in addition to `button[class*="bg-"]`, ensuring links styled as solid buttons keep white text against their colored background.
+  3. Syntax highlighting tokens on `#eeebe3` paper background in E-Ink must use high-contrast dark ink tokens:
+     - Amber: `#78350f` (Contrast: **7.69:1** $\ge 4.5:1$ PASS; standard `#b45309` is only 4.22:1 FAIL).
+     - Orange: `#9a3412` (Contrast: **6.17:1** $\ge 4.5:1$ PASS; standard `#c2410c` is only 4.35:1 FAIL).
+
+### 4. Light Mode & E-Ink Text-Transparent Gradient Clipping Fallback
+- Applying `.text-transparent.bg-clip-text` with light gradient stops (e.g. `from-sky-400 to-amber-400`) washes out or completely vanishes against white or paper backgrounds.
+- Always enforce a solid text fallback in `.light` and `.e-ink`:
+  ```css
+  .light .text-transparent.bg-clip-text,
+  .e-ink .text-transparent.bg-clip-text {
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+    color: var(--text-primary) !important;
+  }
+  ```
+
+### 5. Badge & Status Pill Contrast (700 vs 600 Shades)
+- White text on Tailwind 600 background shades fails WCAG 2.2 AA contrast:
+  - `amber-600` on white text: 3.19:1 (**FAIL**)
+  - `emerald-600` on white text: 3.77:1 (**FAIL**)
+  - `sky-600` on white text: 4.10:1 (**FAIL**)
+  - `cyan-600` on white text: 4.09:1 (**FAIL**)
+- **Always use 700 shades** for solid colored badges and active filter pills with white text:
+  - `amber-700`: **5.02:1** (PASS)
+  - `emerald-700`: **5.48:1** (PASS)
+  - `sky-700`: **5.93:1** (PASS)
+  - `cyan-700`: **5.56:1** (PASS)
+
+### 6. Natural Text Wrapping & Zero Unrevealed Truncation
+- **Never use arbitrary `truncate` or `line-clamp`** on primary content, titles, headings, or definitions.
+- Apply `overflow-wrap: anywhere` and `text-wrap: pretty` globally on body prose and descriptions.
+- Headings use `text-wrap: balance` and tight line-height (`--line-height-heading: 1.25`).
+- Ensure all flex children and grid cells containing text include `min-width: 0` (or `flex-1`) to allow text shrinking without clipping.
+- When previews are intentionally clamped on compact cards, **always provide an accessible interactive reveal trigger** with `aria-expanded={isExpanded}` and dynamic, descriptive `aria-label` announcing the item being expanded.
+- Code blocks must contain horizontal scrolling strictly within the panel (`overflow-x-auto`) and provide accessible word-wrap toggle controls.
+
+### 7. Cloudflare Deployment Pipeline Sequence
+To guarantee zero-downtime, no 404s on sharded JSON, and consistent asset hashes, always follow the complete 4-step sequence:
+1. `npm run content:validate && npm run content:shard` — validates 11,280+ records and updates search catalogs.
+2. `npm run build:worker` — compiles Next.js 16 and OpenNext Cloudflare Worker bundle.
+3. `npm run r2:sync:remote` — synchronizes 106+ JSON artifact shards and PDFs to Cloudflare R2.
+4. `npm run deploy:worker` — deploys the edge worker via Wrangler with `--cacheChunkSize 10`.

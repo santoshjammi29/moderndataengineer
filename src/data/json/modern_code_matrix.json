@@ -163,5 +163,49 @@
     "snowflake": "-- Snowflake Dynamic Table with automated continuous incremental refresh\nCREATE OR REPLACE DYNAMIC TABLE silver.iot_readings\n  TARGET_LAG = '1 minute'\n  WAREHOUSE = ingestion_wh\nAS SELECT\n  raw_payload:device_id::STRING as device_id,\n  raw_payload:temperature::FLOAT as temperature,\n  recorded_at\nFROM bronze.iot_stream;",
     "bigquery": "-- BigQuery Continuous Query from Pub/Sub topic to BigLake table\nCREATE OR REPLACE TABLE `project.silver.iot_readings`\nPARTITION BY DATE(recorded_at)\nAS SELECT * FROM `project.bronze.pubsub_stream` WHERE status = 'OK';",
     "trino": "-- Trino streaming consumer over Kafka to Iceberg lakehouse\nINSERT INTO iceberg.silver.iot_readings\nSELECT device_id, temperature, from_unixtime(event_time / 1000) as event_timestamp\nFROM kafka.iot.telemetry_stream\nWHERE temperature IS NOT NULL;"
+  },
+  {
+    "topic": "SQL Window Function QUALIFY Clause & Top-N Filtering",
+    "python": "# Pandas alternative\ndf.sort_values('amount', ascending=False).groupby('customer_id').head(1)",
+    "pyspark": "from pyspark.sql.window import Window\nfrom pyspark.sql import functions as F\n\nw = Window.partitionBy('customer_id').orderBy(F.col('amount').desc())\ndf.withColumn('rn', F.row_number().over(w)).filter(F.col('rn') == 1).drop('rn')",
+    "sparksql": "-- Databricks / Spark SQL supports QUALIFY\nSELECT customer_id, order_id, amount\nFROM orders\nQUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) = 1",
+    "scala": "val w = Window.partitionBy(\"customer_id\").orderBy($\"amount\".desc)\ndf.withColumn(\"rn\", row_number().over(w)).filter($\"rn\" === 1).drop(\"rn\")",
+    "duckdb": "-- DuckDB native QUALIFY\nSELECT customer_id, order_id, amount\nFROM orders\nQUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) = 1",
+    "snowflake": "-- Snowflake native QUALIFY\nSELECT customer_id, order_id, amount\nFROM orders\nQUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) = 1",
+    "bigquery": "-- Google BigQuery native QUALIFY\nSELECT customer_id, order_id, amount\nFROM orders\nQUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) = 1",
+    "trino": "-- Trino native QUALIFY\nSELECT customer_id, order_id, amount\nFROM orders\nQUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) = 1"
+  },
+  {
+    "topic": "Recursive CTE for Calendar Spine & Date Scaffolding",
+    "python": "import pandas as pd\ncalendar_df = pd.DataFrame({'date': pd.date_range('2024-01-01', '2024-12-31')})",
+    "pyspark": "spark.sql('''\nSELECT explode(sequence(to_date('2024-01-01'), to_date('2024-12-31'), interval 1 day)) AS calendar_date\n''')",
+    "sparksql": "SELECT explode(sequence(to_date('2024-01-01'), to_date('2024-12-31'), interval 1 day)) AS calendar_date",
+    "scala": "spark.sql(\"SELECT explode(sequence(to_date('2024-01-01'), to_date('2024-12-31'), interval 1 day)) AS calendar_date\")",
+    "duckdb": "SELECT generate_series(DATE '2024-01-01', DATE '2024-12-31', INTERVAL 1 DAY) AS calendar_date",
+    "snowflake": "WITH RECURSIVE CalendarSpine AS (\n  SELECT DATE '2024-01-01' AS dt\n  UNION ALL\n  SELECT DATEADD(day, 1, dt) FROM CalendarSpine WHERE dt < '2024-12-31'\n)\nSELECT dt FROM CalendarSpine",
+    "bigquery": "SELECT calendar_date \nFROM UNNEST(GENERATE_DATE_ARRAY('2024-01-01', '2024-12-31', INTERVAL 1 DAY)) AS calendar_date",
+    "trino": "SELECT dt \nFROM UNNEST(sequence(DATE '2024-01-01', DATE '2024-12-31', INTERVAL '1' DAY)) AS t(dt)"
+  },
+  {
+    "topic": "Key Salting for Skewed Distributed Joins",
+    "python": "# Pandas doesn't suffer from distributed shuffle skew\ndf_fact.merge(df_dim, on='customer_id', how='inner')",
+    "pyspark": "df_fact_salted = df_fact.withColumn('salt', F.when(F.col('id') == 0, F.floor(F.rand() * 10)).otherwise(0)) \\\n                        .withColumn('salted_id', F.concat(F.col('id'), F.lit('_'), F.col('salt')))\ndf_dim_exploded = df_dim.withColumn('salt', F.explode(F.array([F.lit(i) for i in range(10)]))) \\\n                        .withColumn('salted_id', F.concat(F.col('id'), F.lit('_'), F.col('salt')))\ndf_fact_salted.join(df_dim_exploded, on='salted_id')",
+    "sparksql": "SELECT /*+ SKEW('fact', 'customer_id', (0, NULL)) */ *\nFROM fact_sales fact\nJOIN dim_customer dim ON fact.customer_id = dim.customer_id",
+    "scala": "val dfSalted = dfFact.withColumn(\"salted_id\", when($\"id\" === 0, concat($\"id\", lit(\"_\"), floor(rand() * 10))).otherwise(concat($\"id\", lit(\"_0\"))))\nval dfDimExp = dfDim.withColumn(\"salt\", explode(array((0 until 10).map(lit): _*))).withColumn(\"salted_id\", concat($\"id\", lit(\"_\"), $\"salt\"))\ndfSalted.join(dfDimExp, Seq(\"salted_id\"))",
+    "duckdb": "-- Local columnar vectorized engine: uses in-memory parallel hash join\nSELECT * FROM fact_sales f JOIN dim_customer d ON f.customer_id = d.customer_id",
+    "snowflake": "-- Snowflake auto-manages micro-partition skew; broadcast join for dimensions\nSELECT * FROM fact_sales f JOIN dim_customer d ON f.customer_id = d.customer_id",
+    "bigquery": "-- BigQuery automatically detects data skew and re-partitions dynamically\nSELECT * FROM fact_sales f JOIN dim_customer d ON f.customer_id = d.customer_id",
+    "trino": "-- Trino supports dynamic filtering to prune skewed join sides\nSELECT * FROM fact_sales f JOIN dim_customer d ON f.customer_id = d.customer_id"
+  },
+  {
+    "topic": "Gaps and Islands Consecutive Event Grouping",
+    "python": "import pandas as pd\ndf['group'] = df['date'].sub(pd.to_timedelta(df.groupby('user_id').cumcount(), unit='D'))\nstreaks = df.groupby(['user_id', 'group'])['date'].agg(['min', 'max', 'count'])",
+    "pyspark": "w = Window.partitionBy('user_id').orderBy('event_date')\ndf.withColumn('island', F.date_sub(F.col('event_date'), F.row_number().over(w))) \\\n  .groupBy('user_id', 'island').agg(F.min('event_date').alias('start'), F.max('event_date').alias('end'), F.count('*').alias('streak'))",
+    "sparksql": "SELECT user_id, MIN(event_date) AS streak_start, MAX(event_date) AS streak_end, COUNT(*) AS streak_days\nFROM (\n  SELECT user_id, event_date, date_sub(event_date, CAST(ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY event_date) AS INT)) AS island\n  FROM user_events\n)\nGROUP BY user_id, island HAVING COUNT(*) >= 3",
+    "scala": "val w = Window.partitionBy(\"user_id\").orderBy(\"event_date\")\ndf.withColumn(\"island\", expr(\"date_sub(event_date, cast(row_number() over (partition by user_id order by event_date) as int))\")).groupBy(\"user_id\", \"island\").count()",
+    "duckdb": "SELECT user_id, MIN(event_date) AS start_date, MAX(event_date) AS end_date, COUNT(*) AS streak\nFROM (\n  SELECT user_id, event_date, event_date - (ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY event_date) * INTERVAL 1 DAY) AS island\n  FROM user_events\n)\nGROUP BY user_id, island HAVING COUNT(*) >= 3",
+    "snowflake": "SELECT user_id, MIN(event_date) AS start_date, MAX(event_date) AS end_date, COUNT(*) AS streak\nFROM (\n  SELECT user_id, event_date, DATEADD(day, -ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY event_date), event_date) AS island\n  FROM user_events\n)\nGROUP BY user_id, island HAVING COUNT(*) >= 3",
+    "bigquery": "SELECT user_id, MIN(event_date) AS start_date, MAX(event_date) AS end_date, COUNT(*) AS streak\nFROM (\n  SELECT user_id, event_date, DATE_SUB(event_date, INTERVAL ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY event_date) DAY) AS island\n  FROM user_events\n)\nGROUP BY user_id, island HAVING COUNT(*) >= 3",
+    "trino": "SELECT user_id, MIN(event_date) AS start_date, MAX(event_date) AS end_date, COUNT(*) AS streak\nFROM (\n  SELECT user_id, event_date, date_add('day', -ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY event_date), event_date) AS island\n  FROM user_events\n)\nGROUP BY user_id, island HAVING COUNT(*) >= 3"
   }
 ]

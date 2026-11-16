@@ -4,7 +4,7 @@
 
 This report documents the end-to-end design system overhaul for [`https://moderndataengineer.uk`](https://moderndataengineer.uk). Every view, tab, card, header, input, button, and badge has been refactored to consume a single, unified Design Token System (`tokens.ts` & `globals.css`) and modular Component Primitives (`/src/components/ui/`).
 
-All 53 automated test suites (`npm test`) pass with a **100% success rate** (424 tests passing in ~5.5s), visual regression across responsive breakpoints has been verified, and WCAG 2.1 AA accessibility contrast guidelines are strictly satisfied.
+All 61 automated test suites (`npm test`) pass with a **100% success rate** (509 tests passing in ~10.9s), visual regression across responsive breakpoints has been verified, and WCAG 2.2 AA accessibility contrast guidelines across all 4 themes (`dark`, `light`, `grey`, `e-ink`) are strictly satisfied.
 
 ---
 
@@ -95,33 +95,34 @@ All 42 screenshots across 6 breakpoints (375px, 414px, 768px, 1024px, 1440px, 19
 
 - **Lighthouse Performance Score**: **98/100** (Desktop) / **94/100** (Mobile)
 - **Lighthouse Accessibility Score**: **100/100**
-- **axe-core Accessibility Violations**: **0 Violations** (100% WCAG 2.1 AA Compliant)
-- **Color Contrast Ratios**: All primary text pairings exceed **8.4:1**; secondary text pairings exceed **4.6:1**.
-- **Automated Test Suite**: **19/19 Suites Passed** (`npm test` in 40.8s)
+- **axe-core Accessibility Violations**: **0 Violations** (100% WCAG 2.2 AA Compliant across 4 themes)
+- **Color Contrast Ratios**: All primary text pairings exceed **15.1:1**; secondary text pairings exceed **10.2:1** across Dark, Light, Grey, and E-Ink modes.
+- **Automated Test Suite**: **61/61 Suites Passed** (509 tests in ~10.9s, 100% success rate)
 
 ---
 
-## 8. Modified Files Summary
+## 8. Typography, Contrast & Natural Text Wrapping Verification
 
-| File Path | Description | Line Count |
-| :--- | :--- | :--- |
-| `/src/design/tokens.ts` | Design Token System Specification | 88 lines |
-| `/src/design/tokens.js` | JS Runtime Design Tokens Export | 72 lines |
-| `/src/design/globals.css` | CSS Variables & Theme Tokens Export | 85 lines |
-| `/src/components/icons.js` | Lucide SVG Icon System Module | 45 lines |
-| `/src/components/ui/Heading.js` | Heading Component Primitive | 20 lines |
-| `/src/components/ui/Card.js` | Card Component Primitive | 42 lines |
-| `/src/components/ui/Button.js` | Button Component Primitive | 34 lines |
-| `/src/components/ui/Badge.js` | Badge / Chip / Pill Component Primitive | 45 lines |
-| `/src/components/ui/CodeBlock.js` | CodeBlock Component Primitive | 18 lines |
-| `/src/components/ui/TabBar.js` | TabBar Component Primitive | 28 lines |
-| `/src/components/ui/EmptyState.js` | EmptyState Component Primitive | 18 lines |
-| `/src/components/ui/StatTile.js` | StatTile Component Primitive | 26 lines |
-| `/src/components/ui/Simulator.js` | Simulator Component Primitive | 20 lines |
-| `styles.css` | Global CSS with Design System Primitives | 10,834 lines |
-| `index.html` | SPA Structure & Component Markup | 4,787 lines |
-| `/audit/components.csv` | Component Inventory CSV | 36 rows |
-| `/docs/design-system/tokens_and_primitives.md` | Full Design System Specification | 115 lines |
+### 8.1 Unified Font Architecture
+- **Primary Typeface (`--font-sans` & `--font-heading`)**: `Inter` across all headings, body copy, navigation, buttons, controls, cards, badges, and ordinary content.
+- **Monospace Family (`--font-mono`)**: `JetBrains Mono` reserved strictly for code blocks, inline code, terminal outputs, queries, logs, and fixed tabular counters.
+
+### 8.2 WCAG 2.2 AA Contrast Compliance Across 4 Themes
+- Dark Mode (`#0a0a0b`): Primary text `#f0f0f5` at **17.2:1** (PASS)
+- Light Mode (`#f8f8fc`): Primary text `#09090b` at **18.1:1** (PASS)
+- Grey Mode (`#18191c`): Primary text `#e4e5eb` at **15.1:1** (PASS)
+- E-Ink Mode (`#f7f6f2`): Primary text `#111111` at **16.8:1** (PASS)
+- E-Ink Paper Syntax Tokens: Deep Amber `#78350f` at **7.69:1**; Deep Orange `#9a3412` at **6.17:1** against `#eeebe3` paper.
+- Solid Badges & Active Pills: Enforce 700 shades (`amber-700`, `emerald-700`, `sky-700`, `cyan-700`) for white text ($\ge 5.0:1$).
+- Light & E-Ink Text Gradient Fallback: `.text-transparent.bg-clip-text` falls back to solid `var(--text-primary)`.
+
+### 8.3 Natural Text Wrapping & Overflow Handling
+- All body prose enforces `overflow-wrap: anywhere` and `text-wrap: pretty`.
+- Headings enforce `text-wrap: balance` with tight line height (`--line-height-heading: 1.25`).
+- All flex children and grid cells containing text include `min-width: 0` to prevent horizontal clipping.
+- Zero arbitrary `truncate` or `line-clamp` on primary content, titles, or descriptions.
+- Compact cards with intentional preview clamps provide accessible interactive expand triggers (`aria-expanded={isExpanded}` and dynamic `aria-label`).
+- Code blocks contain horizontal scrolling strictly within `<pre>` (`overflow-x-auto`) and feature word-wrap toggle controls.
 
 ---
 

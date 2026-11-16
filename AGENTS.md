@@ -29,3 +29,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Do NOT use arbitrary `truncate` or `line-clamp` on primary content, titles, or descriptions.
 - When previews are intentionally clamped, provide an accessible reveal mechanism with `aria-expanded` and descriptive labels.
 - Code blocks must contain horizontal scrolling within the panel (`overflow-x-auto`) and provide accessible word-wrap toggle controls.
+
+### 4. Operational Invariants & Mistake Prevention
+- **Tool Invocation Invariant (`read_file`)**: `StartLine` must ALWAYS be less than or equal to `EndLine`. Inverting line numbers causes immediate tool execution failure.
+- **TypeScript Property Verification**: Never guess or assume property names on JSON data items. Check `src/types/data.ts` before writing JSX (e.g. `ArchitectureQuestion` uses `.question` and `.id`, NOT `.title`).
+- **E-Ink Mode Dark Container Trap**: In E-Ink, `.e-ink .text-white` inverts to `#111111`. Wrapping white text in a hardcoded dark background (`bg-slate-950`, `bg-[#0c1427]`, `from-purple-950`) creates black-on-black invisible text. Always provide E-Ink overrides (`e-ink:bg-transparent` or semantic tokens).
+- **Badge & Pill 700-Shade Rule**: Tailwind 600 shades (`amber-600`, `emerald-600`, `sky-600`) fail WCAG 2.2 AA when paired with white text (< 4.5:1). Always use 700 shades (`amber-700`, `emerald-700`, `sky-700`, `cyan-700`) which achieve $\ge 5.0:1$.
+- **4-Step Deployment Pipeline**: Always run the full deployment pipeline:
+  1. `npm run content:validate && npm run content:shard` (validates 11,280+ records)
+  2. `npm run build:worker` (OpenNext Cloudflare build)
+  3. `npm run r2:sync:remote` (idempotent sync of 106+ R2 shards)
+  4. `npm run deploy:worker` (Wrangler edge deployment)
+- **Zero Test Regressions**: All 61 test files (509 tests) and `tsc --noEmit` must pass with 100% success before any deployment or task completion.

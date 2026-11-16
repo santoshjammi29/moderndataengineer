@@ -519,5 +519,159 @@
       "For SQL Server 2022 on-premises, PolyBase connects to S3-compatible storage using S3 credentials"
     ],
     "use_case": "Enterprise hybrid data lake virtualization architecture allowing on-premises SQL Server 2022 and Synapse Dedicated Pools to ingest Azure Data Lake Parquet files directly via T-SQL."
+  },
+  {
+    "id": "sql-a-09",
+    "title": "Safe Chunked Batch Deletion Pattern",
+    "level": "advanced",
+    "category": "Production Operations & Maintenance",
+    "description": "Purges millions of historical records from high-throughput tables in iterative small chunks to prevent transaction log full errors and avoid table lock escalation.",
+    "code": "SET NOCOUNT ON;\nDECLARE @BatchSize INT = 5000;\nDECLARE @RowsDeleted INT = 1;\nDECLARE @TotalDeleted INT = 0;\n\nWHILE @RowsDeleted > 0\nBEGIN\n    BEGIN TRANSACTION;\n    \n    DELETE TOP (@BatchSize)\n    FROM dbo.fact_audit_log WITH (ROWLOCK)\n    WHERE log_date < DATEADD(month, -6, GETUTCDATE());\n    \n    SET @RowsDeleted = @@ROWCOUNT;\n    SET @TotalDeleted = @TotalDeleted + @RowsDeleted;\n    \n    COMMIT TRANSACTION;\n    \n    -- Optional: checkpoint log breath and reduce CPU throttling\n    WAITFOR DELAY '00:00:01';\nEND;\n\nPRINT CONCAT('Successfully deleted total records: ', @TotalDeleted);",
+    "notes": [
+      "Keeps transaction size strictly under 5,000 rows to prevent lock escalation from ROWLOCK to TABLOCK",
+      "Short transactions allow the database checkpoint engine to truncate the transaction log (.ldf)",
+      "WAITFOR DELAY yields CPU cycles back to concurrent OLTP workloads"
+    ],
+    "use_case": "Archiving historical telemetry, GDPR data deletion, and high-throughput production table maintenance without downtime."
+  },
+  {
+    "id": "sql-i-11",
+    "title": "7-Day Moving Average & Running Total Analytical Query",
+    "level": "intermediate",
+    "category": "Window Functions",
+    "description": "Calculates running cumulative revenue and a rolling 7-day moving average using explicit ROWS BETWEEN window frame specifications.",
+    "code": "SELECT \n    sale_date,\n    daily_revenue_eur,\n    -- Running Total: Cumulative sum from start to current row\n    SUM(daily_revenue_eur) OVER (\n        ORDER BY sale_date \n        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS running_total_revenue_eur,\n    -- 7-Day Moving Average: Current row plus previous 6 rows\n    AVG(daily_revenue_eur) OVER (\n        ORDER BY sale_date \n        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW\n    ) AS moving_avg_7d_eur,\n    -- Moving 7-Day Total Transaction Count\n    COUNT(*) OVER (\n        ORDER BY sale_date \n        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW\n    ) AS moving_window_count\nFROM dbo.fact_daily_sales_summary\nORDER BY sale_date;",
+    "notes": [
+      "Always specify ROWS BETWEEN rather than RANGE BETWEEN to guarantee predictable performance and avoid tie clumping",
+      "Notice that for the first 6 days of the dataset, AVG() smoothly averages available preceding rows (1 to 6 days)",
+      "Explicit frame prevents expensive tempdb spooling incurred by the default RANGE specification"
+    ],
+    "use_case": "Financial analytics, SaaS revenue run-rates, and smoothing noisy daily telemetry on the Azure SQL Silver reporting layer."
+  },
+  {
+    "id": "sql-i-12",
+    "title": "Engine-Agnostic Matrix Pivoting via Conditional Aggregation",
+    "level": "intermediate",
+    "category": "Aggregation & Grouping",
+    "description": "Transposes quarterly rows into structured columns without relying on vendor-specific PIVOT keywords, compatible across all relational and cloud platforms.",
+    "code": "SELECT \n    department_id,\n    fiscal_year,\n    SUM(CASE WHEN quarter = 'Q1' THEN revenue_eur ELSE 0 END) AS q1_revenue_eur,\n    SUM(CASE WHEN quarter = 'Q2' THEN revenue_eur ELSE 0 END) AS q2_revenue_eur,\n    SUM(CASE WHEN quarter = 'Q3' THEN revenue_eur ELSE 0 END) AS q3_revenue_eur,\n    SUM(CASE WHEN quarter = 'Q4' THEN revenue_eur ELSE 0 END) AS q4_revenue_eur,\n    SUM(revenue_eur) AS total_annual_revenue_eur\nFROM dbo.fact_department_financials\nGROUP BY department_id, fiscal_year\nORDER BY fiscal_year DESC, department_id ASC;",
+    "notes": [
+      "Works identically across SQL Server, PostgreSQL, MySQL, Oracle, Snowflake, BigQuery, and Spark SQL",
+      "Using SUM(CASE ...) is cleaner, faster, and more flexible than proprietary PIVOT syntax when combining multiple aggregations",
+      "Easily extended with FILTER (WHERE ...) clause in modern PostgreSQL / DuckDB"
+    ],
+    "use_case": "Financial quarterly rollups, cohort analysis, and transposing EAV (Entity-Attribute-Value) models for Power BI matrix visual consumption."
+  },
+  {
+    "id": "sql-a-10",
+    "title": "Azure Synapse Maximum Throughput Staging Ingestion Pattern",
+    "level": "architect",
+    "category": "Cloud MPP & Synapse",
+    "description": "Configures a dedicated staging table with Round-Robin distribution and Heap storage to achieve maximum ingestion throughput during ELT pipelines.",
+    "code": "-- Step 1: Create Staging Table with Round-Robin and Heap\nCREATE TABLE stg.orders_raw_ingest\nWITH (\n    DISTRIBUTION = ROUND_ROBIN,\n    HEAP\n)\nAS\nSELECT * FROM dbo.fact_orders WHERE 1 = 0;\n\n-- Step 2: High-speed ingestion via COPY INTO\nCOPY INTO stg.orders_raw_ingest\nFROM 'https://mystorageaccount.dfs.core.windows.net/landing/orders/*.parquet'\nWITH (\n    FILE_TYPE = 'PARQUET',\n    CREDENTIAL = (IDENTITY = 'Managed Identity')\n);\n\n-- Step 3: Insert into Production Clustered Columnstore Fact Table\nINSERT INTO prod.fact_orders (order_id, customer_id, order_date, total_amount_eur)\nSELECT order_id, customer_id, order_date, total_amount_eur\nFROM stg.orders_raw_ingest;\n\n-- Step 4: Fast truncate staging table\nTRUNCATE TABLE stg.orders_raw_ingest;",
+    "notes": [
+      "Round-Robin spreads data uniformly across all 60 distributions with zero hash calculation overhead",
+      "Heap storage avoids index maintenance and rowgroup compression overhead during bulk ingest",
+      "Bulk loading into staging before inserting into production Fact ensures clean transaction boundaries and simple retry logic"
+    ],
+    "use_case": "High-volume data warehouse ingestion pipelines handling gigabytes to terabytes per hour in Azure Synapse Analytics."
+  },
+  {
+    "id": "sql-a-11",
+    "title": "Mitigating Parameter Sniffing via OPTIMIZE FOR and RECOMPILE",
+    "level": "advanced",
+    "category": "Performance Tuning",
+    "description": "Hardens stored procedures against cached execution plan regressions caused by parameter sniffing across heavily skewed datasets.",
+    "code": "CREATE OR ALTER PROCEDURE dbo.usp_get_orders_by_status\n    @order_status VARCHAR(20)\nAS\nBEGIN\n    SET NOCOUNT ON;\n    \n    -- Strategy 1: Standard query with OPTIMIZE FOR UNKNOWN\n    -- Generates a stable plan based on average statistical distribution\n    SELECT \n        order_id,\n        customer_id,\n        order_date,\n        total_amount_eur\n    FROM dbo.fact_orders\n    WHERE order_status = @order_status\n    OPTION (OPTIMIZE FOR (@order_status UNKNOWN));\n    \n    -- Strategy 2: For extreme cardinality differences, force statement-level recompile\n    -- SELECT * FROM dbo.fact_orders WHERE order_status = @order_status OPTION (RECOMPILE);\nEND;",
+    "notes": [
+      "OPTIMIZE FOR UNKNOWN instructs the query optimizer to use the density vector rather than sniffing the runtime value",
+      "OPTION (RECOMPILE) produces an optimal plan per call at the cost of a few milliseconds of CPU compilation time",
+      "Prevents production latency spikes where a 50ms procedure intermittently stalls for 60 seconds"
+    ],
+    "use_case": "Production OLTP APIs and ETL stored procedures filtering on volatile status or flag columns."
+  },
+  {
+    "id": "sql-a-12",
+    "title": "Deduplication with Earliest Record Preservation using CTE",
+    "level": "intermediate",
+    "category": "Data Quality & Cleansing",
+    "description": "Eliminates duplicate entities across business keys while preserving the earliest original record using ROW_NUMBER() and a Common Table Expression.",
+    "code": "WITH ranked_duplicates AS (\n    SELECT \n        customer_sk,\n        customer_id,\n        email,\n        created_at,\n        ROW_NUMBER() OVER (\n            PARTITION BY email \n            ORDER BY created_at ASC, customer_sk ASC\n        ) AS duplicate_rank\n    FROM dbo.dim_customers\n)\nDELETE FROM ranked_duplicates\nWHERE duplicate_rank > 1;\n\n-- Verify zero duplicates remain\nSELECT email, COUNT(*)\nFROM dbo.dim_customers\nGROUP BY email\nHAVING COUNT(*) > 1;",
+    "notes": [
+      "T-SQL and PostgreSQL allow direct DELETE operations through Common Table Expressions",
+      "ORDER BY created_at ASC preserves the first seen record; DESC would preserve the most recent record",
+      "For tables > 500,000 rows, combine with chunked deletion to prevent lock escalation"
+    ],
+    "use_case": "Silver-layer customer Master Data Management (MDM) deduplication and CRM reconciliation pipelines."
+  },
+  {
+    "id": "mssql-sargable-date-range",
+    "title": "SARGable Date Range Filtering vs Date Functions",
+    "level": "intermediate",
+    "category": "Query Optimization",
+    "description": "Demonstrates writing Search Argument Able (SARGable) date boundary queries that utilize B-tree index seeks rather than forcing full clustered index scans.",
+    "code": "-- ❌ Non-SARGable Antipattern (forces full clustered index scan)\nSELECT OrderID, CustomerID, OrderDate, TotalAmount\nFROM dbo.Orders\nWHERE YEAR(OrderDate) = 2024 AND MONTH(OrderDate) = 6;\n\n-- ✅ SARGable Production Pattern (enables logarithmic index seek)\nSELECT OrderID, CustomerID, OrderDate, TotalAmount\nFROM dbo.Orders\nWHERE OrderDate >= '2024-06-01' \n  AND OrderDate < '2024-07-01';",
+    "notes": [
+      "Wrapping OrderDate in YEAR() and MONTH() requires the engine to evaluate the scalar function for every row in the table.",
+      "Half-open interval (>= start AND < next_month) correctly handles datetime2 and datetime fractional second precision.",
+      "Saves 90%+ CPU time and disk I/O on tables exceeding 1 million rows."
+    ],
+    "use_case": "Production report and ETL queries filtering time-series or transactional records by month/year."
+  },
+  {
+    "id": "mssql-try-catch-transaction-template",
+    "title": "Production Stored Procedure Template with TRY...CATCH & RCSI",
+    "level": "advanced",
+    "category": "Stored Procedures & Concurrency",
+    "description": "Standard enterprise stored procedure template incorporating atomic transaction management, error throwing, and deadlock resilience.",
+    "code": "CREATE OR ALTER PROCEDURE dbo.TransferFunds\n    @SourceAccountID      INT,\n    @DestinationAccountID INT,\n    @Amount               DECIMAL(18, 2)\nAS\nBEGIN\n    SET NOCOUNT ON;\n    SET XACT_ABORT ON; -- Automatically rolls back transaction if run-time error occurs\n\n    BEGIN TRY\n        BEGIN TRANSACTION;\n\n        -- Enforce uniform object access order (lock lower ID first to prevent deadlocks):\n        IF @SourceAccountID > @DestinationAccountID\n        BEGIN\n            -- Swap to guarantee uniform lock sequence:\n            DECLARE @TempID INT = @SourceAccountID;\n            SET @SourceAccountID = @DestinationAccountID;\n            SET @DestinationAccountID = @TempID;\n        END\n\n        UPDATE dbo.Accounts SET Balance = Balance - @Amount WHERE AccountID = @SourceAccountID;\n        UPDATE dbo.Accounts SET Balance = Balance + @Amount WHERE AccountID = @DestinationAccountID;\n\n        COMMIT TRANSACTION;\n    END TRY\n    BEGIN CATCH\n        IF @@TRANCOUNT > 0\n            ROLLBACK TRANSACTION;\n\n        -- Re-throw the original error with line number and state:\n        THROW;\n    END CATCH\nEND;",
+    "notes": [
+      "SET XACT_ABORT ON ensures orphaned locks are released if connection aborts.",
+      "Locking accounts in uniform numerical order mathematically prevents cyclic deadlock chains.",
+      "Structured THROW preserves original error number, severity, and call stack."
+    ],
+    "use_case": "High-throughput financial and transactional processing procedures."
+  },
+  {
+    "id": "mssql-gaps-and-islands-streaks",
+    "title": "Gaps & Islands Consecutive Sequence Analysis",
+    "level": "advanced",
+    "category": "Analytical Window Functions",
+    "description": "Identifies contiguous active streaks (e.g. users logging in >= 3 consecutive days) using the Date - ROW_NUMBER() island grouping invariant.",
+    "code": "WITH DailyLogins AS (\n    SELECT DISTINCT UserID, CAST(LoginTime AS DATE) AS LoginDate\n    FROM dbo.UserActivity\n),\nIslandGrouped AS (\n    SELECT \n        UserID,\n        LoginDate,\n        -- The invariant: Date - RowNumber produces a static anchor for consecutive days:\n        DATEADD(day, -ROW_NUMBER() OVER (PARTITION BY UserID ORDER BY LoginDate), LoginDate) AS IslandAnchor\n    FROM DailyLogins\n)\nSELECT \n    UserID,\n    MIN(LoginDate) AS StreakStart,\n    MAX(LoginDate) AS StreakEnd,\n    COUNT(*)       AS ConsecutiveDays\nFROM IslandGrouped\nGROUP BY UserID, IslandAnchor\nHAVING COUNT(*) >= 3\nORDER BY UserID, StreakStart;",
+    "notes": [
+      "DISTINCT in CTE ensures duplicate logins on the same calendar day do not corrupt the sequence.",
+      "DATEADD(day, -rn, date) evaluates in a single pass without expensive self-joins.",
+      "Applicable to sensor telemetry uptime, recurring billing streaks, and gaming engagement."
+    ],
+    "use_case": "Product engagement tracking, customer loyalty gamification, and machine sensor SLA monitoring."
+  },
+  {
+    "id": "mssql-cardinality-estimator-feedback",
+    "title": "Configuring Legacy Cardinality Estimation & Hints",
+    "level": "architect",
+    "category": "Query Engine Internals",
+    "description": "Techniques to resolve query plan regressions caused by the post-2014 Cardinality Estimator at database, session, and query levels.",
+    "code": "-- 1. Database Scoped Configuration (Fixes regressions across entire database):\nALTER DATABASE SCOPED CONFIGURATION \nSET LEGACY_CARDINALITY_ESTIMATION = ON;\n\n-- 2. Single-Query Targeted Hint (Preserves modern CE for other queries):\nSELECT \n    c.CustomerName,\n    o.OrderID,\n    o.TotalAmount\nFROM dbo.Customers c\nINNER JOIN dbo.Orders o ON c.CustomerID = o.CustomerID\nWHERE c.City = 'Seattle' AND c.PostalCode = '98101'\nOPTION (USE HINT('FORCE_LEGACY_CARDINALITY_ESTIMATION'));\n\n-- 3. Verify Query Store Plan Forcing:\nSELECT q.query_id, p.plan_id, p.is_forced_plan\nFROM sys.query_store_query q\nJOIN sys.query_store_plan p ON q.query_id = p.query_id\nWHERE p.is_forced_plan = 1;",
+    "notes": [
+      "Modern CE assumes predicate independence, underestimating row counts for correlated columns.",
+      "Underestimation prompts the optimizer to select Nested Loops with row lookups over Hash Joins.",
+      "Database-scoped configuration isolates the setting without requiring server-wide trace flag 9481."
+    ],
+    "use_case": "Migrating mission-critical databases from SQL Server 2008/2012 to 2019/2022 without query timeouts."
+  },
+  {
+    "id": "mssql-rcsi-snapshot-isolation",
+    "title": "Enabling Read Committed Snapshot Isolation (RCSI)",
+    "level": "architect",
+    "category": "Concurrency & Locking",
+    "description": "Enables statement-level optimistic concurrency in SQL Server to completely eliminate reader-writer blocking.",
+    "code": "-- Step 1: Terminate active connections and activate RCSI:\nALTER DATABASE CoreBanking\nSET READ_COMMITTED_SNAPSHOT ON\nWITH ROLLBACK IMMEDIATE;\n\n-- Step 2: Verify database isolation state:\nSELECT \n    name,\n    is_read_committed_snapshot_on,\n    snapshot_isolation_state_desc\nFROM sys.databases\nWHERE name = 'CoreBanking';\n\n-- Step 3: Monitor Persistent Version Store (PVS) memory:\nSELECT \n    db_name(database_id) AS DatabaseName,\n    pvs_in_row_version_store_size_kb,\n    pvs_off_row_version_store_size_kb\nFROM sys.dm_tran_persistent_version_store_stats\nWHERE database_id = DB_ID('CoreBanking');",
+    "notes": [
+      "Readers do not acquire Shared (S) locks, so they never block concurrent exclusive (X) update locks.",
+      "Does not require modifying query syntax (unlike manual SNAPSHOT isolation or NOLOCK).",
+      "SQL Server 2019+ utilizes Persistent Version Store (PVS) inside the user database, reducing TempDB overhead."
+    ],
+    "use_case": "High-throughput mixed OLTP and operational reporting databases suffering from blocking."
   }
 ]

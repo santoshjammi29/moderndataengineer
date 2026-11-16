@@ -29,7 +29,7 @@ The live figures historically disagreed across pages; the branch now uses the ge
 The two requested repositories were inspected at pinned snapshots: [moderndataengineer, `302c6d4`](https://github.com/santoshjammi29/moderndataengineer/tree/302c6d4539c2c77196775a291f36267f35dd0398) and [pyspark-handbook, `bb56d37`](https://github.com/santoshjammi29/pyspark-handbook/tree/bb56d371a6c1c14b92e3ae0336e15b7784f75107). The PySpark handbook describes 105 notebook lessons; this checkout contains 156 PySpark drills after unifying those lessons alongside the 51 earlier drills.
 
 **Branch verification checks completed (12 November 2026):**
-- **Vitest Suite:** 58 passed of 58 test files (**472 passed of 472 tests**, 0 failures).
+- **Vitest Suite:** 61 passed of 61 test files (**509 passed of 509 tests**, 0 failures).
 - **Content Validation:** `npm run content:validate` (`scripts/validate-content.ts`) passed across 869 concepts, 3,294 scenarios, and 7,098 Q&A (**11,261 total assets validated**, 0 schema errors).
 - **Search Sharding & Indexing:** `npm run content:shard` (`scripts/shard-and-index.ts`) passed, generating `src/data/content-counts.json` (11,956 records), regenerating MiniSearch inverted index, writing `search_catalog.json` (5.73 MB), and seeding `.build-artifacts/r2` and `public/_artifacts`.
 - **TypeScript:** `npm run typecheck` (`tsc --noEmit`) passed with 0 errors.
@@ -142,8 +142,8 @@ The route map below covers all 30 App Router page entries (20 primary routes and
 
 ### Automated Test Suite (Vitest)
 - **Status:** PASS (0 errors, 0 failures)
-- **Test Files:** 58 passed of 58
-- **Tests Executed:** 472 passed of 472
+- **Test Files:** 61 passed of 61
+- **Tests Executed:** 509 passed of 509
 - **Duration:** 7.21s
 
 ### Static Analysis & Integrity

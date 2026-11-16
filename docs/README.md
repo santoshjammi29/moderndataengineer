@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://moderndataengineer.uk"><img src="https://img.shields.io/badge/Live_Site-moderndataengineer.uk-blueviolet?style=flat-square" alt="Live Site"></a>
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js" alt="Next.js 16"></a>
-  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-58_Files_%E2%80%A2_472_Passed-green?style=flat-square&logo=vitest" alt="Vitest 58/58"></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-61_Files_%E2%80%A2_509_Passed-green?style=flat-square&logo=vitest" alt="Vitest 61/61"></a>
   <a href="../src/data/content-counts.json"><img src="https://img.shields.io/badge/Inventory-11%2C956%2B_Assets-blue?style=flat-square" alt="11,956+ Assets"></a>
   <a href="content-expansion-plan.md"><img src="https://img.shields.io/badge/Research-21_Authoritative_Sources-emerald?style=flat-square" alt="21 Research Sources"></a>
 </p>
@@ -71,9 +71,9 @@ Verified edge network benchmarks, accessibility certifications, and Lighthouse a
 
 | Document | Primary Focus | Key Score / Metric | Direct Link |
 | :--- | :--- | :--- | :--- |
-| **Enterprise Production Audit** | Edge TTFB, LCP, Zero-Bundle DAL, Test Coverage | **99/100 Lighthouse**, LCP: 0.78s, **472 Tests Passed (58 Suites)** | [`audits/production_audit.md`](./audits/production_audit.md) |
-| **Theme & Contrast Audit** | Zero-Flash Theme Switch, Runtime Contrast Matrix | **<16ms Theme Toggle**, WCAG 2.1 AA Certified | [`audits/theme_audit.md`](./audits/theme_audit.md) |
-| **Design System Audit** | Fluid Typography Clamp, 6 Responsive Breakpoints | **100% Pass Rate across 58 Test Suites** | [`audits/design_system_audit.md`](./audits/design_system_audit.md) |
+| **Enterprise Production Audit** | Edge TTFB, LCP, Zero-Bundle DAL, Test Coverage | **99/100 Lighthouse**, LCP: 0.78s, **509 Tests Passed (61 Suites)** | [`audits/production_audit.md`](./audits/production_audit.md) |
+| **Theme & Contrast Audit** | 4-Theme Switching (Dark, Light, Grey, E-Ink) & Contrast Matrix | **<16ms Theme Toggle**, WCAG 2.2 AA Certified | [`audits/theme_audit.md`](./audits/theme_audit.md) |
+| **Design System Audit** | Fluid Typography Clamp, 6 Responsive Breakpoints | **100% Pass Rate across 61 Test Suites (509 tests)** | [`audits/design_system_audit.md`](./audits/design_system_audit.md) |
 
 👉 **[Explore Full Audits Directory](./audits/README.md)**
 
@@ -97,7 +97,7 @@ Developer onboarding, architecture rules, testing runbooks, and strategic planni
 
 | Document | Primary Focus | Operational Guide | Direct Link |
 | :--- | :--- | :--- | :--- |
-| **Development & Operations Guide** | Next.js 16 App Router, DAL, Vitest suite, Cloudflare OpenNext | Local setup, Zero-Bundle rule, 58-suite test runbook, R2 sync | [`engineering/development_guide.md`](./engineering/development_guide.md) |
+| **Development & Operations Guide** | Next.js 16 App Router, DAL, Vitest suite, Cloudflare OpenNext | Local setup, Zero-Bundle rule, 61-suite test runbook (509 tests), R2 sync | [`engineering/development_guide.md`](./engineering/development_guide.md) |
 | **Platform Engineering Roadmap** | Completed milestones & v2.0+ planned expansions | BM25F search, Databricks 148+ hub, 7 master PDFs, single-roof concepts | [`engineering/roadmap.md`](./engineering/roadmap.md) |
 | **Workers for Platforms** | Dynamic tenant isolation and customer workers | Edge sandboxing, execution safety, and container isolation | [`engineering/workers-for-platforms.md`](./engineering/workers-for-platforms.md) |
 

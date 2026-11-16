@@ -1583,7 +1583,7 @@
     "effort": "Low Effort",
     "problem": "Pipeline crashes with 'java.lang.OutOfMemoryError: Java heap space' on the Spark Driver node during wide queries or report exports.",
     "solution": "Eliminate driver-side materialization (.collect(), .toPandas()). Use distributed writes directly to Delta Lake, limit result sets with .take(N), or switch to PySpark Pandas API (pandas_on_spark) which executes distributed across workers.",
-    "codeSnippet": "# ❌ ANTI-PATTERN: Pulling 20M rows to driver JVM\n# df.collect() \n# df.toPandas()\n\n# ✅ REMEDIATION 1: Write directly to distributed Delta table\ndf.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"prod.gold.summary\")\n\n# ✅ REMEDIATION 2: Safe bounded preview\nsample_rows = df.limit(500).toPandas()\n\n# ✅ REMEDIATION 3: Distributed Pandas API\nimport pyspark.pandas as ps\nps_df = ps.read_table(\"prod.silver.orders\")\nresult = ps_df.groupby(\"country\").revenue.sum() # Executes on workers, not driver",
+    "codeSnippet": "# \u274c ANTI-PATTERN: Pulling 20M rows to driver JVM\n# df.collect() \n# df.toPandas()\n\n# \u2705 REMEDIATION 1: Write directly to distributed Delta table\ndf.write.format(\"delta\").mode(\"overwrite\").saveAsTable(\"prod.gold.summary\")\n\n# \u2705 REMEDIATION 2: Safe bounded preview\nsample_rows = df.limit(500).toPandas()\n\n# \u2705 REMEDIATION 3: Distributed Pandas API\nimport pyspark.pandas as ps\nps_df = ps.read_table(\"prod.silver.orders\")\nresult = ps_df.groupby(\"country\").revenue.sum() # Executes on workers, not driver",
     "language": "python",
     "whyItMatters": "The driver node is designed strictly for task orchestration and Catalyst query planning. Collecting distributed partitions forces gigabytes of deserialized JVM objects into driver heap, inevitably crashing the entire cluster.",
     "metrics": "Eliminates 100% of driver crash terminations, saves driver scaling costs",
@@ -1649,7 +1649,7 @@
     "effort": "Medium Effort",
     "problem": "Spark UI stage details show massive 'Spill (Memory): 120 GB' and 'Spill (Disk): 35 GB'. Tasks spend 70%+ of execution time serializing and writing intermediate sort buffers to disk.",
     "solution": "Increase spark.sql.shuffle.partitions so that individual partition data slices fit cleanly within executor execution memory slots. Ensure a minimum of 4 GB RAM per executor core. Eliminate unpartitioned window functions.",
-    "codeSnippet": "# 1. Calculate optimal shuffle partition count:\n# Target partition size = ~128 MB to 200 MB\n# E.g. For a 120 GB dataset: 120,000 MB / 150 MB = 800 partitions\nspark.conf.set(\"spark.sql.shuffle.partitions\", \"800\")\n\n# 2. Enable adaptive coalesce to automatically shrink post-shuffle partitions\nspark.conf.set(\"spark.sql.adaptive.coalescePartitions.enabled\", \"true\")\nspark.conf.set(\"spark.sql.adaptive.advisoryPartitionSizeInBytes\", \"134217728\") # 128 MB\n\n# ❌ BAD: Window.orderBy(\"date\") -> Unpartitioned window shuffles all data to 1 task\n# ✅ GOOD: Window.partitionBy(\"customer_id\").orderBy(\"date\")",
+    "codeSnippet": "# 1. Calculate optimal shuffle partition count:\n# Target partition size = ~128 MB to 200 MB\n# E.g. For a 120 GB dataset: 120,000 MB / 150 MB = 800 partitions\nspark.conf.set(\"spark.sql.shuffle.partitions\", \"800\")\n\n# 2. Enable adaptive coalesce to automatically shrink post-shuffle partitions\nspark.conf.set(\"spark.sql.adaptive.coalescePartitions.enabled\", \"true\")\nspark.conf.set(\"spark.sql.adaptive.advisoryPartitionSizeInBytes\", \"134217728\") # 128 MB\n\n# \u274c BAD: Window.orderBy(\"date\") -> Unpartitioned window shuffles all data to 1 task\n# \u2705 GOOD: Window.partitionBy(\"customer_id\").orderBy(\"date\")",
     "language": "python",
     "whyItMatters": "Disk spill incurs massive I/O serialization, compression, and disk write penalties. Eliminating disk spill often speeds up Spark shuffle stages by 3x to 5x.",
     "metrics": "3x-5x faster shuffle stages, 0 GB disk spill",
@@ -1960,6 +1960,120 @@
       "Observability",
       "Alerting",
       "SRE"
+    ]
+  },
+  {
+    "id": "sql-window-functions-master-cheatsheet",
+    "title": "SQL Window Functions Master Cheat Sheet",
+    "category": "SQL & Storage",
+    "categorySlug": "sql",
+    "impact": "High (Analytics Performance & Code Elegance)",
+    "effort": "Low (Drop-in Syntax)",
+    "problem": "Developers write inefficient, convoluted correlated subqueries and multiple self-joins to calculate running totals, moving averages, and top-N category rankings.",
+    "solution": "Leverage ANSI SQL Window Functions with explicit frame bounds (ROWS BETWEEN) and the modern QUALIFY clause to evaluate rankings and aggregates in a single logarithmic pass.",
+    "codeSnippet": "-- Finding Top 1 Product per Category + Running Monthly Revenue\nSELECT \n    category_id,\n    product_id,\n    order_date,\n    revenue,\n    DENSE_RANK() OVER (PARTITION BY category_id ORDER BY revenue DESC) AS rank_in_cat,\n    SUM(revenue) OVER (\n        PARTITION BY category_id \n        ORDER BY order_date \n        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS running_monthly_revenue\nFROM fact_sales\nQUALIFY rank_in_cat = 1;",
+    "language": "sql",
+    "whyItMatters": "Window functions process partitions without collapsing rows, reducing time complexity from O(N^2) correlated subqueries to O(N log N) sorted passes.",
+    "metrics": "Up to 80% faster execution; eliminates 5+ self-join roundtrips.",
+    "antiPattern": "Using subqueries like '(SELECT COUNT(*) FROM t2 WHERE t2.val > t1.val)' for ranking; omitting 'ROWS BETWEEN' which causes default fallback to memory-heavy 'RANGE BETWEEN'.",
+    "tags": [
+      "SQL",
+      "Window Functions",
+      "DENSE_RANK",
+      "QUALIFY",
+      "Analytics Engineering"
+    ]
+  },
+  {
+    "id": "sql-spark-pandas-polars-rosetta-stone",
+    "title": "Cross-Engine Rosetta Stone (SQL \u2194 PySpark \u2194 Pandas \u2194 Polars)",
+    "category": "SQL & Storage",
+    "categorySlug": "sql",
+    "impact": "Critical (Multi-Engine Developer Velocity)",
+    "effort": "Immediate (Syntax Reference)",
+    "problem": "Data engineers working across SQL warehouses, distributed Spark clusters, and local Python pipelines waste time looking up equivalent syntax for common data manipulations.",
+    "solution": "Use this drop-in translation matrix mapping SQL, PySpark, Pandas, and Polars expressions for filtering, sorting, column creation, aggregation, and ranking.",
+    "codeSnippet": "-- SQL:\nSELECT dept, AVG(salary) AS avg_sal FROM emp WHERE status = 'A' GROUP BY dept;\n\n# PySpark:\ndf.filter(col('status') == 'A').groupBy('dept').agg(avg('salary').alias('avg_sal'))\n\n# Pandas:\ndf[df['status'] == 'A'].groupby('dept')['salary'].mean().reset_index(name='avg_sal')\n\n# Polars:\ndf.filter(pl.col('status') == 'A').group_by('dept').agg(pl.mean('salary').alias('avg_sal'))",
+    "language": "python",
+    "whyItMatters": "Eliminates cognitive load and avoids silent semantic differences (e.g. Pandas groupby dropping nulls by default vs SQL/Polars preserving them).",
+    "metrics": "Zero semantic divergence; consistent data quality across multi-hop pipelines.",
+    "antiPattern": "Writing procedural for-loops in Pandas/PySpark instead of native vectorized expressions.",
+    "tags": [
+      "Rosetta Stone",
+      "SQL",
+      "PySpark",
+      "Pandas",
+      "Polars",
+      "Data Engineering"
+    ]
+  },
+  {
+    "id": "spark-5s-triage-runbook-cheatsheet",
+    "title": "Apache Spark 5S Performance Triage Runbook",
+    "category": "Spark Optimization",
+    "categorySlug": "spark",
+    "impact": "Maximum (Cluster Stability & Cost Reduction)",
+    "effort": "Medium (Configuration & Code Refactoring)",
+    "problem": "Spark jobs fail with OOM crashes, stall indefinitely at 99% completion, or experience massive shuffle disk spill penalties.",
+    "solution": "Triage performance issues across the 5 S's: Storage (compaction), Skew (salting/AQE), Spill (shuffle partition sizing), Shuffle (broadcast joins), and Serialization (vectorized Pandas UDFs).",
+    "codeSnippet": "-- 1. SKEW: Enable AQE Skew Join\nspark.conf.set('spark.sql.adaptive.skewJoin.enabled', 'true')\n\n-- 2. SPILL: Size shuffle partitions dynamically (data_size_mb / 150)\nspark.conf.set('spark.sql.shuffle.partitions', str(int(input_mb / 150)))\n\n-- 3. SHUFFLE: Broadcast small dimensions (<100MB)\nfrom pyspark.sql.functions import broadcast\ndf_joined = df_fact.join(broadcast(df_dim), on='dim_id', how='inner')",
+    "language": "python",
+    "whyItMatters": "Eliminates 95% of production Spark job failures and prevents expensive cluster autoscaling overspend.",
+    "metrics": "Reduces job runtimes by 50%\u201390%; eliminates disk spill I/O.",
+    "antiPattern": "Leaving spark.sql.shuffle.partitions at the default 200 for terabyte-scale jobs; using df.collect() on distributed datasets.",
+    "tags": [
+      "Spark",
+      "Performance",
+      "5S",
+      "AQE",
+      "Data Skew",
+      "Tungsten"
+    ]
+  },
+  {
+    "id": "sql-server-deadlock-triage-cheatsheet",
+    "title": "SQL Server Deadlock (Error 1205) Triage Cheat Sheet",
+    "category": "SQL & Storage",
+    "categorySlug": "sql",
+    "impact": "High (Database Availability & Concurrency)",
+    "effort": "Medium (Architecture & Scripting)",
+    "problem": "Concurrent batch updates and analytical reporting queries generate frequent Error 1205 deadlock victim exceptions.",
+    "solution": "Enforce uniform table access order across all stored procedures, enable Read Committed Snapshot Isolation (RCSI), and ensure covering indexes eliminate bookmark lookups.",
+    "codeSnippet": "-- 1. Enable RCSI to eliminate reader-writer blocking:\nALTER DATABASE CoreBanking \nSET READ_COMMITTED_SNAPSHOT ON \nWITH ROLLBACK IMMEDIATE;\n\n-- 2. Stored Procedure Safe Pattern with TRY...CATCH & Uniform Order:\nBEGIN TRY\n    BEGIN TRANSACTION;\n    -- Always access Customers before Orders across ALL procedures:\n    UPDATE dbo.Customers SET LastActive = GETDATE() WHERE CustomerID = @cust_id;\n    UPDATE dbo.Orders SET Status = 'Processed' WHERE CustomerID = @cust_id;\n    COMMIT TRANSACTION;\nEND TRY\nBEGIN CATCH\n    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;\n    THROW;\nEND CATCH;",
+    "language": "sql",
+    "whyItMatters": "RCSI directs readers to row versions in TempDB, completely preventing select statements from blocking concurrent update statements.",
+    "metrics": "Eliminates up to 98% of transactional deadlock events.",
+    "antiPattern": "Using NOLOCK (dirty reads) which causes missing rows, duplicated reads, and corrupted reporting summaries.",
+    "tags": [
+      "SQL Server",
+      "Deadlocks",
+      "RCSI",
+      "Error 1205",
+      "Concurrency",
+      "T-SQL"
+    ]
+  },
+  {
+    "id": "synapse-mpp-distribution-cheatsheet",
+    "title": "Azure Synapse MPP 60-Distribution Table Design Matrix",
+    "category": "SQL & Storage",
+    "categorySlug": "sql",
+    "impact": "High (MPP Query Performance & FinOps)",
+    "effort": "Low (DDL Sizing)",
+    "problem": "Queries in Azure Synapse Analytics run slowly and exhaust DWU memory slots due to cross-node Data Movement Service (DMS) shuffle broadcasts.",
+    "solution": "Apply the 60-distribution rule: Replicate dimension tables under 2 GB, Hash-distribute large fact tables (>100M rows) on high-cardinality join keys, and Round-Robin staging tables.",
+    "codeSnippet": "-- 1. Staging Table: Maximum Ingestion Throughput\nCREATE TABLE stage.Orders (\n    OrderID INT NOT NULL, CustomerID INT NOT NULL, Amount DECIMAL(18,2)\n) WITH (DISTRIBUTION = ROUND_ROBIN, HEAP);\n\n-- 2. Replicated Dimension (< 2 GB): Eliminates DMS Broadcast Moves\nCREATE TABLE dbo.DimStore (\n    StoreID INT NOT NULL, StoreName VARCHAR(100) NOT NULL\n) WITH (DISTRIBUTION = REPLICATE, CLUSTERED COLUMNSTORE INDEX);\n\n-- 3. Hash Distributed Fact (> 100M Rows): Colocated Joins\nCREATE TABLE fact.Orders (\n    OrderID INT NOT NULL, CustomerID INT NOT NULL, Amount DECIMAL(18,2)\n) WITH (DISTRIBUTION = HASH(CustomerID), CLUSTERED COLUMNSTORE INDEX);",
+    "language": "sql",
+    "whyItMatters": "Colocated hash joins execute locally within each compute slice with zero inter-node network data movement.",
+    "metrics": "Up to 10x faster analytical joins; eliminates DMS bottlenecks.",
+    "antiPattern": "Hash distributing on DATE columns (causes time-based compute hotspots); replicating tables > 2 GB.",
+    "tags": [
+      "Synapse",
+      "MPP",
+      "Distributions",
+      "Azure",
+      "Columnstore",
+      "Data Warehousing"
     ]
   }
 ]

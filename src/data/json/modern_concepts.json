@@ -29,7 +29,7 @@
     "subdomain": "compute-engines",
     "difficulty": "HARD",
     "summary": "Runtime query plan adjustments based on actual shuffle statistics collected during stage execution.",
-    "details": "Adaptive Query Execution (AQE) dynamically merges small post-shuffle partitions into optimal 64MB\u2013128MB tasks, converts sort-merge joins to broadcast hash joins when build-side stats drop below threshold, and splits skewed partitions into sub-partitions to prevent single-straggler tasks."
+    "details": "Adaptive Query Execution (AQE) dynamically merges small post-shuffle partitions into optimal 64MB–128MB tasks, converts sort-merge joins to broadcast hash joins when build-side stats drop below threshold, and splits skewed partitions into sub-partitions to prevent single-straggler tasks."
   },
   {
     "id": "mc-05",
@@ -398,5 +398,37 @@
     ],
     "tradeoffs": "Complete elimination of unexpected upstream pipeline breakages vs required cultural shift and producer collaboration.",
     "codeSnippet": "# Open Data Contract Standard (ODCS) Spec\nversion: 2.1.0\nkind: DataContract\nname: CheckoutCompletedEvent\nowner: checkout-squad@company.com\nschema:\n  type: object\n  properties:\n    order_id: { type: string, format: uuid }\n    amount: { type: number, minimum: 0 }\n    currency: { type: string, enum: ['USD', 'EUR', 'GBP'] }\nserviceLevelAgreement:\n  freshness: 15m\n  availability: 99.9%"
+  },
+  {
+    "id": "mc-synapse-mpp-distribution",
+    "title": "Azure Synapse 60-Distribution MPP Storage Architecture",
+    "subdomain": "compute-engines",
+    "difficulty": "ARCHITECT",
+    "summary": "Azure Synapse distributes queries across 60 fixed storage buckets via Control Node orchestration and compute nodes, requiring deliberate Hash, Round-Robin, and Replicated data placement.",
+    "details": "Massively Parallel Processing (MPP) achieves high throughput by breaking data across 60 distributions. Hash Distributed tables partition Fact data (>2GB) across nodes on high-cardinality join keys to enable co-located joins without network shuffle. Round-Robin tables spread staging data evenly for maximum write throughput. Replicated tables cache small Dimension data (<2GB) on every compute node, completely eliminating Data Movement Service (DMS) broadcast latency."
+  },
+  {
+    "id": "mc-snowflake-qualify-filtering",
+    "title": "Snowflake & BigQuery QUALIFY Clause Execution Pipeline",
+    "subdomain": "compute-engines",
+    "difficulty": "HARD",
+    "summary": "The QUALIFY clause extends the SQL execution pipeline to filter window function results directly, eliminating boilerplate CTEs and nested subqueries.",
+    "details": "Because window functions evaluate during the SELECT stage, standard SQL prevents window filtering in WHERE or HAVING clauses. Engines like Snowflake, BigQuery, and Databricks introduce QUALIFY as a post-window filter stage immediately preceding final ORDER BY. This provides dramatic syntax simplification for top-N ranking, sessionization, and deduplication queries."
+  },
+  {
+    "id": "mc-spark-skew-salting",
+    "title": "Apache Spark Distributed Join Skew Mitigation via Key Salting",
+    "subdomain": "compute-engines",
+    "difficulty": "ARCHITECT",
+    "summary": "Salting mitigates data skew stragglers during distributed joins by appending random keys to heavy partitions and exploding matching dimension records.",
+    "details": "In distributed shuffle joins, extreme key skew (e.g., 90% of rows sharing key='UNKNOWN') forces a single executor to process gigabytes while peer nodes idle, leading to container killed / OOM errors. Salting appends random(0, K-1) to the skewed key and cross-replicates the dimension table K times. Spark 3.0+ Adaptive Query Execution (AQE) can dynamically split skewed partitions at runtime."
+  },
+  {
+    "id": "mc-delta-liquid-clustering",
+    "title": "Delta Lake Liquid Clustering vs. Static Partitioning",
+    "subdomain": "lakehouse-formats",
+    "difficulty": "HARD",
+    "summary": "Liquid clustering replaces legacy directory-based Hive partitioning and manual Z-ordering with flexible Hilbert curve multidimensional data organization.",
+    "details": "Legacy partitioning (/year=2024/month=11/) causes small file fragmentation, partition skew, and costly full-table rewrites when query patterns change. Delta Lake Liquid Clustering decouples clustering keys from physical directory paths, allowing clustering columns to be added or modified dynamically without table rewrites, and automatically coalescing files during writes."
   }
 ]

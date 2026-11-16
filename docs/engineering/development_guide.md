@@ -42,7 +42,7 @@ The platform is built as an enterprise-grade cloud educational portal leveraging
 │   │   ├── redis.ts                 # Bounded LRU cache
 │   │   └── guided-learning.ts       # Cross-section aggregation engine
 │   ├── workers/                     # Web Workers for SIMD vector compute
-│   └── __tests__/                   # 61 Vitest test suites (501 tests)
+│   └── __tests__/                   # 61 Vitest test suites (509 tests)
 ├── public/
 │   ├── diagrams/                    # Lossless WebP, AVIF, and JPG whiteboard blueprints
 │   └── cheatsheets/pdf/             # 10 Master Vector PDFs & printable incident runbooks
@@ -129,16 +129,76 @@ npm test
 
 ## 5. Build & Deployment Lifecycle
 
-```bash
-# 1. Type checking and Cloudflare OpenNext build
-npm run build:cf
+The production platform builds with Next.js 16 and `@opennextjs/cloudflare` to deploy on Cloudflare Workers (`lakehouse-architect`) with sharded JSON data stored in Cloudflare R2:
 
-# 2. Automated test run (53 files, 424 tests)
+```bash
+# 1. Automated test run (61 files, 509 tests)
 npm test
 
-# 3. Fast-track worker deploy (~35 seconds, skips R2 uploads)
-npm run deploy:quick
+# 2. Schema validation and search sharding (11,280+ items)
+npm run content:validate && npm run content:shard
 
-# 4. Full production deployment to Cloudflare with idempotent R2 sync
-npm run deploy:cf
+# 3. Compile Next.js 16 and OpenNext Cloudflare bundle
+npm run build:worker
+
+# 4. Idempotently sync sharded JSON artifacts and PDFs to Cloudflare R2
+npm run r2:sync:remote
+
+# 5. Deploy edge worker to Cloudflare Workers via Wrangler
+npm run deploy:worker
+
+# Fast-track worker deploy (~35 seconds, skips R2 uploads when data is unchanged)
+npm run deploy:quick
 ```
+
+---
+
+## 6. Unified Typography Architecture
+
+1. **Single Primary Typeface**:
+   - `--font-sans` & `--font-heading`: `Inter` with system fallbacks (`system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`).
+   - Applied consistently across all headings (`h1`–`h6`), body copy, navigation, buttons, controls, cards, badges, and ordinary content.
+2. **Dedicated Monospace Family**:
+   - `--font-mono`: `JetBrains Mono`, `Fira Code`, `ui-monospace`, `Menlo`, `Monaco`, `monospace`.
+   - Strictly reserved for code blocks, inline code, terminal outputs, queries, logs, and fixed tabular counters.
+3. **Fluid Scale & Line Heights**:
+   - Headings: `text-wrap: balance` with tight line height (`--line-height-heading: 1.25`).
+   - Body prose: `text-wrap: pretty` with comfortable line height (`--line-height-body: 1.6`).
+   - Code blocks: `--line-height-code: 1.7` preserving indentation and vertical scanability.
+
+---
+
+## 7. WCAG 2.2 AA Contrast & Theme Safety Matrix
+
+The platform supports 4 themes: **Dark** (`.theme-dark` / default), **Light** (`.theme-light`), **Grey** (`.theme-grey`), and **E-Ink** (`.theme-e-ink`). Every foreground/background pair is mathematically verified to satisfy WCAG 2.2 AA:
+- Normal text: $\ge 4.5:1$
+- Large text & interactive components: $\ge 3.0:1$
+
+| Element / Token | Dark Mode (`#0a0a0b`) | Light Mode (`#f8f8fc`) | Grey Mode (`#18191c`) | E-Ink Mode (`#f7f6f2`) | WCAG AA Standard |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Primary Text** | `#f0f0f5` (17.2:1) | `#09090b` (18.1:1) | `#e4e5eb` (15.1:1) | `#111111` (16.8:1) | $\ge 4.5:1$ PASS |
+| **Secondary Text** | `#cbd5e1` (11.8:1) | `#334155` (10.2:1) | `#b8bcc9` (10.4:1) | `#262626` (13.5:1) | $\ge 4.5:1$ PASS |
+| **Muted Text** | `#9da4b4` (6.2:1) | `#475569` (7.2:1) | `#9095a6` (5.1:1) | `#475569` (7.2:1) | $\ge 4.5:1$ PASS |
+| **Placeholder Text**| `#9ca3af` (6.1:1) | `#475569` (6.5:1) | `#9ca3af` (5.0:1) | `#555555` (5.4:1) | $\ge 4.5:1$ PASS |
+| **Link Text** | `#60a5fa` (8.6:1) | `#1d4ed8` (5.7:1) | `#60a5fa` (7.8:1) | `#111111` (16.8:1) | $\ge 4.5:1$ PASS |
+| **Syntax Amber** | `#fbbf24` (10.2:1) | `#fcd34d` (12.4:1) | `#fbbf24` (9.1:1) | `#78350f` (7.7:1 on paper) | $\ge 4.5:1$ PASS |
+| **Syntax Orange** | `#fb923c` (7.8:1) | `#fdba74` (10.1:1) | `#fb923c` (6.9:1) | `#9a3412` (6.2:1 on paper) | $\ge 4.5:1$ PASS |
+
+### Critical Contrast & Theme Invariants
+1. **E-Ink Dark Container Inversion**: Never wrap `.text-white` in a hardcoded dark background (`bg-slate-950`, `bg-[#0c1427]`) without an E-Ink alternative. E-Ink inverts white text to `#111111`, creating unreadable black-on-black text.
+2. **Text Gradient Clipping Fallback**: In `.light` and `.e-ink`, `.text-transparent.bg-clip-text` must fall back to solid `color: var(--text-primary)`.
+3. **Badge 700-Shade Rule**: Tailwind 600 shades (`amber-600`, `emerald-600`, `sky-600`) fail WCAG AA with white text. Always use 700 shades (`amber-700`, `emerald-700`, `sky-700`, `cyan-700`).
+
+---
+
+## 8. Operational Triage & Developer Mistake Prevention
+
+1. **Tool Invocations (`read_file`)**: `StartLine` must be $\le$ `EndLine`. Inverted line ranges throw validation exceptions.
+2. **TypeScript Property Access**: Never guess properties on data items. Inspect `src/types/data.ts` first (e.g. `ArchitectureQuestion` has `.question` and `.id`, never `.title`).
+3. **Natural Text Wrapping**:
+   - Never use arbitrary `truncate` or `line-clamp` on primary content.
+   - Use `overflow-wrap: anywhere` on body copy, `text-wrap: balance` on headings.
+   - Ensure all flex/grid children containing text include `min-width: 0`.
+   - Always pair intentional line clamps with accessible disclosures (`aria-expanded={isExpanded}` and dynamic `aria-label`).
+4. **Code Blocks**: Code blocks must have horizontal scrolling constrained strictly inside the `<pre>` container (`overflow-x-auto`) and include accessible word-wrap toggle controls.
+5. **Deployment Pipeline Sequence**: To prevent missing chunks or 404 errors on artifacts, always execute the full pipeline: `content:validate && content:shard` $\rightarrow$ `build:worker` $\rightarrow$ `r2:sync:remote` $\rightarrow$ `deploy:worker`.

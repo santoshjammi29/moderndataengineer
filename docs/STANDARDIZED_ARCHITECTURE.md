@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://moderndataengineer.uk"><img src="https://img.shields.io/badge/Production-moderndataengineer.uk-blueviolet?style=flat-square" alt="Live Site"></a>
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js" alt="Next.js 16"></a>
-  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Vitest-58_Suites_%E2%80%A2_472_Tests-green?style=flat-square&logo=vitest" alt="Vitest 58/58"></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Vitest-61_Suites_%E2%80%A2_509_Tests-green?style=flat-square&logo=vitest" alt="Vitest 61/61"></a>
   <a href="content-expansion-plan.md"><img src="https://img.shields.io/badge/Research-21_Authoritative_Sources-emerald?style=flat-square" alt="21 Research Sources"></a>
 </p>
 
@@ -19,7 +19,7 @@
 
 **Modern Data Engineer & Lakehouse Architect** (`moderndataengineer.uk`) is engineered for high-performance, real-time global access by thousands of concurrent engineers, architects, and interview candidates, deployed on **Cloudflare OpenNext / Workers** with R2 artifact synchronization.
 
-To guarantee zero latency worldwide and seamless future maintenance, the codebase adheres to six architectural invariants:
+To guarantee zero latency worldwide and seamless future maintenance, the codebase adheres to seven architectural invariants:
 
 1. **Strict Server/Client Boundary**: Every page uses a Server Component entry point (`page.tsx`) for metadata, SEO, and edge caching (ISR), paired with an interactive Client Component (`*-client.tsx`).
 2. **Central Source of Truth**: All platform constants, brand metadata, caching rules, and UI presets reside in `src/config/platform.config.ts`.
@@ -27,6 +27,7 @@ To guarantee zero latency worldwide and seamless future maintenance, the codebas
 4. **Zero-Lag Continuous Reading Mode**: All card-centric views support instant "Read All" (`Shift + E`) with $O(1)$ inverse Set evaluation.
 5. **Zero-Bundle Edge Mandate**: Zero raw JSON data bundled into client JavaScript; massive datasets are served via streaming R2 shards and cached in persistent IndexedDB.
 6. **Dynamic Display Scaling**: Utilize the full width across 1080p, 1440p, 2K, 4K, and 3440px ultrawide displays (`w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto`), scaling cards and code blocks into multi-column responsive grids.
+7. **Unified Typography & WCAG 2.2 AA Contrast Compliance**: Single primary typeface (`Inter`) for headings, body, and navigation; dedicated monospace (`JetBrains Mono`) for code and terminal outputs; mathematical contrast safety ($\ge 4.5:1$ normal text, $\ge 3.0:1$ large text) across 4 themes (`dark`, `light`, `grey`, `e-ink`); natural text wrapping (`overflow-wrap: anywhere`, `text-wrap: pretty`); zero unrevealed truncation.
 
 ---
 

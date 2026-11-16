@@ -118,6 +118,20 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Production Flows", href: "/stages?tab=flows", badge: "8 Flows" },
         ],
       },
+      {
+        label: "SQL Study Guide",
+        href: "/sql",
+        icon: Database,
+        matches: ["/sql", "/sql-study-guide"],
+        pill: { text: "Guide", variant: "new" },
+        subItems: [
+          { label: "Execution Stepper", href: "/sql?tab=stepper", badge: "S-F-W-G-H-O" },
+          { label: "Window Visualizer", href: "/sql?tab=window", badge: "Live" },
+          { label: "Rosetta Stone", href: "/sql?tab=rosetta", badge: "5 Engines" },
+          { label: "Practice Drills", href: "/sql?tab=drills", badge: "4 Tiers" },
+          { label: "Architecture Runbooks", href: "/sql?tab=runbooks", badge: "Prod" },
+        ],
+      },
     ],
   },
   {
@@ -312,6 +326,12 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "stages-sdlc", label: "6-Stage SDLC Playbook", shortLabel: "SDLC Playbook", href: "/stages?tab=sdlc", category: "Learn", categoryColor: "purple", icon: Workflow, badge: "152 Controls" },
   { id: "stages-catalyst", label: "5-Stage Catalyst Pipeline", shortLabel: "Catalyst Pipeline", href: "/stages?tab=catalyst", category: "Learn", categoryColor: "purple", icon: Cpu, badge: "5 Stages" },
   { id: "stages-flows", label: "8 Production Flows", shortLabel: "Production Flows", href: "/stages?tab=flows", category: "Learn", categoryColor: "purple", icon: Activity, badge: "8 Flows" },
+  { id: "sql-guide", label: "SQL Mastery Study Guide", shortLabel: "SQL Guide", href: "/sql", category: "Learn", categoryColor: "indigo", icon: Database, badge: "Guide" },
+  { id: "sql-stepper", label: "SQL Clause Execution Stepper", shortLabel: "SQL Stepper", href: "/sql?tab=stepper", category: "Learn", categoryColor: "indigo", icon: Activity, badge: "S-F-W-G-H-O" },
+  { id: "sql-window", label: "Window Functions Visualizer", shortLabel: "Window Visualizer", href: "/sql?tab=window", category: "Learn", categoryColor: "indigo", icon: Database, badge: "Live" },
+  { id: "sql-rosetta", label: "Multi-Engine SQL Rosetta Stone", shortLabel: "SQL Rosetta", href: "/sql?tab=rosetta", category: "Learn", categoryColor: "indigo", icon: Code2, badge: "5 Engines" },
+  { id: "sql-drills", label: "4-Tier SQL Practice Drills", shortLabel: "SQL Drills", href: "/sql?tab=drills", category: "Learn", categoryColor: "indigo", icon: Sparkles, badge: "4 Tiers" },
+  { id: "sql-runbooks", label: "SQL Engine Architecture & Runbooks", shortLabel: "SQL Runbooks", href: "/sql?tab=runbooks", category: "Practise", categoryColor: "purple", icon: Terminal, badge: "Prod" },
 
   // Practise
   { id: "architecture", label: "Architecture Hub", shortLabel: "Architecture", href: "/architecture", category: "Practise", categoryColor: "purple", icon: Layers, badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+` },

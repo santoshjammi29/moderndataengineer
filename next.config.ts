@@ -204,6 +204,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/sql-study-guide",
+        destination: "/sql",
+        permanent: true,
+      },
+      {
         source: "/browser",
         destination: "/search-topics",
         permanent: true,

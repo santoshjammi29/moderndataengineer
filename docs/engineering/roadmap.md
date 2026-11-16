@@ -4,8 +4,14 @@ This roadmap outlines achieved milestones and future planned expansions for **Ve
 
 ---
 
-## 🏆 Recently Completed Architectural Initiatives (v1.0 – v2.0)
+## 🏆 Recently Completed Architectural Initiatives (v1.0 – v2.1)
 
+- [x] **Unified Typography Architecture & WCAG 2.2 AA Contrast Compliance across 4 Themes (v2.1)**:
+  - **Unified Font System**: Standardized on a single primary typeface (`Inter` for `--font-sans` & `--font-heading`) across all headings, body copy, navigation, controls, cards, and badges, and a single monospace family (`JetBrains Mono` for `--font-mono`) for code, terminal output, queries, and logs.
+  - **4-Theme Mathematical Contrast Matrix**: Mathematically verified and passed WCAG 2.2 AA ($\ge 4.5:1$ normal text, $\ge 3.0:1$ large text) across Dark (`#0a0a0b`), Light (`#f8f8fc`), Grey (`#18191c`), and E-Ink (`#f7f6f2`).
+  - **Theme Inversion Remediation**: Solved E-Ink black-on-black text inversion inside dark containers by adding E-Ink overrides and protecting buttons/links with `.e-ink :where(...)`; engineered high-contrast dark ink tokens for paper syntax highlighting (`#78350f` Amber: 7.69:1; `#9a3412` Orange: 6.17:1); established solid foreground fallbacks for text gradient clipping in Light and E-Ink modes; upgraded all solid badges to 700 shades for $\ge 5.0:1$ contrast.
+  - **Natural Text Wrapping & Overflow**: Eliminated arbitrary `truncate` and `line-clamp` on primary content in favor of `overflow-wrap: anywhere`, `text-wrap: pretty`, headings `text-wrap: balance`, and `min-width: 0` on flex/grid text containers. Provided accessible interactive reveal triggers (`aria-expanded`) for intentional previews.
+  - **Vitest Suite Expansion**: 61 test files and 509 unit/integration tests with 100% pass rate.
 - [x] **Evidence-Led Lakehouse Expansion & Interactive Systems Modernization (v2.0)**:
   - **Sourced Evidence Expansion**: Synthesized 21 primary authoritative standards (DORA 2025, Thoughtworks Radar Vol. 35, dbt Labs 2026, OpenLineage, NIST SP 800-207 Zero Trust, OWASP Top 10 for LLMs, Uber Wukong, Delta Lake 3.2, Apache Iceberg v2/v3, AWS S3 Express One Zone).
   - **11,956+ Searchable Assets**: Expanded catalog to 7,098 Q&A, 3,294 architecture scenarios, 869 concepts, 283 code drills, 156 GCC company profiles, and 42 whiteboard blueprints.

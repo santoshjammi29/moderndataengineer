@@ -784,5 +784,75 @@
       "Can be directly connected to Power BI Direct Lake models to build enterprise FinOps cost control dashboards."
     ],
     "use_case": "Setting up automated FinOps alerts to detect rogue un-optimized all-purpose clusters running overnight and auditing compliance for GDPR/HIPAA regulated tables."
+  },
+  {
+    "id": "sparksql-qualify-top-n-dedup",
+    "title": "QUALIFY Clause for In-Line Window Filtering",
+    "level": "intermediate",
+    "category": "Window Functions",
+    "description": "Uses the native QUALIFY clause in Spark SQL / Databricks to filter window function rankings without nested CTEs.",
+    "code": "-- Deduplicate customer events, retaining only the latest state per customer\nSELECT \n    customer_id,\n    event_type,\n    event_timestamp,\n    payload\nFROM customer_events\nQUALIFY ROW_NUMBER() OVER (\n    PARTITION BY customer_id \n    ORDER BY event_timestamp DESC\n) = 1;",
+    "notes": [
+      "QUALIFY evaluates after the WINDOW and SELECT clauses, allowing filtering on window functions directly.",
+      "Supported natively in Spark SQL 3.4+ and all Databricks Runtime versions.",
+      "Catalyst pushes down the rank limit into the physical SortExec operator, avoiding full dataset buffering."
+    ],
+    "use_case": "Silver-layer deduplication in Medallion lakehouse ingestion pipelines."
+  },
+  {
+    "id": "sparksql-skew-join-hint",
+    "title": "Adaptive Query Execution Skew Join Hint",
+    "level": "advanced",
+    "category": "Distributed Joins",
+    "description": "Enforces automatic partition splitting for known skewed join keys using Spark SQL SKEW hints.",
+    "code": "-- Explicit SKEW hint targeting customer_id with hot values (0, NULL)\nSELECT /*+ SKEW('f', 'customer_id', (0, NULL)) */\n    f.order_id,\n    f.amount,\n    c.customer_name\nFROM fact_sales f\nINNER JOIN dim_customer c \n    ON f.customer_id = c.customer_id;",
+    "notes": [
+      "Instructs Catalyst to automatically split partitions containing customer_id in (0, NULL) into smaller sub-partitions.",
+      "Replicates the corresponding dimension partition to match each sub-partition.",
+      "Eliminates 99% task completion stalls without requiring manual key salting code."
+    ],
+    "use_case": "Joining multi-terabyte transactional tables against master dimensions with heavy default/guest keys."
+  },
+  {
+    "id": "sparksql-delta-merge-scd2",
+    "title": "Delta Lake SCD Type 2 MERGE INTO Implementation",
+    "level": "advanced",
+    "category": "Delta Lake Operations",
+    "description": "Standard Delta Lake MERGE statement to expire changed records and insert new active versions for historical tracking.",
+    "code": "-- Step 1: Stage incoming changes with null surrogate keys for inserts\nMERGE INTO dim_customer AS target\nUSING (\n    -- Join updates against target to identify changed records:\n    SELECT \n        updates.customer_id AS merge_key,\n        updates.*\n    FROM staged_customer_updates updates\n    UNION ALL\n    SELECT \n        NULL AS merge_key,\n        updates.*\n    FROM staged_customer_updates updates\n    JOIN dim_customer target \n        ON updates.customer_id = target.customer_id\n    WHERE target.is_current = 1 \n      AND (target.address <> updates.address OR target.email <> updates.email)\n) AS source\nON target.customer_id = source.merge_key\n-- Step 2: Expire existing active row\nWHEN MATCHED AND target.is_current = 1 AND (target.address <> source.address OR target.email <> source.email) THEN\n    UPDATE SET target.is_current = 0, target.end_date = CURRENT_DATE()\n-- Step 3: Insert new active row\nWHEN NOT MATCHED THEN\n    INSERT (customer_id, name, address, email, start_date, end_date, is_current)\n    VALUES (source.customer_id, source.name, source.address, source.email, CURRENT_DATE(), NULL, 1);",
+    "notes": [
+      "Single-pass MERGE executes atomically under Delta Lake ACID guarantees.",
+      "Unioning with merge_key = NULL ensures new rows are inserted in the same transaction.",
+      "Guarantees that no customer has overlapping active records (is_current = 1)."
+    ],
+    "use_case": "Kimball SCD Type 2 historical dimension processing in Databricks and Microsoft Fabric Lakehouse."
+  },
+  {
+    "id": "sparksql-broadcast-hash-join",
+    "title": "Forcing Broadcast Hash Joins with BROADCAST Hint",
+    "level": "intermediate",
+    "category": "Distributed Joins",
+    "description": "Bypasses network shuffle exchange by broadcasting small dimension tables to all cluster worker nodes.",
+    "code": "-- Force Broadcast Hash Join on dim_store (<100MB)\nSELECT /*+ BROADCAST(s) */\n    f.order_id,\n    f.amount,\n    s.store_name,\n    s.region\nFROM fact_sales f\nINNER JOIN dim_store s \n    ON f.store_id = s.store_id;",
+    "notes": [
+      "The driver collects dim_store and distributes a read-only copy to all executor memory pools.",
+      "fact_sales remains entirely in place with ZERO network shuffle or disk spill.",
+      "Recommended for dimension tables up to 100MB (autoBroadcastJoinThreshold defaults to 10MB)."
+    ],
+    "use_case": "Star-schema fact-to-dimension joins in Spark SQL."
+  },
+  {
+    "id": "sparksql-date-spine-sequence",
+    "title": "Generating Continuous Date Spines via SEQUENCE()",
+    "level": "intermediate",
+    "category": "Date Functions & Scaffolding",
+    "description": "Generates a continuous sequence of calendar dates without recursive CTE overhead using native Spark sequence functions.",
+    "code": "-- Generate 365 days of 2024 for outer join scaffolding:\nSELECT explode(sequence(\n    to_date('2024-01-01'), \n    to_date('2024-12-31'), \n    interval 1 day\n)) AS calendar_date;",
+    "notes": [
+      "sequence() generates an array of dates evaluated in parallel by Catalyst.",
+      "explode() projects array elements into individual table rows.",
+      "Significantly faster than recursive CTEs in distributed engines."
+    ],
+    "use_case": "Financial reporting, cohort retention, and filling zero-activity date gaps in telemetry."
   }
 ]
