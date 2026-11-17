@@ -260,4 +260,46 @@ describe("Linked Mind Map Feature Tests", () => {
     // For all levels, zoom scales to 68%
     expect(screen.getByText("68%")).toBeDefined();
   });
+
+  it("supports toggling fullscreen mode with Escape key and floating exit button", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    // Click Fullscreen button in toolbar
+    const fullscreenBtn = screen.getByLabelText("Fullscreen View");
+    fireEvent.click(fullscreenBtn);
+
+    // Fullscreen is active: toolbar button shows Exit, and floating exit button appears
+    expect(screen.getAllByLabelText("Exit Fullscreen").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("to exit")).toBeDefined();
+
+    // Pressing Escape exits fullscreen
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(screen.queryByLabelText("Exit Fullscreen")).toBeNull();
+    expect(screen.getByLabelText("Fullscreen View")).toBeDefined();
+  });
+
+  it("supports free dragging of nodes and resetting positions via Reset Nodes button", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    // Initially no custom offsets, so "Reset Nodes" button is not visible
+    expect(screen.queryByLabelText("Reset Node Positions")).toBeNull();
+
+    // Find a draggable concept node
+    const conceptNode = screen.getByText("OneLake");
+    expect(conceptNode).toBeDefined();
+
+    // Trigger drag by mousedown on the node and mousemove on window
+    fireEvent.mouseDown(conceptNode, { clientX: 100, clientY: 100, button: 0 });
+    fireEvent.mouseMove(window, { clientX: 180, clientY: 220 });
+    fireEvent.mouseUp(window);
+
+    // Now node has custom offset, so "Reset Nodes" button appears
+    const resetNodesBtn = screen.getByLabelText("Reset Node Positions");
+    expect(resetNodesBtn).toBeDefined();
+    expect(screen.getByText("Reset Nodes")).toBeDefined();
+
+    // Click "Reset Nodes" button to clear all offsets
+    fireEvent.click(resetNodesBtn);
+    expect(screen.queryByLabelText("Reset Node Positions")).toBeNull();
+  });
 });

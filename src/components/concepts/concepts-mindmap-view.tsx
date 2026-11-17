@@ -144,7 +144,14 @@ export function ConceptsMindmapView({
   const handleNodeMouseDown = useCallback(
     (e: React.MouseEvent, nodeId: string) => {
       if (e.button !== 0) return; // Left click only
-      if ((e.target as HTMLElement).closest("button, a, input, select")) return;
+      const target = e.target as HTMLElement;
+      // Do not drag if clicking an inner action button (e.g. Info modal button) or input
+      if (
+        target.closest("input, select, textarea, a") ||
+        (target.closest("button") && target.closest("button") !== e.currentTarget)
+      ) {
+        return;
+      }
       e.stopPropagation(); // Prevent canvas panning
 
       const currentOffset = nodeOffsets[nodeId] || { x: 0, y: 0 };
@@ -214,10 +221,8 @@ export function ConceptsMindmapView({
       setIsDragging(false);
     };
 
-    if (isDragging || draggingNodeRef.current) {
-      window.addEventListener("mousemove", handleGlobalMouseMove);
-      window.addEventListener("mouseup", handleGlobalMouseUp);
-    }
+    window.addEventListener("mousemove", handleGlobalMouseMove);
+    window.addEventListener("mouseup", handleGlobalMouseUp);
     return () => {
       window.removeEventListener("mousemove", handleGlobalMouseMove);
       window.removeEventListener("mouseup", handleGlobalMouseUp);
@@ -986,6 +991,25 @@ export function ConceptsMindmapView({
             }}
             onMouseDown={handleMouseDown}
           >
+            {/* Floating Quick Exit Button in Fullscreen Mode */}
+            {isFullscreen && (
+              <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-[var(--surface-1)]/90 border border-[var(--border)] text-[var(--muted-foreground)] backdrop-blur-xs shadow-xs">
+                  <kbd className="px-1 py-0.5 rounded bg-[var(--surface-2)] text-[10px] font-bold text-[var(--foreground)]">Esc</kbd>
+                  <span>to exit</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsFullscreen(false)}
+                  className="px-3 py-1.5 rounded-lg bg-[var(--surface-1)]/95 border border-[var(--border)] text-xs font-semibold text-[var(--foreground)] hover:bg-[var(--surface-2)] shadow-md inline-flex items-center gap-1.5 cursor-pointer backdrop-blur-xs transition-colors"
+                  title="Exit Fullscreen Mode"
+                  aria-label="Exit Fullscreen"
+                >
+                  <Minimize2 size={13} />
+                  <span>Exit Fullscreen</span>
+                </button>
+              </div>
+            )}
             {/* Draggable & Scalable Workspace */}
             <div
               style={{
@@ -1175,31 +1199,34 @@ export function ConceptsMindmapView({
                                             <div className="flex items-center justify-end">
                                               {/* Vertical Concepts Column */}
                                               <div
-                                                className="flex flex-col justify-around items-end gap-1.5 pr-0.5"
-                                                style={{ height: curSubHeight }}
+                                                className="flex flex-col justify-around items-end gap-2 pr-0.5"
+                                                style={{ minHeight: curSubHeight }}
                                               >
                                                 {subtopic.concepts.map((concept) =>
                                                   renderConceptPillOrCard(concept, topic, true)
                                                 )}
                                               </div>
 
-                                              {/* Level 2 Subtopic -> Level 3 Concepts Organic Branching Splines */}
+                                              {/* Level 2 Subtopic -> Level 3 Concepts Flexible Organic Splines */}
                                               <svg
-                                                width="40"
+                                                width="48"
                                                 height={curSubHeight}
                                                 className="shrink-0 pointer-events-none overflow-visible"
-                                                style={{ minWidth: 40 }}
+                                                style={{ minWidth: 48 }}
                                               >
                                                 {subtopic.concepts.map((concept, cIdx) => {
                                                   const K = subtopic.concepts.length;
-                                                  const startX = 40;
+                                                  const startX = 48;
                                                   const startY = curSubHeight / 2;
-                                                  const endX = 0;
-                                                  const endY = ((cIdx + 0.5) / K) * curSubHeight;
+                                                  const cOffset = nodeOffsets[concept.id] || { x: 0, y: 0 };
+                                                  const endX = 0 + cOffset.x;
+                                                  const endY = ((cIdx + 0.5) / K) * curSubHeight + cOffset.y;
+                                                  const pathD = getOrganicFlexibleSpline(startX, startY, endX, endY, "left");
+
                                                   return (
                                                     <g key={concept.id}>
                                                       <path
-                                                        d={`M ${startX},${startY} C 20,${startY} 20,${endY} ${endX},${endY}`}
+                                                        d={pathD}
                                                         fill="none"
                                                         stroke={topic.colorHex}
                                                         strokeWidth={definitionsVisible ? "2" : "1.75"}
@@ -1210,66 +1237,81 @@ export function ConceptsMindmapView({
                                                     </g>
                                                   );
                                                 })}
-                                                <circle cx="40" cy={curSubHeight / 2} r="3" fill={topic.colorHex} />
+                                                <circle cx="48" cy={curSubHeight / 2} r="3" fill={topic.colorHex} />
                                               </svg>
                                             </div>
                                           )}
 
                                           {/* Level 2 Subtopic Node */}
-                                          <div
-                                            onClick={() => toggleSubtopic(subtopic.id)}
-                                            className={cn(
-                                              "shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-right shadow-2xs group/sub",
-                                              isSubExpanded
-                                                ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
-                                                : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
-                                            )}
-                                          >
-                                            {/* Subtopic Definition Inspector Info Button */}
-                                            <button
-                                              type="button"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedSubtopicInfo({ topic, subtopic });
-                                              }}
-                                              className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-amber-400 cursor-pointer"
-                                              title={`View ${subtopic.title} Subtopic Architecture Definition`}
-                                              aria-label={`View ${subtopic.title} Subtopic Definition`}
-                                            >
-                                              <Info size={11} />
-                                            </button>
-                                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold">
-                                              {subtopic.concepts.length}
-                                            </span>
-                                            <div>
-                                              <div className="flex items-center justify-end gap-1.5">
-                                                <span className="text-xs font-semibold text-[var(--foreground)]">
-                                                  {subtopic.title}
+                                          {(() => {
+                                            const sOffset = nodeOffsets[subtopic.id] || { x: 0, y: 0 };
+                                            const isSubDragged = sOffset.x !== 0 || sOffset.y !== 0;
+
+                                            return (
+                                              <div
+                                                onMouseDown={(e) => handleNodeMouseDown(e, subtopic.id)}
+                                                onClick={(e) => {
+                                                  if (justDraggedRef.current) return;
+                                                  toggleSubtopic(subtopic.id);
+                                                }}
+                                                style={{
+                                                  transform: `translate(${sOffset.x}px, ${sOffset.y}px)`,
+                                                }}
+                                                className={cn(
+                                                  "shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-grab active:cursor-grabbing select-none text-right shadow-2xs group/sub",
+                                                  isSubExpanded
+                                                    ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
+                                                    : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40",
+                                                  isSubDragged && "ring-2 ring-amber-400/50 shadow-md"
+                                                )}
+                                              >
+                                                {/* Subtopic Definition Inspector Info Button */}
+                                                <button
+                                                  type="button"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedSubtopicInfo({ topic, subtopic });
+                                                  }}
+                                                  className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-amber-400 cursor-pointer"
+                                                  title={`View ${subtopic.title} Subtopic Architecture Definition`}
+                                                  aria-label={`View ${subtopic.title} Subtopic Definition`}
+                                                >
+                                                  <Info size={11} />
+                                                </button>
+                                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold">
+                                                  {subtopic.concepts.length}
                                                 </span>
-                                                <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
-                                                  L2 Subtopic
-                                                </span>
+                                                <div>
+                                                  <div className="flex items-center justify-end gap-1.5">
+                                                    <span className="text-xs font-semibold text-[var(--foreground)]">
+                                                      {subtopic.title}
+                                                    </span>
+                                                    <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                                                      L2 Subtopic
+                                                    </span>
+                                                  </div>
+                                                  {definitionsVisible && (
+                                                    <p className="text-[9.5px] text-[var(--muted-foreground)] line-clamp-1 max-w-[180px] italic leading-tight">
+                                                      {subtopic.description}
+                                                    </p>
+                                                  )}
+                                                </div>
+                                                <button
+                                                  type="button"
+                                                  className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
+                                                  aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
+                                                >
+                                                  {isSubExpanded ? <ChevronDown size={12} /> : <ChevronLeft size={12} />}
+                                                </button>
                                               </div>
-                                              {definitionsVisible && (
-                                                <p className="text-[9.5px] text-[var(--muted-foreground)] line-clamp-1 max-w-[180px] italic leading-tight">
-                                                  {subtopic.description}
-                                                </p>
-                                              )}
-                                            </div>
-                                            <button
-                                              type="button"
-                                              className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
-                                              aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
-                                            >
-                                              {isSubExpanded ? <ChevronDown size={12} /> : <ChevronLeft size={12} />}
-                                            </button>
-                                          </div>
+                                            );
+                                          })()}
                                         </div>
                                       );
                                     })}
                                   </div>
 
-                                  {/* Level 1 Domain -> Level 2 Subtopics Curved Branching Splines */}
+                                  {/* Level 1 Domain -> Level 2 Subtopics Flexible Branching Splines */}
                                   <svg
                                     width="48"
                                     height={curTopicHeight}
@@ -1284,13 +1326,15 @@ export function ConceptsMindmapView({
                                       const curSubH = getSubHeight(sub);
                                       const startX = 48;
                                       const startY = curTopicHeight / 2;
-                                      const endX = 0;
-                                      const endY = yOffset + curSubH / 2;
+                                      const sOffset = nodeOffsets[sub.id] || { x: 0, y: 0 };
+                                      const endX = 0 + sOffset.x;
+                                      const endY = yOffset + curSubH / 2 + sOffset.y;
+                                      const pathD = getOrganicFlexibleSpline(startX, startY, endX, endY, "left");
 
                                       return (
                                         <g key={sub.id}>
                                           <path
-                                            d={`M ${startX},${startY} C 24,${startY} 24,${endY} ${endX},${endY}`}
+                                            d={pathD}
                                             fill="none"
                                             stroke={topic.colorHex}
                                             strokeWidth="2.5"
@@ -1307,71 +1351,86 @@ export function ConceptsMindmapView({
                               )}
 
                               {/* Level 1 Domain Node */}
-                              <div
-                                onClick={() => toggleTopic(topic.id)}
-                                className={cn(
-                                  "shrink-0 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm group",
-                                  isTopicExpanded
-                                    ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
-                                    : "bg-[var(--surface-1)] hover:border-purple-500/40"
-                                )}
-                                style={{ borderColor: topic.colorHex }}
-                              >
-                                {/* Domain Definition Inspector Info Button */}
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedTopicInfo(topic);
-                                  }}
-                                  className="p-1 rounded-lg text-[var(--muted-foreground)] hover:text-purple-400 hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
-                                  title={`View ${topic.title} Domain Definition & Architecture`}
-                                  aria-label={`View ${topic.title} Domain Definition`}
-                                >
-                                  <Info size={13} />
-                                </button>
-                                <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
-                                  {topic.matchingCount}
-                                </span>
-                                <div className="text-right">
-                                  <div className="flex items-center justify-end gap-1.5">
-                                    <span
-                                      className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
-                                      style={{
-                                        backgroundColor: `${topic.colorHex}15`,
-                                        color: topic.colorHex,
-                                        borderColor: `${topic.colorHex}30`,
+                              {(() => {
+                                const tOffset = nodeOffsets[topic.id] || { x: 0, y: 0 };
+                                const isTopicDragged = tOffset.x !== 0 || tOffset.y !== 0;
+
+                                return (
+                                  <div
+                                    onMouseDown={(e) => handleNodeMouseDown(e, topic.id)}
+                                    onClick={(e) => {
+                                      if (justDraggedRef.current) return;
+                                      toggleTopic(topic.id);
+                                    }}
+                                    className={cn(
+                                      "shrink-0 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing select-none shadow-sm group",
+                                      isTopicExpanded
+                                        ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
+                                        : "bg-[var(--surface-1)] hover:border-purple-500/40",
+                                      isTopicDragged && "ring-2 ring-purple-400/50 shadow-md"
+                                    )}
+                                    style={{
+                                      transform: `translate(${tOffset.x}px, ${tOffset.y}px)`,
+                                      borderColor: topic.colorHex,
+                                    }}
+                                  >
+                                    {/* Domain Definition Inspector Info Button */}
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedTopicInfo(topic);
                                       }}
+                                      className="p-1 rounded-lg text-[var(--muted-foreground)] hover:text-purple-400 hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
+                                      title={`View ${topic.title} Domain Definition & Architecture`}
+                                      aria-label={`View ${topic.title} Domain Definition`}
                                     >
-                                      {topic.categoryKey}
+                                      <Info size={13} />
+                                    </button>
+                                    <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                                      {topic.matchingCount}
                                     </span>
-                                    <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
-                                      L1 Domain
-                                    </span>
+                                    <div className="text-right">
+                                      <div className="flex items-center justify-end gap-1.5">
+                                        <span
+                                          className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
+                                          style={{
+                                            backgroundColor: `${topic.colorHex}15`,
+                                            color: topic.colorHex,
+                                            borderColor: `${topic.colorHex}30`,
+                                          }}
+                                        >
+                                          {topic.categoryKey}
+                                        </span>
+                                        <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
+                                          L1 Domain
+                                        </span>
+                                      </div>
+                                      <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
+                                        {topic.title}
+                                      </h3>
+                                      {definitionsVisible && (
+                                        <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 max-w-[220px] italic leading-tight mt-0.5">
+                                          {topic.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <div
+                                      className="p-1.5 rounded-xl border text-white shadow-xs shrink-0"
+                                      style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
+                                    >
+                                      <TopicIcon topic={topic.icon} size={16} />
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
+                                      aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
+                                    >
+                                      {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronLeft size={14} />}
+                                    </button>
                                   </div>
-                                  <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
-                                    {topic.title}
-                                  </h3>
-                                  {definitionsVisible && (
-                                    <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 max-w-[220px] italic leading-tight mt-0.5">
-                                      {topic.description}
-                                    </p>
-                                  )}
-                                </div>
-                                <div
-                                  className="p-1.5 rounded-xl border text-white shadow-xs shrink-0"
-                                  style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
-                                >
-                                  <TopicIcon topic={topic.icon} size={16} />
-                                </div>
-                                <button
-                                  type="button"
-                                  className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
-                                  aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
-                                >
-                                  {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronLeft size={14} />}
-                                </button>
-                              </div>
+                                );
+                              })()}
                             </div>
                           );
                         })}
@@ -1392,13 +1451,15 @@ export function ConceptsMindmapView({
                           const curTopH = getTopicHeight(lt);
                           const startX = 56;
                           const startY = leftWingHeight / 2;
-                          const endX = 0;
-                          const endY = yOffset + curTopH / 2;
+                          const tOffset = nodeOffsets[lt.id] || { x: 0, y: 0 };
+                          const endX = 0 + tOffset.x;
+                          const endY = yOffset + curTopH / 2 + tOffset.y;
+                          const pathD = getOrganicFlexibleSpline(startX, startY, endX, endY, "left");
 
                           return (
                             <g key={lt.id}>
                               <path
-                                d={`M ${startX},${startY} C 28,${startY} 28,${endY} ${endX},${endY}`}
+                                d={pathD}
                                 fill="none"
                                 stroke={lt.colorHex}
                                 strokeWidth="3"
@@ -1445,13 +1506,15 @@ export function ConceptsMindmapView({
                           const curTopH = getTopicHeight(rt);
                           const startX = 0;
                           const startY = rightWingHeight / 2;
-                          const endX = 56;
-                          const endY = yOffset + curTopH / 2;
+                          const tOffset = nodeOffsets[rt.id] || { x: 0, y: 0 };
+                          const endX = 56 + tOffset.x;
+                          const endY = yOffset + curTopH / 2 + tOffset.y;
+                          const pathD = getOrganicFlexibleSpline(startX, startY, endX, endY, "right");
 
                           return (
                             <g key={rt.id}>
                               <path
-                                d={`M ${startX},${startY} C 28,${startY} 28,${endY} ${endX},${endY}`}
+                                d={pathD}
                                 fill="none"
                                 stroke={rt.colorHex}
                                 strokeWidth="3"
@@ -1478,76 +1541,91 @@ export function ConceptsMindmapView({
                               style={{ minHeight: curTopicHeight }}
                             >
                               {/* Level 1 Domain Node */}
-                              <div
-                                onClick={() => toggleTopic(topic.id)}
-                                className={cn(
-                                  "shrink-0 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm group",
-                                  isTopicExpanded
-                                    ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
-                                    : "bg-[var(--surface-1)] hover:border-purple-500/40"
-                                )}
-                                style={{ borderColor: topic.colorHex }}
-                              >
-                                <button
-                                  type="button"
-                                  className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
-                                  aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
-                                >
-                                  {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                                </button>
-                                <div
-                                  className="p-1.5 rounded-xl border text-white shadow-xs shrink-0"
-                                  style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
-                                >
-                                  <TopicIcon topic={topic.icon} size={16} />
-                                </div>
-                                <div className="text-left">
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
-                                      L1 Domain
-                                    </span>
-                                    <span
-                                      className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
-                                      style={{
-                                        backgroundColor: `${topic.colorHex}15`,
-                                        color: topic.colorHex,
-                                        borderColor: `${topic.colorHex}30`,
-                                      }}
+                              {(() => {
+                                const tOffset = nodeOffsets[topic.id] || { x: 0, y: 0 };
+                                const isTopicDragged = tOffset.x !== 0 || tOffset.y !== 0;
+
+                                return (
+                                  <div
+                                    onMouseDown={(e) => handleNodeMouseDown(e, topic.id)}
+                                    onClick={(e) => {
+                                      if (justDraggedRef.current) return;
+                                      toggleTopic(topic.id);
+                                    }}
+                                    className={cn(
+                                      "shrink-0 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing select-none shadow-sm group",
+                                      isTopicExpanded
+                                        ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
+                                        : "bg-[var(--surface-1)] hover:border-purple-500/40",
+                                      isTopicDragged && "ring-2 ring-purple-400/50 shadow-md"
+                                    )}
+                                    style={{
+                                      transform: `translate(${tOffset.x}px, ${tOffset.y}px)`,
+                                      borderColor: topic.colorHex,
+                                    }}
+                                  >
+                                    <button
+                                      type="button"
+                                      className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
+                                      aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
                                     >
-                                      {topic.categoryKey}
+                                      {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                                    </button>
+                                    <div
+                                      className="p-1.5 rounded-xl border text-white shadow-xs shrink-0"
+                                      style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
+                                    >
+                                      <TopicIcon topic={topic.icon} size={16} />
+                                    </div>
+                                    <div className="text-left">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
+                                          L1 Domain
+                                        </span>
+                                        <span
+                                          className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
+                                          style={{
+                                            backgroundColor: `${topic.colorHex}15`,
+                                            color: topic.colorHex,
+                                            borderColor: `${topic.colorHex}30`,
+                                          }}
+                                        >
+                                          {topic.categoryKey}
+                                        </span>
+                                      </div>
+                                      <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
+                                        {topic.title}
+                                      </h3>
+                                      {definitionsVisible && (
+                                        <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 max-w-[220px] italic leading-tight mt-0.5">
+                                          {topic.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                                      {topic.matchingCount}
                                     </span>
+                                    {/* Domain Definition Inspector Info Button */}
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedTopicInfo(topic);
+                                      }}
+                                      className="p-1 rounded-lg text-[var(--muted-foreground)] hover:text-purple-400 hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
+                                      title={`View ${topic.title} Domain Definition & Architecture`}
+                                      aria-label={`View ${topic.title} Domain Definition`}
+                                    >
+                                      <Info size={13} />
+                                    </button>
                                   </div>
-                                  <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
-                                    {topic.title}
-                                  </h3>
-                                  {definitionsVisible && (
-                                    <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 max-w-[220px] italic leading-tight mt-0.5">
-                                      {topic.description}
-                                    </p>
-                                  )}
-                                </div>
-                                <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
-                                  {topic.matchingCount}
-                                </span>
-                                {/* Domain Definition Inspector Info Button */}
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedTopicInfo(topic);
-                                  }}
-                                  className="p-1 rounded-lg text-[var(--muted-foreground)] hover:text-purple-400 hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
-                                  title={`View ${topic.title} Domain Definition & Architecture`}
-                                  aria-label={`View ${topic.title} Domain Definition`}
-                                >
-                                  <Info size={13} />
-                                </button>
-                              </div>
+                                );
+                              })()}
 
                               {/* Level 2 Subtopics & Level 3 Concepts on Right */}
                               {isTopicExpanded && topic.subtopics.length > 0 && (
                                 <div className="flex items-center">
-                                  {/* Level 1 Domain -> Level 2 Subtopics Curved Branching Splines */}
+                                  {/* Level 1 Domain -> Level 2 Subtopics Flexible Branching Splines */}
                                   <svg
                                     width="48"
                                     height={curTopicHeight}
@@ -1562,13 +1640,15 @@ export function ConceptsMindmapView({
                                       const curSubH = getSubHeight(sub);
                                       const startX = 0;
                                       const startY = curTopicHeight / 2;
-                                      const endX = 48;
-                                      const endY = yOffset + curSubH / 2;
+                                      const sOffset = nodeOffsets[sub.id] || { x: 0, y: 0 };
+                                      const endX = 48 + sOffset.x;
+                                      const endY = yOffset + curSubH / 2 + sOffset.y;
+                                      const pathD = getOrganicFlexibleSpline(startX, startY, endX, endY, "right");
 
                                       return (
                                         <g key={sub.id}>
                                           <path
-                                            d={`M ${startX},${startY} C 24,${startY} 24,${endY} ${endX},${endY}`}
+                                            d={pathD}
                                             fill="none"
                                             stroke={topic.colorHex}
                                             strokeWidth="2.5"
@@ -1598,74 +1678,92 @@ export function ConceptsMindmapView({
                                           style={{ height: curSubHeight }}
                                         >
                                           {/* Level 2 Subtopic Node */}
-                                          <div
-                                            onClick={() => toggleSubtopic(subtopic.id)}
-                                            className={cn(
-                                              "shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-left shadow-2xs group/sub",
-                                              isSubExpanded
-                                                ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
-                                                : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
-                                            )}
-                                          >
-                                            <button
-                                              type="button"
-                                              className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
-                                              aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
-                                            >
-                                              {isSubExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-                                            </button>
-                                            <div>
-                                              <div className="flex items-center gap-1.5">
-                                                <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
-                                                  L2 Subtopic
-                                                </span>
-                                                <span className="text-xs font-semibold text-[var(--foreground)]">
-                                                  {subtopic.title}
-                                                </span>
-                                              </div>
-                                              {definitionsVisible && (
-                                                <p className="text-[9.5px] text-[var(--muted-foreground)] line-clamp-1 max-w-[180px] italic leading-tight">
-                                                  {subtopic.description}
-                                                </p>
-                                              )}
-                                            </div>
-                                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold">
-                                              {subtopic.concepts.length}
-                                            </span>
-                                            {/* Subtopic Definition Inspector Info Button */}
-                                            <button
-                                              type="button"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedSubtopicInfo({ topic, subtopic });
-                                              }}
-                                              className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-amber-400 cursor-pointer"
-                                              title={`View ${subtopic.title} Subtopic Architecture Definition`}
-                                              aria-label={`View ${subtopic.title} Subtopic Definition`}
-                                            >
-                                              <Info size={11} />
-                                            </button>
-                                          </div>
+                                          {(() => {
+                                            const sOffset = nodeOffsets[subtopic.id] || { x: 0, y: 0 };
+                                            const isSubDragged = sOffset.x !== 0 || sOffset.y !== 0;
 
-                                          {/* Level 2 Subtopic -> Level 3 Concepts Organic Branching Splines */}
+                                            return (
+                                              <div
+                                                onMouseDown={(e) => handleNodeMouseDown(e, subtopic.id)}
+                                                onClick={(e) => {
+                                                  if (justDraggedRef.current) return;
+                                                  toggleSubtopic(subtopic.id);
+                                                }}
+                                                style={{
+                                                  transform: `translate(${sOffset.x}px, ${sOffset.y}px)`,
+                                                }}
+                                                className={cn(
+                                                  "shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-grab active:cursor-grabbing select-none text-left shadow-2xs group/sub",
+                                                  isSubExpanded
+                                                    ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
+                                                    : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40",
+                                                  isSubDragged && "ring-2 ring-amber-400/50 shadow-md"
+                                                )}
+                                              >
+                                                <button
+                                                  type="button"
+                                                  className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
+                                                  aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
+                                                >
+                                                  {isSubExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                                                </button>
+                                                <div>
+                                                  <div className="flex items-center gap-1.5">
+                                                    <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                                                      L2 Subtopic
+                                                    </span>
+                                                    <span className="text-xs font-semibold text-[var(--foreground)]">
+                                                      {subtopic.title}
+                                                    </span>
+                                                  </div>
+                                                  {definitionsVisible && (
+                                                    <p className="text-[9.5px] text-[var(--muted-foreground)] line-clamp-1 max-w-[180px] italic leading-tight">
+                                                      {subtopic.description}
+                                                    </p>
+                                                  )}
+                                                </div>
+                                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold">
+                                                  {subtopic.concepts.length}
+                                                </span>
+                                                {/* Subtopic Definition Inspector Info Button */}
+                                                <button
+                                                  type="button"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedSubtopicInfo({ topic, subtopic });
+                                                  }}
+                                                  className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-amber-400 cursor-pointer"
+                                                  title={`View ${subtopic.title} Subtopic Architecture Definition`}
+                                                  aria-label={`View ${subtopic.title} Subtopic Definition`}
+                                                >
+                                                  <Info size={11} />
+                                                </button>
+                                              </div>
+                                            );
+                                          })()}
+
+                                          {/* Level 2 Subtopic -> Level 3 Concepts Flexible Organic Splines */}
                                           {isSubExpanded && subtopic.concepts.length > 0 && (
                                             <div className="flex items-center">
                                               <svg
-                                                width="40"
+                                                width="48"
                                                 height={curSubHeight}
                                                 className="shrink-0 pointer-events-none overflow-visible"
-                                                style={{ minWidth: 40 }}
+                                                style={{ minWidth: 48 }}
                                               >
                                                 {subtopic.concepts.map((concept, cIdx) => {
                                                   const K = subtopic.concepts.length;
                                                   const startX = 0;
                                                   const startY = curSubHeight / 2;
-                                                  const endX = 40;
-                                                  const endY = ((cIdx + 0.5) / K) * curSubHeight;
+                                                  const cOffset = nodeOffsets[concept.id] || { x: 0, y: 0 };
+                                                  const endX = 48 + cOffset.x;
+                                                  const endY = ((cIdx + 0.5) / K) * curSubHeight + cOffset.y;
+                                                  const pathD = getOrganicFlexibleSpline(startX, startY, endX, endY, "right");
+
                                                   return (
                                                     <g key={concept.id}>
                                                       <path
-                                                        d={`M ${startX},${startY} C 20,${startY} 20,${endY} ${endX},${endY}`}
+                                                        d={pathD}
                                                         fill="none"
                                                         stroke={topic.colorHex}
                                                         strokeWidth={definitionsVisible ? "2" : "1.75"}
@@ -1681,8 +1779,8 @@ export function ConceptsMindmapView({
 
                                               {/* Vertical Concepts Column */}
                                               <div
-                                                className="flex flex-col justify-around items-start gap-1.5 pl-0.5"
-                                                style={{ height: curSubHeight }}
+                                                className="flex flex-col justify-around items-start gap-2 pl-0.5"
+                                                style={{ minHeight: curSubHeight }}
                                               >
                                                 {subtopic.concepts.map((concept) =>
                                                   renderConceptPillOrCard(concept, topic, false)
@@ -1706,57 +1804,66 @@ export function ConceptsMindmapView({
               ) : (
                 /* ─── 360° RADIAL ORBIT STARBURST (CANVA RADIAL WITH 3 MULTI-LEVEL EXPANSION) ─── */
                 (() => {
-                  const cx = 700;
-                  const cy = 650;
+                  const cx = 1100;
+                  const cy = 1000;
                   const totalTopics = filteredTree.length;
                   const isAllL1 = expandedTopics.size === 0;
                   const isAllL2Only = expandedTopics.size > 0 && expandedSubtopics.size === 0;
 
-                  // Dynamic radii based on expanded levels
-                  const r1 = isAllL1 ? 230 : 200; // Orbit Ring 1: Level 1 Topics
-                  const r2 = 360;                  // Orbit Ring 2: Level 2 Subtopics
-                  const r3Base = 530;              // Orbit Ring 3: Level 3 Concepts
+                  // Dynamic radii based on expanded levels (spaced generously to prevent overlapping)
+                  const r1 = isAllL1 ? 280 : 230; // Orbit Ring 1: Level 1 Topics
+                  const r2 = 450;                  // Orbit Ring 2: Level 2 Subtopics
 
                   // Build geometry tree for splines and node rendering
                   const radialTree = filteredTree.map((topic, tIdx) => {
                     const tAngle = (tIdx / Math.max(totalTopics, 1)) * 2 * Math.PI - Math.PI / 2;
-                    const tx = cx + r1 * Math.cos(tAngle);
-                    const ty = cy + r1 * Math.sin(tAngle);
+                    const txBase = cx + r1 * Math.cos(tAngle);
+                    const tyBase = cy + r1 * Math.sin(tAngle);
+                    const tOffset = nodeOffsets[topic.id] || { x: 0, y: 0 };
+                    const tx = txBase + tOffset.x;
+                    const ty = tyBase + tOffset.y;
 
                     const isTopicExp = expandedTopics.has(topic.id);
                     const subCount = topic.subtopics.length;
-                    const sectorSpan = (2 * Math.PI / Math.max(totalTopics, 1)) * 0.82;
+                    const sectorSpan = (2 * Math.PI / Math.max(totalTopics, 1)) * 0.88;
 
                     const subtopicsData = topic.subtopics.map((sub, sIdx) => {
                       let sAngle = tAngle;
                       if (subCount > 1) {
                         sAngle = tAngle - sectorSpan / 2 + (sIdx / (subCount - 1)) * sectorSpan;
                       }
-                      const sx = cx + r2 * Math.cos(sAngle);
-                      const sy = cy + r2 * Math.sin(sAngle);
+                      const sxBase = cx + r2 * Math.cos(sAngle);
+                      const syBase = cy + r2 * Math.sin(sAngle);
+                      const sOffset = nodeOffsets[sub.id] || { x: 0, y: 0 };
+                      const sx = sxBase + sOffset.x;
+                      const sy = syBase + sOffset.y;
 
                       const isSubExp = expandedSubtopics.has(sub.id);
-                      // In radial layout, render up to 5 concepts per subtopic to keep layout crisp & legible
-                      const maxVisibleConcepts = 5;
+                      // In radial layout, render concepts across 3 staggered concentric shells to guarantee zero stacking
+                      const maxVisibleConcepts = 6;
                       const conceptsToRender = sub.concepts.slice(0, maxVisibleConcepts);
                       const cCount = conceptsToRender.length;
-                      const cSectorSpan = (sectorSpan / Math.max(subCount, 1)) * 0.85;
+                      const cSectorSpan = Math.min(sectorSpan / Math.max(subCount, 1), 0.38);
 
                       const conceptsData = conceptsToRender.map((concept, cIdx) => {
                         let cAngle = sAngle;
                         if (cCount > 1) {
                           cAngle = sAngle - cSectorSpan / 2 + (cIdx / (cCount - 1)) * cSectorSpan;
                         }
-                        // Stagger radiuses slightly to prevent label overlap
-                        const r3 = r3Base + (cIdx % 2) * 55;
-                        const kx = cx + r3 * Math.cos(cAngle);
-                        const ky = cy + r3 * Math.sin(cAngle);
+                        // Stagger radiuses across 3 orbital tiers (640px, 780px, 920px)
+                        const r3Tier = 640 + (cIdx % 3) * 140;
+                        const kxBase = cx + r3Tier * Math.cos(cAngle);
+                        const kyBase = cy + r3Tier * Math.sin(cAngle);
+                        const cOffset = nodeOffsets[concept.id] || { x: 0, y: 0 };
+                        const kx = kxBase + cOffset.x;
+                        const ky = kyBase + cOffset.y;
 
                         return {
                           concept,
                           kx,
                           ky,
                           cAngle,
+                          isDragged: cOffset.x !== 0 || cOffset.y !== 0,
                         };
                       });
 
@@ -1766,6 +1873,7 @@ export function ConceptsMindmapView({
                         sy,
                         sAngle,
                         isSubExp,
+                        isDragged: sOffset.x !== 0 || sOffset.y !== 0,
                         hasMoreConcepts: sub.concepts.length > maxVisibleConcepts,
                         remainingCount: sub.concepts.length - maxVisibleConcepts,
                         conceptsData,
@@ -1778,12 +1886,13 @@ export function ConceptsMindmapView({
                       ty,
                       tAngle,
                       isTopicExp,
+                      isDragged: tOffset.x !== 0 || tOffset.y !== 0,
                       subtopicsData,
                     };
                   });
 
                   return (
-                    <div className="relative w-[1400px] h-[1300px] flex items-center justify-center">
+                    <div className="relative w-[2200px] h-[2000px] flex items-center justify-center">
                       {/* Background Orbit Guide Rings */}
                       <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
                         {/* Orbit Ring 1 Guide */}
@@ -1808,28 +1917,47 @@ export function ConceptsMindmapView({
                             strokeDasharray="6 6"
                           />
                         )}
-                        {/* Orbit Ring 3 Guide */}
+                        {/* Orbit Tiered Shell Guides */}
                         {expandedSubtopics.size > 0 && (
-                          <circle
-                            cx={cx}
-                            cy={cy}
-                            r={r3Base}
-                            fill="none"
-                            stroke="rgba(148, 163, 184, 0.06)"
-                            strokeWidth="1.5"
-                            strokeDasharray="8 8"
-                          />
+                          <>
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={640}
+                              fill="none"
+                              stroke="rgba(148, 163, 184, 0.06)"
+                              strokeWidth="1"
+                              strokeDasharray="8 8"
+                            />
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={780}
+                              fill="none"
+                              stroke="rgba(148, 163, 184, 0.05)"
+                              strokeWidth="1"
+                              strokeDasharray="10 10"
+                            />
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={920}
+                              fill="none"
+                              stroke="rgba(148, 163, 184, 0.04)"
+                              strokeWidth="1"
+                              strokeDasharray="12 12"
+                            />
+                          </>
                         )}
 
                         {/* Splines Level 0 -> Level 1 */}
-                        {radialTree.map(({ topic, tx, ty, tAngle, isTopicExp, subtopicsData }) => {
-                          const cpX = cx + (r1 * 0.45) * Math.cos(tAngle + 0.12);
-                          const cpY = cy + (r1 * 0.45) * Math.sin(tAngle + 0.12);
+                        {radialTree.map(({ topic, tx, ty, isTopicExp, subtopicsData }) => {
+                          const splineCoreToTopic = getOrganicFlexibleSpline(cx, cy, tx, ty, "radial");
 
                           return (
                             <g key={topic.id}>
                               <path
-                                d={`M ${cx},${cy} Q ${cpX},${cpY} ${tx},${ty}`}
+                                d={splineCoreToTopic}
                                 fill="none"
                                 stroke={topic.colorHex}
                                 strokeWidth="2.5"
@@ -1840,14 +1968,13 @@ export function ConceptsMindmapView({
 
                               {/* Splines Level 1 -> Level 2 */}
                               {isTopicExp &&
-                                subtopicsData.map(({ sub, sx, sy, sAngle, isSubExp, conceptsData }) => {
-                                  const midX = (tx + sx) / 2 + 12 * Math.sin(sAngle);
-                                  const midY = (ty + sy) / 2 - 12 * Math.cos(sAngle);
+                                subtopicsData.map(({ sub, sx, sy, isSubExp, conceptsData }) => {
+                                  const splineTopicToSub = getOrganicFlexibleSpline(tx, ty, sx, sy, "radial");
 
                                   return (
                                     <g key={sub.id}>
                                       <path
-                                        d={`M ${tx},${ty} Q ${midX},${midY} ${sx},${sy}`}
+                                        d={splineTopicToSub}
                                         fill="none"
                                         stroke={topic.colorHex}
                                         strokeWidth="2"
@@ -1858,20 +1985,19 @@ export function ConceptsMindmapView({
 
                                       {/* Splines Level 2 -> Level 3 */}
                                       {isSubExp &&
-                                        conceptsData.map(({ concept, kx, ky, cAngle }) => {
-                                          const cMidX = (sx + kx) / 2 + 8 * Math.sin(cAngle);
-                                          const cMidY = (sy + ky) / 2 - 8 * Math.cos(cAngle);
+                                        conceptsData.map(({ concept, kx, ky }) => {
+                                          const splineSubToConcept = getOrganicFlexibleSpline(sx, sy, kx, ky, "radial");
 
                                           return (
                                             <g key={concept.id}>
                                               <path
-                                                d={`M ${sx},${sy} Q ${cMidX},${cMidY} ${kx},${ky}`}
+                                                d={splineSubToConcept}
                                                 fill="none"
                                                 stroke={topic.colorHex}
                                                 strokeWidth="1.25"
                                                 strokeLinecap="round"
                                                 strokeDasharray="2 2"
-                                                className="opacity-55"
+                                                className="opacity-60"
                                               />
                                               <circle cx={kx} cy={ky} r="2.5" fill={topic.colorHex} />
                                             </g>
@@ -1885,7 +2011,7 @@ export function ConceptsMindmapView({
                         })}
                       </svg>
 
-                      {/* Central Node at (cx, cy) = (700, 650) */}
+                      {/* Central Node at (cx, cy) = (1100, 1000) */}
                       <div
                         style={{
                           position: "absolute",
@@ -1900,11 +2026,11 @@ export function ConceptsMindmapView({
                             if (isAllL1) handleDepthChange(3);
                             else handleDepthChange(1);
                           }}
-                          className="p-4 sm:p-5 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[260px] space-y-2 ring-4 ring-purple-500/10 cursor-pointer hover:scale-103 transition-transform"
+                          className="p-5 sm:p-6 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[280px] space-y-2 ring-4 ring-purple-500/10 cursor-pointer hover:scale-103 transition-transform"
                           title="Click to toggle expand/collapse all"
                         >
-                          <div className="mx-auto w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 text-white flex items-center justify-center shadow-md">
-                            <Network size={22} />
+                          <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 text-white flex items-center justify-center shadow-md">
+                            <Network size={24} />
                           </div>
                           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
                             Level 0 • Platform Core
@@ -1923,20 +2049,27 @@ export function ConceptsMindmapView({
                       </div>
 
                       {/* Orbit Nodes: Level 1, Level 2, Level 3 */}
-                      {radialTree.map(({ topic, tx, ty, isTopicExp, subtopicsData }) => (
+                      {radialTree.map(({ topic, tx, ty, isTopicExp, isDragged: isTopicDragged, subtopicsData }) => (
                         <React.Fragment key={topic.id}>
                           {/* ─── LEVEL 1: DOMAIN NODE ─── */}
                           <div
+                            onMouseDown={(e) => handleNodeMouseDown(e, topic.id)}
                             style={{
                               position: "absolute",
                               left: `${tx}px`,
                               top: `${ty}px`,
                               transform: "translate(-50%, -50%)",
                             }}
-                            className="z-15 group"
+                            className={cn(
+                              "z-15 group cursor-grab active:cursor-grabbing",
+                              isTopicDragged && "ring-2 ring-purple-400/50 shadow-xl"
+                            )}
                           >
                             <div
-                              onClick={() => toggleTopic(topic.id)}
+                              onClick={() => {
+                                if (justDraggedRef.current) return;
+                                toggleTopic(topic.id);
+                              }}
                               className="px-3 py-1.5 rounded-full border-2 bg-[var(--surface-1)] shadow-md hover:scale-105 transition-transform cursor-pointer flex items-center gap-1.5 select-none"
                               style={{ borderColor: topic.colorHex }}
                             >
@@ -1968,19 +2101,26 @@ export function ConceptsMindmapView({
                           {/* ─── LEVEL 2: SUBTOPIC NODES ─── */}
                           {isTopicExp &&
                             subtopicsData.map(
-                              ({ sub, sx, sy, isSubExp, hasMoreConcepts, remainingCount, conceptsData }) => (
+                              ({ sub, sx, sy, isSubExp, isDragged: isSubDragged, conceptsData }) => (
                                 <React.Fragment key={sub.id}>
                                   <div
+                                    onMouseDown={(e) => handleNodeMouseDown(e, sub.id)}
                                     style={{
                                       position: "absolute",
                                       left: `${sx}px`,
                                       top: `${sy}px`,
                                       transform: "translate(-50%, -50%)",
                                     }}
-                                    className="z-12 group"
+                                    className={cn(
+                                      "z-12 group cursor-grab active:cursor-grabbing",
+                                      isSubDragged && "ring-2 ring-amber-400/50 shadow-xl"
+                                    )}
                                   >
                                     <div
-                                      onClick={() => toggleSubtopic(sub.id)}
+                                      onClick={() => {
+                                        if (justDraggedRef.current) return;
+                                        toggleSubtopic(sub.id);
+                                      }}
                                       className="px-2.5 py-1 rounded-full border bg-[var(--surface-1)] shadow-sm hover:scale-104 transition-transform cursor-pointer flex items-center gap-1.5 select-none max-w-[200px]"
                                       style={{
                                         borderColor: topic.colorHex,
@@ -2013,7 +2153,7 @@ export function ConceptsMindmapView({
 
                                   {/* ─── LEVEL 3: CONCEPT NODES ─── */}
                                   {isSubExp &&
-                                    conceptsData.map(({ concept, kx, ky }) => {
+                                    conceptsData.map(({ concept, kx, ky, isDragged: isConceptDragged }) => {
                                       const isSelected = selectedConcept?.id === concept.id;
                                       const isBookmarked = bookmarkedIds.has(concept.id);
                                       const isMatch =
@@ -2036,24 +2176,32 @@ export function ConceptsMindmapView({
                                       return (
                                         <div
                                           key={concept.id}
+                                          onMouseDown={(e) => handleNodeMouseDown(e, concept.id)}
                                           style={{
                                             position: "absolute",
                                             left: `${kx}px`,
                                             top: `${ky}px`,
                                             transform: "translate(-50%, -50%)",
                                           }}
-                                          className="z-10 group"
+                                          className={cn(
+                                            "z-10 group cursor-grab active:cursor-grabbing",
+                                            isConceptDragged && "ring-2 ring-purple-400/50 shadow-xl"
+                                          )}
                                         >
                                           {definitionsVisible ? (
                                             <div
-                                              onClick={() => setSelectedConcept(concept)}
+                                              onClick={() => {
+                                                if (justDraggedRef.current) return;
+                                                setSelectedConcept(concept);
+                                              }}
                                               className={cn(
-                                                "rounded-xl p-2 border transition-all cursor-pointer select-none space-y-1 text-left shadow-2xs hover:scale-105 active:scale-98 max-w-[190px]",
+                                                "rounded-xl p-2.5 border transition-all select-none space-y-1 text-left shadow-2xs hover:scale-105 active:scale-98 max-w-[210px]",
                                                 isSelected
                                                   ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
                                                   : isMatch
                                                   ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
-                                                  : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                                                  : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]",
+                                                isConceptDragged && "ring-2 ring-purple-400/50 shadow-md"
                                               )}
                                               style={{
                                                 borderLeftColor: !isSelected && !isMatch ? topic.colorHex : undefined,
@@ -2092,15 +2240,19 @@ export function ConceptsMindmapView({
                                           ) : (
                                             <button
                                               type="button"
-                                              onClick={() => setSelectedConcept(concept)}
+                                              onClick={() => {
+                                                if (justDraggedRef.current) return;
+                                                setSelectedConcept(concept);
+                                              }}
                                               title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
                                               className={cn(
-                                                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95 whitespace-nowrap",
+                                                "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-semibold transition-all select-none text-left shadow-2xs hover:scale-105 active:scale-95 whitespace-nowrap",
                                                 isSelected
                                                   ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
                                                   : isMatch
                                                   ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
-                                                  : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                                                  : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]",
+                                                isConceptDragged && "ring-2 ring-purple-400/50 shadow-md"
                                               )}
                                               style={{
                                                 borderLeftColor: !isSelected && !isMatch ? topic.colorHex : undefined,
@@ -2108,10 +2260,10 @@ export function ConceptsMindmapView({
                                               }}
                                             >
                                               {isBookmarked && (
-                                                <BookmarkCheck size={10} className="text-amber-400 fill-amber-400 shrink-0" />
+                                                <BookmarkCheck size={11} className="text-amber-400 fill-amber-400 shrink-0" />
                                               )}
                                               <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
-                                              <span className="truncate max-w-[130px]">{concept.term}</span>
+                                              <span className="truncate max-w-[140px]">{concept.term}</span>
                                             </button>
                                           )}
                                         </div>
