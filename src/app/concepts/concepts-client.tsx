@@ -195,10 +195,14 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
   const [shuffleSeed, setShuffleSeed] = useState(0);
   const [statusAnnouncement, setStatusAnnouncement] = useState("");
 
-  // Unified View Mode State (Glossary, Mindmap, Study)
+  // Unified View Mode State (Mindmap, Glossary, Study)
   const initialViewParam = searchParams.get("view");
   const [viewMode, setViewMode] = useState<ConceptViewMode>(
-    initialViewParam === "mindmap" ? "mindmap" : initialViewParam === "study" ? "study" : "glossary"
+    initialViewParam === "glossary" || initialViewParam === "cards" || initialViewParam === "list"
+      ? "glossary"
+      : initialViewParam === "study"
+      ? "study"
+      : "mindmap"
   );
   const isStudyMode = viewMode === "study";
   const [studyIndex, setStudyIndex] = useState(0);
@@ -212,7 +216,7 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
     setViewMode(mode);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
-      if (mode === "glossary") {
+      if (mode === "mindmap") {
         url.searchParams.delete("view");
       } else {
         url.searchParams.set("view", mode);
@@ -253,10 +257,10 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
     const viewParam = searchParams.get("view");
     if (viewParam === "study") {
       setViewMode("study");
+    } else if (viewParam === "glossary" || viewParam === "cards" || viewParam === "list") {
+      setViewMode("glossary");
     } else if (viewParam === "mindmap") {
       setViewMode("mindmap");
-    } else if (viewParam === "list" || viewParam === "glossary" || !viewParam) {
-      setViewMode("glossary");
     }
 
     if (termParam !== null) {
@@ -483,7 +487,15 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0 self-start md:self-auto">
+          <div className="flex items-center gap-2 shrink-0 self-start md:self-auto flex-wrap">
+            <Link
+              href="/mindmap"
+              className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors shrink-0"
+            >
+              <GitBranch size={13} />
+              <span>Dedicated /mindmap Canvas</span>
+              <ArrowRight size={12} />
+            </Link>
             <div className="px-3 py-1 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-right shadow-2xs">
               <div className="text-xs sm:text-sm font-bold text-blue-500 font-mono leading-none">
                 {initialConcepts.length}
@@ -518,30 +530,30 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">
         <button
           type="button"
-          onClick={() => handleViewChange("glossary")}
-          className={cn(
-            "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
-            viewMode === "glossary"
-              ? "bg-blue-600 text-white shadow-xs font-semibold"
-              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-          )}
-        >
-          <BookOpen size={13} />
-          <span>Glossary &amp; Cards ({initialConcepts.length})</span>
-        </button>
-
-        <button
-          type="button"
           onClick={() => handleViewChange("mindmap")}
           className={cn(
             "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
             viewMode === "mindmap"
-              ? "bg-blue-600 text-white shadow-xs font-semibold"
+              ? "bg-purple-600 text-white shadow-xs font-bold"
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           )}
         >
           <GitBranch size={13} />
-          <span>Multi-Level Mind Map (14 Pillars)</span>
+          <span>Interactive Mind Map ({initialConcepts.length} Terms)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleViewChange("glossary")}
+          className={cn(
+            "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
+            viewMode === "glossary"
+              ? "bg-blue-600 text-white shadow-xs font-bold"
+              : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+          )}
+        >
+          <BookOpen size={13} />
+          <span>Glossary Cards &amp; Definitions</span>
         </button>
 
         <button
@@ -550,7 +562,7 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
           className={cn(
             "flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
             viewMode === "study"
-              ? "bg-blue-600 text-white shadow-xs font-semibold"
+              ? "bg-blue-600 text-white shadow-xs font-bold"
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           )}
         >

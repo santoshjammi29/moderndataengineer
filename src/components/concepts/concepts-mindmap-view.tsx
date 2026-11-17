@@ -161,7 +161,7 @@ export function ConceptsMindmapView({
       const initialSubs = new Set<string>();
       // Expand subtopics for initial visible state
       fullTree.forEach((t) => {
-        t.subtopics.slice(0, 3).forEach((s) => initialSubs.add(s.id));
+        t.subtopics.forEach((s) => initialSubs.add(s.id));
       });
       setExpandedSubtopics(initialSubs);
     }
