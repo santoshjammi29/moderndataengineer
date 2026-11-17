@@ -562,12 +562,28 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
       {/* ─── MIND MAP VIEW (Single Roof Integration) ─── */}
       {viewMode === "mindmap" && (
         <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs">
+            <div className="flex items-center gap-2">
+              <GitBranch size={15} className="text-blue-400 shrink-0" />
+              <span className="text-[var(--foreground)] font-medium">
+                Looking for the dedicated full-canvas linked concept hierarchy?
+              </span>
+            </div>
+            <Link
+              href="/mindmap"
+              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-colors inline-flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+            >
+              <span>Open Dedicated /mindmap</span>
+              <ArrowRight size={13} />
+            </Link>
+          </div>
           <ConceptsMindmapView
             concepts={initialConcepts}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
+            initialLayoutMode="mindmap"
           />
         </div>
       )}

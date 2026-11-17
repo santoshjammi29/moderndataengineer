@@ -1505,7 +1505,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                 <ArrowRight size={12} />
               </Link>
               <Link
-                href="/concepts?view=mindmap"
+                href="/mindmap"
                 className="px-3 py-1.5 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--foreground)] border border-[var(--border)] font-medium text-[11px] transition-colors flex items-center gap-1.5"
               >
                 <span>Mind Map</span>

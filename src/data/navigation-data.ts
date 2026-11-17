@@ -95,7 +95,7 @@ export const NAV_GROUPS: NavGroup[] = [
         pill: { text: `${formatContentCount(CONTENT_COUNTS.concepts)}`, variant: "easy" },
         subItems: [
           { label: "Glossary & Cards", href: "/concepts", badge: `${formatContentCount(CONTENT_COUNTS.concepts)}` },
-          { label: "Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars" },
+          { label: "Mind Map", href: "/mindmap", badge: "Interactive" },
           { label: "Flashcards", href: "/concepts?view=study", badge: "Recall" },
         ],
       },
@@ -319,6 +319,7 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "learning-paths", label: "Learning Paths Portal", shortLabel: "Learning Paths", href: "/learning-paths", category: "Learn", categoryColor: "indigo", icon: GraduationCap, badge: "Curricula" },
   { id: "concepts", label: "Concepts Glossary", shortLabel: "Glossary", href: "/concepts", category: "Learn", categoryColor: "emerald", icon: BookOpen, badge: `${formatContentCount(CONTENT_COUNTS.concepts)}` },
   { id: "mindmap", label: "Concepts Mind Map", shortLabel: "Mind Map", href: "/concepts?view=mindmap", category: "Learn", categoryColor: "emerald", icon: GitBranch, badge: "Mind Map" },
+  { id: "mindmap-page", label: "Concepts Linked Mind Map", shortLabel: "Mind Map Hub", href: "/mindmap", category: "Learn", categoryColor: "emerald", icon: GitBranch, badge: "Interactive" },
   { id: "concepts-study", label: "Flashcards Study", shortLabel: "Flashcards", href: "/concepts?view=study", category: "Learn", categoryColor: "emerald", icon: BookOpen, badge: "Recall" },
   { id: "stages", label: "Mastery Stages Hub", shortLabel: "Stages Hub", href: "/stages", category: "Learn", categoryColor: "purple", icon: Workflow, badge: "All Stages" },
   { id: "stages-mastery", label: "4-Stage Mastery Journey", shortLabel: "Mastery Journey", href: "/stages?tab=mastery", category: "Learn", categoryColor: "purple", icon: Workflow, badge: "4 Stages" },
@@ -499,7 +500,7 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         badge: `${formatContentCount(CONTENT_COUNTS.concepts)}`,
         subpages: [
           { label: "Glossary & Cards", href: "/concepts", badge: `${formatContentCount(CONTENT_COUNTS.concepts)}` },
-          { label: "Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars" },
+          { label: "Mind Map", href: "/mindmap", badge: "Interactive" },
           { label: "Flashcards Study", href: "/concepts?view=study", badge: "Recall" },
         ],
       },

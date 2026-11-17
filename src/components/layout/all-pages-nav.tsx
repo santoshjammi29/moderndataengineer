@@ -75,7 +75,7 @@ const NAV_SECTIONS: NavSection[] = [
     badge: formatContentCount(CONTENT_COUNTS.concepts),
     subpages: [
       { label: "Glossary & Cards", href: "/concepts", badge: formatContentCount(CONTENT_COUNTS.concepts), description: "Searchable core concept definitions" },
-      { label: "Concepts Mind Map", href: "/concepts?view=mindmap", badge: "14 Pillars", description: "Visual node graph of lakehouse ideas" },
+      { label: "Concepts Mind Map", href: "/mindmap", badge: "Interactive", description: "Visual linked node mind map across 4 levels" },
       { label: "Lakehouse Concepts", href: "/modern-stack?tab=concepts", badge: "FinOps", description: "Storage, compute, and transaction primitives" },
     ],
   },

@@ -61,7 +61,7 @@ const PHASES: PhaseSection[] = [
         actionText: "Explore Concepts",
         subLinks: [
           { label: "Concept Glossary", href: "/concepts" },
-          { label: "Interactive Mind Map", href: "/concepts?view=mindmap" },
+          { label: "Interactive Mind Map", href: "/mindmap" },
           { label: "Flashcards", href: "/concepts?view=flashcards" },
         ],
       },
