@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "sonner", "@tanstack/react-virtual"],
+    agentUpgrade: "security",
   },
   images: {
     unoptimized: false,
