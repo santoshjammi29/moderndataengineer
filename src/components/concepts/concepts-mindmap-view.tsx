@@ -47,6 +47,42 @@ const difficultyColors: Record<Difficulty, { bg: string; text: string; border: s
   ARCHITECT: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20" },
 };
 
+/**
+ * Generates an organic, flexible S-curve or curved spline between two coordinates.
+ * Dynamically bends and flexes as nodes are dragged freely across the canvas.
+ */
+function getOrganicFlexibleSpline(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  direction: "left" | "right" | "radial" = "radial"
+): string {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+
+  if (direction === "radial") {
+    // Subtle organic quadratic curve
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+    // Bow slightly outward for a hand-crafted brainstorm spline
+    const perpX = -dy * 0.12;
+    const perpY = dx * 0.12;
+    const cpX = midX + perpX;
+    const cpY = midY + perpY;
+    return `M ${x1},${y1} Q ${cpX},${cpY} ${x2},${y2}`;
+  }
+
+  // Bilateral S-curve:
+  const absDx = Math.max(Math.abs(dx), 24);
+  const curvature = Math.max(absDx * 0.48, 16);
+  const cp1X = x1 + (direction === "left" ? -curvature : curvature);
+  const cp1Y = y1;
+  const cp2X = x2 + (direction === "left" ? curvature : -curvature);
+  const cp2Y = y2;
+  return `M ${x1},${y1} C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${x2},${y2}`;
+}
+
 interface ConceptsMindmapViewProps {
   concepts: Concept[];
   searchQuery?: string;
@@ -93,23 +129,100 @@ export function ConceptsMindmapView({
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
+  // Free movement offsets for draggable nodes (nodeId -> { x, y })
+  const [nodeOffsets, setNodeOffsets] = useState<Record<string, { x: number; y: number }>>({});
+  const draggingNodeRef = useRef<{
+    id: string;
+    startX: number;
+    startY: number;
+    initialX: number;
+    initialY: number;
+    hasMoved: boolean;
+  } | null>(null);
+  const justDraggedRef = useRef<boolean>(false);
+
+  const handleNodeMouseDown = useCallback(
+    (e: React.MouseEvent, nodeId: string) => {
+      if (e.button !== 0) return; // Left click only
+      if ((e.target as HTMLElement).closest("button, a, input, select")) return;
+      e.stopPropagation(); // Prevent canvas panning
+
+      const currentOffset = nodeOffsets[nodeId] || { x: 0, y: 0 };
+      draggingNodeRef.current = {
+        id: nodeId,
+        startX: e.clientX,
+        startY: e.clientY,
+        initialX: currentOffset.x,
+        initialY: currentOffset.y,
+        hasMoved: false,
+      };
+    },
+    [nodeOffsets]
+  );
+
+  const handleResetNodePositions = useCallback(() => {
+    setNodeOffsets({});
+    toast.info("Node positions reset to automatic distribution");
+  }, []);
+
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest("button, input, a, select, [role='dialog']")) return;
     setIsDragging(true);
     dragStartRef.current = { x: e.clientX - panOffset.x, y: e.clientY - panOffset.y };
   }, [panOffset]);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging) return;
-    setPanOffset({
-      x: e.clientX - dragStartRef.current.x,
-      y: e.clientY - dragStartRef.current.y,
-    });
-  }, [isDragging]);
+  // Window-level mouse tracking for buttery-smooth dragging of nodes & canvas
+  React.useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (draggingNodeRef.current) {
+        const dx = (e.clientX - draggingNodeRef.current.startX) / zoomLevel;
+        const dy = (e.clientY - draggingNodeRef.current.startY) / zoomLevel;
 
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+          draggingNodeRef.current.hasMoved = true;
+          justDraggedRef.current = true;
+        }
+
+        const targetId = draggingNodeRef.current.id;
+        const newX = draggingNodeRef.current.initialX + dx;
+        const newY = draggingNodeRef.current.initialY + dy;
+
+        setNodeOffsets((prev) => ({
+          ...prev,
+          [targetId]: { x: Math.round(newX), y: Math.round(newY) },
+        }));
+        return;
+      }
+
+      if (isDragging) {
+        setPanOffset({
+          x: e.clientX - dragStartRef.current.x,
+          y: e.clientY - dragStartRef.current.y,
+        });
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      if (draggingNodeRef.current) {
+        if (draggingNodeRef.current.hasMoved) {
+          setTimeout(() => {
+            justDraggedRef.current = false;
+          }, 80);
+        }
+        draggingNodeRef.current = null;
+      }
+      setIsDragging(false);
+    };
+
+    if (isDragging || draggingNodeRef.current) {
+      window.addEventListener("mousemove", handleGlobalMouseMove);
+      window.addEventListener("mouseup", handleGlobalMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleGlobalMouseMove);
+      window.removeEventListener("mouseup", handleGlobalMouseUp);
+    };
+  }, [isDragging, zoomLevel]);
 
   const handleResetZoom = useCallback(() => {
     setZoomLevel(1);
@@ -120,7 +233,7 @@ export function ConceptsMindmapView({
     let optimalZoom = 0.7;
     if (stretchDepth === 1) optimalZoom = 1.0;
     else if (stretchDepth === 2) optimalZoom = 0.85;
-    else optimalZoom = mindmapStyle === "radial" ? 0.72 : 0.68;
+    else optimalZoom = mindmapStyle === "radial" ? 0.58 : 0.68;
     setZoomLevel(optimalZoom);
     setPanOffset({ x: 0, y: 0 });
     toast.info(`Adjusted zoom to ${Math.round(optimalZoom * 100)}% to fit screen`);
@@ -383,9 +496,9 @@ export function ConceptsMindmapView({
     }
   }, [currentConceptIndex, visibleConceptsList]);
 
-  // Keyboard navigation when focus mode / modal is open
+  // Keyboard navigation when focus mode / modal / fullscreen is open
   React.useEffect(() => {
-    if (!selectedConcept && !selectedTopicInfo && !selectedSubtopicInfo) return;
+    if (!selectedConcept && !selectedTopicInfo && !selectedSubtopicInfo && !isFullscreen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -403,6 +516,7 @@ export function ConceptsMindmapView({
         if (selectedConcept) setSelectedConcept(null);
         else if (selectedTopicInfo) setSelectedTopicInfo(null);
         else if (selectedSubtopicInfo) setSelectedSubtopicInfo(null);
+        else if (isFullscreen) setIsFullscreen(false);
       } else if (e.key === "ArrowLeft" && selectedConcept) {
         e.preventDefault();
         handlePrevConcept();
@@ -416,7 +530,7 @@ export function ConceptsMindmapView({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedConcept, selectedTopicInfo, selectedSubtopicInfo, handlePrevConcept, handleNextConcept]);
+  }, [selectedConcept, selectedTopicInfo, selectedSubtopicInfo, isFullscreen, handlePrevConcept, handleNextConcept]);
 
   return (
     <div className="space-y-4">
@@ -619,7 +733,7 @@ export function ConceptsMindmapView({
         <div
           className={cn(
             "rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden shadow-xs transition-all",
-            isFullscreen && "fixed inset-0 z-50 rounded-none bg-[var(--background)] p-4 sm:p-6 overflow-auto"
+            isFullscreen && "fixed inset-0 z-50 rounded-none bg-[var(--background)] p-3 sm:p-5 flex flex-col overflow-hidden"
           )}
         >
           {/* Canvas Control Toolbar */}
@@ -775,6 +889,20 @@ export function ConceptsMindmapView({
                 </button>
               </div>
 
+              {/* Reset Dragged Node Positions */}
+              {Object.keys(nodeOffsets).length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleResetNodePositions}
+                  className="px-2.5 py-1 rounded-lg bg-[var(--surface-1)] border border-purple-500/30 text-[11px] font-semibold text-purple-400 hover:bg-purple-500/10 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                  title="Reset custom node positions to automatic distribution"
+                  aria-label="Reset Node Positions"
+                >
+                  <Sparkles size={12} />
+                  <span>Reset Nodes</span>
+                </button>
+              )}
+
               {/* Copy Hierarchy */}
               <button
                 type="button"
@@ -845,7 +973,10 @@ export function ConceptsMindmapView({
           {/* Organic Mind Map Canvas Area */}
           <div
             className={cn(
-              "relative h-[580px] sm:h-[620px] max-h-[calc(100vh-250px)] min-h-[480px] overflow-hidden select-none",
+              "relative overflow-hidden select-none transition-all",
+              isFullscreen
+                ? "flex-1 w-full h-full min-h-0 rounded-xl"
+                : "h-[580px] sm:h-[620px] max-h-[calc(100vh-250px)] min-h-[480px]",
               isDragging ? "cursor-grabbing" : "cursor-grab"
             )}
             style={{
@@ -854,9 +985,6 @@ export function ConceptsMindmapView({
               backgroundSize: "24px 24px",
             }}
             onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
           >
             {/* Draggable & Scalable Workspace */}
             <div
@@ -875,26 +1003,26 @@ export function ConceptsMindmapView({
 
                   const getSubHeight = (sub: ConceptSubtopicPillar) => {
                     const isExp = expandedSubtopics.has(sub.id);
-                    if (!isExp || sub.concepts.length === 0) return 44;
-                    return Math.max(sub.concepts.length * (definitionsVisible ? 68 : 36), 44);
+                    if (!isExp || sub.concepts.length === 0) return 50;
+                    return Math.max(sub.concepts.length * (definitionsVisible ? 88 : 46), 50);
                   };
 
                   const getTopicHeight = (top: ConceptTopicPillar) => {
                     const isExp = expandedTopics.has(top.id);
-                    if (!isExp || top.subtopics.length === 0) return 56;
+                    if (!isExp || top.subtopics.length === 0) return 60;
                     const sHeights = top.subtopics.map(getSubHeight);
                     return Math.max(
-                      sHeights.reduce((a, b) => a + b, 0) + (top.subtopics.length - 1) * 14,
-                      56
+                      sHeights.reduce((a, b) => a + b, 0) + (top.subtopics.length - 1) * 16,
+                      60
                     );
                   };
 
                   const getWingHeight = (wingTopics: ConceptTopicPillar[]) => {
-                    if (wingTopics.length === 0) return 200;
+                    if (wingTopics.length === 0) return 240;
                     const heights = wingTopics.map(getTopicHeight);
                     return Math.max(
-                      heights.reduce((a, b) => a + b, 0) + (wingTopics.length - 1) * 24,
-                      200
+                      heights.reduce((a, b) => a + b, 0) + (wingTopics.length - 1) * 28,
+                      240
                     );
                   };
 
@@ -908,6 +1036,8 @@ export function ConceptsMindmapView({
                       concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
                       concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
                     );
+                    const offset = nodeOffsets[concept.id] || { x: 0, y: 0 };
+                    const isNodeDragged = offset.x !== 0 || offset.y !== 0;
 
                     const dotColor =
                       concept.difficulty === "EASY"
@@ -924,16 +1054,22 @@ export function ConceptsMindmapView({
                       return (
                         <div
                           key={concept.id}
-                          onClick={() => setSelectedConcept(concept)}
+                          onMouseDown={(e) => handleNodeMouseDown(e, concept.id)}
+                          onClick={(e) => {
+                            if (justDraggedRef.current) return;
+                            setSelectedConcept(concept);
+                          }}
                           className={cn(
-                            "rounded-xl p-2.5 border transition-all cursor-pointer select-none space-y-1 text-left shadow-2xs hover:scale-102 active:scale-98 max-w-[260px]",
+                            "rounded-xl p-2.5 border transition-all cursor-grab active:cursor-grabbing select-none space-y-1 text-left shadow-2xs hover:scale-102 active:scale-98 max-w-[260px] relative",
                             isSelected
                               ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
                               : isMatch
                               ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
-                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]",
+                            isNodeDragged && "ring-2 ring-purple-400/50 shadow-md"
                           )}
                           style={{
+                            transform: `translate(${offset.x}px, ${offset.y}px)`,
                             [isLeft ? "borderRightColor" : "borderLeftColor"]: !isSelected && !isMatch ? topic.colorHex : undefined,
                             [isLeft ? "borderRightWidth" : "borderLeftWidth"]: !isSelected && !isMatch ? "3px" : undefined,
                           }}
@@ -969,17 +1105,23 @@ export function ConceptsMindmapView({
                       <button
                         key={concept.id}
                         type="button"
-                        onClick={() => setSelectedConcept(concept)}
+                        onMouseDown={(e) => handleNodeMouseDown(e, concept.id)}
+                        onClick={(e) => {
+                          if (justDraggedRef.current) return;
+                          setSelectedConcept(concept);
+                        }}
                         title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
                         className={cn(
-                          "group/pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95",
+                          "group/pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all cursor-grab active:cursor-grabbing select-none text-left shadow-2xs hover:scale-105 active:scale-95 relative",
                           isSelected
                             ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
                             : isMatch
                             ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
-                            : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                            : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]",
+                          isNodeDragged && "ring-2 ring-purple-400/50 shadow-md"
                         )}
                         style={{
+                          transform: `translate(${offset.x}px, ${offset.y}px)`,
                           [isLeft ? "borderRightColor" : "borderLeftColor"]: !isSelected && !isMatch ? topic.colorHex : undefined,
                           [isLeft ? "borderRightWidth" : "borderLeftWidth"]: !isSelected && !isMatch ? "2.5px" : undefined,
                         }}
