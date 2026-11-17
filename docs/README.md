@@ -22,7 +22,9 @@ The documentation is organized into six specialized pillars designed for Lead Ar
 
 ```
 docs/
-├── architecture/             # 8 Deep-Dive Modules + JSON Export + 42 Blueprints
+├── architecture/             # 9 Deep-Dive Modules + JSON Export + 52 Blueprints
+├── whiteboard_diagrams/      # 52 Hand-Drawn Whiteboard Blueprints Catalog (Markdown Embeds & Personas)
+├── pdf/                      # 11 Master A4 Vector PDFs & Technical Manuals
 ├── audits/                   # Production Edge Benchmarks, Theme & Design System Audits
 ├── design-system/            # Design Token System 2.0, UI Primitives, Editorial Spec
 ├── engineering/              # Development Quickstart, Vitest Testing Runbook, Roadmap
@@ -44,12 +46,13 @@ In-depth technical guides, failure mode analysis, decision trees, and production
 | **03** | **NoSQL & Vector Databases** | Cosmos DB, ScyllaDB, pgvector, Qdrant, Milvus | RU/s optimization, multi-region writes, vector embeddings, semantic search, and RAG architectures. | [`architecture/03_nosql_vector_db.md`](./architecture/03_nosql_vector_db.md) |
 | **04** | **Modern ETL/ELT & Streaming** | Spark, Flink, DuckDB, Polars, Delta UniForm | In-process analytical de-clustering, Apache Arrow zero-copy memory, real-time CEP vs micro-batching. | [`architecture/04_etl_stream_proc.md`](./architecture/04_etl_stream_proc.md) |
 | **05** | **Lakehouse FinOps** | Databricks System Tables, Storage Lifecycle, Spot VMs | TCO models, Serverless SQL auto-scaling, Spot instance arbitrage, and cold data lifecycle policies. | [`architecture/05_lakehouse_finops.md`](./architecture/05_lakehouse_finops.md) |
-| **06** | **Enterprise Blueprints** | End-to-End Enterprise Lakehouse Blueprints | 6 production walkthroughs + 42 Whiteboard Blueprints across 7 domains with Mermaid flows. | [`architecture/06_enterprise_blueprints.md`](./architecture/06_enterprise_blueprints.md) |
+| **06** | **Enterprise Blueprints** | End-to-End Enterprise Lakehouse Blueprints | 6 production walkthroughs + 52 Whiteboard Blueprints across 7 domains with Mermaid flows. | [`architecture/06_enterprise_blueprints.md`](./architecture/06_enterprise_blueprints.md) |
 | **07** | **Open Storage Formats** | Delta Lake, Apache Iceberg, Apache Hudi, Paimon | Lakehouse metadata snapshot trees, ACID OCC, hidden partitioning, Parquet/ORC/Avro physical layouts. | [`architecture/07_open_storage_formats.md`](./architecture/07_open_storage_formats.md) |
 | **08** | **6 Delta Lake Optimizations** | Liquid Clustering, Z-Order, OPTIMIZE, VACUUM | Benchmarking 6 Delta Lake performance and storage hygiene levers across a 50M-row dataset. | [`architecture/08_delta_optimization.md`](./architecture/08_delta_optimization.md) |
+| **09** | **Databricks Technical Manual** | Level 100–400 Curriculum & Production Blueprints | Authoritative 20-page manual covering Split-Plane architecture, Delta Lake internals, Liquid Clustering, Auto Loader, Lakeflow DLT, Unity Catalog, Photon, RocksDB streaming, DABs, FinOps, and Mosaic AI RAG. | [`architecture/09_databricks_intelligence_platform_manual.md`](./architecture/09_databricks_intelligence_platform_manual.md) |
 | **Data**| **Machine-Readable Export** | Full Dataset JSON (`knowledge_base_export.json`) | Machine-readable export with metadata, schema tags, questions, and code snippets for SSGs and RAG. | [`architecture/knowledge_base_export.json`](./architecture/knowledge_base_export.json) |
 
-👉 **[Explore Full Architecture Library](./architecture/README.md)**
+👉 **[Explore Full Architecture Library](./architecture/README.md)** · **[View 52 Whiteboard Blueprints](./whiteboard_diagrams/README.md)** · **[Download Enterprise PDFs](./pdf/README.md)**
 
 ---
 

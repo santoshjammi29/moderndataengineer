@@ -23,6 +23,7 @@ import {
   Bot,
   Flame,
   ArrowRight,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -144,19 +145,31 @@ export function DatabricksManualView() {
             Databricks Asset Bundles (DABs), and System Tables FinOps.
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-[var(--muted-foreground)] font-mono">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 size={13} className="text-emerald-400" /> 8 Technical Modules
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5">
-              <CodeBlock code="" language="sql" className="hidden" />
-              14 Production Code Blueprints
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5">
-              <AlertTriangle size={13} className="text-amber-400" /> 6 Incident Triage Playbooks
-            </span>
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--muted-foreground)] font-mono">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 size={13} className="text-emerald-400" /> 8 Technical Modules
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5">
+                <CodeBlock code="" language="sql" className="hidden" />
+                14 Production Code Blueprints
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle size={13} className="text-amber-400" /> 6 Incident Triage Playbooks
+              </span>
+            </div>
+
+            <a
+              href="/api/download/pdf/databricks_data_intelligence_platform_technical_manual.pdf"
+              download="databricks_data_intelligence_platform_technical_manual.pdf"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-sans text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              title="Download Complete 20-Page A4 PDF Manual"
+            >
+              <Download size={13} />
+              <span>Download 20-Page Technical Manual PDF</span>
+            </a>
           </div>
         </div>
       </div>

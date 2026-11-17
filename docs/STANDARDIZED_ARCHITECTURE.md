@@ -47,12 +47,12 @@ src/
 │   │   └── concepts-client.tsx    # 3-in-1 single-roof view switcher (Glossary, Mindmap, Flashcards)
 │   ├── architecture/
 │   │   ├── page.tsx
-│   │   └── architecture-client.tsx # 36-keyword filter deck & 42 whiteboard blueprints
+│   │   └── architecture-client.tsx # 36-keyword filter deck & 52 whiteboard blueprints
 │   ├── code-practice/             # Unified Code Practice Hub (Drills, Databricks, Matrix, Runbooks)
-│   │   ├── databricks/            # Dedicated Databricks Hub (148+ operations & memory triage)
+│   │   ├── databricks/            # Dedicated Databricks Hub (148+ operations, memory triage & 20-Page Level 100-400 manual)
 │   │   └── code-practice-client.tsx
 │   ├── cheat-sheet/
-│   │   └── cheat-sheet-client.tsx # 7 Master Vector PDFs & PDF Downloads Hub
+│   │   └── cheat-sheet-client.tsx # 11 Master Vector PDFs & PDF Downloads Hub
 │   ├── modern-stack/
 │   │   └── modern-stack-client.tsx # Cloud Platforms & Engine Matrix (10 engines, FinOps, 6 simulators)
 │   ├── spark-engine/

@@ -41,3 +41,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   3. `npm run r2:sync:remote` (idempotent sync of 106+ R2 shards)
   4. `npm run deploy:worker` (Wrangler edge deployment)
 - **Zero Test Regressions**: All 61 test files (509 tests) and `tsc --noEmit` must pass with 100% success before any deployment or task completion.
+- **Repository Asset & PDF Invariants**: The repository maintains 11 published vector A4 PDFs (`docs/pdf/` and `public/cheatsheets/pdf/`) including the 20-page Databricks Technical Manual generated via `scripts/generate_databricks_manual_pdf.py`. All 52 whiteboard blueprints are mirrored in `assets/whiteboards/` and documented in `docs/whiteboard_diagrams/README.md`.

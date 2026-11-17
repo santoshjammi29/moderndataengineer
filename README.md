@@ -79,13 +79,13 @@ The platform hosts the industry's most rigorous, verified catalog of data engine
 | **Guided Tracks** | Learning Tracks | **15 Tracks** | 15 progressive tracks including the new **Governed Agentic Data Platforms** track (`/guided-learning`). |
 | **Career Paths** | Complete Certification Paths | **13 Paths** | 16-Week Production Lakehouse Track, DP-700, DP-600, Databricks Associate/Pro, and legacy DP-203 reference (`/learning-paths`). |
 | **Enterprise Guide** | GCC Enterprise Directory | **156** | Tier-1 Global Capability Centers (Bangalore & Hyderabad) with hiring bars, tech stacks, and interview loops (`/company-research`). |
-| **Visual Blueprints** | Hand-Drawn Whiteboards | **42** | High-resolution blueprints with 5 role perspectives, under-the-hood engine mechanics, and triage runbooks (`/whiteboards`). |
+| **Visual Blueprints** | Hand-Drawn Whiteboards | **52** | High-resolution blueprints across 7 domains with 5 role perspectives, engine mechanisms, triage runbooks, and 100% primary docLinks ([docs/whiteboard_diagrams](docs/whiteboard_diagrams/README.md) & `/whiteboards`). |
 | **Modern Blueprints**| Modern Architecture Blueprints | **18** | End-to-end modern lakehouse, vector pipeline, and CDC stream blueprints (`/modern-stack`). |
 | **Modern Concepts** | Cutting-Edge Primitives | **32** | UniForm, Iceberg v2/v3, LanceDB, Arrow C Data, Liquid Clustering, Data Contracts, ODCS standard (`/modern-stack`). |
 | **Lakehouse FinOps**| Cloud Cost Playbooks | **15** | Cloud Lakehouse FinOps & compute cost reduction playbooks with risk assessments (`/modern-stack`). |
 | **Interactive Labs** | Dynamic Execution Simulators | **6 Simulators** | Spark 3.5 AQE Skew Join Sizer, Table Format Selector, S3 Express Cost Estimator, Cluster Sizer, RAG Sizer, Streaming State Sizer (`/modern-stack`). |
 | **Execution Flows** | Interactive Flow Diagrams | **8 Flows** | Mastery Roadmap, Medallion Flow, Enterprise Stack, SDLC, Pipeline Execution, System Design, Interview Defense, Optimization (`/stages`). |
-| **PDF Downloads** | Compiled Master Vector PDFs | **7 PDFs** | Architecture Master Reference, PySpark, Python, Spark Core, Spark SQL, Incident Runbooks, Master Cheatsheet (`/cheat-sheet`). |
+| **PDF Downloads** | Compiled Master Vector PDFs | **11 PDFs** | **Databricks 20-Page Technical Manual (Level 100–400)**, 47-Page All-in-One Master, Catalyst Triage, Delta vs Iceberg, SDLC Contracts, Runbooks, and 5 Language Suites ([docs/pdf](docs/pdf/README.md) & `/cheat-sheet`). |
 
 ---
 
@@ -144,9 +144,12 @@ flowchart LR
 
 ---
 
-## 🎨 Enterprise Whiteboard Blueprints (42 Architect-Grade Blueprints)
+## 🎨 Enterprise Whiteboard Blueprints (52 Architect-Grade Blueprints)
 
-All 42 blueprints are rendered as high-fidelity hand-drawn digital schematics (available in `src/data/diagrams.ts` and `/public/diagrams/` in WebP & AVIF formats) grouped into 7 core architectural domains. Every single blueprint includes **multi-persona engineering depth**:
+All 52 blueprints are rendered as high-fidelity hand-drawn digital schematics (available in `src/data/diagrams.ts`, `assets/whiteboards/`, and `public/diagrams/` in WebP & AVIF formats) grouped into 7 core architectural domains. The complete repository documentation with Markdown image embeds, multi-persona breakdowns, and primary docLinks is available at:
+👉 **[`docs/whiteboard_diagrams/README.md`](docs/whiteboard_diagrams/README.md)**
+
+Every single blueprint includes **multi-persona engineering depth**:
 
 - **5 Distinct Role Perspectives per Blueprint**:
   - 🏛️ **Lead Data Architect**: Macro system design, multi-cloud federation, SLA/SLO definition, FinOps unit economics, disaster recovery.
@@ -161,13 +164,31 @@ All 42 blueprints are rendered as high-fidelity hand-drawn digital schematics (a
 
 | Architectural Domain | Count | Highlighted Production Blueprints |
 | :--- | :---: | :--- |
-| **Compute & Optimization** | **11** | Catalyst Optimizer & Photon Engine<br>• Shuffle & Memory Architecture<br>• Data Skew & AQE<br>• SaveMode Handling<br>• Join Strategy Decision Matrix<br>• Tungsten Spill Mechanics<br>• Structured Streaming State Store (RocksDB)<br>• Photon vs. JVM<br>• Broadcast & Accumulators<br>• SQL Server Engine Internals |
-| **Storage Engines & Formats** | **8** | Delta Lake ACID Under the Hood<br>• Apache Iceberg Snapshot Tree<br>• Open Table Formats (Delta vs. Iceberg vs. Hudi)<br>• Open File Formats (Parquet vs. ORC vs. Avro)<br>• 6 Delta Optimization Levers<br>• Lakehouse ACID Concurrency Matrix<br>• SCD Types 0–6 in Medallion<br>• Master Enterprise Lakehouse Reference |
-| **Pipelines & Ingestion** | **8** | Apache Airflow Distributed Architecture<br>• dbt Modern Analytics Engineering DAG<br>• Azure Data Factory Hybrid IR<br>• Kafka Event Streaming<br>• CDC with Debezium<br>• Databricks Medallion Architecture<br>• Delta Live Tables (DLT)<br>• Databricks Asset Bundles (DABs) & Serverless CI/CD |
-| **Platform Landscape** | **5** | Databricks Unified Platform Master<br>• Enterprise RAG & Vector Data Pipelines<br>• Modern Python Data (Arrow, Polars, DuckDB)<br>• FinOps & Cloud Cost Optimization<br>• Enterprise Edge & IoT Architecture |
+| **Compute & Optimization** | **11** | Catalyst Optimizer & Photon Engine<br>• Photon vs. JVM C++ Mechanics<br>• Shuffle & Memory Architecture<br>• Data Skew & AQE Dynamic Splitting<br>• SaveMode Handling<br>• Join Strategy Decision Matrix<br>• Tungsten Spill Mechanics<br>• Structured Streaming State Store (RocksDB)<br>• Broadcast & Accumulators<br>• SQL Server Engine Internals |
+| **Storage Engines & Formats** | **9** | Delta Lake ACID Under the Hood<br>• Apache Iceberg Open Table Format<br>• Open Table Formats (Delta vs. Iceberg vs. Hudi)<br>• Open File Formats (Parquet vs. ORC vs. Avro)<br>• 6 Delta Optimization Levers<br>• Lakehouse ACID Concurrency Matrix<br>• SCD Types 1–6 in Medallion<br>• Delta vs. Iceberg Architecture<br>• Table Maintenance Compaction & VACUUM |
+| **Data Pipelines & Ingestion** | **12** | Apache Airflow Distributed Architecture<br>• dbt Modern Analytics Engineering DAG<br>• Azure Data Factory Hybrid IR<br>• Kafka Event Streaming<br>• CDC with Debezium<br>• Databricks Medallion Architecture<br>• Delta Live Tables (DLT)<br>• Databricks Asset Bundles (DABs) & Serverless CI/CD<br>• Auto Loader (`cloudFiles`) Ingestion<br>• Ingestion Strategy Decision Matrix<br>• Streaming DLQ Self-Healing<br>• Orchestration Backfill Lifecycle |
+| **Platform Landscape & AI** | **7** | Databricks Unified Platform Master<br>• Enterprise RAG & Vector Data Pipelines<br>• Governed Agentic RAG Pipeline (Unity Catalog)<br>• Modern Python Data (Arrow, Polars, DuckDB)<br>• FinOps & Cloud Cost Optimization<br>• Enterprise Edge & IoT Architecture<br>• Multi-Region Lakehouse BCDR Failover |
 | **Microsoft Fabric & Power BI** | **4** | Microsoft Fabric Unified Architecture & OneLake<br>• Power BI Direct Lake & VertiPaq<br>• Power BI DAX Engine Mechanics & Context Transition<br>• Fabric OneLake Shortcuts & Direct Lake Mode |
 | **Data Modeling & Architecture** | **4** | Kimball Dimensional Modeling & Star Schema<br>• Data Vault 2.0 Enterprise Modeling<br>• Distributed Systems Resilience & Consensus<br>• Enterprise Data Mesh & Data Products |
-| **Governance & Security** | **2** | Unity Catalog Unified Governance & 3-Level Namespace<br>• Microsoft Purview Unified Metadata & Catalog |
+| **Governance & Security** | **5** | Unity Catalog Unified Governance & 3-Level Namespace<br>• Microsoft Purview Unified Metadata & Catalog<br>• Zero-Trust Access: Dynamic Row Filters & Column Masks<br>• Write-Audit-Publish (WAP) & Data Quality Quarantine<br>• Enterprise Lakehouse CI/CD Promotion Lifecycle |
+
+---
+
+## 📘 Databricks Data Intelligence Platform: End-to-End Technical Manual (Level 100–400)
+
+The repository provides the complete, authoritative **20-page technical reference manual** for the Databricks Lakehouse platform, structured across four sequential mastery tiers:
+
+- **Level 100 (Foundational Architecture)**: Split-Plane security model, Databricks Control Plane vs. Classic & Serverless Compute Planes, ADLS Gen2/S3 integration, cluster modes, and DBU economics.
+- **Level 200 (Delta Lake Storage Internals & Medallion ETL)**: `_delta_log` ACID protocol, atomic JSON commits, compacted Parquet checkpoints, Deletion Vectors (Merge-on-Read), Liquid Clustering (Hilbert curves) vs. Hive/Z-Order, Predictive Optimization, and Delta UniForm (Iceberg/Hudi).
+- **Level 300 (Unity Catalog Governance & Spark/Photon Engine)**: 3-level namespace (`catalog.schema.table`), SQL UDF dynamic row filters & column masking, Lakehouse Federation, Delta Sharing, Catalyst AQE (coalescing, join switching, skew joins), and Photon C++ SIMD vectorization.
+- **Level 400 (Frameworks, Stateful Streaming, DevOps, FinOps & AI)**: Off-heap RocksDB stateful streaming with changelog checkpointing, metadata-driven parameterized ingestion & merge frameworks, Databricks Asset Bundles (DABs) with table update triggers and Chispa unit testing, System Tables FinOps (`system.billing.usage`, `system.query.history`), and Mosaic AI Vector Search RAG with Delta Sync.
+
+| Access Modality | Location / Resource Link |
+| :--- | :--- |
+| **Download 20-Page A4 PDF** | [`docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf`](docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf) |
+| **Interactive Web Manual** | [https://moderndataengineer.uk/code-practice/databricks](https://moderndataengineer.uk/code-practice/databricks) |
+| **Repository Markdown Reference** | [`docs/architecture/09_databricks_intelligence_platform_manual.md`](docs/architecture/09_databricks_intelligence_platform_manual.md) |
+| **Full PDF Library Index** | [`docs/pdf/README.md`](docs/pdf/README.md) · [Web PDF Downloads Hub](https://moderndataengineer.uk/cheat-sheet) |
 
 ---
 

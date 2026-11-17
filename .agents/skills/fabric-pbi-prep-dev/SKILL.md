@@ -33,9 +33,9 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── concepts/                      # 704 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
 │   │   ├── mindmap/                       # Standalone route (cross-links to /concepts single-roof view)
 │   │   ├── qa-prep/                       # 7,084 Q&A scenarios (questions.json [3,414] + data_de.json [3,670])
-│   │   ├── architecture/                  # 3,269 architecture scenarios + 36-keyword filter bar + 42 whiteboard blueprints
-│   │   ├── code-practice/                 # Unified Code Practice Hub: 178 Drills, 148+ Databricks Operations & Triage, 15 Polyglot Matrix, 62 Python Runbooks
-│   │   │   └── databricks/                # Dedicated Databricks Coding Hub (148+ operations & memory triage)
+│   │   ├── architecture/                  # 3,269 architecture scenarios + 36-keyword filter bar + 52 whiteboard blueprints
+│   │   ├── code-practice/                 # Unified Code Practice Hub: 178 Drills, 148+ Databricks Operations & Triage, 15 Polyglot Matrix, 62 Python Runbooks, 20-Page Level 100-400 Technical Manual
+│   │   │   └── databricks/                # Dedicated Databricks Coding Hub (148+ operations & memory triage, 20-page manual download)
 │   │   ├── learning-paths/                # 13 structured career paths (Fabric, Databricks, Azure, AWS, GCP, Snowflake, and 16-Week Production Lakehouse Track)
 │   │   ├── company-research/              # 156 GCC company profiles (BigTech, FinTech, GCCs)
 │   │   ├── modern-stack/                  # Cloud Platforms & Engine Matrix (10 engines, 15 FinOps playbooks, 32 primitives, 6 simulators, AI/RAG)
@@ -43,9 +43,9 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   │   └── catalyst/                  # Catalyst redirect to /spark-catalyst
 │   │   ├── spark-catalyst/                # Spark Catalyst Optimizer & Execution Visualizer
 │   │   ├── visualizer/                    # Spark Execution Visualizer
-│   │   ├── whiteboards/                   # Dedicated Whiteboard Architecture Mastery Hub (42 hand-drawn blueprints)
+│   │   ├── whiteboards/                   # Dedicated Whiteboard Architecture Mastery Hub (52 hand-drawn blueprints & 10 system flows)
 │   │   ├── dataops/                       # DataOps, DABs, and CI/CD automation
-│   │   ├── cheat-sheet/                   # Cheatsheets hub (86 cards) + PDF downloads hub (7 compiled master PDFs)
+│   │   ├── cheat-sheet/                   # Cheatsheets hub (86 cards) + PDF downloads hub (11 compiled master PDFs including 20-Page Technical Manual)
 │   │   ├── studio/                        # Personal learning studio sandbox & goal tracker
 │   │   ├── search-topics/                 # Universal Topic Search Engine (BM25F client reader)
 │   │   ├── security/                      # Security Policy & Responsible Disclosure

@@ -119,7 +119,7 @@ The route map below covers all 30 App Router page entries (20 primary routes and
 | `/dataops` | `tabs=connectivity, cicd, lifecycle, diagram` | Verified. Tool secrets, CI/CD pipelines (GitHub Actions, Azure DevOps, DABs), NIST SSDF controls. | Production deployment and approval gates. |
 | `/studio` | `#bookmarks`, `#architecture-ledger`, personal progress | Verified. Local storage bookmark persistence, export/import, and keyboard accessibility. | Secure client-side state without leakage. |
 | `/visualizer` | Spark execution visualizer | Verified. Step-by-step query execution animator with stage partitions and shuffle boundaries. | Visual shuffle simulation. |
-| `/whiteboards` | `category`, `tab`, `diagram` | Verified. 42 hand-drawn whiteboard systems blueprints across streaming, lakehouse, and AI. | High-resolution SVG diagrams with trade-off rubrics. |
+| `/whiteboards` | `category`, `tab`, `diagram` | Verified. 52 hand-drawn whiteboard systems blueprints across streaming, lakehouse, and AI. | High-resolution SVG diagrams with trade-off rubrics. |
 | `/learning-paths` | `card`/`id`, `#decision-ledger` | Verified. 13 role-based curricula for Data Engineers, Lakehouse Architects, and FinOps Engineers. | Milestone tracking and ADR decision ledger. |
 | `/security` | Security information page | Verified. Vulnerability disclosure protocol, pgp keys, and alignment with `security.txt`. | Accurate security reporting expectations. |
 

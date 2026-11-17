@@ -107,8 +107,114 @@ Click to inspect the master index: 📖 **[105 Use Cases Catalog](./references/p
 
 ---
 
-## 4. Helper Tools & Scripts
+## 4. Helper Tools, References & Technical Manual
 
+- 📘 **[Databricks Data Intelligence Platform: 20-Page Technical Manual (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 100 (Architecture), Level 200 (Delta Lake), Level 300 (Unity Catalog & Photon), and Level 400 (Stateful Streaming, Metadata Frameworks, DABs, FinOps & AI).
+- 📖 **[Authoritative Technical Manual Markdown](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/architecture/09_databricks_intelligence_platform_manual.md)**: Repository documentation of all 8 manual modules and 14 production code blueprints.
 - 🚀 **[SparkSession Bootstrap Script](./scripts/spark_bootstrap.py)**: Auto-detects Databricks vs local environment and configures Delta Lake 3.2.
 - 🧪 **[Notebook AST & Format Validator](./scripts/validate_notebooks.py)**: Validates Databricks cell format and syntax across notebooks.
 - 📝 **[Databricks Notebook Template](./resources/notebook_template.py)**: Clean starter template for new production use cases.
+
+---
+
+## 5. Production PySpark Reference Recipes (Level 100–400)
+
+### 1. Incremental Ingestion with Auto Loader (`cloudFiles`)
+```python
+from pyspark.sql import functions as F
+
+df_bronze = (
+    spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/Volumes/prod_catalog/metadata/schemas/orders")
+    .option("cloudFiles.inferColumnTypes", "true")
+    .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+    .option("rescuedDataColumn", "_rescued_data")
+    .load("abfss://landing@storage.dfs.core.windows.net/raw/orders/")
+    .select("*", "_metadata.file_path", F.current_timestamp().alias("_ingest_ts"))
+)
+
+(
+    df_bronze.writeStream.format("delta")
+    .option("checkpointLocation", "/Volumes/prod_catalog/metadata/checkpoints/orders_bronze")
+    .option("mergeSchema", "true")
+    .trigger(availableNow=True)
+    .toTable("prod_catalog.bronze.orders_raw")
+)
+```
+
+### 2. CDF Micro-Batch Deduplication & Idempotent MERGE
+```python
+from delta.tables import DeltaTable
+from pyspark.sql import Window
+import pyspark.sql.functions as F
+
+def upsert_cdf_to_gold(micro_batch_df, batch_id):
+    if micro_batch_df.isEmpty():
+        return
+
+    win_spec = Window.partitionBy("customer_id").orderBy(F.col("_commit_version").desc())
+    deduped_changes = (
+        micro_batch_df.filter(F.col("_change_type") != "update_preimage")
+        .withColumn("_rn", F.row_number().over(win_spec))
+        .filter(F.col("_rn") == 1)
+        .drop("_rn", "_commit_version", "_commit_timestamp")
+    )
+
+    target_table = DeltaTable.forName(spark, "prod_catalog.gold.dim_customers")
+
+    (
+        target_table.alias("t")
+        .merge(deduped_changes.alias("s"), "t.customer_id = s.customer_id")
+        .whenMatchedDelete(condition="s._change_type = 'delete'")
+        .whenMatchedUpdate(
+            condition="s._change_type != 'delete'",
+            set={"customer_name": "s.customer_name", "tier": "s.tier", "updated_at": "s.updated_at"}
+        )
+        .whenNotMatchedInsert(
+            condition="s._change_type != 'delete'",
+            values={"customer_id": "s.customer_id", "customer_name": "s.customer_name", "tier": "s.tier", "updated_at": "s.updated_at"}
+        )
+        .execute()
+    )
+```
+
+### 3. Stateful Streaming with RocksDB & Event-Time Watermarking
+```python
+import pyspark.sql.functions as F
+
+spark.conf.set("spark.sql.streaming.stateStore.providerClass", "com.databricks.sql.streaming.state.RocksDBStateStoreProvider")
+spark.conf.set("spark.sql.streaming.stateStore.rocksdb.changelogCheckpointing.enabled", "true")
+
+impressions = spark.readStream.table("prod_catalog.bronze.ad_impressions").withWatermark("impression_ts", "10 minutes").alias("imp")
+clicks = spark.readStream.table("prod_catalog.bronze.ad_clicks").withWatermark("click_ts", "20 minutes").alias("clk")
+
+ad_attribution = impressions.join(
+    clicks,
+    F.expr("imp.ad_id = clk.ad_id AND clk.click_ts >= imp.impression_ts AND clk.click_ts <= imp.impression_ts + interval 15 minutes"),
+    "leftOuter"
+)
+```
+
+### 4. Unit Testing DataFrames with Pytest & Chispa
+```python
+import pytest
+from pyspark.sql import SparkSession
+from chispa.dataframe_comparer import assert_df_equality
+import pyspark.sql.functions as F
+
+@pytest.fixture(scope="session")
+def spark():
+    return (
+        SparkSession.builder.master("local[2]")
+        .appName("lakehouse-unit-tests")
+        .config("spark.sql.shuffle.partitions", "2")
+        .getOrCreate()
+    )
+
+def test_standardize_orders_cleans_and_deduplicates(spark):
+    input_df = spark.createDataFrame([("ORD-101", " shipped "), ("ORD-101", "shipped"), (None, "cancelled")], ["order_id", "status"])
+    expected_df = spark.createDataFrame([("ORD-101", "SHIPPED")], ["order_id", "status"])
+    clean_df = input_df.filter(F.col("order_id").isNotNull()).withColumn("status", F.upper(F.trim(F.col("status")))).dropDuplicates(["order_id"])
+    assert_df_equality(clean_df, expected_df, ignore_nullable=True)
+```

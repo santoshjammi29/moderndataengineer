@@ -20,7 +20,7 @@
 | Document | Primary Scope | Operational Focus | Direct Link |
 | :--- | :--- | :--- | :--- |
 | **Development & Operations Guide** | Project architecture, Server Data Layer, Vitest suite, Cloudflare OpenNext | App Router folder layout, Zero-Bundle Data Mandate, 61-file test suite, 4-step deployment pipeline. | [`development_guide.md`](./development_guide.md) |
-| **Platform Engineering Roadmap** | Completed milestones & future architectural expansions | BM25F search, Databricks 148+ operations hub, 7 master PDFs, single-roof concepts & mindmap. | [`roadmap.md`](./roadmap.md) |
+| **Platform Engineering Roadmap** | Completed milestones & future architectural expansions | BM25F search, Databricks 148+ operations hub, 11 master PDFs, 52 whiteboard blueprints, single-roof concepts & mindmap. | [`roadmap.md`](./roadmap.md) |
 | **Workers for Platforms** | Dynamic tenant isolation and customer workers | Edge sandboxing, execution safety, and container isolation. | [`workers-for-platforms.md`](./workers-for-platforms.md) |
 
 ---

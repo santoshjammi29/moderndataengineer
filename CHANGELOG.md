@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.1 — Databricks Data Intelligence Platform Manual, 52-Blueprint Whiteboard Mastery & 11-PDF Enterprise Library (2026-11-17)
+
+### 📘 Databricks Data Intelligence Platform: End-to-End Technical Manual (Level 100–400)
+- **Authoritative 20-Page Technical Reference Manual**: Complete end-to-end curriculum progression spanning Level 100 (Foundational Architecture), Level 200 (Delta Lake Internals & Medallion ETL), Level 300 (Unity Catalog Governance & Spark/Photon Engine), and Level 400 (Metadata Frameworks, Stateful Streaming, CI/CD Asset Bundles, FinOps & Mosaic AI).
+- **Direct PDF Download & Web Integration**: Generated vector A4 printable manual (`docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf` & `public/cheatsheets/pdf/`), integrated download CTA in `/code-practice/databricks` manual viewer, and registered in `/api/download/pdf/[filename]` route.
+- **Repository Architecture Documentation**: Created `docs/architecture/09_databricks_intelligence_platform_manual.md` documenting all 8 modules and 14 production blueprints.
+
+### 🎨 52 Architecture Whiteboard Blueprints & Repository Mirror
+- **Expanded Whiteboard Catalog**: Consolidated all 52 blueprints across 7 architectural domains (Compute & Optimization, Storage Engines, Pipelines & Ingestion, Platform Landscape & AI, Microsoft Fabric, Data Modeling, Governance & Security).
+- **Repository Markdown Sitemaps**: Generated `docs/whiteboard_diagrams/README.md` containing all 52 blueprints with relative image embeds, 5-role persona breakdowns (Architect, Senior DE, DE, Steward, BI Analyst), engine-level mechanisms, triage playbooks, and primary documentation links.
+- **Asset Mirroring**: Mirrored all 52 WebP diagrams into `assets/whiteboards/` for direct offline browsing and Git repository tracking.
+
+### 📄 11-Document Master A4 Vector PDF Library
+- **PDF Downloads Hub Update**: Expanded library under `/cheat-sheet` and `docs/pdf/` to 11 master vector documents with 33 hierarchical bookmarks, ISO 216 standard A4 layouts, and 250 DPI thumbnail previews.
+- **TOC & Document Metadata**: Generated full Table of Contents metadata across all PDF documents.
+
+### 🧪 Quality Gates & Tests
+- **Zero Test Regressions**: All 61 test files (509 tests) passing with 100% success rate.
+
+---
+
 ## v2.0 — Evidence-Led Lakehouse Expansion, Interactive Simulators & Sourced Standards (2026-11-12)
 
 ### 🔬 Sourced Evidence Expansion & 21 Primary Research Standards

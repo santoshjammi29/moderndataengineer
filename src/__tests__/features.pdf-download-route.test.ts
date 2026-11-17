@@ -64,6 +64,14 @@ describe('PDF Download Route API (/api/download/pdf/[filename])', () => {
     expect(res.headers.get('Content-Disposition')).toContain('attachment; filename="lakehouse_table_formats_delta_iceberg_guide.pdf"');
   });
 
+  it('serves databricks_data_intelligence_platform_technical_manual.pdf with attachment Content-Disposition', async () => {
+    const req = new NextRequest('http://localhost:3000/api/download/pdf/databricks_data_intelligence_platform_technical_manual.pdf');
+    const res = await GET(req, { params: Promise.resolve({ filename: 'databricks_data_intelligence_platform_technical_manual.pdf' }) });
+    expect(res.status).toBe(200);
+    expect(res.headers.get('Content-Type')).toBe('application/pdf');
+    expect(res.headers.get('Content-Disposition')).toContain('attachment; filename="databricks_data_intelligence_platform_technical_manual.pdf"');
+  });
+
   it('serves data_engineering_sdlc_and_data_contracts_guide.pdf with attachment Content-Disposition', async () => {
     const req = new NextRequest('http://localhost:3000/api/download/pdf/data_engineering_sdlc_and_data_contracts_guide.pdf');
     const res = await GET(req, { params: Promise.resolve({ filename: 'data_engineering_sdlc_and_data_contracts_guide.pdf' }) });

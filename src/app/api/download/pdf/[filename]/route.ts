@@ -5,6 +5,7 @@ import path from 'path';
 export const runtime = 'nodejs';
 
 const ALLOWED_PDFS = new Set([
+  'databricks_data_intelligence_platform_technical_manual.pdf',
   'databricks_master_cheatsheet.pdf',
   'databricks_sparksql_cheatsheet.pdf',
   'databricks_pyspark_cheatsheet.pdf',

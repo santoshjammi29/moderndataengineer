@@ -25,6 +25,12 @@ The source notebooks use Databricks notebook `.py` format and span open-source S
 
 Treat notebooks as worked examples to adapt, not as proof that code ran in the user's environment. State when a recipe is unexecuted. Only claim performance gains when baseline and after measurements exist for the relevant workload. For current vendor APIs or compatibility claims, verify against current primary documentation when that information can drift.
 
+## Reference Manuals & Technical Documentation
+
+- 📘 **[Databricks Data Intelligence Platform 20-Page Technical Manual (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 100 (Architecture), Level 200 (Delta Lake), Level 300 (Unity Catalog & Photon), and Level 400 (DevOps, Streaming, FinOps & AI).
+- 📖 **[Authoritative Technical Manual Markdown](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/architecture/09_databricks_intelligence_platform_manual.md)**: Repository markdown reference of all 8 modules and 14 production blueprints.
+- 📐 **[52 Architecture Whiteboard Blueprints Catalog](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/whiteboard_diagrams/README.md)**: Visual whiteboard schematics with multi-persona breakdowns.
+
 ## Source and license
 
 The source notebooks and configuration files are from the MIT-licensed [PySpark Handbook repository](https://github.com/santoshjammi29/pyspark-handbook). The imported source snapshot and commit are recorded in [UPSTREAM.md](../UPSTREAM.md); the repository license is included as `LICENSE`.

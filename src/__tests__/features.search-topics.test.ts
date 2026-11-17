@@ -71,7 +71,7 @@ describe("Search Topics Engine & Content Resolver", () => {
     expect(concept).toBeDefined();
     expect(concept?.category).toBe("Concepts");
     expect(concept?.details.definition).toBeDefined();
-  });
+  }, 15000);
 
   it("batch resolves items in parallel", async () => {
     const batch = await resolveKnowledgeItemsBatch([

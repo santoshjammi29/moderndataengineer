@@ -110,8 +110,51 @@ spark.executor.extraJavaOptions = -XX:+UseG1GC -XX:InitiatingHeapOccupancyPercen
 
 ---
 
-## 4. Reference Manuals & Diagnostic Tools
+## 4. The 5 S's Physical Plan Diagnostic Matrix
 
+Performance bottlenecks in distributed Spark workloads fall into five root causes—**Spill, Skew, Shuffle, Storage, and Serialization (the 5 S's)**:
+
+| Physical Plan Operator | Engine Mode | Execution Behavior | Optimization Action |
+| :--- | :--- | :--- | :--- |
+| `PhotonScan` / `PhotonProject` | Photon C++ | Vectorized columnar scan and filter evaluation | Verify `PartitionFilters` and `DataFilters` are populated (predicate pushdown active). |
+| `PhotonBroadcastHashJoin` | Photon C++ | Zero-shuffle hash join using broadcasted small table | Optimal join strategy for dimension tables < 100 MB. |
+| `SortMergeJoin` | Spark / Photon | Shuffles and sorts both datasets across network | Ensure AQE is enabled; apply Liquid Clustering on join keys or use Broadcast hint if one side is small. |
+| `BroadcastNestedLoopJoin` | Spark / Photon | O(N × M) Cartesian loop caused by non-equi join condition | Rewrite inequality joins into equi-joins or enable Databricks Range Join optimization bin hints. |
+| `BatchEvalPython` / `ArrowEvalPython` | Python Worker | Breaks out of Photon C++ to run Python code | Refactor into native Spark SQL expressions or SQL UDFs so Photon remains 100% vectorized. |
+
+### Explicit Skew Mitigation Pattern: Splitting NULL Keys Before Left Outer Join
+```python
+import pyspark.sql.functions as F
+
+df_orders_valid = orders_df.filter(F.col("customer_id").isNotNull())
+df_orders_null = orders_df.filter(F.col("customer_id").isNull())
+
+# Join only non-null keys to prevent millions of NULL rows from landing on a single executor
+df_joined_valid = df_orders_valid.join(customers_df, on="customer_id", how="left")
+
+# Union back the NULL rows with empty dimension columns
+df_final = df_joined_valid.unionByName(df_orders_null, allowMissingColumns=True)
+```
+
+---
+
+## 5. Production Incident Resolution Playbook (Level 400 Reference)
+
+| Production Symptom | Spark UI / System Root Cause Diagnosis | Actionable Engineering Resolution |
+| :--- | :--- | :--- |
+| **Straggler Task** *(199/200 tasks finished, 1 hanging)* | **Data Skew:** Max task duration and Shuffle Read Size are 10x–100x larger than 75th percentile. | 1. Filter out NULL join keys before joining and union back afterward.<br>2. Verify `spark.sql.adaptive.skewJoin.enabled = true`.<br>3. Apply salted keys (`concat(key, '_', floor(rand() * 16))`). |
+| **High Memory & Disk Spill** | **Partition Memory Exhaustion:** Shuffle partitions exceed executor RAM per core. | 1. Set `spark.sql.shuffle.partitions = auto` so AQE splits oversized partitions.<br>2. Switch to memory-optimized worker VMs.<br>3. Eliminate unbounded Window functions lacking a `PARTITION BY` clause. |
+| **Driver `OutOfMemoryError`** | **Driver Heap Exhaustion:** Calling `.collect()`, `.toPandas()`, or broadcasting large tables. | 1. Replace `.collect()` with distributed PySpark writes.<br>2. Reduce `spark.sql.autoBroadcastJoinThreshold`.<br>3. Scale up the Driver node instance size vertically. |
+| **Slow Scans & High Metadata Latency** | **Small File Problem:** Thousands of KB-sized Parquet files from streaming or over-partitioning. | 1. Migrate from Hive partitioning to **Liquid Clustering** (`CLUSTER BY`).<br>2. Enable Predictive Optimization or `autoOptimize`.<br>3. Execute `OPTIMIZE table_name`. |
+| **`ConcurrentAppendException`** | **OCC Conflict:** Two concurrent jobs updating overlapping Parquet files. | 1. Enable **Deletion Vectors** and Row Tracking for row-level concurrency.<br>2. Add explicit target clustering key filters inside `MERGE ON` predicates. |
+| **`PhotonToSpark` Transition** | **Vectorization Breakout:** Custom Python UDF forces Photon to convert batches to JVM rows. | 1. Inspect SQL DAG for `BatchEvalPython`.<br>2. Rewrite Python UDFs using native `pyspark.sql.functions` or SQL Higher-Order Functions. |
+
+---
+
+## 6. Reference Manuals, Guides & Diagnostic Tools
+
+- 📘 **[Databricks Data Intelligence Platform 20-Page Manual (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum covering compute, Delta Lake, Photon, and incident resolution.
+- 📄 **[Catalyst Optimizer & Execution Plan Triage Guide (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/spark_execution_plan_and_catalyst_triage_guide.pdf)**: 12 high-impact cards on plan reading, physical operators, and bottleneck elimination.
 - 🚨 **[Production Triage Decision Matrix](./references/production_triage_decision_matrix.md)**: Fast symptom-to-fix lookup table.
 - 📊 **[Spark UI & EventLog Analysis Guide](./references/spark_ui_eventlog_analysis.md)**: Reading stage timelines, executor metrics, and query plans.
 - ⚙️ **[AQE Configuration & Tuning Reference](./references/aqe_configuration_reference.md)**: Dynamic coalescing, join switching, and skew join configs.

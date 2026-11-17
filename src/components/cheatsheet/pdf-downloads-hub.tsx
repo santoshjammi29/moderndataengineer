@@ -40,6 +40,28 @@ export interface PdfDocumentMeta {
 
 export const MASTER_PDF_SUITES: PdfDocumentMeta[] = [
   {
+    id: "databricks_manual",
+    title: "Databricks Data Intelligence Platform: End-to-End Technical Manual",
+    subtitle: "Definitive 20-Page Master A4 Vector PDF · Level 100 to Level 400",
+    description:
+      "Structured progression from foundational cloud architecture (Level 100) to principal production design (Level 400), covering Split-Plane architecture, Delta Lake internals, Liquid Clustering, Auto Loader, Lakeflow DLT, Unity Catalog, Catalyst AQE & Photon C++ engine, RocksDB stateful streaming, DABs, FinOps, and Mosaic AI RAG.",
+    pages: 20,
+    fileSize: "1.4 MB",
+    pdfUrl: "/cheatsheets/pdf/databricks_data_intelligence_platform_technical_manual.pdf",
+    htmlUrl: "/cheatsheets/html/databricks_data_intelligence_platform_technical_manual.html",
+    thumbnailUrl: "/cheatsheets/images/databricks_manual_page_1.png",
+    category: "master",
+    badge: "Level 100–400 Manual",
+    badgeColor: "bg-red-500/20 text-red-300 border-red-500/40",
+    highlights: [
+      "Level 100: Split-Plane Architecture, Classic vs Serverless & DBU Economics",
+      "Level 200: Delta ACID Log, Deletion Vectors (MoR), Liquid Clustering & UniForm",
+      "Level 300: Auto Loader, CDF Deduplication, Unity Catalog & Photon Engine",
+      "Level 400: RocksDB Streaming, DABs CI/CD, Chispa, System Tables & Mosaic AI",
+    ],
+    cardsCount: 32,
+  },
+  {
     id: "all_in_one_master",
     title: "Complete Lakehouse Architecture & Runbooks Enterprise Reference (All-in-One Master)",
     subtitle: "Definitive 47-Page Master A4 Vector PDF · Complete Enterprise Handbook",
@@ -347,7 +369,7 @@ export function PdfDownloadsHub() {
         {/* Category Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
           {[
-            { id: "ALL", label: "All PDF Suites (10)", icon: Layers },
+            { id: "ALL", label: `All PDF Suites (${MASTER_PDF_SUITES.length})`, icon: Layers },
             { id: "guides", label: "Reference Guides (3)", icon: BookOpen },
             { id: "master", label: "Master Editions", icon: Sparkles },
             { id: "sparksql", label: "Spark SQL", icon: Terminal },
