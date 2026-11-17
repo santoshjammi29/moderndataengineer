@@ -28,6 +28,7 @@ import {
   Network,
   ZoomIn,
   ZoomOut,
+  Info,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -121,6 +122,18 @@ export function ConceptsMindmapView({
 
   // Selected Concept for Detail Inspector
   const [selectedConcept, setSelectedConcept] = useState<Concept | null>(null);
+
+  // Definitions toggle state: reveal definitions inline across Level 1, 2, and 3
+  const [definitionsVisible, setDefinitionsVisible] = useState<boolean>(false);
+
+  // Selected Topic Pillar for Domain Definition Inspector Dialog
+  const [selectedTopicInfo, setSelectedTopicInfo] = useState<ConceptTopicPillar | null>(null);
+
+  // Selected Subtopic Pillar for Subtopic Definition Inspector Dialog
+  const [selectedSubtopicInfo, setSelectedSubtopicInfo] = useState<{
+    topic: ConceptTopicPillar;
+    subtopic: ConceptSubtopicPillar;
+  } | null>(null);
   const [copied, setCopied] = useState(false);
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
     try {
@@ -362,7 +375,7 @@ export function ConceptsMindmapView({
 
   // Keyboard navigation when focus mode / modal is open
   React.useEffect(() => {
-    if (!selectedConcept) return;
+    if (!selectedConcept && !selectedTopicInfo && !selectedSubtopicInfo) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -377,11 +390,13 @@ export function ConceptsMindmapView({
 
       if (e.key === "Escape") {
         e.preventDefault();
-        setSelectedConcept(null);
-      } else if (e.key === "ArrowLeft") {
+        if (selectedConcept) setSelectedConcept(null);
+        else if (selectedTopicInfo) setSelectedTopicInfo(null);
+        else if (selectedSubtopicInfo) setSelectedSubtopicInfo(null);
+      } else if (e.key === "ArrowLeft" && selectedConcept) {
         e.preventDefault();
         handlePrevConcept();
-      } else if (e.key === "ArrowRight") {
+      } else if (e.key === "ArrowRight" && selectedConcept) {
         e.preventDefault();
         handleNextConcept();
       }
@@ -391,7 +406,7 @@ export function ConceptsMindmapView({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedConcept, handlePrevConcept, handleNextConcept]);
+  }, [selectedConcept, selectedTopicInfo, selectedSubtopicInfo, handlePrevConcept, handleNextConcept]);
 
   return (
     <div className="space-y-4">
@@ -642,6 +657,23 @@ export function ConceptsMindmapView({
                 </button>
               </div>
 
+              {/* 3-Level Definitions Toggle Switch */}
+              <button
+                type="button"
+                onClick={() => setDefinitionsVisible((v) => !v)}
+                className={cn(
+                  "px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer inline-flex items-center gap-1.5 border",
+                  definitionsVisible
+                    ? "bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-2xs font-bold ring-1 ring-amber-400/30"
+                    : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
+                )}
+                title="Toggle 3-Level Definitions preview (Level 1 Domains, Level 2 Subtopics, Level 3 Concepts)"
+                aria-label="Toggle Definitions"
+              >
+                <BookOpen size={12} className={definitionsVisible ? "text-amber-400" : ""} />
+                <span>{definitionsVisible ? "Definitions: ON" : "Show Definitions"}</span>
+              </button>
+
               {/* Zoom controls */}
               <div className="flex items-center gap-0.5 px-1 py-0.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs">
                 <button
@@ -769,459 +801,699 @@ export function ConceptsMindmapView({
               className="p-8 sm:p-16 min-w-max flex items-center justify-center"
             >
               {mindmapStyle === "bilateral" ? (
-                /* ─── BILATERAL BRAINSTORM FLOW (CANVA STYLE) ─── */
-                <div className="relative flex items-center justify-center gap-6 sm:gap-10 min-w-max">
-                  {/* LEFT WING DOMAINS */}
-                  <div className="flex flex-col justify-around gap-6 items-end shrink-0">
-                    {filteredTree
-                      .slice(0, Math.ceil(filteredTree.length / 2))
-                      .map((topic, tIdx, arr) => {
-                        const isTopicExpanded = expandedTopics.has(topic.id);
+                /* ─── BILATERAL BRAINSTORM FLOW (CANVA STYLE WITH 3-LEVEL SUB-BRANCHES) ─── */
+                (() => {
+                  const leftTopics = filteredTree.slice(0, Math.ceil(filteredTree.length / 2));
+                  const rightTopics = filteredTree.slice(Math.ceil(filteredTree.length / 2));
 
-                        return (
-                          <div key={topic.id} className="flex items-center justify-end group relative">
-                            {/* Level 3 Concepts & Level 2 Subtopics on Far Left */}
-                            {isTopicExpanded && topic.subtopics.length > 0 && (
-                              <div className="flex items-center justify-end">
-                                {/* Subtopics Column on Left */}
-                                <div className="flex flex-col justify-around gap-3.5 py-1 items-end">
-                                  {topic.subtopics.map((subtopic) => {
-                                    const isSubExpanded = expandedSubtopics.has(subtopic.id);
+                  const getSubHeight = (sub: ConceptSubtopicPillar) => {
+                    const isExp = expandedSubtopics.has(sub.id);
+                    if (!isExp || sub.concepts.length === 0) return 44;
+                    return Math.max(sub.concepts.length * (definitionsVisible ? 68 : 36), 44);
+                  };
 
-                                    return (
-                                      <div key={subtopic.id} className="flex items-center justify-end gap-2.5">
-                                        {/* Level 3 Concept Name Pills on far left */}
-                                        {isSubExpanded && subtopic.concepts.length > 0 && (
-                                          <div className="flex items-center gap-2 pr-1">
-                                            <div className="flex flex-wrap items-center justify-end gap-1.5 max-w-lg">
-                                              {subtopic.concepts.map((concept) => {
-                                                const isSelected = selectedConcept?.id === concept.id;
-                                                const isBookmarked = bookmarkedIds.has(concept.id);
-                                                const isMatch = activeSearch.trim() && (
-                                                  concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
-                                                  concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
-                                                );
+                  const getTopicHeight = (top: ConceptTopicPillar) => {
+                    const isExp = expandedTopics.has(top.id);
+                    if (!isExp || top.subtopics.length === 0) return 56;
+                    const sHeights = top.subtopics.map(getSubHeight);
+                    return Math.max(
+                      sHeights.reduce((a, b) => a + b, 0) + (top.subtopics.length - 1) * 14,
+                      56
+                    );
+                  };
 
-                                                const dotColor =
-                                                  concept.difficulty === "EASY"
-                                                    ? "bg-emerald-500"
-                                                    : concept.difficulty === "MEDIUM"
-                                                    ? "bg-blue-500"
-                                                    : concept.difficulty === "HARD"
-                                                    ? "bg-amber-500"
-                                                    : "bg-purple-500";
+                  const getWingHeight = (wingTopics: ConceptTopicPillar[]) => {
+                    if (wingTopics.length === 0) return 200;
+                    const heights = wingTopics.map(getTopicHeight);
+                    return Math.max(
+                      heights.reduce((a, b) => a + b, 0) + (wingTopics.length - 1) * 24,
+                      200
+                    );
+                  };
 
-                                                return (
-                                                  <button
-                                                    key={concept.id}
-                                                    type="button"
-                                                    onClick={() => setSelectedConcept(concept)}
-                                                    title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
-                                                    className={cn(
-                                                      "group/pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95",
-                                                      isSelected
-                                                        ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
-                                                        : isMatch
-                                                        ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
-                                                        : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
-                                                    )}
-                                                    style={{
-                                                      borderRightColor: !isSelected && !isMatch ? topic.colorHex : undefined,
-                                                      borderRightWidth: !isSelected && !isMatch ? "2.5px" : undefined,
-                                                    }}
-                                                  >
-                                                    {isBookmarked && (
-                                                      <BookmarkCheck size={11} className="text-amber-400 shrink-0" />
-                                                    )}
-                                                    <span className="truncate max-w-[240px] sm:max-w-none">{concept.term}</span>
-                                                    <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
-                                                  </button>
-                                                );
-                                              })}
-                                            </div>
-                                            {/* Delicate connector stem */}
-                                            <svg width="24" height="12" className="shrink-0 pointer-events-none">
-                                              <line x1="0" y1="6" x2="24" y2="6" stroke={topic.colorHex} strokeWidth="1.5" strokeDasharray="3 3" />
-                                              <circle cx="0" cy="6" r="2.5" fill={topic.colorHex} />
-                                            </svg>
-                                          </div>
-                                        )}
+                  const leftWingHeight = getWingHeight(leftTopics);
+                  const rightWingHeight = getWingHeight(rightTopics);
 
-                                        {/* Level 2 Subtopic Node */}
-                                        <div
-                                          onClick={() => toggleSubtopic(subtopic.id)}
-                                          className={cn(
-                                            "shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-right shadow-2xs",
-                                            isSubExpanded
-                                              ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
-                                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
-                                          )}
-                                        >
-                                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold mr-0.5">
-                                            {subtopic.concepts.length}
-                                          </span>
-                                          <span className="text-xs font-semibold text-[var(--foreground)]">
-                                            {subtopic.title}
-                                          </span>
-                                          <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
-                                            L2 Subtopic
-                                          </span>
-                                          <button
-                                            type="button"
-                                            className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
-                                            aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
-                                          >
-                                            {isSubExpanded ? <ChevronDown size={12} /> : <ChevronLeft size={12} />}
-                                          </button>
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
+                  const renderConceptPillOrCard = (concept: Concept, topic: ConceptTopicPillar, isLeft: boolean) => {
+                    const isSelected = selectedConcept?.id === concept.id;
+                    const isBookmarked = bookmarkedIds.has(concept.id);
+                    const isMatch = activeSearch.trim() && (
+                      concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
+                      concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
+                    );
 
-                                {/* Flowing curved SVG branch from Subtopics to Domain Node */}
-                                <svg
-                                  width="48"
-                                  height={Math.max(topic.subtopics.length * 56, 48)}
-                                  className="shrink-0 pointer-events-none overflow-visible"
-                                  style={{ minWidth: 48 }}
-                                >
-                                  {topic.subtopics.map((sub, sIdx) => {
-                                    const H = Math.max(topic.subtopics.length * 56, 48);
-                                    const startY = topic.subtopics.length === 1 ? H / 2 : ((sIdx + 0.5) / topic.subtopics.length) * H;
-                                    const endY = H / 2;
-                                    return (
-                                      <g key={sub.id}>
-                                        <path
-                                          d={`M 0,${startY} C 22,${startY} 26,${endY} 48,${endY}`}
-                                          fill="none"
-                                          stroke={topic.colorHex}
-                                          strokeWidth="2.5"
-                                          strokeLinecap="round"
-                                          className="opacity-75 transition-opacity"
-                                        />
-                                        <circle cx="0" cy={startY} r="3" fill={topic.colorHex} />
-                                      </g>
-                                    );
-                                  })}
-                                </svg>
-                              </div>
-                            )}
+                    const dotColor =
+                      concept.difficulty === "EASY"
+                        ? "bg-emerald-500"
+                        : concept.difficulty === "MEDIUM"
+                        ? "bg-blue-500"
+                        : concept.difficulty === "HARD"
+                        ? "bg-amber-500"
+                        : "bg-purple-500";
 
-                            {/* Level 1 Domain Node */}
-                            <div
-                              onClick={() => toggleTopic(topic.id)}
-                              className={cn(
-                                "shrink-0 inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm",
-                                isTopicExpanded
-                                  ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
-                                  : "bg-[var(--surface-1)] hover:border-purple-500/40"
-                              )}
-                              style={{ borderColor: topic.colorHex }}
-                            >
-                              <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] mr-1">
-                                {topic.matchingCount}
-                              </span>
-                              <div className="text-right">
-                                <div className="flex items-center justify-end gap-1.5">
-                                  <span
-                                    className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
-                                    style={{
-                                      backgroundColor: `${topic.colorHex}15`,
-                                      color: topic.colorHex,
-                                      borderColor: `${topic.colorHex}30`,
-                                    }}
-                                  >
-                                    {topic.categoryKey}
-                                  </span>
-                                  <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
-                                    L1 Domain
-                                  </span>
-                                </div>
-                                <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
-                                  {topic.title}
-                                </h3>
-                              </div>
-                              <div
-                                className="p-1.5 rounded-xl border text-white shadow-xs"
-                                style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
-                              >
-                                <TopicIcon topic={topic.icon} size={16} />
-                              </div>
-                              <button
-                                type="button"
-                                className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
-                                aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
-                              >
-                                {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronLeft size={14} />}
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
+                    const diffMeta = difficultyColors[concept.difficulty] || difficultyColors.MEDIUM;
 
-                  {/* Left SVG Branching Splines from Central Hub to Left Domains */}
-                  <svg
-                    width="56"
-                    height={Math.max(Math.ceil(filteredTree.length / 2) * 80, 200)}
-                    className="shrink-0 pointer-events-none overflow-visible"
-                    style={{ minWidth: 56 }}
-                  >
-                    {filteredTree.slice(0, Math.ceil(filteredTree.length / 2)).map((lt, lIdx, arr) => {
-                      const H = Math.max(arr.length * 80, 200);
-                      const startY = H / 2;
-                      const endY = arr.length === 1 ? startY : ((lIdx + 0.5) / arr.length) * H;
+                    if (definitionsVisible) {
                       return (
-                        <g key={lt.id}>
-                          <path
-                            d={`M 56,${startY} C 28,${startY} 28,${endY} 0,${endY}`}
-                            fill="none"
-                            stroke={lt.colorHex}
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            className="opacity-80 transition-opacity"
-                          />
-                          <circle cx="0" cy={endY} r="3.5" fill={lt.colorHex} />
-                        </g>
+                        <div
+                          key={concept.id}
+                          onClick={() => setSelectedConcept(concept)}
+                          className={cn(
+                            "rounded-xl p-2.5 border transition-all cursor-pointer select-none space-y-1 text-left shadow-2xs hover:scale-102 active:scale-98 max-w-[260px]",
+                            isSelected
+                              ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
+                              : isMatch
+                              ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
+                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                          )}
+                          style={{
+                            [isLeft ? "borderRightColor" : "borderLeftColor"]: !isSelected && !isMatch ? topic.colorHex : undefined,
+                            [isLeft ? "borderRightWidth" : "borderLeftWidth"]: !isSelected && !isMatch ? "3px" : undefined,
+                          }}
+                        >
+                          <div className="flex items-center justify-between gap-1.5">
+                            <span className={cn("text-xs font-bold truncate", isSelected ? "text-white" : "text-[var(--foreground)]")}>
+                              {concept.term}
+                            </span>
+                            <span
+                              className={cn(
+                                "text-[8.5px] font-bold px-1.5 py-0.2 rounded-sm border uppercase shrink-0",
+                                isSelected
+                                  ? "bg-white/20 text-white border-white/30"
+                                  : `${diffMeta.bg} ${diffMeta.text} ${diffMeta.border}`
+                              )}
+                            >
+                              {concept.difficulty}
+                            </span>
+                          </div>
+                          <p
+                            className={cn(
+                              "text-[10px] line-clamp-2 leading-tight",
+                              isSelected ? "text-white/90" : "text-[var(--muted-foreground)]"
+                            )}
+                          >
+                            {concept.definition}
+                          </p>
+                        </div>
                       );
-                    })}
-                  </svg>
+                    }
 
-                  {/* LEVEL 0: CENTRAL CORE ROOT HUB (CANVA ORG ROOT) */}
-                  <div className="shrink-0 relative z-20 flex flex-col items-center px-2">
-                    <div className="relative p-5 sm:p-6 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[280px] space-y-2.5 ring-4 ring-purple-500/10">
-                      <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md">
-                        <Network size={26} />
+                    return (
+                      <button
+                        key={concept.id}
+                        type="button"
+                        onClick={() => setSelectedConcept(concept)}
+                        title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
+                        className={cn(
+                          "group/pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95",
+                          isSelected
+                            ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
+                            : isMatch
+                            ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
+                            : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                        )}
+                        style={{
+                          [isLeft ? "borderRightColor" : "borderLeftColor"]: !isSelected && !isMatch ? topic.colorHex : undefined,
+                          [isLeft ? "borderRightWidth" : "borderLeftWidth"]: !isSelected && !isMatch ? "2.5px" : undefined,
+                        }}
+                      >
+                        {isLeft && isBookmarked && (
+                          <BookmarkCheck size={11} className="text-amber-400 shrink-0" />
+                        )}
+                        <span className="truncate max-w-[220px] sm:max-w-none">{concept.term}</span>
+                        <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
+                        {!isLeft && isBookmarked && (
+                          <BookmarkCheck size={11} className="text-amber-400 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  };
+
+                  return (
+                    <div className="relative flex items-center justify-center gap-6 sm:gap-10 min-w-max">
+                      {/* ─── LEFT WING DOMAINS (BRANCHES & SUB-BRANCHES) ─── */}
+                      <div className="flex flex-col justify-around gap-6 items-end shrink-0">
+                        {leftTopics.map((topic, tIdx) => {
+                          const isTopicExpanded = expandedTopics.has(topic.id);
+                          const curTopicHeight = getTopicHeight(topic);
+
+                          return (
+                            <div
+                              key={topic.id}
+                              className="flex items-center justify-end group relative"
+                              style={{ minHeight: curTopicHeight }}
+                            >
+                              {/* Level 3 Concepts & Level 2 Subtopics on Far Left */}
+                              {isTopicExpanded && topic.subtopics.length > 0 && (
+                                <div className="flex items-center justify-end">
+                                  {/* Subtopics Column on Left */}
+                                  <div
+                                    className="flex flex-col justify-around gap-3.5 py-1 items-end"
+                                    style={{ height: curTopicHeight }}
+                                  >
+                                    {topic.subtopics.map((subtopic) => {
+                                      const isSubExpanded = expandedSubtopics.has(subtopic.id);
+                                      const curSubHeight = getSubHeight(subtopic);
+
+                                      return (
+                                        <div
+                                          key={subtopic.id}
+                                          className="flex items-center justify-end"
+                                          style={{ height: curSubHeight }}
+                                        >
+                                          {/* Level 3 Concepts (far left) & Organic Sub-Branches */}
+                                          {isSubExpanded && subtopic.concepts.length > 0 && (
+                                            <div className="flex items-center justify-end">
+                                              {/* Vertical Concepts Column */}
+                                              <div
+                                                className="flex flex-col justify-around items-end gap-1.5 pr-0.5"
+                                                style={{ height: curSubHeight }}
+                                              >
+                                                {subtopic.concepts.map((concept) =>
+                                                  renderConceptPillOrCard(concept, topic, true)
+                                                )}
+                                              </div>
+
+                                              {/* Level 2 Subtopic -> Level 3 Concepts Organic Branching Splines */}
+                                              <svg
+                                                width="40"
+                                                height={curSubHeight}
+                                                className="shrink-0 pointer-events-none overflow-visible"
+                                                style={{ minWidth: 40 }}
+                                              >
+                                                {subtopic.concepts.map((concept, cIdx) => {
+                                                  const K = subtopic.concepts.length;
+                                                  const startX = 40;
+                                                  const startY = curSubHeight / 2;
+                                                  const endX = 0;
+                                                  const endY = ((cIdx + 0.5) / K) * curSubHeight;
+                                                  return (
+                                                    <g key={concept.id}>
+                                                      <path
+                                                        d={`M ${startX},${startY} C 20,${startY} 20,${endY} ${endX},${endY}`}
+                                                        fill="none"
+                                                        stroke={topic.colorHex}
+                                                        strokeWidth={definitionsVisible ? "2" : "1.75"}
+                                                        strokeLinecap="round"
+                                                        className="opacity-75 transition-all"
+                                                      />
+                                                      <circle cx={endX} cy={endY} r="2.5" fill={topic.colorHex} />
+                                                    </g>
+                                                  );
+                                                })}
+                                                <circle cx="40" cy={curSubHeight / 2} r="3" fill={topic.colorHex} />
+                                              </svg>
+                                            </div>
+                                          )}
+
+                                          {/* Level 2 Subtopic Node */}
+                                          <div
+                                            onClick={() => toggleSubtopic(subtopic.id)}
+                                            className={cn(
+                                              "shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-right shadow-2xs group/sub",
+                                              isSubExpanded
+                                                ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
+                                                : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
+                                            )}
+                                          >
+                                            {/* Subtopic Definition Inspector Info Button */}
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedSubtopicInfo({ topic, subtopic });
+                                              }}
+                                              className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-amber-400 cursor-pointer"
+                                              title={`View ${subtopic.title} Subtopic Architecture Definition`}
+                                              aria-label={`View ${subtopic.title} Subtopic Definition`}
+                                            >
+                                              <Info size={11} />
+                                            </button>
+                                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold">
+                                              {subtopic.concepts.length}
+                                            </span>
+                                            <div>
+                                              <div className="flex items-center justify-end gap-1.5">
+                                                <span className="text-xs font-semibold text-[var(--foreground)]">
+                                                  {subtopic.title}
+                                                </span>
+                                                <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                                                  L2 Subtopic
+                                                </span>
+                                              </div>
+                                              {definitionsVisible && (
+                                                <p className="text-[9.5px] text-[var(--muted-foreground)] line-clamp-1 max-w-[180px] italic leading-tight">
+                                                  {subtopic.description}
+                                                </p>
+                                              )}
+                                            </div>
+                                            <button
+                                              type="button"
+                                              className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
+                                              aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
+                                            >
+                                              {isSubExpanded ? <ChevronDown size={12} /> : <ChevronLeft size={12} />}
+                                            </button>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+
+                                  {/* Level 1 Domain -> Level 2 Subtopics Curved Branching Splines */}
+                                  <svg
+                                    width="48"
+                                    height={curTopicHeight}
+                                    className="shrink-0 pointer-events-none overflow-visible"
+                                    style={{ minWidth: 48 }}
+                                  >
+                                    {topic.subtopics.map((sub, sIdx) => {
+                                      let yOffset = 0;
+                                      for (let i = 0; i < sIdx; i++) {
+                                        yOffset += getSubHeight(topic.subtopics[i]) + 14;
+                                      }
+                                      const curSubH = getSubHeight(sub);
+                                      const startX = 48;
+                                      const startY = curTopicHeight / 2;
+                                      const endX = 0;
+                                      const endY = yOffset + curSubH / 2;
+
+                                      return (
+                                        <g key={sub.id}>
+                                          <path
+                                            d={`M ${startX},${startY} C 24,${startY} 24,${endY} ${endX},${endY}`}
+                                            fill="none"
+                                            stroke={topic.colorHex}
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            className="opacity-80 transition-opacity"
+                                          />
+                                          <circle cx={endX} cy={endY} r="3" fill={topic.colorHex} />
+                                        </g>
+                                      );
+                                    })}
+                                    <circle cx="48" cy={curTopicHeight / 2} r="3.5" fill={topic.colorHex} />
+                                  </svg>
+                                </div>
+                              )}
+
+                              {/* Level 1 Domain Node */}
+                              <div
+                                onClick={() => toggleTopic(topic.id)}
+                                className={cn(
+                                  "shrink-0 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm group",
+                                  isTopicExpanded
+                                    ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
+                                    : "bg-[var(--surface-1)] hover:border-purple-500/40"
+                                )}
+                                style={{ borderColor: topic.colorHex }}
+                              >
+                                {/* Domain Definition Inspector Info Button */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedTopicInfo(topic);
+                                  }}
+                                  className="p-1 rounded-lg text-[var(--muted-foreground)] hover:text-purple-400 hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
+                                  title={`View ${topic.title} Domain Definition & Architecture`}
+                                  aria-label={`View ${topic.title} Domain Definition`}
+                                >
+                                  <Info size={13} />
+                                </button>
+                                <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                                  {topic.matchingCount}
+                                </span>
+                                <div className="text-right">
+                                  <div className="flex items-center justify-end gap-1.5">
+                                    <span
+                                      className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
+                                      style={{
+                                        backgroundColor: `${topic.colorHex}15`,
+                                        color: topic.colorHex,
+                                        borderColor: `${topic.colorHex}30`,
+                                      }}
+                                    >
+                                      {topic.categoryKey}
+                                    </span>
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
+                                      L1 Domain
+                                    </span>
+                                  </div>
+                                  <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
+                                    {topic.title}
+                                  </h3>
+                                  {definitionsVisible && (
+                                    <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 max-w-[220px] italic leading-tight mt-0.5">
+                                      {topic.description}
+                                    </p>
+                                  )}
+                                </div>
+                                <div
+                                  className="p-1.5 rounded-xl border text-white shadow-xs shrink-0"
+                                  style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
+                                >
+                                  <TopicIcon topic={topic.icon} size={16} />
+                                </div>
+                                <button
+                                  type="button"
+                                  className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
+                                  aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
+                                >
+                                  {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronLeft size={14} />}
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
-                        Level 0 • Platform Core
+
+                      {/* Left SVG Branching Splines from Central Hub to Left Domains */}
+                      <svg
+                        width="56"
+                        height={leftWingHeight}
+                        className="shrink-0 pointer-events-none overflow-visible"
+                        style={{ minWidth: 56 }}
+                      >
+                        {leftTopics.map((lt, lIdx) => {
+                          let yOffset = 0;
+                          for (let i = 0; i < lIdx; i++) {
+                            yOffset += getTopicHeight(leftTopics[i]) + 24;
+                          }
+                          const curTopH = getTopicHeight(lt);
+                          const startX = 56;
+                          const startY = leftWingHeight / 2;
+                          const endX = 0;
+                          const endY = yOffset + curTopH / 2;
+
+                          return (
+                            <g key={lt.id}>
+                              <path
+                                d={`M ${startX},${startY} C 28,${startY} 28,${endY} ${endX},${endY}`}
+                                fill="none"
+                                stroke={lt.colorHex}
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                className="opacity-80 transition-opacity"
+                              />
+                              <circle cx={endX} cy={endY} r="3.5" fill={lt.colorHex} />
+                            </g>
+                          );
+                        })}
+                        <circle cx="56" cy={leftWingHeight / 2} r="4" fill="#a855f7" />
+                      </svg>
+
+                      {/* ─── LEVEL 0: CENTRAL CORE ROOT HUB (CANVA ORG ROOT) ─── */}
+                      <div className="shrink-0 relative z-20 flex flex-col items-center px-2">
+                        <div className="relative p-5 sm:p-6 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[280px] space-y-2.5 ring-4 ring-purple-500/10">
+                          <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md">
+                            <Network size={26} />
+                          </div>
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
+                            Level 0 • Platform Core
+                          </div>
+                          <h2 className="text-base sm:text-lg font-extrabold text-[var(--foreground)] tracking-tight leading-snug">
+                            Enterprise Data &amp; Lakehouse Platform
+                          </h2>
+                          <div className="text-xs font-mono font-semibold text-[var(--muted-foreground)]">
+                            {totalVisibleConcepts} Concepts • {filteredTree.length} Domains
+                          </div>
+                        </div>
                       </div>
-                      <h2 className="text-base sm:text-lg font-extrabold text-[var(--foreground)] tracking-tight leading-snug">
-                        Enterprise Data &amp; Lakehouse Platform
-                      </h2>
-                      <div className="text-xs font-mono font-semibold text-[var(--muted-foreground)]">
-                        {totalVisibleConcepts} Concepts • {filteredTree.length} Domains
+
+                      {/* Right SVG Branching Splines from Central Hub to Right Domains */}
+                      <svg
+                        width="56"
+                        height={rightWingHeight}
+                        className="shrink-0 pointer-events-none overflow-visible"
+                        style={{ minWidth: 56 }}
+                      >
+                        {rightTopics.map((rt, rIdx) => {
+                          let yOffset = 0;
+                          for (let i = 0; i < rIdx; i++) {
+                            yOffset += getTopicHeight(rightTopics[i]) + 24;
+                          }
+                          const curTopH = getTopicHeight(rt);
+                          const startX = 0;
+                          const startY = rightWingHeight / 2;
+                          const endX = 56;
+                          const endY = yOffset + curTopH / 2;
+
+                          return (
+                            <g key={rt.id}>
+                              <path
+                                d={`M ${startX},${startY} C 28,${startY} 28,${endY} ${endX},${endY}`}
+                                fill="none"
+                                stroke={rt.colorHex}
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                className="opacity-80 transition-opacity"
+                              />
+                              <circle cx={endX} cy={endY} r="3.5" fill={rt.colorHex} />
+                            </g>
+                          );
+                        })}
+                        <circle cx="0" cy={rightWingHeight / 2} r="4" fill="#a855f7" />
+                      </svg>
+
+                      {/* ─── RIGHT WING DOMAINS (BRANCHES & SUB-BRANCHES) ─── */}
+                      <div className="flex flex-col justify-around gap-6 items-start shrink-0">
+                        {rightTopics.map((topic, tIdx) => {
+                          const isTopicExpanded = expandedTopics.has(topic.id);
+                          const curTopicHeight = getTopicHeight(topic);
+
+                          return (
+                            <div
+                              key={topic.id}
+                              className="flex items-center group relative"
+                              style={{ minHeight: curTopicHeight }}
+                            >
+                              {/* Level 1 Domain Node */}
+                              <div
+                                onClick={() => toggleTopic(topic.id)}
+                                className={cn(
+                                  "shrink-0 flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm group",
+                                  isTopicExpanded
+                                    ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
+                                    : "bg-[var(--surface-1)] hover:border-purple-500/40"
+                                )}
+                                style={{ borderColor: topic.colorHex }}
+                              >
+                                <button
+                                  type="button"
+                                  className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
+                                  aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
+                                >
+                                  {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                                </button>
+                                <div
+                                  className="p-1.5 rounded-xl border text-white shadow-xs shrink-0"
+                                  style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
+                                >
+                                  <TopicIcon topic={topic.icon} size={16} />
+                                </div>
+                                <div className="text-left">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
+                                      L1 Domain
+                                    </span>
+                                    <span
+                                      className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
+                                      style={{
+                                        backgroundColor: `${topic.colorHex}15`,
+                                        color: topic.colorHex,
+                                        borderColor: `${topic.colorHex}30`,
+                                      }}
+                                    >
+                                      {topic.categoryKey}
+                                    </span>
+                                  </div>
+                                  <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
+                                    {topic.title}
+                                  </h3>
+                                  {definitionsVisible && (
+                                    <p className="text-[10px] text-[var(--muted-foreground)] line-clamp-2 max-w-[220px] italic leading-tight mt-0.5">
+                                      {topic.description}
+                                    </p>
+                                  )}
+                                </div>
+                                <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                                  {topic.matchingCount}
+                                </span>
+                                {/* Domain Definition Inspector Info Button */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedTopicInfo(topic);
+                                  }}
+                                  className="p-1 rounded-lg text-[var(--muted-foreground)] hover:text-purple-400 hover:bg-[var(--surface-3)] transition-colors cursor-pointer"
+                                  title={`View ${topic.title} Domain Definition & Architecture`}
+                                  aria-label={`View ${topic.title} Domain Definition`}
+                                >
+                                  <Info size={13} />
+                                </button>
+                              </div>
+
+                              {/* Level 2 Subtopics & Level 3 Concepts on Right */}
+                              {isTopicExpanded && topic.subtopics.length > 0 && (
+                                <div className="flex items-center">
+                                  {/* Level 1 Domain -> Level 2 Subtopics Curved Branching Splines */}
+                                  <svg
+                                    width="48"
+                                    height={curTopicHeight}
+                                    className="shrink-0 pointer-events-none overflow-visible"
+                                    style={{ minWidth: 48 }}
+                                  >
+                                    {topic.subtopics.map((sub, sIdx) => {
+                                      let yOffset = 0;
+                                      for (let i = 0; i < sIdx; i++) {
+                                        yOffset += getSubHeight(topic.subtopics[i]) + 14;
+                                      }
+                                      const curSubH = getSubHeight(sub);
+                                      const startX = 0;
+                                      const startY = curTopicHeight / 2;
+                                      const endX = 48;
+                                      const endY = yOffset + curSubH / 2;
+
+                                      return (
+                                        <g key={sub.id}>
+                                          <path
+                                            d={`M ${startX},${startY} C 24,${startY} 24,${endY} ${endX},${endY}`}
+                                            fill="none"
+                                            stroke={topic.colorHex}
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            className="opacity-80 transition-opacity"
+                                          />
+                                          <circle cx={endX} cy={endY} r="3" fill={topic.colorHex} />
+                                        </g>
+                                      );
+                                    })}
+                                    <circle cx="0" cy={curTopicHeight / 2} r="3.5" fill={topic.colorHex} />
+                                  </svg>
+
+                                  {/* Subtopics Column on Right */}
+                                  <div
+                                    className="flex flex-col justify-around gap-3.5 py-1"
+                                    style={{ height: curTopicHeight }}
+                                  >
+                                    {topic.subtopics.map((subtopic) => {
+                                      const isSubExpanded = expandedSubtopics.has(subtopic.id);
+                                      const curSubHeight = getSubHeight(subtopic);
+
+                                      return (
+                                        <div
+                                          key={subtopic.id}
+                                          className="flex items-center"
+                                          style={{ height: curSubHeight }}
+                                        >
+                                          {/* Level 2 Subtopic Node */}
+                                          <div
+                                            onClick={() => toggleSubtopic(subtopic.id)}
+                                            className={cn(
+                                              "shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-left shadow-2xs group/sub",
+                                              isSubExpanded
+                                                ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
+                                                : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
+                                            )}
+                                          >
+                                            <button
+                                              type="button"
+                                              className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
+                                              aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
+                                            >
+                                              {isSubExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                                            </button>
+                                            <div>
+                                              <div className="flex items-center gap-1.5">
+                                                <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                                                  L2 Subtopic
+                                                </span>
+                                                <span className="text-xs font-semibold text-[var(--foreground)]">
+                                                  {subtopic.title}
+                                                </span>
+                                              </div>
+                                              {definitionsVisible && (
+                                                <p className="text-[9.5px] text-[var(--muted-foreground)] line-clamp-1 max-w-[180px] italic leading-tight">
+                                                  {subtopic.description}
+                                                </p>
+                                              )}
+                                            </div>
+                                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold">
+                                              {subtopic.concepts.length}
+                                            </span>
+                                            {/* Subtopic Definition Inspector Info Button */}
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedSubtopicInfo({ topic, subtopic });
+                                              }}
+                                              className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-amber-400 cursor-pointer"
+                                              title={`View ${subtopic.title} Subtopic Architecture Definition`}
+                                              aria-label={`View ${subtopic.title} Subtopic Definition`}
+                                            >
+                                              <Info size={11} />
+                                            </button>
+                                          </div>
+
+                                          {/* Level 2 Subtopic -> Level 3 Concepts Organic Branching Splines */}
+                                          {isSubExpanded && subtopic.concepts.length > 0 && (
+                                            <div className="flex items-center">
+                                              <svg
+                                                width="40"
+                                                height={curSubHeight}
+                                                className="shrink-0 pointer-events-none overflow-visible"
+                                                style={{ minWidth: 40 }}
+                                              >
+                                                {subtopic.concepts.map((concept, cIdx) => {
+                                                  const K = subtopic.concepts.length;
+                                                  const startX = 0;
+                                                  const startY = curSubHeight / 2;
+                                                  const endX = 40;
+                                                  const endY = ((cIdx + 0.5) / K) * curSubHeight;
+                                                  return (
+                                                    <g key={concept.id}>
+                                                      <path
+                                                        d={`M ${startX},${startY} C 20,${startY} 20,${endY} ${endX},${endY}`}
+                                                        fill="none"
+                                                        stroke={topic.colorHex}
+                                                        strokeWidth={definitionsVisible ? "2" : "1.75"}
+                                                        strokeLinecap="round"
+                                                        className="opacity-75 transition-all"
+                                                      />
+                                                      <circle cx={endX} cy={endY} r="2.5" fill={topic.colorHex} />
+                                                    </g>
+                                                  );
+                                                })}
+                                                <circle cx="0" cy={curSubHeight / 2} r="3" fill={topic.colorHex} />
+                                              </svg>
+
+                                              {/* Vertical Concepts Column */}
+                                              <div
+                                                className="flex flex-col justify-around items-start gap-1.5 pl-0.5"
+                                                style={{ height: curSubHeight }}
+                                              >
+                                                {subtopic.concepts.map((concept) =>
+                                                  renderConceptPillOrCard(concept, topic, false)
+                                                )}
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  </div>
-
-                  {/* Right SVG Branching Splines from Central Hub to Right Domains */}
-                  <svg
-                    width="56"
-                    height={Math.max(Math.floor(filteredTree.length / 2) * 80, 200)}
-                    className="shrink-0 pointer-events-none overflow-visible"
-                    style={{ minWidth: 56 }}
-                  >
-                    {filteredTree.slice(Math.ceil(filteredTree.length / 2)).map((rt, rIdx, arr) => {
-                      const H = Math.max(arr.length * 80, 200);
-                      const startY = H / 2;
-                      const endY = arr.length === 1 ? startY : ((rIdx + 0.5) / arr.length) * H;
-                      return (
-                        <g key={rt.id}>
-                          <path
-                            d={`M 0,${startY} C 28,${startY} 28,${endY} 56,${endY}`}
-                            fill="none"
-                            stroke={rt.colorHex}
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            className="opacity-80 transition-opacity"
-                          />
-                          <circle cx="56" cy={endY} r="3.5" fill={rt.colorHex} />
-                        </g>
-                      );
-                    })}
-                  </svg>
-
-                  {/* RIGHT WING DOMAINS */}
-                  <div className="flex flex-col justify-around gap-6 items-start shrink-0">
-                    {filteredTree
-                      .slice(Math.ceil(filteredTree.length / 2))
-                      .map((topic, tIdx, arr) => {
-                        const isTopicExpanded = expandedTopics.has(topic.id);
-
-                        return (
-                          <div key={topic.id} className="flex items-center group relative">
-                            {/* Level 1 Domain Node */}
-                            <div
-                              onClick={() => toggleTopic(topic.id)}
-                              className={cn(
-                                "shrink-0 inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm",
-                                isTopicExpanded
-                                  ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
-                                  : "bg-[var(--surface-1)] hover:border-purple-500/40"
-                              )}
-                              style={{ borderColor: topic.colorHex }}
-                            >
-                              <button
-                                type="button"
-                                className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
-                                aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
-                              >
-                                {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                              </button>
-                              <div
-                                className="p-1.5 rounded-xl border text-white shadow-xs"
-                                style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
-                              >
-                                <TopicIcon topic={topic.icon} size={16} />
-                              </div>
-                              <div className="text-left">
-                                <div className="flex items-center gap-1.5">
-                                  <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
-                                    L1 Domain
-                                  </span>
-                                  <span
-                                    className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
-                                    style={{
-                                      backgroundColor: `${topic.colorHex}15`,
-                                      color: topic.colorHex,
-                                      borderColor: `${topic.colorHex}30`,
-                                    }}
-                                  >
-                                    {topic.categoryKey}
-                                  </span>
-                                </div>
-                                <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
-                                  {topic.title}
-                                </h3>
-                              </div>
-                              <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] ml-1">
-                                {topic.matchingCount}
-                              </span>
-                            </div>
-
-                            {/* Level 2 Subtopics & Level 3 Concepts on Right */}
-                            {isTopicExpanded && topic.subtopics.length > 0 && (
-                              <div className="flex items-center">
-                                {/* Flowing curved SVG branch from Domain to Subtopics */}
-                                <svg
-                                  width="48"
-                                  height={Math.max(topic.subtopics.length * 56, 48)}
-                                  className="shrink-0 pointer-events-none overflow-visible"
-                                  style={{ minWidth: 48 }}
-                                >
-                                  {topic.subtopics.map((sub, sIdx) => {
-                                    const H = Math.max(topic.subtopics.length * 56, 48);
-                                    const startY = H / 2;
-                                    const endY = topic.subtopics.length === 1 ? startY : ((sIdx + 0.5) / topic.subtopics.length) * H;
-                                    return (
-                                      <g key={sub.id}>
-                                        <path
-                                          d={`M 0,${startY} C 22,${startY} 26,${endY} 48,${endY}`}
-                                          fill="none"
-                                          stroke={topic.colorHex}
-                                          strokeWidth="2.5"
-                                          strokeLinecap="round"
-                                          className="opacity-75 transition-opacity"
-                                        />
-                                        <circle cx="48" cy={endY} r="3" fill={topic.colorHex} />
-                                      </g>
-                                    );
-                                  })}
-                                </svg>
-
-                                {/* Subtopics Column on Right */}
-                                <div className="flex flex-col justify-around gap-3.5 py-1">
-                                  {topic.subtopics.map((subtopic) => {
-                                    const isSubExpanded = expandedSubtopics.has(subtopic.id);
-
-                                    return (
-                                      <div key={subtopic.id} className="flex items-center gap-2.5">
-                                        {/* Level 2 Subtopic Node */}
-                                        <div
-                                          onClick={() => toggleSubtopic(subtopic.id)}
-                                          className={cn(
-                                            "shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-left shadow-2xs",
-                                            isSubExpanded
-                                              ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
-                                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
-                                          )}
-                                        >
-                                          <button
-                                            type="button"
-                                            className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
-                                            aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
-                                          >
-                                            {isSubExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-                                          </button>
-                                          <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
-                                            L2 Subtopic
-                                          </span>
-                                          <span className="text-xs font-semibold text-[var(--foreground)]">
-                                            {subtopic.title}
-                                          </span>
-                                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold ml-0.5">
-                                            {subtopic.concepts.length}
-                                          </span>
-                                        </div>
-
-                                        {/* Level 3 Concept Name Pills on right */}
-                                        {isSubExpanded && subtopic.concepts.length > 0 && (
-                                          <div className="flex items-center gap-2 pl-1">
-                                            <svg width="24" height="12" className="shrink-0 pointer-events-none">
-                                              <line x1="0" y1="6" x2="24" y2="6" stroke={topic.colorHex} strokeWidth="1.5" strokeDasharray="3 3" />
-                                              <circle cx="24" cy="6" r="2.5" fill={topic.colorHex} />
-                                            </svg>
-                                            <div className="flex flex-wrap items-center gap-1.5 max-w-lg">
-                                              {subtopic.concepts.map((concept) => {
-                                                const isSelected = selectedConcept?.id === concept.id;
-                                                const isBookmarked = bookmarkedIds.has(concept.id);
-                                                const isMatch = activeSearch.trim() && (
-                                                  concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
-                                                  concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
-                                                );
-
-                                                const dotColor =
-                                                  concept.difficulty === "EASY"
-                                                    ? "bg-emerald-500"
-                                                    : concept.difficulty === "MEDIUM"
-                                                    ? "bg-blue-500"
-                                                    : concept.difficulty === "HARD"
-                                                    ? "bg-amber-500"
-                                                    : "bg-purple-500";
-
-                                                return (
-                                                  <button
-                                                    key={concept.id}
-                                                    type="button"
-                                                    onClick={() => setSelectedConcept(concept)}
-                                                    title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
-                                                    className={cn(
-                                                      "group/pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95",
-                                                      isSelected
-                                                        ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
-                                                        : isMatch
-                                                        ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
-                                                        : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
-                                                    )}
-                                                    style={{
-                                                      borderLeftColor: !isSelected && !isMatch ? topic.colorHex : undefined,
-                                                      borderLeftWidth: !isSelected && !isMatch ? "2.5px" : undefined,
-                                                    }}
-                                                  >
-                                                    <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
-                                                    <span className="truncate max-w-[240px] sm:max-w-none">{concept.term}</span>
-                                                    {isBookmarked && (
-                                                      <BookmarkCheck size={11} className="text-amber-400 shrink-0" />
-                                                    )}
-                                                  </button>
-                                                );
-                                              })}
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                  </div>
-                </div>
+                  );
+                })()
               ) : (
                 /* ─── 360° RADIAL ORBIT STARBURST (CANVA RADIAL) ─── */
                 <div className="relative w-[1300px] h-[1000px] flex items-center justify-center">
@@ -1305,6 +1577,18 @@ export function ConceptsMindmapView({
                           <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] text-[var(--muted-foreground)]">
                             {topic.matchingCount}
                           </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedTopicInfo(topic);
+                            }}
+                            className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-purple-400 cursor-pointer"
+                            title={`View ${topic.title} Domain Definition`}
+                            aria-label={`View ${topic.title} Domain Definition`}
+                          >
+                            <Info size={11} />
+                          </button>
                         </div>
                       </div>
                     );
@@ -1759,6 +2043,248 @@ export function ConceptsMindmapView({
                   Close (Esc)
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── DOMAIN ARCHITECTURAL SCOPE & DEFINITION MODAL ─── */}
+      {selectedTopicInfo && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={() => setSelectedTopicInfo(null)}
+        >
+          <div
+            className="w-full max-w-2xl rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="topic-modal-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="p-4 sm:p-5 bg-[var(--surface-2)]/50 border-b border-[var(--border)] flex items-start justify-between gap-3">
+              <div className="space-y-1.5 min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                    Level 1 Domain
+                  </span>
+                  <span
+                    className="text-[10px] font-bold px-2 py-0.5 rounded-md border"
+                    style={{
+                      backgroundColor: `${selectedTopicInfo.colorHex}15`,
+                      color: selectedTopicInfo.colorHex,
+                      borderColor: `${selectedTopicInfo.colorHex}30`,
+                    }}
+                  >
+                    {selectedTopicInfo.categoryKey}
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--muted-foreground)] px-2 py-0.5 rounded-md bg-[var(--surface-2)] border border-[var(--border)]">
+                    {selectedTopicInfo.totalCount} Concepts • {selectedTopicInfo.subtopics.length} Pillars
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="p-1.5 rounded-xl border text-white shadow-xs shrink-0"
+                    style={{
+                      backgroundColor: `${selectedTopicInfo.colorHex}25`,
+                      borderColor: `${selectedTopicInfo.colorHex}50`,
+                    }}
+                  >
+                    <TopicIcon topic={selectedTopicInfo.icon} size={20} />
+                  </div>
+                  <h3 id="topic-modal-title" className="text-base sm:text-xl font-bold text-[var(--foreground)] tracking-tight">
+                    {selectedTopicInfo.title}
+                  </h3>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedTopicInfo(null)}
+                className="p-2 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] transition-colors cursor-pointer"
+                title="Close Dialog"
+                aria-label="Close Dialog"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs sm:text-sm">
+              {/* Official Domain Architectural Scope / Definition */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <BookOpen size={12} /> Domain Architectural Scope &amp; Definition
+                </span>
+                <p className="text-sm text-[var(--foreground)] font-medium leading-relaxed bg-[var(--surface-2)]/60 p-3.5 rounded-xl border border-[var(--border)]">
+                  {selectedTopicInfo.description}
+                </p>
+              </div>
+
+              {/* Pillars / Subtopics Breakdown */}
+              <div className="space-y-2.5">
+                <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers size={12} /> Architectural Pillars ({selectedTopicInfo.subtopics.length})
+                </span>
+                <div className="space-y-2.5">
+                  {selectedTopicInfo.subtopics.map((sub) => (
+                    <div
+                      key={sub.id}
+                      className="p-3 rounded-xl bg-[var(--surface-2)]/40 border border-[var(--border)] space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                            Level 2 Pillar
+                          </span>
+                          <h4 className="text-xs font-bold text-[var(--foreground)]">{sub.title}</h4>
+                        </div>
+                        <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                          {sub.concepts.length} concepts
+                        </span>
+                      </div>
+                      <p className="text-xs text-[var(--muted-foreground)] leading-relaxed italic">
+                        {sub.description}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-1 pt-1">
+                        {sub.concepts.map((c) => (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedTopicInfo(null);
+                              setSelectedConcept(c);
+                            }}
+                            className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--border)] text-[var(--foreground)] hover:border-purple-500 hover:text-purple-400 transition-colors cursor-pointer"
+                          >
+                            {c.term}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-3.5 sm:p-4 bg-[var(--surface-2)]/50 border-t border-[var(--border)] flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  handleSelectTopic(selectedTopicInfo.categoryKey);
+                  setSelectedTopicInfo(null);
+                }}
+                className="px-3 py-1.5 rounded-xl bg-purple-600 text-white text-xs font-semibold hover:bg-purple-500 transition-colors cursor-pointer"
+              >
+                Filter Mind Map to {selectedTopicInfo.shortTitle}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedTopicInfo(null)}
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── SUBTOPIC ARCHITECTURAL DEFINITION MODAL ─── */}
+      {selectedSubtopicInfo && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={() => setSelectedSubtopicInfo(null)}
+        >
+          <div
+            className="w-full max-w-2xl rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="subtopic-modal-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="p-4 sm:p-5 bg-[var(--surface-2)]/50 border-b border-[var(--border)] flex items-start justify-between gap-3">
+              <div className="space-y-1.5 min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-500">
+                    Level 2 Subtopic Pillar
+                  </span>
+                  <span className="text-[10px] font-medium text-[var(--muted-foreground)]">
+                    under <strong className="text-[var(--foreground)]">{selectedSubtopicInfo.topic.title}</strong>
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--muted-foreground)] px-2 py-0.5 rounded-md bg-[var(--surface-2)] border border-[var(--border)]">
+                    {selectedSubtopicInfo.subtopic.concepts.length} Concepts
+                  </span>
+                </div>
+                <h3 id="subtopic-modal-title" className="text-base sm:text-xl font-bold text-[var(--foreground)] tracking-tight">
+                  {selectedSubtopicInfo.subtopic.title}
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedSubtopicInfo(null)}
+                className="p-2 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] transition-colors cursor-pointer"
+                title="Close Dialog"
+                aria-label="Close Dialog"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs sm:text-sm">
+              {/* Official Subtopic Architectural Definition */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <BookOpen size={12} /> Pillar Architectural Definition
+                </span>
+                <p className="text-sm text-[var(--foreground)] font-medium leading-relaxed bg-[var(--surface-2)]/60 p-3.5 rounded-xl border border-[var(--border)]">
+                  {selectedSubtopicInfo.subtopic.description}
+                </p>
+              </div>
+
+              {/* Concepts under this Subtopic */}
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles size={12} /> Level 3 Technical Concepts ({selectedSubtopicInfo.subtopic.concepts.length})
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {selectedSubtopicInfo.subtopic.concepts.map((concept) => (
+                    <div
+                      key={concept.id}
+                      onClick={() => {
+                        setSelectedSubtopicInfo(null);
+                        setSelectedConcept(concept);
+                      }}
+                      className="p-2.5 rounded-xl bg-[var(--surface-2)]/50 border border-[var(--border)] hover:border-amber-500/50 transition-all cursor-pointer space-y-1 text-left"
+                    >
+                      <div className="flex items-center justify-between gap-1">
+                        <h4 className="text-xs font-bold text-[var(--foreground)] truncate">{concept.term}</h4>
+                        <span className="text-[9px] font-semibold px-1.5 py-0.2 rounded-sm bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase">
+                          {concept.difficulty}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
+                        {concept.definition}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-3.5 sm:p-4 bg-[var(--surface-2)]/50 border-t border-[var(--border)] flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedSubtopicInfo(null)}
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

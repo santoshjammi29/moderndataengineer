@@ -129,4 +129,55 @@ describe("Linked Mind Map Feature Tests", () => {
     fireEvent.click(mindmapBtn);
     expect(screen.getByText("Linked Mind Map Topology")).toBeDefined();
   });
+
+  it("toggles inline definitions across all 3 levels via the toolbar toggle", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    // Initially definitions are toggled off (Names Only mode)
+    const toggleBtn = screen.getByLabelText("Toggle Definitions");
+    expect(screen.getByText("Show Definitions")).toBeDefined();
+
+    // Toggle ON
+    fireEvent.click(toggleBtn);
+    expect(screen.getByText("Definitions: ON")).toBeDefined();
+
+    // Concept definitions are now visible inline
+    expect(screen.getByText("Unified logical data lake for Microsoft Fabric.")).toBeDefined();
+
+    // Toggle OFF
+    fireEvent.click(toggleBtn);
+    expect(screen.getByText("Show Definitions")).toBeDefined();
+  });
+
+  it("opens Domain Architectural Scope modal when domain info button is clicked", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    const domainInfoBtn = screen.getByLabelText("View Microsoft Fabric Domain Definition");
+    fireEvent.click(domainInfoBtn);
+
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toBeDefined();
+    expect(screen.getByText("Domain Architectural Scope & Definition")).toBeDefined();
+
+    // Close dialog
+    const closeBtn = screen.getByLabelText("Close Dialog");
+    fireEvent.click(closeBtn);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("opens Subtopic Architectural Definition modal when subtopic info button is clicked", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    const subtopicInfoBtn = screen.getByLabelText("View OneLake & ADLS Storage Substrate Subtopic Definition");
+    fireEvent.click(subtopicInfoBtn);
+
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toBeDefined();
+    expect(screen.getByText("Pillar Architectural Definition")).toBeDefined();
+
+    // Close dialog
+    const closeBtn = screen.getByLabelText("Close Dialog");
+    fireEvent.click(closeBtn);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
 });
