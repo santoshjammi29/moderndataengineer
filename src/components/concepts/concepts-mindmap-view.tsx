@@ -1,7 +1,7 @@
 "use client";
 
 import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   GitBranch,
@@ -87,6 +87,33 @@ export function ConceptsMindmapView({
   const [layoutMode, setLayoutMode] = useState<"mindmap" | "tree" | "grid">(initialLayoutMode);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [mindmapStyle, setMindmapStyle] = useState<"bilateral" | "radial">("bilateral");
+  const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button, input, a, select, [role='dialog']")) return;
+    setIsDragging(true);
+    dragStartRef.current = { x: e.clientX - panOffset.x, y: e.clientY - panOffset.y };
+  }, [panOffset]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setPanOffset({
+      x: e.clientX - dragStartRef.current.x,
+      y: e.clientY - dragStartRef.current.y,
+    });
+  }, [isDragging]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const handleResetZoom = useCallback(() => {
+    setZoomLevel(1);
+    setPanOffset({ x: 0, y: 0 });
+  }, []);
 
   // Expanded nodes state
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
@@ -563,7 +590,7 @@ export function ConceptsMindmapView({
           </button>
         </div>
       ) : layoutMode === "mindmap" ? (
-        /* ─── LINKED MIND MAP (ONLY NAMES IN CONNECTED HIERARCHY) ─── */
+        /* ─── CANVA-INSPIRED ORGANIC BRAINSTORM MIND MAP (ONLY NAMES) ─── */
         <div
           className={cn(
             "rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden shadow-xs transition-all",
@@ -571,9 +598,9 @@ export function ConceptsMindmapView({
           )}
         >
           {/* Canvas Control Toolbar */}
-          <div className="p-3 sm:p-4 bg-[var(--surface-2)]/60 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-3">
+          <div className="p-3 sm:p-4 bg-[var(--surface-2)]/70 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 flex-wrap text-xs">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 font-semibold">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 font-semibold">
                 <Network size={13} />
                 <span>Linked Mind Map Topology</span>
               </div>
@@ -583,25 +610,55 @@ export function ConceptsMindmapView({
               </span>
             </div>
 
-            {/* Canvas Actions */}
+            {/* Canvas Actions & Mindmap Style Switcher */}
             <div className="flex items-center gap-1.5 flex-wrap">
+              {/* Brainstorm Style Switcher */}
+              <div className="inline-flex items-center gap-0.5 p-0.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs">
+                <button
+                  type="button"
+                  onClick={() => setMindmapStyle("bilateral")}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer",
+                    mindmapStyle === "bilateral"
+                      ? "bg-purple-600 text-white shadow-2xs"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  )}
+                  title="Bilateral Organic Brainstorm (Canva Style)"
+                >
+                  Bilateral Flow
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMindmapStyle("radial")}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer",
+                    mindmapStyle === "radial"
+                      ? "bg-purple-600 text-white shadow-2xs"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  )}
+                  title="360° Radial Starburst Orbit"
+                >
+                  Radial Orbit
+                </button>
+              </div>
+
               {/* Zoom controls */}
               <div className="flex items-center gap-0.5 px-1 py-0.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs">
                 <button
                   type="button"
-                  onClick={() => setZoomLevel((z) => Math.max(z - 0.15, 0.6))}
+                  onClick={() => setZoomLevel((z) => Math.max(z - 0.15, 0.5))}
                   className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
                   title="Zoom Out"
                   aria-label="Zoom Out"
                 >
                   <ZoomOut size={13} />
                 </button>
-                <span className="text-[11px] font-mono px-1.5 text-[var(--foreground)] min-w-[3rem] text-center">
+                <span className="text-[11px] font-mono px-1.5 text-[var(--foreground)] min-w-[3rem] text-center font-semibold">
                   {Math.round(zoomLevel * 100)}%
                 </span>
                 <button
                   type="button"
-                  onClick={() => setZoomLevel((z) => Math.min(z + 0.15, 1.5))}
+                  onClick={() => setZoomLevel((z) => Math.min(z + 0.15, 1.6))}
                   className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
                   title="Zoom In"
                   aria-label="Zoom In"
@@ -610,9 +667,9 @@ export function ConceptsMindmapView({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setZoomLevel(1)}
+                  onClick={handleResetZoom}
                   className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
-                  title="Reset Zoom"
+                  title="Reset Zoom & Pan"
                   aria-label="Reset Zoom"
                 >
                   <RotateCcw size={13} />
@@ -636,6 +693,7 @@ export function ConceptsMindmapView({
                 onClick={() => setIsFullscreen((prev) => !prev)}
                 className="px-2.5 py-1 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-[11px] font-semibold text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                 title={isFullscreen ? "Exit Fullscreen" : "Fullscreen View"}
+                aria-label={isFullscreen ? "Exit Fullscreen" : "Fullscreen View"}
               >
                 {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
                 <span className="hidden sm:inline">{isFullscreen ? "Exit" : "Fullscreen"}</span>
@@ -643,211 +701,616 @@ export function ConceptsMindmapView({
             </div>
           </div>
 
-          {/* Mind Map Canvas Area */}
-          <div className="p-4 sm:p-8 overflow-x-auto min-h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[var(--surface-2)]/30 via-transparent to-transparent">
+          {/* Quick Domain Filter Strip */}
+          <div className="px-3 py-2 bg-[var(--surface-1)] border-b border-[var(--border)] flex items-center gap-1.5 overflow-x-auto scrollbar-none text-xs">
+            <span className="text-[10px] uppercase font-bold text-[var(--muted-foreground)] shrink-0 mr-1">
+              Focus Domain:
+            </span>
+            <button
+              type="button"
+              onClick={() => handleSelectTopic("ALL")}
+              className={cn(
+                "px-2.5 py-0.5 rounded-full text-[11px] font-semibold border transition-all cursor-pointer shrink-0",
+                currentTopic === "ALL"
+                  ? "bg-purple-600 text-white border-purple-500 shadow-2xs"
+                  : "bg-[var(--surface-2)] border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              )}
+            >
+              All Domains ({fullTree.length})
+            </button>
+            {fullTree.map((top) => (
+              <button
+                key={top.id}
+                type="button"
+                onClick={() => handleSelectTopic(top.categoryKey)}
+                className={cn(
+                  "px-2.5 py-0.5 rounded-full text-[11px] font-semibold border transition-all cursor-pointer shrink-0 flex items-center gap-1",
+                  currentTopic === top.categoryKey
+                    ? "text-white shadow-2xs font-bold"
+                    : "bg-[var(--surface-2)] border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                )}
+                style={{
+                  backgroundColor: currentTopic === top.categoryKey ? top.colorHex : undefined,
+                  borderColor: currentTopic === top.categoryKey ? top.colorHex : undefined,
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ backgroundColor: top.colorHex }}
+                />
+                <span>{top.categoryKey}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Organic Mind Map Canvas Area */}
+          <div
+            className={cn(
+              "relative min-h-[640px] overflow-hidden select-none",
+              isDragging ? "cursor-grabbing" : "cursor-grab"
+            )}
+            style={{
+              backgroundColor: "var(--surface-1)",
+              backgroundImage: `radial-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px)`,
+              backgroundSize: "24px 24px",
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            {/* Draggable & Scalable Workspace */}
             <div
               style={{
-                transform: `scale(${zoomLevel})`,
-                transformOrigin: "top left",
-                transition: "transform 0.15s ease-out",
+                transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
+                transformOrigin: "center center",
+                transition: isDragging ? "none" : "transform 0.15s ease-out",
               }}
-              className="space-y-8 min-w-[700px]"
+              className="p-8 sm:p-16 min-w-max flex items-center justify-center"
             >
-              {/* Level 0: Platform Core Root Hub */}
-              <div className="inline-flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[var(--surface-2)] border-2 border-blue-500/40 shadow-sm">
-                <div className="p-2.5 rounded-xl bg-blue-600 text-white shadow-xs">
-                  <Network size={22} />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
-                      Level 0 • Platform Core
-                    </span>
-                    <span className="text-xs font-mono font-semibold text-[var(--muted-foreground)]">
-                      {totalVisibleConcepts} Concepts
-                    </span>
-                  </div>
-                  <h2 className="text-sm sm:text-base font-bold text-[var(--foreground)] tracking-tight">
-                    Enterprise Data &amp; Lakehouse Platform
-                  </h2>
-                </div>
-              </div>
+              {mindmapStyle === "bilateral" ? (
+                /* ─── BILATERAL BRAINSTORM FLOW (CANVA STYLE) ─── */
+                <div className="relative flex items-center justify-center gap-6 sm:gap-10 min-w-max">
+                  {/* LEFT WING DOMAINS */}
+                  <div className="flex flex-col justify-around gap-6 items-end shrink-0">
+                    {filteredTree
+                      .slice(0, Math.ceil(filteredTree.length / 2))
+                      .map((topic, tIdx, arr) => {
+                        const isTopicExpanded = expandedTopics.has(topic.id);
 
-              {/* Level 1, 2, 3 Branches */}
-              <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 before:top-0 before:bottom-4 before:w-0.5 before:bg-blue-500/30">
-                {filteredTree.map((topic) => {
-                  const isTopicExpanded = expandedTopics.has(topic.id);
+                        return (
+                          <div key={topic.id} className="flex items-center justify-end group relative">
+                            {/* Level 3 Concepts & Level 2 Subtopics on Far Left */}
+                            {isTopicExpanded && topic.subtopics.length > 0 && (
+                              <div className="flex items-center justify-end">
+                                {/* Subtopics Column on Left */}
+                                <div className="flex flex-col justify-around gap-3.5 py-1 items-end">
+                                  {topic.subtopics.map((subtopic) => {
+                                    const isSubExpanded = expandedSubtopics.has(subtopic.id);
 
-                  return (
-                    <div key={topic.id} className="relative group">
-                      {/* Connector from spine to Level 1 */}
-                      <div className="absolute -left-3 sm:-left-5 top-5 w-3 sm:w-5 h-0.5 bg-blue-500/30" />
+                                    return (
+                                      <div key={subtopic.id} className="flex items-center justify-end gap-2.5">
+                                        {/* Level 3 Concept Name Pills on far left */}
+                                        {isSubExpanded && subtopic.concepts.length > 0 && (
+                                          <div className="flex items-center gap-2 pr-1">
+                                            <div className="flex flex-wrap items-center justify-end gap-1.5 max-w-lg">
+                                              {subtopic.concepts.map((concept) => {
+                                                const isSelected = selectedConcept?.id === concept.id;
+                                                const isBookmarked = bookmarkedIds.has(concept.id);
+                                                const isMatch = activeSearch.trim() && (
+                                                  concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
+                                                  concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
+                                                );
 
-                      {/* Level 1: Topic Domain Node */}
-                      <div className="flex items-start gap-4">
-                        <div
-                          onClick={() => toggleTopic(topic.id)}
-                          className={cn(
-                            "inline-flex items-center gap-2.5 p-2.5 sm:p-3 rounded-xl border-2 transition-all cursor-pointer select-none shadow-xs",
-                            isTopicExpanded
-                              ? "bg-[var(--surface-2)] border-blue-500/60 ring-1 ring-blue-500/20"
-                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-blue-500/40"
-                          )}
-                          style={{ borderColor: isTopicExpanded ? topic.colorHex : undefined }}
-                        >
-                          <button
-                            type="button"
-                            className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
-                            aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
-                          >
-                            {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                          </button>
+                                                const dotColor =
+                                                  concept.difficulty === "EASY"
+                                                    ? "bg-emerald-500"
+                                                    : concept.difficulty === "MEDIUM"
+                                                    ? "bg-blue-500"
+                                                    : concept.difficulty === "HARD"
+                                                    ? "bg-amber-500"
+                                                    : "bg-purple-500";
 
-                          <div
-                            className="p-1.5 rounded-lg border text-white"
-                            style={{ backgroundColor: `${topic.colorHex}20`, borderColor: `${topic.colorHex}40` }}
-                          >
-                            <TopicIcon topic={topic.icon} size={15} />
-                          </div>
+                                                return (
+                                                  <button
+                                                    key={concept.id}
+                                                    type="button"
+                                                    onClick={() => setSelectedConcept(concept)}
+                                                    title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
+                                                    className={cn(
+                                                      "group/pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95",
+                                                      isSelected
+                                                        ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
+                                                        : isMatch
+                                                        ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
+                                                        : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                                                    )}
+                                                    style={{
+                                                      borderRightColor: !isSelected && !isMatch ? topic.colorHex : undefined,
+                                                      borderRightWidth: !isSelected && !isMatch ? "2.5px" : undefined,
+                                                    }}
+                                                  >
+                                                    {isBookmarked && (
+                                                      <BookmarkCheck size={11} className="text-amber-400 shrink-0" />
+                                                    )}
+                                                    <span className="truncate max-w-[240px] sm:max-w-none">{concept.term}</span>
+                                                    <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
+                                                  </button>
+                                                );
+                                              })}
+                                            </div>
+                                            {/* Delicate connector stem */}
+                                            <svg width="24" height="12" className="shrink-0 pointer-events-none">
+                                              <line x1="0" y1="6" x2="24" y2="6" stroke={topic.colorHex} strokeWidth="1.5" strokeDasharray="3 3" />
+                                              <circle cx="0" cy="6" r="2.5" fill={topic.colorHex} />
+                                            </svg>
+                                          </div>
+                                        )}
 
-                          <div>
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[9px] font-bold uppercase tracking-wider text-blue-400">
-                                L1 Domain
+                                        {/* Level 2 Subtopic Node */}
+                                        <div
+                                          onClick={() => toggleSubtopic(subtopic.id)}
+                                          className={cn(
+                                            "shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-right shadow-2xs",
+                                            isSubExpanded
+                                              ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
+                                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
+                                          )}
+                                        >
+                                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold mr-0.5">
+                                            {subtopic.concepts.length}
+                                          </span>
+                                          <span className="text-xs font-semibold text-[var(--foreground)]">
+                                            {subtopic.title}
+                                          </span>
+                                          <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                                            L2 Subtopic
+                                          </span>
+                                          <button
+                                            type="button"
+                                            className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
+                                            aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
+                                          >
+                                            {isSubExpanded ? <ChevronDown size={12} /> : <ChevronLeft size={12} />}
+                                          </button>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+
+                                {/* Flowing curved SVG branch from Subtopics to Domain Node */}
+                                <svg
+                                  width="48"
+                                  height={Math.max(topic.subtopics.length * 56, 48)}
+                                  className="shrink-0 pointer-events-none overflow-visible"
+                                  style={{ minWidth: 48 }}
+                                >
+                                  {topic.subtopics.map((sub, sIdx) => {
+                                    const H = Math.max(topic.subtopics.length * 56, 48);
+                                    const startY = topic.subtopics.length === 1 ? H / 2 : ((sIdx + 0.5) / topic.subtopics.length) * H;
+                                    const endY = H / 2;
+                                    return (
+                                      <g key={sub.id}>
+                                        <path
+                                          d={`M 0,${startY} C 22,${startY} 26,${endY} 48,${endY}`}
+                                          fill="none"
+                                          stroke={topic.colorHex}
+                                          strokeWidth="2.5"
+                                          strokeLinecap="round"
+                                          className="opacity-75 transition-opacity"
+                                        />
+                                        <circle cx="0" cy={startY} r="3" fill={topic.colorHex} />
+                                      </g>
+                                    );
+                                  })}
+                                </svg>
+                              </div>
+                            )}
+
+                            {/* Level 1 Domain Node */}
+                            <div
+                              onClick={() => toggleTopic(topic.id)}
+                              className={cn(
+                                "shrink-0 inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm",
+                                isTopicExpanded
+                                  ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
+                                  : "bg-[var(--surface-1)] hover:border-purple-500/40"
+                              )}
+                              style={{ borderColor: topic.colorHex }}
+                            >
+                              <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] mr-1">
+                                {topic.matchingCount}
                               </span>
-                              <span
-                                className="text-[9px] font-semibold px-1.5 py-0.2 rounded border"
-                                style={{
-                                  backgroundColor: `${topic.colorHex}15`,
-                                  color: topic.colorHex,
-                                  borderColor: `${topic.colorHex}30`,
-                                }}
+                              <div className="text-right">
+                                <div className="flex items-center justify-end gap-1.5">
+                                  <span
+                                    className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
+                                    style={{
+                                      backgroundColor: `${topic.colorHex}15`,
+                                      color: topic.colorHex,
+                                      borderColor: `${topic.colorHex}30`,
+                                    }}
+                                  >
+                                    {topic.categoryKey}
+                                  </span>
+                                  <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
+                                    L1 Domain
+                                  </span>
+                                </div>
+                                <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
+                                  {topic.title}
+                                </h3>
+                              </div>
+                              <div
+                                className="p-1.5 rounded-xl border text-white shadow-xs"
+                                style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
                               >
-                                {topic.categoryKey}
+                                <TopicIcon topic={topic.icon} size={16} />
+                              </div>
+                              <button
+                                type="button"
+                                className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
+                                aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
+                              >
+                                {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronLeft size={14} />}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+
+                  {/* Left SVG Branching Splines from Central Hub to Left Domains */}
+                  <svg
+                    width="56"
+                    height={Math.max(Math.ceil(filteredTree.length / 2) * 80, 200)}
+                    className="shrink-0 pointer-events-none overflow-visible"
+                    style={{ minWidth: 56 }}
+                  >
+                    {filteredTree.slice(0, Math.ceil(filteredTree.length / 2)).map((lt, lIdx, arr) => {
+                      const H = Math.max(arr.length * 80, 200);
+                      const startY = H / 2;
+                      const endY = arr.length === 1 ? startY : ((lIdx + 0.5) / arr.length) * H;
+                      return (
+                        <g key={lt.id}>
+                          <path
+                            d={`M 56,${startY} C 28,${startY} 28,${endY} 0,${endY}`}
+                            fill="none"
+                            stroke={lt.colorHex}
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            className="opacity-80 transition-opacity"
+                          />
+                          <circle cx="0" cy={endY} r="3.5" fill={lt.colorHex} />
+                        </g>
+                      );
+                    })}
+                  </svg>
+
+                  {/* LEVEL 0: CENTRAL CORE ROOT HUB (CANVA ORG ROOT) */}
+                  <div className="shrink-0 relative z-20 flex flex-col items-center px-2">
+                    <div className="relative p-5 sm:p-6 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[280px] space-y-2.5 ring-4 ring-purple-500/10">
+                      <div className="mx-auto w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md">
+                        <Network size={26} />
+                      </div>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
+                        Level 0 • Platform Core
+                      </div>
+                      <h2 className="text-base sm:text-lg font-extrabold text-[var(--foreground)] tracking-tight leading-snug">
+                        Enterprise Data &amp; Lakehouse Platform
+                      </h2>
+                      <div className="text-xs font-mono font-semibold text-[var(--muted-foreground)]">
+                        {totalVisibleConcepts} Concepts • {filteredTree.length} Domains
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right SVG Branching Splines from Central Hub to Right Domains */}
+                  <svg
+                    width="56"
+                    height={Math.max(Math.floor(filteredTree.length / 2) * 80, 200)}
+                    className="shrink-0 pointer-events-none overflow-visible"
+                    style={{ minWidth: 56 }}
+                  >
+                    {filteredTree.slice(Math.ceil(filteredTree.length / 2)).map((rt, rIdx, arr) => {
+                      const H = Math.max(arr.length * 80, 200);
+                      const startY = H / 2;
+                      const endY = arr.length === 1 ? startY : ((rIdx + 0.5) / arr.length) * H;
+                      return (
+                        <g key={rt.id}>
+                          <path
+                            d={`M 0,${startY} C 28,${startY} 28,${endY} 56,${endY}`}
+                            fill="none"
+                            stroke={rt.colorHex}
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            className="opacity-80 transition-opacity"
+                          />
+                          <circle cx="56" cy={endY} r="3.5" fill={rt.colorHex} />
+                        </g>
+                      );
+                    })}
+                  </svg>
+
+                  {/* RIGHT WING DOMAINS */}
+                  <div className="flex flex-col justify-around gap-6 items-start shrink-0">
+                    {filteredTree
+                      .slice(Math.ceil(filteredTree.length / 2))
+                      .map((topic, tIdx, arr) => {
+                        const isTopicExpanded = expandedTopics.has(topic.id);
+
+                        return (
+                          <div key={topic.id} className="flex items-center group relative">
+                            {/* Level 1 Domain Node */}
+                            <div
+                              onClick={() => toggleTopic(topic.id)}
+                              className={cn(
+                                "shrink-0 inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm",
+                                isTopicExpanded
+                                  ? "bg-[var(--surface-2)] shadow-md ring-2 ring-purple-500/20"
+                                  : "bg-[var(--surface-1)] hover:border-purple-500/40"
+                              )}
+                              style={{ borderColor: topic.colorHex }}
+                            >
+                              <button
+                                type="button"
+                                className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
+                                aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
+                              >
+                                {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                              </button>
+                              <div
+                                className="p-1.5 rounded-xl border text-white shadow-xs"
+                                style={{ backgroundColor: `${topic.colorHex}25`, borderColor: `${topic.colorHex}50` }}
+                              >
+                                <TopicIcon topic={topic.icon} size={16} />
+                              </div>
+                              <div className="text-left">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400">
+                                    L1 Domain
+                                  </span>
+                                  <span
+                                    className="text-[9px] font-semibold px-1.5 py-0.2 rounded-full border"
+                                    style={{
+                                      backgroundColor: `${topic.colorHex}15`,
+                                      color: topic.colorHex,
+                                      borderColor: `${topic.colorHex}30`,
+                                    }}
+                                  >
+                                    {topic.categoryKey}
+                                  </span>
+                                </div>
+                                <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
+                                  {topic.title}
+                                </h3>
+                              </div>
+                              <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] ml-1">
+                                {topic.matchingCount}
                               </span>
                             </div>
-                            <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
-                              {topic.title}
-                            </h3>
-                          </div>
 
-                          <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--border)] text-[var(--muted-foreground)] ml-1">
+                            {/* Level 2 Subtopics & Level 3 Concepts on Right */}
+                            {isTopicExpanded && topic.subtopics.length > 0 && (
+                              <div className="flex items-center">
+                                {/* Flowing curved SVG branch from Domain to Subtopics */}
+                                <svg
+                                  width="48"
+                                  height={Math.max(topic.subtopics.length * 56, 48)}
+                                  className="shrink-0 pointer-events-none overflow-visible"
+                                  style={{ minWidth: 48 }}
+                                >
+                                  {topic.subtopics.map((sub, sIdx) => {
+                                    const H = Math.max(topic.subtopics.length * 56, 48);
+                                    const startY = H / 2;
+                                    const endY = topic.subtopics.length === 1 ? startY : ((sIdx + 0.5) / topic.subtopics.length) * H;
+                                    return (
+                                      <g key={sub.id}>
+                                        <path
+                                          d={`M 0,${startY} C 22,${startY} 26,${endY} 48,${endY}`}
+                                          fill="none"
+                                          stroke={topic.colorHex}
+                                          strokeWidth="2.5"
+                                          strokeLinecap="round"
+                                          className="opacity-75 transition-opacity"
+                                        />
+                                        <circle cx="48" cy={endY} r="3" fill={topic.colorHex} />
+                                      </g>
+                                    );
+                                  })}
+                                </svg>
+
+                                {/* Subtopics Column on Right */}
+                                <div className="flex flex-col justify-around gap-3.5 py-1">
+                                  {topic.subtopics.map((subtopic) => {
+                                    const isSubExpanded = expandedSubtopics.has(subtopic.id);
+
+                                    return (
+                                      <div key={subtopic.id} className="flex items-center gap-2.5">
+                                        {/* Level 2 Subtopic Node */}
+                                        <div
+                                          onClick={() => toggleSubtopic(subtopic.id)}
+                                          className={cn(
+                                            "shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all cursor-pointer select-none text-left shadow-2xs",
+                                            isSubExpanded
+                                              ? "bg-[var(--surface-2)] border-amber-500/60 ring-1 ring-amber-500/30"
+                                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/40"
+                                          )}
+                                        >
+                                          <button
+                                            type="button"
+                                            className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
+                                            aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
+                                          >
+                                            {isSubExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                                          </button>
+                                          <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                                            L2 Subtopic
+                                          </span>
+                                          <span className="text-xs font-semibold text-[var(--foreground)]">
+                                            {subtopic.title}
+                                          </span>
+                                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold ml-0.5">
+                                            {subtopic.concepts.length}
+                                          </span>
+                                        </div>
+
+                                        {/* Level 3 Concept Name Pills on right */}
+                                        {isSubExpanded && subtopic.concepts.length > 0 && (
+                                          <div className="flex items-center gap-2 pl-1">
+                                            <svg width="24" height="12" className="shrink-0 pointer-events-none">
+                                              <line x1="0" y1="6" x2="24" y2="6" stroke={topic.colorHex} strokeWidth="1.5" strokeDasharray="3 3" />
+                                              <circle cx="24" cy="6" r="2.5" fill={topic.colorHex} />
+                                            </svg>
+                                            <div className="flex flex-wrap items-center gap-1.5 max-w-lg">
+                                              {subtopic.concepts.map((concept) => {
+                                                const isSelected = selectedConcept?.id === concept.id;
+                                                const isBookmarked = bookmarkedIds.has(concept.id);
+                                                const isMatch = activeSearch.trim() && (
+                                                  concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
+                                                  concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
+                                                );
+
+                                                const dotColor =
+                                                  concept.difficulty === "EASY"
+                                                    ? "bg-emerald-500"
+                                                    : concept.difficulty === "MEDIUM"
+                                                    ? "bg-blue-500"
+                                                    : concept.difficulty === "HARD"
+                                                    ? "bg-amber-500"
+                                                    : "bg-purple-500";
+
+                                                return (
+                                                  <button
+                                                    key={concept.id}
+                                                    type="button"
+                                                    onClick={() => setSelectedConcept(concept)}
+                                                    title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
+                                                    className={cn(
+                                                      "group/pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95",
+                                                      isSelected
+                                                        ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
+                                                        : isMatch
+                                                        ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
+                                                        : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                                                    )}
+                                                    style={{
+                                                      borderLeftColor: !isSelected && !isMatch ? topic.colorHex : undefined,
+                                                      borderLeftWidth: !isSelected && !isMatch ? "2.5px" : undefined,
+                                                    }}
+                                                  >
+                                                    <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
+                                                    <span className="truncate max-w-[240px] sm:max-w-none">{concept.term}</span>
+                                                    {isBookmarked && (
+                                                      <BookmarkCheck size={11} className="text-amber-400 shrink-0" />
+                                                    )}
+                                                  </button>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              ) : (
+                /* ─── 360° RADIAL ORBIT STARBURST (CANVA RADIAL) ─── */
+                <div className="relative w-[1300px] h-[1000px] flex items-center justify-center">
+                  {/* Central Node at (650, 500) */}
+                  <div className="absolute z-20 flex flex-col items-center">
+                    <div className="p-5 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[260px] space-y-2 ring-4 ring-purple-500/10">
+                      <div className="mx-auto w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 text-white flex items-center justify-center shadow-md">
+                        <Network size={24} />
+                      </div>
+                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
+                        Level 0 • Platform Core
+                      </div>
+                      <h2 className="text-sm font-extrabold text-[var(--foreground)] tracking-tight">
+                        Enterprise Data &amp; Lakehouse Platform
+                      </h2>
+                      <div className="text-[11px] font-mono text-[var(--muted-foreground)]">
+                        {totalVisibleConcepts} Concepts
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Radial SVG Branches & Orbit Nodes */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+                    {filteredTree.map((topic, idx) => {
+                      const total = filteredTree.length;
+                      const angle = (idx / total) * 2 * Math.PI - Math.PI / 2;
+                      const cx = 650;
+                      const cy = 500;
+                      const r1 = 320;
+                      const tx = cx + r1 * Math.cos(angle);
+                      const ty = cy + r1 * Math.sin(angle);
+                      const cpX = cx + (r1 * 0.5) * Math.cos(angle + 0.15);
+                      const cpY = cy + (r1 * 0.5) * Math.sin(angle + 0.15);
+
+                      return (
+                        <g key={topic.id}>
+                          <path
+                            d={`M ${cx},${cy} Q ${cpX},${cpY} ${tx},${ty}`}
+                            fill="none"
+                            stroke={topic.colorHex}
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            className="opacity-70"
+                          />
+                          <circle cx={tx} cy={ty} r="4" fill={topic.colorHex} />
+                        </g>
+                      );
+                    })}
+                  </svg>
+
+                  {/* Radial Domain Nodes positioned around perimeter */}
+                  {filteredTree.map((topic, idx) => {
+                    const total = filteredTree.length;
+                    const angle = (idx / total) * 2 * Math.PI - Math.PI / 2;
+                    const cx = 650;
+                    const cy = 500;
+                    const r1 = 320;
+                    const tx = cx + r1 * Math.cos(angle);
+                    const ty = cy + r1 * Math.sin(angle);
+
+                    return (
+                      <div
+                        key={topic.id}
+                        style={{
+                          position: "absolute",
+                          left: `${tx}px`,
+                          top: `${ty}px`,
+                          transform: "translate(-50%, -50%)",
+                        }}
+                        className="z-10 group"
+                      >
+                        <div
+                          onClick={() => toggleTopic(topic.id)}
+                          className="px-3 py-1.5 rounded-full border-2 bg-[var(--surface-1)] shadow-md hover:scale-105 transition-transform cursor-pointer flex items-center gap-1.5"
+                          style={{ borderColor: topic.colorHex }}
+                        >
+                          <TopicIcon topic={topic.icon} size={13} />
+                          <span className="text-xs font-bold text-[var(--foreground)] whitespace-nowrap">
+                            {topic.title}
+                          </span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] text-[var(--muted-foreground)]">
                             {topic.matchingCount}
                           </span>
                         </div>
                       </div>
-
-                      {/* Level 2 Subtopics & Level 3 Concepts */}
-                      {isTopicExpanded && (
-                        <div className="relative pl-6 sm:pl-8 pt-3 space-y-4 before:absolute before:left-3 before:top-2 before:bottom-3 before:w-0.5 before:bg-amber-500/30">
-                          {topic.subtopics.map((subtopic) => {
-                            const isSubExpanded = expandedSubtopics.has(subtopic.id);
-
-                            return (
-                              <div key={subtopic.id} className="relative">
-                                {/* Connector from Domain to Subtopic */}
-                                <div className="absolute -left-3 sm:-left-5 top-4 w-3 sm:w-5 h-0.5 bg-amber-500/30" />
-
-                                {/* Level 2: Subtopic Node */}
-                                <div
-                                  onClick={() => toggleSubtopic(subtopic.id)}
-                                  className={cn(
-                                    "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all cursor-pointer select-none",
-                                    isSubExpanded
-                                      ? "bg-[var(--surface-2)] border-amber-500/50"
-                                      : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/30"
-                                  )}
-                                >
-                                  <button
-                                    type="button"
-                                    className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
-                                    aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
-                                  >
-                                    {isSubExpanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-                                  </button>
-
-                                  <div className="space-y-0.5">
-                                    <div className="flex items-center gap-1.5">
-                                      <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
-                                        L2 Subtopic
-                                      </span>
-                                      <span className="text-xs font-bold text-[var(--foreground)]">
-                                        {subtopic.title}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-1)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold ml-1">
-                                    {subtopic.concepts.length}
-                                  </span>
-                                </div>
-
-                                {/* Level 3: Concepts (ONLY THE NAMES!) */}
-                                {isSubExpanded && subtopic.concepts.length > 0 && (
-                                  <div className="relative pl-6 sm:pl-8 pt-2.5 pb-1 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-500/30">
-                                    {/* Header for Level 3 */}
-                                    <div className="flex items-center gap-2 pb-1.5">
-                                      <div className="absolute -left-3 sm:-left-5 top-4 w-3 sm:w-5 h-0.5 bg-emerald-500/30" />
-                                      <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400">
-                                        L3 Concepts ({subtopic.concepts.length} Terms • Only Names)
-                                      </span>
-                                    </div>
-
-                                    {/* Concepts pills: ONLY THE NAMES! */}
-                                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                                      {subtopic.concepts.map((concept) => {
-                                        const isSelected = selectedConcept?.id === concept.id;
-                                        const isBookmarked = bookmarkedIds.has(concept.id);
-                                        const isMatch = activeSearch.trim() && (
-                                          concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
-                                          concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
-                                        );
-
-                                        // Difficulty dot color
-                                        const dotColor =
-                                          concept.difficulty === "EASY"
-                                            ? "bg-emerald-500"
-                                            : concept.difficulty === "MEDIUM"
-                                            ? "bg-blue-500"
-                                            : concept.difficulty === "HARD"
-                                            ? "bg-amber-500"
-                                            : "bg-purple-500";
-
-                                        return (
-                                          <button
-                                            key={concept.id}
-                                            type="button"
-                                            onClick={() => setSelectedConcept(concept)}
-                                            title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
-                                            className={cn(
-                                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-semibold transition-all cursor-pointer select-none text-left",
-                                              isSelected
-                                                ? "bg-blue-500/20 border-blue-500 text-blue-400 ring-2 ring-blue-500/40 shadow-xs"
-                                                : isMatch
-                                                ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
-                                                : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-blue-500/50 hover:bg-[var(--surface-2)]"
-                                            )}
-                                          >
-                                            <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
-                                            <span className="truncate max-w-[240px] sm:max-w-none">{concept.term}</span>
-                                            {isBookmarked && (
-                                              <BookmarkCheck size={10} className="text-amber-400 shrink-0" />
-                                            )}
-                                          </button>
-                                        );
-                                      })}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>
