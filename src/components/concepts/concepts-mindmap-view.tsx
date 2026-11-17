@@ -25,6 +25,9 @@ import {
   CheckCircle2,
   HelpCircle,
   RotateCcw,
+  Network,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -49,6 +52,7 @@ interface ConceptsMindmapViewProps {
   onSearchChange?: (q: string) => void;
   selectedCategory?: string;
   onCategoryChange?: (cat: string) => void;
+  initialLayoutMode?: "mindmap" | "tree" | "grid";
 }
 
 export function ConceptsMindmapView({
@@ -57,6 +61,7 @@ export function ConceptsMindmapView({
   onSearchChange,
   selectedCategory = "ALL",
   onCategoryChange,
+  initialLayoutMode = "tree",
 }: ConceptsMindmapViewProps) {
   // Local or controlled search
   const [internalSearch, setInternalSearch] = useState("");
@@ -78,8 +83,10 @@ export function ConceptsMindmapView({
   // 4 = Deep Stretch (Concepts with Definition Previews)
   const [stretchDepth, setStretchDepth] = useState<1 | 2 | 3 | 4>(3);
 
-  // Layout presentation mode: 'tree' (Horizontal Tree Branches) or 'grid' (Pillar Columns)
-  const [layoutMode, setLayoutMode] = useState<"tree" | "grid">("tree");
+  // Layout presentation mode: 'mindmap' (Linked Mind Map), 'tree' (Tree Branches) or 'grid' (Pillar Columns)
+  const [layoutMode, setLayoutMode] = useState<"mindmap" | "tree" | "grid">(initialLayoutMode);
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   // Expanded nodes state
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
@@ -271,6 +278,22 @@ export function ConceptsMindmapView({
     return filteredTree.reduce((sum, t) => sum + (t.matchingCount ?? 0), 0);
   }, [filteredTree]);
 
+  const handleCopyHierarchy = useCallback(() => {
+    let md = `# Enterprise Data Platform Concepts Hierarchy\n\n`;
+    filteredTree.forEach((topic) => {
+      md += `## ${topic.title} (${topic.matchingCount} concepts)\n`;
+      topic.subtopics.forEach((sub) => {
+        md += `### ${sub.title} (${sub.concepts.length} concepts)\n`;
+        sub.concepts.forEach((c) => {
+          md += `- **${c.term}** [${c.difficulty}]\n`;
+        });
+        md += `\n`;
+      });
+    });
+    navigator.clipboard.writeText(md);
+    toast.success("Complete concepts hierarchy copied to clipboard as Markdown!");
+  }, [filteredTree]);
+
   // Flat list of visible concepts for sequential focus navigation
   const visibleConceptsList = useMemo(() => {
     const list: Concept[] = [];
@@ -389,6 +412,21 @@ export function ConceptsMindmapView({
 
             {/* Layout Mode Switcher */}
             <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-xs">
+              <button
+                type="button"
+                onClick={() => setLayoutMode("mindmap")}
+                className={cn(
+                  "px-2.5 py-1 rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5 font-semibold text-xs",
+                  layoutMode === "mindmap"
+                    ? "bg-blue-600 text-white"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                )}
+                title="Linked Mind Map (Only Names)"
+                aria-label="Linked Mind Map (Only Names)"
+              >
+                <Network size={14} />
+                <span className="hidden sm:inline">Mind Map</span>
+              </button>
               <button
                 type="button"
                 onClick={() => setLayoutMode("tree")}
@@ -523,6 +561,295 @@ export function ConceptsMindmapView({
             <RotateCcw size={12} />
             <span>Reset All Filters</span>
           </button>
+        </div>
+      ) : layoutMode === "mindmap" ? (
+        /* ─── LINKED MIND MAP (ONLY NAMES IN CONNECTED HIERARCHY) ─── */
+        <div
+          className={cn(
+            "rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden shadow-xs transition-all",
+            isFullscreen && "fixed inset-0 z-50 rounded-none bg-[var(--background)] p-4 sm:p-6 overflow-auto"
+          )}
+        >
+          {/* Canvas Control Toolbar */}
+          <div className="p-3 sm:p-4 bg-[var(--surface-2)]/60 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 font-semibold">
+                <Network size={13} />
+                <span>Linked Mind Map Topology</span>
+              </div>
+              <span className="hidden sm:inline text-[var(--muted-foreground)]">•</span>
+              <span className="text-[var(--muted-foreground)] text-[11px]">
+                Showing <strong className="text-[var(--foreground)]">{totalVisibleConcepts}</strong> concept names linked across <strong className="text-[var(--foreground)]">{filteredTree.length}</strong> domains
+              </span>
+            </div>
+
+            {/* Canvas Actions */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {/* Zoom controls */}
+              <div className="flex items-center gap-0.5 px-1 py-0.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs">
+                <button
+                  type="button"
+                  onClick={() => setZoomLevel((z) => Math.max(z - 0.15, 0.6))}
+                  className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
+                  title="Zoom Out"
+                  aria-label="Zoom Out"
+                >
+                  <ZoomOut size={13} />
+                </button>
+                <span className="text-[11px] font-mono px-1.5 text-[var(--foreground)] min-w-[3rem] text-center">
+                  {Math.round(zoomLevel * 100)}%
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setZoomLevel((z) => Math.min(z + 0.15, 1.5))}
+                  className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
+                  title="Zoom In"
+                  aria-label="Zoom In"
+                >
+                  <ZoomIn size={13} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setZoomLevel(1)}
+                  className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
+                  title="Reset Zoom"
+                  aria-label="Reset Zoom"
+                >
+                  <RotateCcw size={13} />
+                </button>
+              </div>
+
+              {/* Copy Hierarchy */}
+              <button
+                type="button"
+                onClick={handleCopyHierarchy}
+                className="px-2.5 py-1 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-[11px] font-semibold text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                title="Copy hierarchy as Markdown"
+              >
+                <Copy size={12} />
+                <span className="hidden sm:inline">Copy Tree</span>
+              </button>
+
+              {/* Fullscreen Toggle */}
+              <button
+                type="button"
+                onClick={() => setIsFullscreen((prev) => !prev)}
+                className="px-2.5 py-1 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-[11px] font-semibold text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                title={isFullscreen ? "Exit Fullscreen" : "Fullscreen View"}
+              >
+                {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+                <span className="hidden sm:inline">{isFullscreen ? "Exit" : "Fullscreen"}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Mind Map Canvas Area */}
+          <div className="p-4 sm:p-8 overflow-x-auto min-h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[var(--surface-2)]/30 via-transparent to-transparent">
+            <div
+              style={{
+                transform: `scale(${zoomLevel})`,
+                transformOrigin: "top left",
+                transition: "transform 0.15s ease-out",
+              }}
+              className="space-y-8 min-w-[700px]"
+            >
+              {/* Level 0: Platform Core Root Hub */}
+              <div className="inline-flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[var(--surface-2)] border-2 border-blue-500/40 shadow-sm">
+                <div className="p-2.5 rounded-xl bg-blue-600 text-white shadow-xs">
+                  <Network size={22} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
+                      Level 0 • Platform Core
+                    </span>
+                    <span className="text-xs font-mono font-semibold text-[var(--muted-foreground)]">
+                      {totalVisibleConcepts} Concepts
+                    </span>
+                  </div>
+                  <h2 className="text-sm sm:text-base font-bold text-[var(--foreground)] tracking-tight">
+                    Enterprise Data &amp; Lakehouse Platform
+                  </h2>
+                </div>
+              </div>
+
+              {/* Level 1, 2, 3 Branches */}
+              <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 before:top-0 before:bottom-4 before:w-0.5 before:bg-blue-500/30">
+                {filteredTree.map((topic) => {
+                  const isTopicExpanded = expandedTopics.has(topic.id);
+
+                  return (
+                    <div key={topic.id} className="relative group">
+                      {/* Connector from spine to Level 1 */}
+                      <div className="absolute -left-3 sm:-left-5 top-5 w-3 sm:w-5 h-0.5 bg-blue-500/30" />
+
+                      {/* Level 1: Topic Domain Node */}
+                      <div className="flex items-start gap-4">
+                        <div
+                          onClick={() => toggleTopic(topic.id)}
+                          className={cn(
+                            "inline-flex items-center gap-2.5 p-2.5 sm:p-3 rounded-xl border-2 transition-all cursor-pointer select-none shadow-xs",
+                            isTopicExpanded
+                              ? "bg-[var(--surface-2)] border-blue-500/60 ring-1 ring-blue-500/20"
+                              : "bg-[var(--surface-1)] border-[var(--border)] hover:border-blue-500/40"
+                          )}
+                          style={{ borderColor: isTopicExpanded ? topic.colorHex : undefined }}
+                        >
+                          <button
+                            type="button"
+                            className="p-0.5 rounded text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] cursor-pointer"
+                            aria-label={isTopicExpanded ? "Collapse Domain" : "Expand Domain"}
+                          >
+                            {isTopicExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                          </button>
+
+                          <div
+                            className="p-1.5 rounded-lg border text-white"
+                            style={{ backgroundColor: `${topic.colorHex}20`, borderColor: `${topic.colorHex}40` }}
+                          >
+                            <TopicIcon topic={topic.icon} size={15} />
+                          </div>
+
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-blue-400">
+                                L1 Domain
+                              </span>
+                              <span
+                                className="text-[9px] font-semibold px-1.5 py-0.2 rounded border"
+                                style={{
+                                  backgroundColor: `${topic.colorHex}15`,
+                                  color: topic.colorHex,
+                                  borderColor: `${topic.colorHex}30`,
+                                }}
+                              >
+                                {topic.categoryKey}
+                              </span>
+                            </div>
+                            <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] tracking-tight">
+                              {topic.title}
+                            </h3>
+                          </div>
+
+                          <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--border)] text-[var(--muted-foreground)] ml-1">
+                            {topic.matchingCount}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Level 2 Subtopics & Level 3 Concepts */}
+                      {isTopicExpanded && (
+                        <div className="relative pl-6 sm:pl-8 pt-3 space-y-4 before:absolute before:left-3 before:top-2 before:bottom-3 before:w-0.5 before:bg-amber-500/30">
+                          {topic.subtopics.map((subtopic) => {
+                            const isSubExpanded = expandedSubtopics.has(subtopic.id);
+
+                            return (
+                              <div key={subtopic.id} className="relative">
+                                {/* Connector from Domain to Subtopic */}
+                                <div className="absolute -left-3 sm:-left-5 top-4 w-3 sm:w-5 h-0.5 bg-amber-500/30" />
+
+                                {/* Level 2: Subtopic Node */}
+                                <div
+                                  onClick={() => toggleSubtopic(subtopic.id)}
+                                  className={cn(
+                                    "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all cursor-pointer select-none",
+                                    isSubExpanded
+                                      ? "bg-[var(--surface-2)] border-amber-500/50"
+                                      : "bg-[var(--surface-1)] border-[var(--border)] hover:border-amber-500/30"
+                                  )}
+                                >
+                                  <button
+                                    type="button"
+                                    className="p-0.5 rounded text-[var(--muted-foreground)] cursor-pointer"
+                                    aria-label={isSubExpanded ? "Collapse Subtopic" : "Expand Subtopic"}
+                                  >
+                                    {isSubExpanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                                  </button>
+
+                                  <div className="space-y-0.5">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500">
+                                        L2 Subtopic
+                                      </span>
+                                      <span className="text-xs font-bold text-[var(--foreground)]">
+                                        {subtopic.title}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-1)] border border-[var(--border)] text-[var(--muted-foreground)] font-semibold ml-1">
+                                    {subtopic.concepts.length}
+                                  </span>
+                                </div>
+
+                                {/* Level 3: Concepts (ONLY THE NAMES!) */}
+                                {isSubExpanded && subtopic.concepts.length > 0 && (
+                                  <div className="relative pl-6 sm:pl-8 pt-2.5 pb-1 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-500/30">
+                                    {/* Header for Level 3 */}
+                                    <div className="flex items-center gap-2 pb-1.5">
+                                      <div className="absolute -left-3 sm:-left-5 top-4 w-3 sm:w-5 h-0.5 bg-emerald-500/30" />
+                                      <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400">
+                                        L3 Concepts ({subtopic.concepts.length} Terms • Only Names)
+                                      </span>
+                                    </div>
+
+                                    {/* Concepts pills: ONLY THE NAMES! */}
+                                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                                      {subtopic.concepts.map((concept) => {
+                                        const isSelected = selectedConcept?.id === concept.id;
+                                        const isBookmarked = bookmarkedIds.has(concept.id);
+                                        const isMatch = activeSearch.trim() && (
+                                          concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
+                                          concept.definition.toLowerCase().includes(activeSearch.toLowerCase())
+                                        );
+
+                                        // Difficulty dot color
+                                        const dotColor =
+                                          concept.difficulty === "EASY"
+                                            ? "bg-emerald-500"
+                                            : concept.difficulty === "MEDIUM"
+                                            ? "bg-blue-500"
+                                            : concept.difficulty === "HARD"
+                                            ? "bg-amber-500"
+                                            : "bg-purple-500";
+
+                                        return (
+                                          <button
+                                            key={concept.id}
+                                            type="button"
+                                            onClick={() => setSelectedConcept(concept)}
+                                            title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
+                                            className={cn(
+                                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-semibold transition-all cursor-pointer select-none text-left",
+                                              isSelected
+                                                ? "bg-blue-500/20 border-blue-500 text-blue-400 ring-2 ring-blue-500/40 shadow-xs"
+                                                : isMatch
+                                                ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
+                                                : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-blue-500/50 hover:bg-[var(--surface-2)]"
+                                            )}
+                                          >
+                                            <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
+                                            <span className="truncate max-w-[240px] sm:max-w-none">{concept.term}</span>
+                                            {isBookmarked && (
+                                              <BookmarkCheck size={10} className="text-amber-400 shrink-0" />
+                                            )}
+                                          </button>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       ) : layoutMode === "tree" ? (
         /* ─── HORIZONTAL TREE BRANCHING MULTI-LEVEL STRETCH ─── */

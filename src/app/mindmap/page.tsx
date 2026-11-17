@@ -1,16 +1,18 @@
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { getConceptsDAL } from "@/lib/dal";
 import { buildPageMetadata } from "@/lib/seo";
 import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
+import { MindmapClient } from "./mindmap-client";
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const concepts = await getConceptsDAL();
   return buildPageMetadata({
-    title: "Concepts Multi-Level Mind Map (Unified Under Single Roof)",
+    title: `Enterprise Data Platform Concepts Linked Mind Map (${concepts.length} Terms)`,
     description:
-      `Interactive multi-level stretching mind map organizing ${formatContentCount(CONTENT_COUNTS.concepts)}+ concepts across Microsoft Fabric, Databricks, Apache Spark, Delta Lake, Airflow, and Distributed Systems.`,
-    path: "/concepts?view=mindmap",
+      `Interactive linked mind map visualizing ${concepts.length} concepts across 14 technology domains and 46 subtopics with hierarchical links and names-only node topology.`,
+    path: "/mindmap",
     keywords: [
       "Concepts Mind Map",
       "Data Engineering Mindmap",
@@ -23,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function MindmapPage() {
-  redirect("/concepts?view=mindmap");
+export default async function MindmapPage() {
+  const concepts = await getConceptsDAL();
+  return <MindmapClient concepts={concepts} />;
 }
