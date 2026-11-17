@@ -180,4 +180,84 @@ describe("Linked Mind Map Feature Tests", () => {
     fireEvent.click(closeBtn);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
+
+  it("controls tree expansion depth with L1 Only, L2 Pillars, and All Levels buttons", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    // Initially All Levels (L3) is expanded
+    expect(screen.getByText("OneLake")).toBeDefined();
+    expect(screen.getByText("OneLake & ADLS Storage Substrate")).toBeDefined();
+
+    // Click "L1 Only" button
+    const l1Btn = screen.getByText("L1 Only");
+    fireEvent.click(l1Btn);
+
+    // Level 1 Domain nodes are still visible
+    expect(screen.getByText("Microsoft Fabric")).toBeDefined();
+    // Subtopics and Concepts are collapsed / minimized
+    expect(screen.queryByText("OneLake & ADLS Storage Substrate")).toBeNull();
+    expect(screen.queryByText("OneLake")).toBeNull();
+
+    // Click "L2 Pillars" button
+    const l2Btn = screen.getByText("L2 Pillars");
+    fireEvent.click(l2Btn);
+
+    // Subtopics are now visible, but individual concepts remain minimized
+    expect(screen.getByText("OneLake & ADLS Storage Substrate")).toBeDefined();
+    expect(screen.queryByText("OneLake")).toBeNull();
+
+    // Click "All Levels" button
+    const allBtn = screen.getByText("All Levels");
+    fireEvent.click(allBtn);
+
+    // Both subtopics and concepts are visible again
+    expect(screen.getByText("OneLake & ADLS Storage Substrate")).toBeDefined();
+    expect(screen.getByText("OneLake")).toBeDefined();
+  });
+
+  it("renders 360° Radial Orbit flow with multi-level expansion and interactivity", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    // Switch to Radial Orbit style
+    const radialRadio = screen.getByRole("button", { name: "Radial Orbit" });
+    fireEvent.click(radialRadio);
+
+    // Level 0 Core is rendered in radial mode
+    expect(screen.getByText("Enterprise Data & Lakehouse Platform")).toBeDefined();
+
+    // Level 1 Domain nodes are present in radial mode
+    expect(screen.getByText("Microsoft Fabric")).toBeDefined();
+    expect(screen.getByText("Apache Spark Core Engine")).toBeDefined();
+
+    // Level 2 Subtopics and Level 3 Concepts are present in radial mode
+    expect(screen.getByText("OneLake & ADLS Storage Substrate")).toBeDefined();
+    expect(screen.getByText("OneLake")).toBeDefined();
+
+    // Clicking concept in Radial Orbit opens Concept Detail Inspector
+    const conceptBtn = screen.getByText("OneLake");
+    fireEvent.click(conceptBtn);
+    expect(screen.getByRole("dialog")).toBeDefined();
+    expect(screen.getByText("Unified logical data lake for Microsoft Fabric.")).toBeDefined();
+
+    // Close dialog
+    fireEvent.click(screen.getByLabelText("Close Inspector"));
+    expect(screen.queryByRole("dialog")).toBeNull();
+
+    // Minimize to L1 Only in Radial mode
+    fireEvent.click(screen.getByText("L1 Only"));
+    expect(screen.getByText("Microsoft Fabric")).toBeDefined();
+    expect(screen.queryByText("OneLake & ADLS Storage Substrate")).toBeNull();
+    expect(screen.queryByText("OneLake")).toBeNull();
+  });
+
+  it("triggers auto-scale when Fit to 14-inch Screen button is clicked", () => {
+    render(<ConceptsMindmapView concepts={mockSampleConcepts} initialLayoutMode="mindmap" />);
+
+    // Click Fit Screen button
+    const fitScreenBtn = screen.getByLabelText("Fit Screen");
+    fireEvent.click(fitScreenBtn);
+
+    // For all levels, zoom scales to 68%
+    expect(screen.getByText("68%")).toBeDefined();
+  });
 });

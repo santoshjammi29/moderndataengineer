@@ -116,6 +116,16 @@ export function ConceptsMindmapView({
     setPanOffset({ x: 0, y: 0 });
   }, []);
 
+  const handleFitScreen = useCallback(() => {
+    let optimalZoom = 0.7;
+    if (stretchDepth === 1) optimalZoom = 1.0;
+    else if (stretchDepth === 2) optimalZoom = 0.85;
+    else optimalZoom = mindmapStyle === "radial" ? 0.72 : 0.68;
+    setZoomLevel(optimalZoom);
+    setPanOffset({ x: 0, y: 0 });
+    toast.info(`Adjusted zoom to ${Math.round(optimalZoom * 100)}% to fit screen`);
+  }, [stretchDepth, mindmapStyle]);
+
   // Expanded nodes state
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
   const [expandedSubtopics, setExpandedSubtopics] = useState<Set<string>>(new Set());
@@ -169,7 +179,7 @@ export function ConceptsMindmapView({
 
   // Initial auto-expand to Level 3 on mount
   React.useEffect(() => {
-    if (expandedTopics.size === 0) {
+    if (expandedTopics.size === 0 && stretchDepth > 1) {
       setExpandedTopics(new Set(fullTree.map((t) => t.id)));
       const initialSubs = new Set<string>();
       // Expand subtopics for initial visible state
@@ -178,7 +188,7 @@ export function ConceptsMindmapView({
       });
       setExpandedSubtopics(initialSubs);
     }
-  }, [fullTree, expandedTopics.size]);
+  }, [fullTree, expandedTopics.size, stretchDepth]);
 
   // Auto-expand branches when searching
   React.useEffect(() => {
@@ -639,6 +649,7 @@ export function ConceptsMindmapView({
                       : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                   )}
                   title="Bilateral Organic Brainstorm (Canva Style)"
+                  aria-label="Bilateral Flow"
                 >
                   Bilateral Flow
                 </button>
@@ -652,8 +663,55 @@ export function ConceptsMindmapView({
                       : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                   )}
                   title="360° Radial Starburst Orbit"
+                  aria-label="Radial Orbit"
                 >
                   Radial Orbit
+                </button>
+              </div>
+
+              {/* Level Minimizing & Expanding Options */}
+              <div className="inline-flex items-center gap-0.5 p-0.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs">
+                <button
+                  type="button"
+                  onClick={() => handleDepthChange(1)}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer",
+                    stretchDepth === 1
+                      ? "bg-purple-600 text-white shadow-2xs font-bold"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  )}
+                  title="Minimize to Level 1 Domains Only"
+                  aria-label="Minimize to Level 1"
+                >
+                  L1 Only
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDepthChange(2)}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer",
+                    stretchDepth === 2
+                      ? "bg-purple-600 text-white shadow-2xs font-bold"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  )}
+                  title="Expand to Level 2 Subtopic Pillars"
+                  aria-label="Expand to Level 2"
+                >
+                  L2 Pillars
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDepthChange(3)}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer",
+                    stretchDepth >= 3
+                      ? "bg-purple-600 text-white shadow-2xs font-bold"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  )}
+                  title="Expand to Level 3 All Concepts"
+                  aria-label="Expand All to Level 3"
+                >
+                  All Levels
                 </button>
               </div>
 
@@ -701,10 +759,19 @@ export function ConceptsMindmapView({
                   type="button"
                   onClick={handleResetZoom}
                   className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
-                  title="Reset Zoom & Pan"
+                  title="Reset Zoom & Pan (100%)"
                   aria-label="Reset Zoom"
                 >
                   <RotateCcw size={13} />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleFitScreen}
+                  className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)] cursor-pointer"
+                  title="Fit to 14-inch Screen (Auto-Scale)"
+                  aria-label="Fit Screen"
+                >
+                  <Maximize2 size={13} />
                 </button>
               </div>
 
@@ -778,7 +845,7 @@ export function ConceptsMindmapView({
           {/* Organic Mind Map Canvas Area */}
           <div
             className={cn(
-              "relative min-h-[640px] overflow-hidden select-none",
+              "relative h-[580px] sm:h-[620px] max-h-[calc(100vh-250px)] min-h-[480px] overflow-hidden select-none",
               isDragging ? "cursor-grabbing" : "cursor-grab"
             )}
             style={{
@@ -1495,105 +1562,427 @@ export function ConceptsMindmapView({
                   );
                 })()
               ) : (
-                /* ─── 360° RADIAL ORBIT STARBURST (CANVA RADIAL) ─── */
-                <div className="relative w-[1300px] h-[1000px] flex items-center justify-center">
-                  {/* Central Node at (650, 500) */}
-                  <div className="absolute z-20 flex flex-col items-center">
-                    <div className="p-5 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[260px] space-y-2 ring-4 ring-purple-500/10">
-                      <div className="mx-auto w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 text-white flex items-center justify-center shadow-md">
-                        <Network size={24} />
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
-                        Level 0 • Platform Core
-                      </div>
-                      <h2 className="text-sm font-extrabold text-[var(--foreground)] tracking-tight">
-                        Enterprise Data &amp; Lakehouse Platform
-                      </h2>
-                      <div className="text-[11px] font-mono text-[var(--muted-foreground)]">
-                        {totalVisibleConcepts} Concepts
-                      </div>
-                    </div>
-                  </div>
+                /* ─── 360° RADIAL ORBIT STARBURST (CANVA RADIAL WITH 3 MULTI-LEVEL EXPANSION) ─── */
+                (() => {
+                  const cx = 700;
+                  const cy = 650;
+                  const totalTopics = filteredTree.length;
+                  const isAllL1 = expandedTopics.size === 0;
+                  const isAllL2Only = expandedTopics.size > 0 && expandedSubtopics.size === 0;
 
-                  {/* Radial SVG Branches & Orbit Nodes */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-                    {filteredTree.map((topic, idx) => {
-                      const total = filteredTree.length;
-                      const angle = (idx / total) * 2 * Math.PI - Math.PI / 2;
-                      const cx = 650;
-                      const cy = 500;
-                      const r1 = 320;
-                      const tx = cx + r1 * Math.cos(angle);
-                      const ty = cy + r1 * Math.sin(angle);
-                      const cpX = cx + (r1 * 0.5) * Math.cos(angle + 0.15);
-                      const cpY = cy + (r1 * 0.5) * Math.sin(angle + 0.15);
+                  // Dynamic radii based on expanded levels
+                  const r1 = isAllL1 ? 230 : 200; // Orbit Ring 1: Level 1 Topics
+                  const r2 = 360;                  // Orbit Ring 2: Level 2 Subtopics
+                  const r3Base = 530;              // Orbit Ring 3: Level 3 Concepts
 
-                      return (
-                        <g key={topic.id}>
-                          <path
-                            d={`M ${cx},${cy} Q ${cpX},${cpY} ${tx},${ty}`}
+                  // Build geometry tree for splines and node rendering
+                  const radialTree = filteredTree.map((topic, tIdx) => {
+                    const tAngle = (tIdx / Math.max(totalTopics, 1)) * 2 * Math.PI - Math.PI / 2;
+                    const tx = cx + r1 * Math.cos(tAngle);
+                    const ty = cy + r1 * Math.sin(tAngle);
+
+                    const isTopicExp = expandedTopics.has(topic.id);
+                    const subCount = topic.subtopics.length;
+                    const sectorSpan = (2 * Math.PI / Math.max(totalTopics, 1)) * 0.82;
+
+                    const subtopicsData = topic.subtopics.map((sub, sIdx) => {
+                      let sAngle = tAngle;
+                      if (subCount > 1) {
+                        sAngle = tAngle - sectorSpan / 2 + (sIdx / (subCount - 1)) * sectorSpan;
+                      }
+                      const sx = cx + r2 * Math.cos(sAngle);
+                      const sy = cy + r2 * Math.sin(sAngle);
+
+                      const isSubExp = expandedSubtopics.has(sub.id);
+                      // In radial layout, render up to 5 concepts per subtopic to keep layout crisp & legible
+                      const maxVisibleConcepts = 5;
+                      const conceptsToRender = sub.concepts.slice(0, maxVisibleConcepts);
+                      const cCount = conceptsToRender.length;
+                      const cSectorSpan = (sectorSpan / Math.max(subCount, 1)) * 0.85;
+
+                      const conceptsData = conceptsToRender.map((concept, cIdx) => {
+                        let cAngle = sAngle;
+                        if (cCount > 1) {
+                          cAngle = sAngle - cSectorSpan / 2 + (cIdx / (cCount - 1)) * cSectorSpan;
+                        }
+                        // Stagger radiuses slightly to prevent label overlap
+                        const r3 = r3Base + (cIdx % 2) * 55;
+                        const kx = cx + r3 * Math.cos(cAngle);
+                        const ky = cy + r3 * Math.sin(cAngle);
+
+                        return {
+                          concept,
+                          kx,
+                          ky,
+                          cAngle,
+                        };
+                      });
+
+                      return {
+                        sub,
+                        sx,
+                        sy,
+                        sAngle,
+                        isSubExp,
+                        hasMoreConcepts: sub.concepts.length > maxVisibleConcepts,
+                        remainingCount: sub.concepts.length - maxVisibleConcepts,
+                        conceptsData,
+                      };
+                    });
+
+                    return {
+                      topic,
+                      tx,
+                      ty,
+                      tAngle,
+                      isTopicExp,
+                      subtopicsData,
+                    };
+                  });
+
+                  return (
+                    <div className="relative w-[1400px] h-[1300px] flex items-center justify-center">
+                      {/* Background Orbit Guide Rings */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+                        {/* Orbit Ring 1 Guide */}
+                        <circle
+                          cx={cx}
+                          cy={cy}
+                          r={r1}
+                          fill="none"
+                          stroke="rgba(148, 163, 184, 0.12)"
+                          strokeWidth="1.5"
+                          strokeDasharray="4 4"
+                        />
+                        {/* Orbit Ring 2 Guide */}
+                        {expandedTopics.size > 0 && (
+                          <circle
+                            cx={cx}
+                            cy={cy}
+                            r={r2}
                             fill="none"
-                            stroke={topic.colorHex}
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            className="opacity-70"
+                            stroke="rgba(148, 163, 184, 0.09)"
+                            strokeWidth="1.5"
+                            strokeDasharray="6 6"
                           />
-                          <circle cx={tx} cy={ty} r="4" fill={topic.colorHex} />
-                        </g>
-                      );
-                    })}
-                  </svg>
+                        )}
+                        {/* Orbit Ring 3 Guide */}
+                        {expandedSubtopics.size > 0 && (
+                          <circle
+                            cx={cx}
+                            cy={cy}
+                            r={r3Base}
+                            fill="none"
+                            stroke="rgba(148, 163, 184, 0.06)"
+                            strokeWidth="1.5"
+                            strokeDasharray="8 8"
+                          />
+                        )}
 
-                  {/* Radial Domain Nodes positioned around perimeter */}
-                  {filteredTree.map((topic, idx) => {
-                    const total = filteredTree.length;
-                    const angle = (idx / total) * 2 * Math.PI - Math.PI / 2;
-                    const cx = 650;
-                    const cy = 500;
-                    const r1 = 320;
-                    const tx = cx + r1 * Math.cos(angle);
-                    const ty = cy + r1 * Math.sin(angle);
+                        {/* Splines Level 0 -> Level 1 */}
+                        {radialTree.map(({ topic, tx, ty, tAngle, isTopicExp, subtopicsData }) => {
+                          const cpX = cx + (r1 * 0.45) * Math.cos(tAngle + 0.12);
+                          const cpY = cy + (r1 * 0.45) * Math.sin(tAngle + 0.12);
 
-                    return (
+                          return (
+                            <g key={topic.id}>
+                              <path
+                                d={`M ${cx},${cy} Q ${cpX},${cpY} ${tx},${ty}`}
+                                fill="none"
+                                stroke={topic.colorHex}
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                className="opacity-75"
+                              />
+                              <circle cx={tx} cy={ty} r="4" fill={topic.colorHex} />
+
+                              {/* Splines Level 1 -> Level 2 */}
+                              {isTopicExp &&
+                                subtopicsData.map(({ sub, sx, sy, sAngle, isSubExp, conceptsData }) => {
+                                  const midX = (tx + sx) / 2 + 12 * Math.sin(sAngle);
+                                  const midY = (ty + sy) / 2 - 12 * Math.cos(sAngle);
+
+                                  return (
+                                    <g key={sub.id}>
+                                      <path
+                                        d={`M ${tx},${ty} Q ${midX},${midY} ${sx},${sy}`}
+                                        fill="none"
+                                        stroke={topic.colorHex}
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        className="opacity-70"
+                                      />
+                                      <circle cx={sx} cy={sy} r="3" fill={topic.colorHex} />
+
+                                      {/* Splines Level 2 -> Level 3 */}
+                                      {isSubExp &&
+                                        conceptsData.map(({ concept, kx, ky, cAngle }) => {
+                                          const cMidX = (sx + kx) / 2 + 8 * Math.sin(cAngle);
+                                          const cMidY = (sy + ky) / 2 - 8 * Math.cos(cAngle);
+
+                                          return (
+                                            <g key={concept.id}>
+                                              <path
+                                                d={`M ${sx},${sy} Q ${cMidX},${cMidY} ${kx},${ky}`}
+                                                fill="none"
+                                                stroke={topic.colorHex}
+                                                strokeWidth="1.25"
+                                                strokeLinecap="round"
+                                                strokeDasharray="2 2"
+                                                className="opacity-55"
+                                              />
+                                              <circle cx={kx} cy={ky} r="2.5" fill={topic.colorHex} />
+                                            </g>
+                                          );
+                                        })}
+                                    </g>
+                                  );
+                                })}
+                            </g>
+                          );
+                        })}
+                      </svg>
+
+                      {/* Central Node at (cx, cy) = (700, 650) */}
                       <div
-                        key={topic.id}
                         style={{
                           position: "absolute",
-                          left: `${tx}px`,
-                          top: `${ty}px`,
+                          left: `${cx}px`,
+                          top: `${cy}px`,
                           transform: "translate(-50%, -50%)",
                         }}
-                        className="z-10 group"
+                        className="z-20 flex flex-col items-center"
                       >
                         <div
-                          onClick={() => toggleTopic(topic.id)}
-                          className="px-3 py-1.5 rounded-full border-2 bg-[var(--surface-1)] shadow-md hover:scale-105 transition-transform cursor-pointer flex items-center gap-1.5"
-                          style={{ borderColor: topic.colorHex }}
+                          onClick={() => {
+                            if (isAllL1) handleDepthChange(3);
+                            else handleDepthChange(1);
+                          }}
+                          className="p-4 sm:p-5 rounded-3xl bg-[var(--surface-1)] border-2 border-purple-500/50 shadow-2xl text-center max-w-[260px] space-y-2 ring-4 ring-purple-500/10 cursor-pointer hover:scale-103 transition-transform"
+                          title="Click to toggle expand/collapse all"
                         >
-                          <TopicIcon topic={topic.icon} size={13} />
-                          <span className="text-xs font-bold text-[var(--foreground)] whitespace-nowrap">
-                            {topic.title}
-                          </span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] text-[var(--muted-foreground)]">
-                            {topic.matchingCount}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedTopicInfo(topic);
-                            }}
-                            className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-purple-400 cursor-pointer"
-                            title={`View ${topic.title} Domain Definition`}
-                            aria-label={`View ${topic.title} Domain Definition`}
-                          >
-                            <Info size={11} />
-                          </button>
+                          <div className="mx-auto w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 text-white flex items-center justify-center shadow-md">
+                            <Network size={22} />
+                          </div>
+                          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
+                            Level 0 • Platform Core
+                          </div>
+                          <h2 className="text-sm font-extrabold text-[var(--foreground)] tracking-tight leading-tight">
+                            Enterprise Data &amp; Lakehouse Platform
+                          </h2>
+                          <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-[var(--muted-foreground)]">
+                            <span>{totalVisibleConcepts} Concepts</span>
+                            <span>•</span>
+                            <span className="text-purple-400 font-semibold">
+                              {isAllL1 ? "L1 Minimal" : isAllL2Only ? "L2 Pillars" : "L3 Full"}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+
+                      {/* Orbit Nodes: Level 1, Level 2, Level 3 */}
+                      {radialTree.map(({ topic, tx, ty, isTopicExp, subtopicsData }) => (
+                        <React.Fragment key={topic.id}>
+                          {/* ─── LEVEL 1: DOMAIN NODE ─── */}
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: `${tx}px`,
+                              top: `${ty}px`,
+                              transform: "translate(-50%, -50%)",
+                            }}
+                            className="z-15 group"
+                          >
+                            <div
+                              onClick={() => toggleTopic(topic.id)}
+                              className="px-3 py-1.5 rounded-full border-2 bg-[var(--surface-1)] shadow-md hover:scale-105 transition-transform cursor-pointer flex items-center gap-1.5 select-none"
+                              style={{ borderColor: topic.colorHex }}
+                            >
+                              <TopicIcon topic={topic.icon} size={13} />
+                              <span className="text-xs font-bold text-[var(--foreground)] whitespace-nowrap">
+                                {topic.title}
+                              </span>
+                              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[var(--surface-2)] text-[var(--muted-foreground)]">
+                                {topic.matchingCount}
+                              </span>
+                              <span className="text-[var(--muted-foreground)]">
+                                {isTopicExp ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedTopicInfo(topic);
+                                }}
+                                className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-purple-400 cursor-pointer"
+                                title={`View ${topic.title} Domain Definition`}
+                                aria-label={`View ${topic.title} Domain Definition`}
+                              >
+                                <Info size={11} />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* ─── LEVEL 2: SUBTOPIC NODES ─── */}
+                          {isTopicExp &&
+                            subtopicsData.map(
+                              ({ sub, sx, sy, isSubExp, hasMoreConcepts, remainingCount, conceptsData }) => (
+                                <React.Fragment key={sub.id}>
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      left: `${sx}px`,
+                                      top: `${sy}px`,
+                                      transform: "translate(-50%, -50%)",
+                                    }}
+                                    className="z-12 group"
+                                  >
+                                    <div
+                                      onClick={() => toggleSubtopic(sub.id)}
+                                      className="px-2.5 py-1 rounded-full border bg-[var(--surface-1)] shadow-sm hover:scale-104 transition-transform cursor-pointer flex items-center gap-1.5 select-none max-w-[200px]"
+                                      style={{
+                                        borderColor: topic.colorHex,
+                                        borderLeftWidth: "3px",
+                                      }}
+                                    >
+                                      <span className="text-[11px] font-bold text-[var(--foreground)] truncate">
+                                        {sub.title}
+                                      </span>
+                                      <span className="text-[9.5px] font-mono px-1 rounded-full bg-[var(--surface-2)] text-[var(--muted-foreground)] shrink-0">
+                                        {sub.concepts.length}
+                                      </span>
+                                      <span className="text-[var(--muted-foreground)] shrink-0">
+                                        {isSubExp ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedSubtopicInfo({ topic, subtopic: sub });
+                                        }}
+                                        className="p-0.5 rounded text-[var(--muted-foreground)] hover:text-blue-400 cursor-pointer shrink-0"
+                                        title={`View ${sub.title} Subtopic Definition`}
+                                        aria-label={`View ${sub.title} Subtopic Definition`}
+                                      >
+                                        <Info size={10} />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  {/* ─── LEVEL 3: CONCEPT NODES ─── */}
+                                  {isSubExp &&
+                                    conceptsData.map(({ concept, kx, ky }) => {
+                                      const isSelected = selectedConcept?.id === concept.id;
+                                      const isBookmarked = bookmarkedIds.has(concept.id);
+                                      const isMatch =
+                                        activeSearch.trim() &&
+                                        (concept.term.toLowerCase().includes(activeSearch.toLowerCase()) ||
+                                          concept.definition.toLowerCase().includes(activeSearch.toLowerCase()));
+
+                                      const dotColor =
+                                        concept.difficulty === "EASY"
+                                          ? "bg-emerald-500"
+                                          : concept.difficulty === "MEDIUM"
+                                          ? "bg-blue-500"
+                                          : concept.difficulty === "HARD"
+                                          ? "bg-amber-500"
+                                          : "bg-purple-500";
+
+                                      const diffMeta =
+                                        difficultyColors[concept.difficulty] || difficultyColors.MEDIUM;
+
+                                      return (
+                                        <div
+                                          key={concept.id}
+                                          style={{
+                                            position: "absolute",
+                                            left: `${kx}px`,
+                                            top: `${ky}px`,
+                                            transform: "translate(-50%, -50%)",
+                                          }}
+                                          className="z-10 group"
+                                        >
+                                          {definitionsVisible ? (
+                                            <div
+                                              onClick={() => setSelectedConcept(concept)}
+                                              className={cn(
+                                                "rounded-xl p-2 border transition-all cursor-pointer select-none space-y-1 text-left shadow-2xs hover:scale-105 active:scale-98 max-w-[190px]",
+                                                isSelected
+                                                  ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
+                                                  : isMatch
+                                                  ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
+                                                  : "bg-[var(--surface-1)] border-[var(--border)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                                              )}
+                                              style={{
+                                                borderLeftColor: !isSelected && !isMatch ? topic.colorHex : undefined,
+                                                borderLeftWidth: !isSelected && !isMatch ? "3px" : undefined,
+                                              }}
+                                            >
+                                              <div className="flex items-center justify-between gap-1">
+                                                <span
+                                                  className={cn(
+                                                    "text-[11px] font-bold truncate",
+                                                    isSelected ? "text-white" : "text-[var(--foreground)]"
+                                                  )}
+                                                >
+                                                  {concept.term}
+                                                </span>
+                                                <span
+                                                  className={cn(
+                                                    "text-[8px] font-bold px-1 py-0.2 rounded-sm border uppercase shrink-0",
+                                                    isSelected
+                                                      ? "bg-white/20 text-white border-white/30"
+                                                      : `${diffMeta.bg} ${diffMeta.text} ${diffMeta.border}`
+                                                  )}
+                                                >
+                                                  {concept.difficulty}
+                                                </span>
+                                              </div>
+                                              <p
+                                                className={cn(
+                                                  "text-[9.5px] line-clamp-2 leading-tight",
+                                                  isSelected ? "text-white/90" : "text-[var(--muted-foreground)]"
+                                                )}
+                                              >
+                                                {concept.definition}
+                                              </p>
+                                            </div>
+                                          ) : (
+                                            <button
+                                              type="button"
+                                              onClick={() => setSelectedConcept(concept)}
+                                              title={`${concept.term} (${concept.difficulty}): ${concept.definition}`}
+                                              className={cn(
+                                                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-semibold transition-all cursor-pointer select-none text-left shadow-2xs hover:scale-105 active:scale-95 whitespace-nowrap",
+                                                isSelected
+                                                  ? "bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40"
+                                                  : isMatch
+                                                  ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 font-bold"
+                                                  : "bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-purple-500/50 hover:bg-[var(--surface-2)]"
+                                              )}
+                                              style={{
+                                                borderLeftColor: !isSelected && !isMatch ? topic.colorHex : undefined,
+                                                borderLeftWidth: !isSelected && !isMatch ? "2.5px" : undefined,
+                                              }}
+                                            >
+                                              {isBookmarked && (
+                                                <BookmarkCheck size={10} className="text-amber-400 fill-amber-400 shrink-0" />
+                                              )}
+                                              <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
+                                              <span className="truncate max-w-[130px]">{concept.term}</span>
+                                            </button>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                </React.Fragment>
+                              )
+                            )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  );
+                })()
               )}
             </div>
           </div>
