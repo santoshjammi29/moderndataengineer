@@ -230,4 +230,19 @@ For visual, architect-level whiteboard schematics covering each of these enterpr
 
 ---
 
+## 6. Dedicated Production Blueprints Repositories
+
+For complete production-grade source code, Declarative Automation Bundles (`databricks.yml`), PySpark engines, and interview defense playbooks:
+
+- 🚀 **[Azure Databricks Project Blueprints](https://github.com/santoshjammi29/azure-databricks-project-blueprints)**:
+  - **Scenario 1**: Omnichannel Retail Sales & Inventory Lakehouse (Auto Loader, Liquid Clustering, Deletion Vectors, DLT SCD Type 2, DBSQL Serverless).
+  - **Scenario 2**: Real-Time Payments Fraud & AML Monitoring (Azure Event Hubs, Structured Streaming, off-heap RocksDB state store, 10-minute watermarks, idempotent alert egress).
+  - **Scenario 3**: Legacy Warehouse Modernization & Controlled Cutover (Topological dependency graph wave phasing, automated dual-run parity verification, DABs CI/CD, Delta Time Travel rollback).
+- 🏛️ **[Enterprise Banking ALM & Credit Risk Analytics Lakehouse](https://github.com/santoshjammi29/enterprise-banking-risk-alm-lakehouse)**:
+  - **Scenario 1**: Enterprise ALM & IRRBB Dynamic Simulation Engine (EBA 6-curve shock scenarios, NMD behavioral replication, PyArrow Vectorized UDFs over Photon).
+  - **Scenario 2**: IFRS 9 Multi-Scenario Expected Credit Loss (ECL) & Basel IV Engine (SICR staging triggers, BCBS 239 data quality expectations, Delta CDF General Ledger feeds).
+  - **Scenario 3**: Commercial & Agri Early Warning System (EWS) (Structured Streaming with off-heap RocksDB, Mosaic AI Vector Search over field inspection notes, Unity Catalog regional RLS).
+
+---
+
 [← Back to Architecture Library](./README.md) • [Documentation Hub](../README.md)
