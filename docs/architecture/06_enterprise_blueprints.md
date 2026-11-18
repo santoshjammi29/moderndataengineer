@@ -242,6 +242,9 @@ For complete production-grade source code, Declarative Automation Bundles (`data
   - **Scenario 1**: Enterprise ALM & IRRBB Dynamic Simulation Engine (EBA 6-curve shock scenarios, NMD behavioral replication, PyArrow Vectorized UDFs over Photon).
   - **Scenario 2**: IFRS 9 Multi-Scenario Expected Credit Loss (ECL) & Basel IV Engine (SICR staging triggers, BCBS 239 data quality expectations, Delta CDF General Ledger feeds).
   - **Scenario 3**: Commercial & Agri Early Warning System (EWS) (Structured Streaming with off-heap RocksDB, Mosaic AI Vector Search over field inspection notes, Unity Catalog regional RLS).
+- 📖 **[Data Engineering Interview Handbook & Architectural Defense Guide](https://github.com/santoshjammi29/data-engineering-interview-handbook)**:
+  - **125 Core Defense Playbooks**: Production-tested solutions for SQL & PySpark internals, Apache Kafka, Spark Structured Streaming, Delta Lake 3.x, AWS Big Data, system design scenarios, and engineering leadership.
+  - **14 Knowledge Base Pillars (140 Questions)**: Deep architectural drill-downs spanning Spark 3.5, Databricks Unity Catalog, Modern Lakehouse, Data Lake storage, Airflow 2/3, ADF, dbt, Microsoft Fabric, Database Architecture, SQL Server, Python, Data Modeling, Power BI, and System Design.
 
 ---
 
