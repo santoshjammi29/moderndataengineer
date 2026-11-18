@@ -69,6 +69,7 @@ flowchart TD
 - ⚡ **[The PySpark Handbook (105 Production Recipes)](https://github.com/santoshjammi29/pyspark-handbook)**: 105 battle-tested PySpark & Delta Lake notebooks with Databricks Asset Bundles (DABs) IaC.
 - ⚡ **[The SQL Handbook (105 Production Exercises)](https://github.com/santoshjammi29/sql-handbook)**: 105 production SQL exercises, MPP architectures, query tuning recipes, and incident runbooks.
 - ⚡ **[The Databricks Handbook (105 Production Recipes)](https://github.com/santoshjammi29/databricks-handbook)**: Complete Databricks Data Intelligence Platform reference covering Unity Catalog, Delta Lake 3.x, Lakeflow Jobs & DLT, DBSQL, DABs, Databricks Apps, Mosaic AI, and FinOps System Tables.
+- ⚡ **[Azure Databricks Project Blueprints](https://github.com/santoshjammi29/azure-databricks-project-blueprints)**: Production-grade interview and enterprise design blueprints covering Omnichannel Retail, Real-Time Fraud & AML, and Warehouse Modernization.
 - ☁️ **[Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet)**: Enterprise Azure architecture, networking, security, and governance.
 
 ---
