@@ -149,30 +149,76 @@ flowchart LR
 All 52 blueprints are rendered as high-fidelity hand-drawn digital schematics (available in `src/data/diagrams.ts`, `assets/whiteboards/`, and `public/diagrams/` in WebP & AVIF formats) grouped into 7 core architectural domains. The complete repository documentation with Markdown image embeds, multi-persona breakdowns, and primary docLinks is available at:
 👉 **[`docs/whiteboard_diagrams/README.md`](docs/whiteboard_diagrams/README.md)**
 
-Every single blueprint includes **multi-persona engineering depth**:
+### 📐 Visual Blueprints Showcase
 
-- **5 Distinct Role Perspectives per Blueprint**:
-  - 🏛️ **Lead Data Architect**: Macro system design, multi-cloud federation, SLA/SLO definition, FinOps unit economics, disaster recovery.
-  - ⚙️ **Senior / Staff Data Engineer**: Low-level engine internals, CPU cache line alignment, AST query plans, off-heap Tungsten memory, shuffle spill triage, ACID log serialization.
-  - 🔧 **Data Engineer**: Daily ELT pipeline engineering, partition/clustering choices, idempotency, streaming checkpoints, schema evolution, and CDC ingestion.
-  - 🛡️ **Data Steward & Governance**: Unity Catalog 3-level namespace (`catalog.schema.table`), Purview lineage graphs, dynamic row/column masks, PII classification, and GDPR deletion workflows.
-  - 📊 **Business Analyst & BI**: Power BI Direct Lake sub-second DAX response, VertiPaq memory limits, metric consistency across dimensional bus matrices, and self-service exploration.
-- **Executive Architect Notes**: Explicit trade-offs, scaling limits, anti-patterns, and cost burndown models.
-- **Under-the-Hood Technical Mechanisms**: 4–6 concrete engine mechanisms per blueprint (e.g. V-Order Parquet sorting, Netty socket buffers, HNSW vector indexing, RocksDB LSM memtables, OCC commit protocols).
-- **Production Triage & Incident Runbooks**: Detailed incident cards featuring alert symptoms, root causes, and step-by-step engineering mitigations.
-- **Interactive 4-Tab Lightbox Inspector**: Modal viewer across `/architecture` and `/whiteboards` enabling seamless switching between **Architecture & Pillars**, **5 Role Perspectives**, **Production Triage**, and **Governance & Compliance**.
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#databricks-platform-master">
+        <img src="assets/whiteboards/databricks_ecosystem_landscape.webp" alt="Databricks Unified Data Intelligence Platform" width="100%" />
+      </a>
+      <br><strong>Databricks Unified Data Intelligence Platform</strong><br>
+      <em>Split-plane cloud architecture, Unity Catalog governance, and multi-engine compute.</em>
+    </td>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#fabric-onelake-architecture">
+        <img src="assets/whiteboards/fabric_onelake_architecture.webp" alt="Microsoft Fabric Unified Architecture & OneLake" width="100%" />
+      </a>
+      <br><strong>Microsoft Fabric Unified Architecture & OneLake</strong><br>
+      <em>Single SaaS lakehouse with zero data duplication, multi-engine compute, and cross-cloud shortcuts.</em>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#spark-catalyst-photon-engine">
+        <img src="assets/whiteboards/catalyst_photon_engine.webp" alt="Databricks Compute: Catalyst Optimizer, AQE & Photon" width="100%" />
+      </a>
+      <br><strong>Databricks Compute: Catalyst Optimizer, AQE & Photon</strong><br>
+      <em>Multi-stage relational optimization from parsed AST to native machine instructions.</em>
+    </td>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#delta-vs-iceberg-architecture">
+        <img src="assets/whiteboards/delta_lake_vs_iceberg_architecture.webp" alt="Delta Lake vs. Apache Iceberg Storage & Metadata Architecture" width="100%" />
+      </a>
+      <br><strong>Delta Lake vs. Apache Iceberg Storage & Metadata Architecture</strong><br>
+      <em>Linear commit log vs hierarchical tree metadata, concurrency, and delete mechanics.</em>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#kafka-event-streaming-pipeline">
+        <img src="assets/whiteboards/kafka_event_streaming_pipeline.webp" alt="Real-Time Event Streaming & Kafka Architecture" width="100%" />
+      </a>
+      <br><strong>Real-Time Event Streaming & Kafka Architecture</strong><br>
+      <em>Distributed commit log, partition replication, consumer group rebalancing, and consumer lag.</em>
+    </td>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#dbt-analytics-engineering-dag">
+        <img src="assets/whiteboards/dbt_analytics_engineering_dag.webp" alt="dbt Modern Analytics Engineering DAG" width="100%" />
+      </a>
+      <br><strong>dbt Modern Analytics Engineering DAG</strong><br>
+      <em>Topological compilation, staging/intermediate/marts layering, and model dependency graph.</em>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#unity-catalog-governance">
+        <img src="assets/whiteboards/unity_catalog_architecture.webp" alt="Unity Catalog Unified Governance & 3-Level Namespace" width="100%" />
+      </a>
+      <br><strong>Unity Catalog Unified Governance & 3-Level Namespace</strong><br>
+      <em>Centralized metadata, unified access controls, and automated cross-workspace lineage.</em>
+    </td>
+    <td width="50%" valign="top">
+      <a href="docs/whiteboard_diagrams/README.md#data-quality-wap-quarantine">
+        <img src="assets/whiteboards/data_quality_wap_quarantine_architecture.webp" alt="Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow" width="100%" />
+      </a>
+      <br><strong>Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow</strong><br>
+      <em>Automated testing circuit breakers, quarantine schemas, and zero-defect production promotion.</em>
+    </td>
+  </tr>
+</table>
 
-| Architectural Domain | Count | Highlighted Production Blueprints |
-| :--- | :---: | :--- |
-| **Compute & Optimization** | **11** | Catalyst Optimizer & Photon Engine<br>• Photon vs. JVM C++ Mechanics<br>• Shuffle & Memory Architecture<br>• Data Skew & AQE Dynamic Splitting<br>• SaveMode Handling<br>• Join Strategy Decision Matrix<br>• Tungsten Spill Mechanics<br>• Structured Streaming State Store (RocksDB)<br>• Broadcast & Accumulators<br>• SQL Server Engine Internals |
-| **Storage Engines & Formats** | **9** | Delta Lake ACID Under the Hood<br>• Apache Iceberg Open Table Format<br>• Open Table Formats (Delta vs. Iceberg vs. Hudi)<br>• Open File Formats (Parquet vs. ORC vs. Avro)<br>• 6 Delta Optimization Levers<br>• Lakehouse ACID Concurrency Matrix<br>• SCD Types 1–6 in Medallion<br>• Delta vs. Iceberg Architecture<br>• Table Maintenance Compaction & VACUUM |
-| **Data Pipelines & Ingestion** | **12** | Apache Airflow Distributed Architecture<br>• dbt Modern Analytics Engineering DAG<br>• Azure Data Factory Hybrid IR<br>• Kafka Event Streaming<br>• CDC with Debezium<br>• Databricks Medallion Architecture<br>• Delta Live Tables (DLT)<br>• Databricks Asset Bundles (DABs) & Serverless CI/CD<br>• Auto Loader (`cloudFiles`) Ingestion<br>• Ingestion Strategy Decision Matrix<br>• Streaming DLQ Self-Healing<br>• Orchestration Backfill Lifecycle |
-| **Platform Landscape & AI** | **7** | Databricks Unified Platform Master<br>• Enterprise RAG & Vector Data Pipelines<br>• Governed Agentic RAG Pipeline (Unity Catalog)<br>• Modern Python Data (Arrow, Polars, DuckDB)<br>• FinOps & Cloud Cost Optimization<br>• Enterprise Edge & IoT Architecture<br>• Multi-Region Lakehouse BCDR Failover |
-| **Microsoft Fabric & Power BI** | **4** | Microsoft Fabric Unified Architecture & OneLake<br>• Power BI Direct Lake & VertiPaq<br>• Power BI DAX Engine Mechanics & Context Transition<br>• Fabric OneLake Shortcuts & Direct Lake Mode |
-| **Data Modeling & Architecture** | **4** | Kimball Dimensional Modeling & Star Schema<br>• Data Vault 2.0 Enterprise Modeling<br>• Distributed Systems Resilience & Consensus<br>• Enterprise Data Mesh & Data Products |
-| **Governance & Security** | **5** | Unity Catalog Unified Governance & 3-Level Namespace<br>• Microsoft Purview Unified Metadata & Catalog<br>• Zero-Trust Access: Dynamic Row Filters & Column Masks<br>• Write-Audit-Publish (WAP) & Data Quality Quarantine<br>• Enterprise Lakehouse CI/CD Promotion Lifecycle |
-
----
+> 🔍 **Explore all 52 blueprints with 5-persona breakdowns, failure modes, and engine internals in [docs/whiteboard_diagrams/README.md](docs/whiteboard_diagrams/README.md)**.
 
 ## 📘 Databricks Data Intelligence Platform: End-to-End Technical Manual (Level 100–400)
 
