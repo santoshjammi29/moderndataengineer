@@ -88,27 +88,14 @@ def build_markdown():
             slug = make_slug(p["id"], p["title"])
             lines.append(f"<a id=\"{slug}\"></a>")
             lines.append(f"## Problem {p['id']:02d} [{p['level']}]: {p['title']}\n")
-            lines.append(f"**Category:** `{p['category']}` | **Difficulty Level:** `{p['level']}`\n")
-            
-            lines.append("### 1. Concrete Scenario & Failure Description")
-            lines.append(f"{p['scenario']}\n")
-
-            lines.append("### 2. Observable Symptom & Failure Signature")
-            lines.append(f"> **Spark UI / Driver Log Signature:**  \n> {p['symptom']}\n")
-
-            lines.append("### 3. Underlying Engine Mechanism & Root Cause")
-            lines.append(f"{p['root_cause']}\n")
-
-            lines.append("### 4. Problematic / Failing Code Pattern")
+            lines.append(f"**Category:** `{p['category']}`\n")
+            lines.append(f"**Scenario & Symptom:**  \n{p['scenario']}  \n*Signature:* `{p['symptom']}`\n")
+            lines.append(f"**Root Cause:**  \n{p['root_cause']}\n")
             code_lang = "sql" if "--" in p["failing_code"] else "python"
-            lines.append(f"```{code_lang}\n{p['failing_code']}\n```\n")
-
-            lines.append("### 5. Production-Grade Solution & Implementation")
+            lines.append(f"**Failing Pattern:**\n```{code_lang}\n{p['failing_code']}\n```\n")
             sol_lang = "sql" if "--" in p["solution_code"] else "python"
-            lines.append(f"```{sol_lang}\n{p['solution_code']}\n```\n")
-
-            lines.append("### 6. Architectural Defense & Interview Takeaway")
-            lines.append(f"> [!TIP]\n> **Lead Architect Defense:**  \n> \"{p['interview_takeaway']}\"\n")
+            lines.append(f"**Production Solution:**\n```{sol_lang}\n{p['solution_code']}\n```\n")
+            lines.append(f"**Architect Rule:** {p['interview_takeaway']}\n")
             lines.append("\n---\n")
 
     return "\n".join(lines)
