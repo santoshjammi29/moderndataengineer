@@ -27,6 +27,30 @@
 
 ---
 
+## 🧠 Master Knowledge Base: 921 Concepts Across 14 Pillars
+
+> 💡 **The Complete 921-Concept Lakehouse Curriculum**: Every architectural concept is indexed and searchable client-side on the live platform (`⌘K` or [`/concepts`](https://moderndataengineer.uk/concepts)), with exhaustive production implementations across our sister reference repositories.
+
+| Pillar # | Domain Category | Topic Count | Primary Sister Repository | Key Architectural Primitives Covered | Status |
+|:---:|:---|:---:|:---|:---|:---:|
+| 1 | **Apache Spark & Distributed Compute** | **135** | [The PySpark Handbook](https://github.com/santoshjammi29/pyspark-handbook) | Catalyst, Tungsten, AQE, Salting, RDD, DataFrame, Spark UI, Memory Triage | ✅ Live |
+| 2 | **Databricks Platform & Lakehouse** | **132** | [The Databricks Handbook](https://github.com/santoshjammi29/databricks-handbook) | Unity Catalog, Delta Lake 3.x, Lakeflow, Photon, DABs, Serverless, Mosaic AI | ✅ Live |
+| 3 | **Relational SQL & Query Engine** | **91** | [The SQL Handbook](https://github.com/santoshjammi29/sql-handbook) | Indexing, S-F-W-G-H-O Execution Order, Locking, RCSI, Join Algorithms | ✅ Live |
+| 4 | **Database Architecture & Distributed MPP** | **79** | [The SQL Handbook](https://github.com/santoshjammi29/sql-handbook) | Vitess Sharding, Concurrency Admission, Read-After-Write, Synapse MPP, SSI | ✅ Live |
+| 5 | **Modern Lakehouse & Streaming Formats** | **76** | [The Streaming Handbook](https://github.com/santoshjammi29/streaming-handbook) | Paimon, Debezium CDC, Watermarking, Iceberg REST, UniForm, Polaris, Liquid Clustering | ✅ Live |
+| 6 | **Distributed System Design** | **68** | [Data System Design Handbook](https://github.com/santoshjammi29/data-system-design-handbook) | CAP/PACELC, Consistent Hashing, Cache-Aside, Rate Limiting, Outbox, Circuit Breaker | ✅ Live |
+| 7 | **General Data Engineering & Modeling** | **63** | [DataOps & CI/CD Handbook](https://github.com/santoshjammi29/dataops-cicd-handbook) | Kimball Dimensional Modeling, SCD Type 2, CDC, ODCS Data Contracts, Idempotency | ✅ Live |
+| 8 | **dbt & Analytics Engineering** | **57** | [The dbt Handbook](https://github.com/santoshjammi29/dbt-handbook) | Models, ref(), Generic Tests, Snapshots, Semantic Layer, MetricFlow, Slim CI | ✅ Live |
+| 9 | **Data Lake Architecture & Formats** | **55** | [Data System Design Handbook](https://github.com/santoshjammi29/data-system-design-handbook) | HDFS, Parquet, Avro, ORC, Medallion Layer Invariants, Object Storage Lifecycle | ✅ Live |
+| 10 | **Apache Airflow & Orchestration** | **52** | [DataOps & CI/CD Handbook](https://github.com/santoshjammi29/dataops-cicd-handbook) | DAGs, Tasks, Operators, Dynamic Task Mapping, Schedulers, Airflow 3.0 Datasets | ✅ Live |
+| 11 | **Microsoft Fabric & OneLake** | **39** | [Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet) | OneLake, Shortcuts, Direct Lake, Capacities F-SKUs, Eventhouse, KQL Database | ✅ Live |
+| 12 | **Azure Data Factory (ADF)** | **27** | [Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet) | Linked Services, Pipelines, Self-Hosted IR, Tumbling Windows, REST Pagination | ✅ Live |
+| 13 | **Power BI & Semantic Layer** | **25** | [Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet) | Import Mode, DirectQuery, DAX Context Transition, Aggregations, TMDL Modeling | ✅ Live |
+| 14 | **Python for Data Engineering** | **22** | [The PySpark Handbook](https://github.com/santoshjammi29/pyspark-handbook) | Generators, GIL, Arrow PyCapsule IPC, Polars LazyFrames, Pydantic Contracts | ✅ Live |
+| | **TOTAL KNOWLEDGE BASE TOPICS** | **921** | **12 Sister Repositories** | **100% Comprehensive Coverage Across All Ecosystem Handbooks** | 🚀 **Complete** |
+
+---
+
 ## 🏛️ System Architecture
 
 Built on a **Zero-Bundle, Zero-Egress, Edge-Native Architecture**: massive datasets stay strictly server-side within React 19 `cache()` Data Access Layers (DAL), serving zero-bundle lightweight JSON payloads to 60 FPS virtualized client surfaces (`@tanstack/react-virtual` + HTML5 `<canvas>`). Large dataset shards are persistently cached in the browser's IndexedDB (`idb`), guaranteeing **0 bytes of repeat network egress** across tab switches and page reloads:
@@ -73,7 +97,7 @@ The platform hosts the industry's most rigorous, verified catalog of data engine
 | **Searchable Assets** | Total MiniSearch Catalog | **11,956** | Fully indexed client-side catalog with sub-5ms BM25F search (`⌘K`). |
 | **Technical Q&A** | Practice Question Bank | **7,098** | **3,670** Data Engineering (`data_de.json`) + **3,428** Core Platform (`questions.json`). |
 | **System Design** | Architecture Scenarios | **3,294** | Production cloud designs, trade-off matrices, failure modes, and 36-keyword filter deck (`/architecture`). |
-| **Core Concepts** | Architectural Concepts | **869** | 14 core pillars: Fabric, Databricks, Lakehouse, Spark, Power BI, ADF, Airflow, dbt, FinOps (`/concepts`). |
+| **Core Concepts** | Architectural Concepts | **921** | 14 core pillars across all ecosystem repositories: Spark & Databricks (135), Databricks (132), SQL Server (91), Database Architecture (79), Modern Lakehouse (76), System Design (68), General DE (63), dbt (57), Data Lake Architecture (55), Apache Airflow (52), Microsoft Fabric (39), ADF (27), Power BI (25), Python (22) (`/concepts`). |
 | **Coding Drills** | Multi-Engine Drills | **283** | Hands-on PySpark 3.5+/4.0 (**156**), Spark SQL (**50**), Python/Polars (**42**), and MSSQL (**35**). |
 | **Coding Hub** | Unified Code Operations | **431+ Ops** | 283 Interactive Drills, 148+ Databricks Operations & Memory Triage, 15 Polyglot Matrix, and 62 Python Runbooks (`/code-practice`). |
 | **Guided Tracks** | Learning Tracks | **15 Tracks** | 15 progressive tracks including the new **Governed Agentic Data Platforms** track (`/guided-learning`). |
