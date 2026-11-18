@@ -2,11 +2,13 @@
 """
 Distribute Knowledge Base Topics across Git Repositories
 Covers all 921 concepts from src/data/json/data_concepts.json into the beginning of each repository.
-Ensures maximum visibility with visible executive summaries and open topic tables.
+Formats Level with icon above and text below (<icon><br><text>).
 """
 
 import json
 import os
+import re
+import subprocess
 import sys
 
 BASE_DIR = "/Users/santosh/Documents/antigravity"
@@ -19,14 +21,14 @@ def load_concepts():
 def format_level(diff):
     d = (diff or "").upper()
     if d == "EASY":
-        return "🟢 Easy"
+        return "🟢<br>Easy"
     if d == "MEDIUM":
-        return "🟡 Intermediate"
+        return "🟡<br>Intermediate"
     if d == "HARD":
-        return "🔴 Advanced"
+        return "🔴<br>Advanced"
     if d == "ARCHITECT":
-        return "🟣 Architect"
-    return "🟡 Intermediate"
+        return "🟣<br>Architect"
+    return "🟡<br>Intermediate"
 
 def escape_cell(text):
     if not text:
@@ -40,7 +42,7 @@ def build_category_table(items, title, icon="📚", open_default=True):
     lines.append(f"<summary><b>{icon} {title} ({len(items)} Topics)</b> — <i>Click to collapse/expand</i></summary>")
     lines.append("")
     lines.append("| # | Topic / Concept | Level | Architectural Definition & Core Principle |")
-    lines.append("|---|---|---|---|")
+    lines.append("|:---:|---|:---:|---|")
     for idx, c in enumerate(items, 1):
         term = escape_cell(c.get("term", ""))
         level = format_level(c.get("difficulty", ""))
@@ -90,66 +92,39 @@ def build_handbook_section(repo_name, pillars, total_topics, concepts, anchor=No
     lines.append("---")
     return "\n".join(lines)
 
-def update_handbook_readme(repo_name, pillars, concepts):
-    readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
+def replace_or_insert_section(readme_path, new_section_md, target_fallback=None):
     with open(readme_path, "r", encoding="utf-8") as f:
         content = f.read()
 
+    section_pattern = re.compile(r'(?:<a id="[^"]+"></a>\s*)?## 🧠 Core Curriculum Concepts & Topics.*?\n---\n', re.DOTALL)
+    if section_pattern.search(content):
+        new_content = section_pattern.sub(new_section_md + "\n", content, count=1)
+        with open(readme_path, "w", encoding="utf-8") as f:
+            f.write(new_content)
+        return True
+    elif target_fallback and target_fallback in content:
+        new_content = content.replace(target_fallback, new_section_md + "\n\n" + target_fallback)
+        with open(readme_path, "w", encoding="utf-8") as f:
+            f.write(new_content)
+        return True
+    else:
+        print(f"ERROR: Could not find section or fallback in {readme_path}")
+        return False
+
+def update_handbook_readme(repo_name, pillars, concepts):
+    readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
     repo_cats = [p[0] for p in pillars]
     total_topics = sum(len([c for c in concepts if c["category"] == cat]) for cat in repo_cats)
 
     anchor = "core-concepts" if repo_name == "databricks-handbook" else None
     section_md = build_handbook_section(repo_name, pillars, total_topics, concepts, anchor)
 
-    if repo_name == "azure-cheat-sheet":
-        # In azure-cheat-sheet, place right after the blockquote / first separator so it is immediately visible!
-        target = "## 🌐 Interactive Version"
-        if target in content:
-            new_content = content.replace(target, section_md + "\n\n" + target)
-            # Add to TOC
-            toc_marker = "## 📑 Table of Contents\n\n"
-            if toc_marker in new_content:
-                toc_entry = f"- [🧠 Core Curriculum Concepts & Topics ({total_topics} Topics)](#-core-curriculum-concepts--topics-{total_topics}-topics-covered)\n"
-                new_content = new_content.replace(toc_marker, toc_marker + toc_entry)
-            with open(readme_path, "w", encoding="utf-8") as f:
-                f.write(new_content)
-            print(f"Updated {repo_name} ({total_topics} topics)")
-            return
-
-    target_heading = "## 🎯 Overview & Mission"
-    if '<a id="overview"></a>' in content:
-        target_heading = '<a id="overview"></a>\n## 🎯 Overview & Mission'
-
-    if target_heading in content:
-        new_content = content.replace(target_heading, section_md + "\n\n" + target_heading)
-        nav_target = "[Sister Repositories]"
-        if nav_target in new_content:
-            nav_link = f" • [Core Concepts ({total_topics} Topics)](#-core-curriculum-concepts--topics)"
-            if repo_name == "databricks-handbook":
-                nav_link = f" • [Core Concepts ({total_topics} Topics)](#core-concepts)"
-            new_content = new_content.replace(f"• {nav_target}", f"{nav_link} • {nav_target}")
-        elif "[Curriculum Overview]" in new_content or "[Platform Architecture]" in new_content:
-            nav_link = f" • [Core Concepts ({total_topics} Topics)](#-core-curriculum-concepts--topics)"
-            if repo_name == "databricks-handbook":
-                nav_link = f" • [Core Concepts ({total_topics} Topics)](#core-concepts)"
-            lines = new_content.split("\n")
-            for i, line in enumerate(lines[:25]):
-                if line.startswith("[") and ("•" in line or "](" in line):
-                    lines[i] = line + nav_link
-                    break
-            new_content = "\n".join(lines)
-
-        with open(readme_path, "w", encoding="utf-8") as f:
-            f.write(new_content)
+    if replace_or_insert_section(readme_path, section_md, "## 🎯 Overview & Mission"):
         print(f"Updated {repo_name} ({total_topics} topics)")
-    else:
-        print(f"ERROR: Could not find target insertion point in {repo_name}")
 
 def update_blueprints_readme(concepts):
     repo_name = "azure-databricks-project-blueprints"
     readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
-    with open(readme_path, "r", encoding="utf-8") as f:
-        content = f.read()
 
     term_map = {c["term"]: c for c in concepts}
     s1_terms = [
@@ -212,17 +187,12 @@ def update_blueprints_readme(concepts):
     lines.append("---")
     section_md = "\n".join(lines)
 
-    target = "## Master Project Index"
-    new_content = content.replace(target, section_md + "\n\n" + target)
-    with open(readme_path, "w", encoding="utf-8") as f:
-        f.write(new_content)
-    print(f"Updated {repo_name} ({total} topics)")
+    if replace_or_insert_section(readme_path, section_md, "## Master Project Index"):
+        print(f"Updated {repo_name} ({total} topics)")
 
 def update_banking_readme(concepts):
     repo_name = "enterprise-banking-risk-alm-lakehouse"
     readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
-    with open(readme_path, "r", encoding="utf-8") as f:
-        content = f.read()
 
     term_map = {c["term"]: c for c in concepts}
     p1_terms = [
@@ -289,17 +259,12 @@ def update_banking_readme(concepts):
     lines.append("---")
     section_md = "\n".join(lines)
 
-    target = "## Architecture Portfolio"
-    new_content = content.replace(target, section_md + "\n\n" + target)
-    with open(readme_path, "w", encoding="utf-8") as f:
-        f.write(new_content)
-    print(f"Updated {repo_name} ({total} topics)")
+    if replace_or_insert_section(readme_path, section_md, "## Architecture Portfolio"):
+        print(f"Updated {repo_name} ({total} topics)")
 
 def update_spark_experiments_readme(concepts):
     repo_name = "spark-experiments"
     readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
-    with open(readme_path, "r", encoding="utf-8") as f:
-        content = f.read()
 
     term_map = {c["term"]: c for c in concepts}
     spark_30 = [
@@ -352,59 +317,8 @@ def update_spark_experiments_readme(concepts):
     lines.append("---")
     section_md = "\n".join(lines)
 
-    target = "## Contact"
-    new_content = content.replace(target, section_md + "\n\n" + target)
-    with open(readme_path, "w", encoding="utf-8") as f:
-        f.write(new_content)
-    print(f"Updated {repo_name} ({total} topics)")
-
-def update_charming_fermi_readme(concepts):
-    repo_name = "charming-fermi"
-    readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
-    with open(readme_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    # 1. Update line 76 from 869 to 921
-    old_row = "| **Core Concepts** | Architectural Concepts | **869** | 14 core pillars: Fabric, Databricks, Lakehouse, Spark, Power BI, ADF, Airflow, dbt, FinOps (`/concepts`). |"
-    new_row = "| **Core Concepts** | Architectural Concepts | **921** | 14 core pillars across all ecosystem repositories: Spark & Databricks (135), Databricks (132), SQL Server (91), Database Architecture (79), Modern Lakehouse (76), System Design (68), General DE (63), dbt (57), Data Lake Architecture (55), Apache Airflow (52), Microsoft Fabric (39), ADF (27), Power BI (25), Python (22) (`/concepts`). |"
-
-    if old_row in content:
-        content = content.replace(old_row, new_row)
-        print("Updated count row in charming-fermi README.")
-
-    # 2. Add Master Knowledge Base Topics Index prominently before System Architecture!
-    master_section = """## 🧠 Master Knowledge Base: 921 Concepts Across 14 Pillars
-
-> 💡 **The Complete 921-Concept Lakehouse Curriculum**: Every architectural concept is indexed and searchable client-side on the live platform (`⌘K` or [`/concepts`](https://moderndataengineer.uk/concepts)), with exhaustive production implementations across our sister reference repositories.
-
-| Pillar # | Domain Category | Topic Count | Primary Sister Repository | Key Architectural Primitives Covered | Status |
-|:---:|:---|:---:|:---|:---|:---:|
-| 1 | **Apache Spark & Distributed Compute** | **135** | [The PySpark Handbook](https://github.com/santoshjammi29/pyspark-handbook) | Catalyst, Tungsten, AQE, Salting, RDD, DataFrame, Spark UI, Memory Triage | ✅ Live |
-| 2 | **Databricks Platform & Lakehouse** | **132** | [The Databricks Handbook](https://github.com/santoshjammi29/databricks-handbook) | Unity Catalog, Delta Lake 3.x, Lakeflow, Photon, DABs, Serverless, Mosaic AI | ✅ Live |
-| 3 | **Relational SQL & Query Engine** | **91** | [The SQL Handbook](https://github.com/santoshjammi29/sql-handbook) | Indexing, S-F-W-G-H-O Execution Order, Locking, RCSI, Join Algorithms | ✅ Live |
-| 4 | **Database Architecture & Distributed MPP** | **79** | [The SQL Handbook](https://github.com/santoshjammi29/sql-handbook) | Vitess Sharding, Concurrency Admission, Read-After-Write, Synapse MPP, SSI | ✅ Live |
-| 5 | **Modern Lakehouse & Streaming Formats** | **76** | [The Streaming Handbook](https://github.com/santoshjammi29/streaming-handbook) | Paimon, Debezium CDC, Watermarking, Iceberg REST, UniForm, Polaris, Liquid Clustering | ✅ Live |
-| 6 | **Distributed System Design** | **68** | [Data System Design Handbook](https://github.com/santoshjammi29/data-system-design-handbook) | CAP/PACELC, Consistent Hashing, Cache-Aside, Rate Limiting, Outbox, Circuit Breaker | ✅ Live |
-| 7 | **General Data Engineering & Modeling** | **63** | [DataOps & CI/CD Handbook](https://github.com/santoshjammi29/dataops-cicd-handbook) | Kimball Dimensional Modeling, SCD Type 2, CDC, ODCS Data Contracts, Idempotency | ✅ Live |
-| 8 | **dbt & Analytics Engineering** | **57** | [The dbt Handbook](https://github.com/santoshjammi29/dbt-handbook) | Models, ref(), Generic Tests, Snapshots, Semantic Layer, MetricFlow, Slim CI | ✅ Live |
-| 9 | **Data Lake Architecture & Formats** | **55** | [Data System Design Handbook](https://github.com/santoshjammi29/data-system-design-handbook) | HDFS, Parquet, Avro, ORC, Medallion Layer Invariants, Object Storage Lifecycle | ✅ Live |
-| 10 | **Apache Airflow & Orchestration** | **52** | [DataOps & CI/CD Handbook](https://github.com/santoshjammi29/dataops-cicd-handbook) | DAGs, Tasks, Operators, Dynamic Task Mapping, Schedulers, Airflow 3.0 Datasets | ✅ Live |
-| 11 | **Microsoft Fabric & OneLake** | **39** | [Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet) | OneLake, Shortcuts, Direct Lake, Capacities F-SKUs, Eventhouse, KQL Database | ✅ Live |
-| 12 | **Azure Data Factory (ADF)** | **27** | [Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet) | Linked Services, Pipelines, Self-Hosted IR, Tumbling Windows, REST Pagination | ✅ Live |
-| 13 | **Power BI & Semantic Layer** | **25** | [Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet) | Import Mode, DirectQuery, DAX Context Transition, Aggregations, TMDL Modeling | ✅ Live |
-| 14 | **Python for Data Engineering** | **22** | [The PySpark Handbook](https://github.com/santoshjammi29/pyspark-handbook) | Generators, GIL, Arrow PyCapsule IPC, Polars LazyFrames, Pydantic Contracts | ✅ Live |
-| | **TOTAL KNOWLEDGE BASE TOPICS** | **921** | **12 Sister Repositories** | **100% Comprehensive Coverage Across All Ecosystem Handbooks** | 🚀 **Complete** |
-
----"""
-
-    target = "## 🏛️ System Architecture"
-    if target in content and "## 🧠 Master Knowledge Base: 921 Concepts Across 14 Pillars" not in content:
-        content = content.replace(target, master_section + "\n\n" + target)
-        print("Placed Master Knowledge Base Topics Index prominently before System Architecture in charming-fermi.")
-
-    with open(readme_path, "w", encoding="utf-8") as f:
-        f.write(content)
-    print("Updated charming-fermi README.")
+    if replace_or_insert_section(readme_path, section_md, "## Contact"):
+        print(f"Updated {repo_name} ({total} topics)")
 
 def main():
     concepts = load_concepts()
@@ -449,8 +363,7 @@ def main():
     update_blueprints_readme(concepts)
     update_banking_readme(concepts)
     update_spark_experiments_readme(concepts)
-    update_charming_fermi_readme(concepts)
-    print("\nAll 12 repositories generated with high visibility!")
+    print("\nAll repositories updated with formatted level badges!")
 
 if __name__ == "__main__":
     main()
