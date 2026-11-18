@@ -18,7 +18,14 @@ export const PLATFORM_CONFIG = {
     "Comprehensive preparation platform for Principal Data Architects and Lead Engineers covering Microsoft Fabric, Databricks, Apache Spark, Delta Lake, Airflow, and Real-Time Lakehouse Systems.",
   url: "https://lakehousearchitect.com",
   author: "Santosh Jammi",
-  githubRepo: "https://github.com/santoshjammi29/fabric-pbi-prep",
+  githubRepo: "https://github.com/santoshjammi29/moderndataengineer",
+  sisterRepos: {
+    platform: "https://github.com/santoshjammi29/moderndataengineer",
+    databricksHandbook: "https://github.com/santoshjammi29/databricks-handbook",
+    pysparkHandbook: "https://github.com/santoshjammi29/pyspark-handbook",
+    sqlHandbook: "https://github.com/santoshjammi29/sql-handbook",
+    azureCheatSheet: "https://github.com/santoshjammi29/azure-cheat-sheet",
+  },
 
   // Edge & Multi-Region Caching Policies (seconds)
   caching: {

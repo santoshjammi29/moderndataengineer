@@ -296,8 +296,10 @@ export default function RootLayout({
                       "height": 512,
                     },
                     "sameAs": [
-                      "https://github.com/santoshjammi29/fabric-pbi-prep",
+                      "https://github.com/santoshjammi29/moderndataengineer",
+                      "https://github.com/santoshjammi29/databricks-handbook",
                       "https://github.com/santoshjammi29/pyspark-handbook",
+                      "https://github.com/santoshjammi29/sql-handbook",
                       "https://github.com/santoshjammi29/azure-cheat-sheet",
                       "https://www.linkedin.com/in/santoshjammi29/",
                       "https://santoshjammi.in",
