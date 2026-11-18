@@ -29,7 +29,7 @@
     "subdomain": "compute-engines",
     "difficulty": "HARD",
     "summary": "Runtime query plan adjustments based on actual shuffle statistics collected during stage execution.",
-    "details": "Adaptive Query Execution (AQE) dynamically merges small post-shuffle partitions into optimal 64MB–128MB tasks, converts sort-merge joins to broadcast hash joins when build-side stats drop below threshold, and splits skewed partitions into sub-partitions to prevent single-straggler tasks."
+    "details": "Adaptive Query Execution (AQE) dynamically merges small post-shuffle partitions into optimal 64MB\u2013128MB tasks, converts sort-merge joins to broadcast hash joins when build-side stats drop below threshold, and splits skewed partitions into sub-partitions to prevent single-straggler tasks."
   },
   {
     "id": "mc-05",
@@ -430,5 +430,13 @@
     "difficulty": "HARD",
     "summary": "Liquid clustering replaces legacy directory-based Hive partitioning and manual Z-ordering with flexible Hilbert curve multidimensional data organization.",
     "details": "Legacy partitioning (/year=2024/month=11/) causes small file fragmentation, partition skew, and costly full-table rewrites when query patterns change. Delta Lake Liquid Clustering decouples clustering keys from physical directory paths, allowing clustering columns to be added or modified dynamically without table rewrites, and automatically coalescing files during writes."
+  },
+  {
+    "id": "mc-mosaic-ai-platform",
+    "title": "Databricks Mosaic AI: Vector Search, AI Gateway, Model Serving & Agent Evaluation",
+    "subdomain": "ai-llm-native",
+    "difficulty": "ARCHITECT",
+    "summary": "End-to-end Lakehouse AI platform integrating vector indexing, governed model serving, and LLM-as-a-judge evaluation.",
+    "details": "Mosaic AI delivers native Delta Sync Vector Search (auto-updating via CDF), AI Gateway with PII guardrails and token rate limiting, scale-to-zero Model Serving, and MLflow 3.x Agent Evaluation with automated LLM-as-a-judge quality scoring."
   }
 ]

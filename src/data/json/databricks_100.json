@@ -1731,18 +1731,18 @@
     "id": "db100-097-ai-functions-for-data-engineers",
     "num": 97,
     "day": 97,
-    "concept": "AI Functions for Data Engineers",
+    "concept": "Databricks SQL AI Functions & Mosaic AI Integration",
     "category": "Architecture & Advanced Patterns",
     "categoryId": 10,
     "difficulty": "MEDIUM",
-    "summary": "Using `ai_query()` and `ai_generate()` SQL functions for data enrichment, classification, and extraction within pipelines. When AI functions replace complex regex/UDF logic. Cost and latency considerations.",
-    "explanation": "In enterprise Databricks lakehouses, AI Functions for Data Engineers is an essential mechanism under Architecture & Advanced Patterns. Using `ai_query()` and `ai_generate()` SQL functions for data enrichment, classification, and extraction within pipelines. When AI functions replace complex regex/UDF logic. Cost and latency considerations.",
+    "summary": "Using ai_query(), ai_summarize(), ai_classify(), ai_extract(), and ai_mask() SQL functions for in-database GenAI enrichment, PII masking, and sentiment triage.",
+    "explanation": "Databricks SQL AI functions allow data engineers to execute serverless foundation model inference directly inside SQL queries without writing Python microservices. Functions like ai_classify categorize unstructured text, ai_extract parses structured JSON entities, and ai_mask redacts sensitive PII before publishing to reporting marts.",
     "keyPoints": [
-      "Core production concept in Databricks Architecture & Advanced Patterns.",
-      "Using `ai_query()` and `ai_generate()` SQL functions for data enrichment, classification, and extraction within pipelines. When AI functions replace complex regex/UDF logic. Cost and latency considerations.",
-      "Essential architectural pattern for enterprise lakehouse systems."
+      "ai_query() invokes foundation models (DBRX, Llama 3, external APIs) directly within SQL queries.",
+      "ai_mask() automatically anonymizes credit card numbers, emails, and names for privacy compliance.",
+      "Runs serverless inside the Photon engine with automatic batching and cached inference."
     ],
-    "codeSnippet": "-- Example for AI Functions for Data Engineers\nSELECT 1;",
+    "codeSnippet": "-- Classify sentiment, extract entities and mask PII in SQL\nSELECT \n    ticket_id,\n    -- Classify ticket priority using zero-shot inference\n    ai_classify(description, ARRAY('urgent', 'normal', 'low')) AS priority,\n    -- Extract product model and defect reason as JSON\n    ai_extract(description, ARRAY('model_id', 'defect_code')) AS extracted_info,\n    -- Anonymize customer email and credit card numbers\n    ai_mask(description, ARRAY('email_address', 'credit_card_number')) AS safe_text\nFROM bronze_support_tickets;",
     "certificationMapping": "Databricks Certified Data Engineer Associate / Professional"
   },
   {
