@@ -25,6 +25,10 @@ export const PLATFORM_CONFIG = {
     pysparkHandbook: "https://github.com/santoshjammi29/pyspark-handbook",
     sqlHandbook: "https://github.com/santoshjammi29/sql-handbook",
     azureCheatSheet: "https://github.com/santoshjammi29/azure-cheat-sheet",
+    dbtHandbook: "https://github.com/santoshjammi29/dbt-handbook",
+    streamingHandbook: "https://github.com/santoshjammi29/streaming-handbook",
+    dataSystemDesignHandbook: "https://github.com/santoshjammi29/data-system-design-handbook",
+    dataopsHandbook: "https://github.com/santoshjammi29/dataops-cicd-handbook",
   },
 
   // Edge & Multi-Region Caching Policies (seconds)
