@@ -23,6 +23,7 @@
 | **Platform Engineering Roadmap** | Completed milestones & future architectural expansions | BM25F search, Databricks 148+ operations hub, 11 master PDFs, 52 whiteboard blueprints, single-roof concepts & mindmap. | [`roadmap.md`](./roadmap.md) |
 | **Workers for Platforms** | Dynamic tenant isolation and customer workers | Edge sandboxing, execution safety, and container isolation. | [`workers-for-platforms.md`](./workers-for-platforms.md) |
 | **Distributed Core & Joins Deep Dive** | Pillars 1, 2, 4, 5, 6 deep dive | Cluster DAG scheduling, 100MB-200MB rule, physical join mechanics, unified memory, exit code 137, and selective salting. | [`distributed_core_joins_and_skew_deep_dive.md`](./distributed_core_joins_and_skew_deep_dive.md) |
+| **Spark Architecture & Tuning Cheatsheet** | Visual Whiteboard Cheatsheets & Triage Runbook | High-resolution visual cheatsheets, Catalyst 5-phase compiler, Master Join Decision Tree, and Spark UI skew/spill triage. | [`spark_architecture_and_tuning_cheatsheet.md`](./spark_architecture_and_tuning_cheatsheet.md) |
 | **Synthetic Skew & Spill Lab** | Hands-on PySpark reproducibility script | Manufacturing 90% key skew, Sort-Merge Join disk spill, observing Spark UI stragglers, and curing via AQE / selective salting. | [`synthetic_skew_and_spill_lab.md`](./synthetic_skew_and_spill_lab.md) |
 
 ---
