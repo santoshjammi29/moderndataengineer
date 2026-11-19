@@ -22,6 +22,8 @@
 | **Development & Operations Guide** | Project architecture, Server Data Layer, Vitest suite, Cloudflare OpenNext | App Router folder layout, Zero-Bundle Data Mandate, 61-file test suite, 4-step deployment pipeline. | [`development_guide.md`](./development_guide.md) |
 | **Platform Engineering Roadmap** | Completed milestones & future architectural expansions | BM25F search, Databricks 148+ operations hub, 11 master PDFs, 52 whiteboard blueprints, single-roof concepts & mindmap. | [`roadmap.md`](./roadmap.md) |
 | **Workers for Platforms** | Dynamic tenant isolation and customer workers | Edge sandboxing, execution safety, and container isolation. | [`workers-for-platforms.md`](./workers-for-platforms.md) |
+| **Distributed Core & Joins Deep Dive** | Pillars 1, 2, 4, 5, 6 deep dive | Cluster DAG scheduling, 100MB-200MB rule, physical join mechanics, unified memory, exit code 137, and selective salting. | [`distributed_core_joins_and_skew_deep_dive.md`](./distributed_core_joins_and_skew_deep_dive.md) |
+| **Synthetic Skew & Spill Lab** | Hands-on PySpark reproducibility script | Manufacturing 90% key skew, Sort-Merge Join disk spill, observing Spark UI stragglers, and curing via AQE / selective salting. | [`synthetic_skew_and_spill_lab.md`](./synthetic_skew_and_spill_lab.md) |
 
 ---
 

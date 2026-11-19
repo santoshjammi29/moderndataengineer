@@ -27,6 +27,7 @@
 | **07** | **Open Format Storage Types Reference** | Delta Lake, Apache Iceberg, Apache Hudi, Paimon | Lakehouse metadata snapshot trees, ACID OCC, hidden partitioning, Parquet/ORC/Avro physical layouts. | [`07_open_storage_formats.md`](./07_open_storage_formats.md) |
 | **08** | **6 Delta Lake Optimization Levers** | Liquid Clustering, Z-Order, OPTIMIZE, VACUUM | Benchmarking 6 Delta Lake performance and storage hygiene levers across a 50M-row dataset. | [`08_delta_optimization.md`](./08_delta_optimization.md) |
 | **09** | **Databricks Technical Manual (Level 100–400)** | Split-Plane, Delta Lake, Unity Catalog, Photon, DABs | Authoritative 20-page curriculum covering foundational infrastructure to principal production architecture. | [`09_databricks_intelligence_platform_manual.md`](./09_databricks_intelligence_platform_manual.md) |
+| **10** | **Production Databricks Medallion Blueprint & Triage** | Auto Loader, DLT Liquid Clustering, Unity Catalog, Spark UI Triage | Complete end-to-end Medallion design with DDL, selective salting, and step-by-step skew/spill triage. | [`10_production_databricks_medallion_blueprint_and_runbook.md`](./10_production_databricks_medallion_blueprint_and_runbook.md) |
 | **Data** | **Unified Machine-Readable JSON Export** | Full Dataset JSON (`knowledge_base_export.json`) | Machine-readable export with metadata, schema tags, questions, and code snippets for SSGs and RAG. | [`knowledge_base_export.json`](./knowledge_base_export.json) |
 
 ---

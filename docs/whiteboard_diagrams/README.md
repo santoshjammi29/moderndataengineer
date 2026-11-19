@@ -526,6 +526,10 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automated lineage tracing data provenance from source files all the way to final Gold dashboard metrics
 - Data retention policies: 90 days in Bronze, 2 years in Silver, indefinite in Gold
 
+**Authoritative Cross-References & Production Blueprints:**
+- 🏛️ **Production Databricks Medallion Blueprint**: [`docs/architecture/10_production_databricks_medallion_blueprint_and_runbook.md`](../architecture/10_production_databricks_medallion_blueprint_and_runbook.md) — Complete DDL, Auto Loader, DLT Liquid Clustering, and Unity Catalog security setup.
+- 🎯 **100 Databricks Interview Questions (Domain 01: Architecture)**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md#section-01-architecture--questions-0110`](../interview_prep/100_databricks_interview_defense_playbook.md#section-01-architecture--questions-0110) (Q01: Lakehouse vs Data Lake, Q05: Bronze/Silver/Gold).
+
 ---
 
 ### Delta Live Tables (DLT) Pipeline Architecture
@@ -1296,6 +1300,10 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automated right-to-be-forgotten deletion workflows tracked and verified across all downstream lineage tables
 - Zero plain-text cloud storage access keys; all access mediated via short-lived temporary STS tokens
 - Tag-based access control (ABAC) automatically applying security policies to newly created tables
+
+**Authoritative Cross-References & Production Security DDL:**
+- 🛡️ **Production Unity Catalog Security Setup**: [`docs/architecture/10_production_databricks_medallion_blueprint_and_runbook.md#12-unity-catalog-security-setup-ddl`](../architecture/10_production_databricks_medallion_blueprint_and_runbook.md#12-unity-catalog-security-setup-ddl) — Concrete DDL for `IS_ACCOUNT_GROUP_MEMBER()` Dynamic Data Masking and Row-Level Security.
+- 🎯 **100 Databricks Interview Questions (Domain 07: Unity Catalog)**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md#section-07-unity-catalog-access-is-an-architecture-decision--questions-6170`](../interview_prep/100_databricks_interview_defense_playbook.md#section-07-unity-catalog-access-is-an-architecture-decision--questions-6170) (Q61–Q70).
 
 ---
 
@@ -2170,6 +2178,11 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Audit trails tracking job runtimes and automated remediation events
 - Predictable SLA compliance for regulatory and financial reporting pipelines
 
+**Authoritative Cross-References & Hands-On Labs:**
+- 🧪 **Hands-On Reproducibility Lab**: [`docs/engineering/synthetic_skew_and_spill_lab.md`](../engineering/synthetic_skew_and_spill_lab.md) — Step-by-step synthetic script for manufacturing 90% key skew, observing Spark UI stragglers, and curing via AQE / selective two-phase salting.
+- 🎯 **100 Databricks Interview Questions**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md#section-06-performance--triage-stop-the-spill--questions-5160`](../interview_prep/100_databricks_interview_defense_playbook.md#section-06-performance--triage-stop-the-spill--questions-5160) (Q51–Q60).
+- 📖 **Distributed Performance Deep Dive**: [`docs/engineering/distributed_core_joins_and_skew_deep_dive.md`](../engineering/distributed_core_joins_and_skew_deep_dive.md).
+
 ---
 
 ### Apache Spark Join Strategy Selection Decision Tree
@@ -2220,6 +2233,10 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Audit trails tracking query execution plans and join operator selection
 - Resource governance preventing memory-intensive join spills from starving peer workloads
 - Data protection verification ensuring broadcasted lookup datasets do not expose restricted data
+
+**Authoritative Cross-References & Join Flowcharts:**
+- 📊 **Physical Visual Join Flowcharts (BHJ, SMJ, SHJ, BNLJ)**: [`docs/engineering/distributed_core_joins_and_skew_deep_dive.md#42-physical-visualizations-of-join-execution`](../engineering/distributed_core_joins_and_skew_deep_dive.md#42-physical-visualizations-of-join-execution).
+- 🎯 **100 Databricks Interview Questions**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md`](../interview_prep/100_databricks_interview_defense_playbook.md) (Q53: BHJ vs SMJ, Q34: Left Join row count inflation).
 
 ---
 
