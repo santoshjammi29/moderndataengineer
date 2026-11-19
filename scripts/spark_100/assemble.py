@@ -89,7 +89,7 @@ def build_markdown():
             lines.append(f"<a id=\"{slug}\"></a>")
             lines.append(f"## Problem {p['id']:02d} [{p['level']}]: {p['title']}\n")
             lines.append(f"**Category:** `{p['category']}`\n")
-            lines.append(f"**Scenario & Symptom:**  \n{p['scenario']}  \n*Signature:* `{p['symptom']}`\n")
+            lines.append(f"**Scenario & Symptom:**  \n{p['scenario']}  \n*Signature:* {p['symptom']}\n")
             lines.append(f"**Root Cause:**  \n{p['root_cause']}\n")
             code_lang = "sql" if "--" in p["failing_code"] else "python"
             lines.append(f"**Failing Pattern:**\n```{code_lang}\n{p['failing_code']}\n```\n")

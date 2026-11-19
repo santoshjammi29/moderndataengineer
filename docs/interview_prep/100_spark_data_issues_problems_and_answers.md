@@ -167,7 +167,7 @@
 
 **Scenario & Symptom:**  
 A transactional lakehouse joins an incoming fact table of 200 million web events with a users dimension table. However, 30% of the incoming events are from unauthenticated guest users where `user_id` is NULL. During the shuffle phase of a SortMergeJoin, the stage reaches 199/200 tasks in 45 seconds, while the final task (Task 200) hangs for 35 minutes before failing with an executor timeout.  
-*Signature:* `Spark UI shows 199 tasks completed with ~5MB shuffle read each, but 1 task processed 45GB shuffle read with massive Tungsten disk spill and eventual `ExecutorLostFailure (heartbeat timed out)`.`
+*Signature:* Spark UI shows 199 tasks completed with ~5MB shuffle read each, but 1 task processed 45GB shuffle read with massive Tungsten disk spill and eventual `ExecutorLostFailure (heartbeat timed out)`.
 
 **Root Cause:**  
 Hash partitioning computes `Murmur3Hash(null) % numPartitions = 0` (or a single fixed partition ID). Consequently, all 60 million records with `user_id IS NULL` are routed to the exact same reducer task, overwhelming that single core.
@@ -218,7 +218,7 @@ final_df = joined_valid.unionByName(null_events)
 
 **Scenario & Symptom:**  
 A retail analytics pipeline aggregates transaction volumes by store country. Upstream legacy point-of-sale systems populate `'UNKNOWN'` or `'N/A'` whenever GPS lookup fails. Out of 500 million transactions, 350 million contain `country = 'UNKNOWN'`. A simple `groupBy('country').agg(sum('amount'))` crashes with OutOfMemoryError.  
-*Signature:* `Stage progress hangs at 99%. Spark UI Executor page shows one executor's heap memory climbing steadily to 100% until YARN/Kubernetes terminates the container with `Exit code 137 (OOMKilled)`.`
+*Signature:* Stage progress hangs at 99%. Spark UI Executor page shows one executor's heap memory climbing steadily to 100% until YARN/Kubernetes terminates the container with `Exit code 137 (OOMKilled)`.
 
 **Root Cause:**  
 Tungsten uses an in-memory hash map (`BytesToBytesMap`) for aggregation. For the single key `'UNKNOWN'`, the hash map cannot be flushed efficiently, causing massive memory pressure and CPU thrashing during hash table resizing.
@@ -277,7 +277,7 @@ final_summary = partial_agg.withColumn(
 
 **Scenario & Symptom:**  
 A media streaming platform joins 1 billion stream events with an artists dimension table containing 2 million rows. Five pop megastars account for 40% of all streams. The query uses default `SortMergeJoin`. The shuffle stage spills 180 GB to disk, and the sort phase runs for 2 hours.  
-*Signature:* `Spark UI shows `Shuffle Spill (Disk)` of 180 GB. Tasks handling megastar `artist_id` partitions spend 95% of execution time in `ExternalSorter.spill()`.`
+*Signature:* Spark UI shows `Shuffle Spill (Disk)` of 180 GB. Tasks handling megastar `artist_id` partitions spend 95% of execution time in `ExternalSorter.spill()`.
 
 **Root Cause:**  
 SortMergeJoin forces both sides to shuffle and sort by join key. For hot keys, sorting 400 million rows in a single partition exceeds executor memory, spilling unsorted Tungsten pages to disk and thrashing I/O.
@@ -322,7 +322,7 @@ result_df = events_df.join(F.broadcast(artists_df), on="artist_id", how="inner")
 
 **Scenario & Symptom:**  
 A retail bank runs a daily reconciliation join between payments and ledger entries on Apache Spark 3.3. Despite `spark.sql.adaptive.enabled=true`, one partition with a corporate clearinghouse ID runs 10x slower than all other partitions. AQE fails to split the skewed partition.  
-*Signature:* `In the Spark UI SQL tab, the SortMergeJoin operator does not show `(skew=true)`, and no partition splitting sub-tasks are created.`
+*Signature:* In the Spark UI SQL tab, the SortMergeJoin operator does not show `(skew=true)`, and no partition splitting sub-tasks are created.
 
 **Root Cause:**  
 AQE skew join detection requires a partition to be both larger than `skewedPartitionThresholdInBytes` (default 256MB) AND larger than `skewedPartitionFactor` (default 5.0) times the median partition size. If median partitions are 60MB, a 280MB skewed partition is only 4.6x the median, failing the 5.0x factor rule.
@@ -367,7 +367,7 @@ spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes", "6
 
 **Scenario & Symptom:**  
 A telecom operator joins two 500GB tables: call data records (CDR) and cell tower telemetry. A primary antenna in Manhattan handles 15% of all calls (75GB). Both tables are too large to broadcast. AQE cannot completely balance the load because the skewed key exceeds memory limits. The join crashes with `FetchFailedException`.  
-*Signature:* `Stage fails repeatedly with `FetchFailedException: Connection reset by peer` as executors hosting the Manhattan cell tower become unresponsive under memory pressure.`
+*Signature:* Stage fails repeatedly with `FetchFailedException: Connection reset by peer` as executors hosting the Manhattan cell tower become unresponsive under memory pressure.
 
 **Root Cause:**  
 When both sides of a skewed join are massive (hundreds of GBs), neither can be broadcast. Hash partitioning maps the hot key to a single reducer on both tables.
@@ -421,7 +421,7 @@ joined_salted = cdrs_salted.join(telemetry_replicated, on="join_key", how="inner
 
 **Scenario & Symptom:**  
 A B2B SaaS platform processes company invoice documents. While 99% of companies have 10-50 line items per invoice, 3 global enterprise conglomerates have invoices containing 600,000 line items. Running `F.explode('line_items')` causes the executor handling those 3 records to crash with `java.lang.OutOfMemoryError: Java heap space`.  
-*Signature:* `Spark task begins normally, then CPU stalls and garbage collection time exceeds 85% of task run time before crashing with Heap OOM.`
+*Signature:* Spark task begins normally, then CPU stalls and garbage collection time exceeds 85% of task run time before crashing with Heap OOM.
 
 **Root Cause:**  
 `explode()` flattens arrays into individual rows within the same partition before writing. 600,000 complex struct objects instantiated in a single JVM thread create hundreds of millions of ephemeral Java objects, saturating Young and Old generation heap spaces.
@@ -474,7 +474,7 @@ chunked_df = invoices_df.withColumn(
 
 **Scenario & Symptom:**  
 A fintech ledger calculates the cumulative running balance for all bank accounts using `SUM(amount) OVER (PARTITION BY account_id ORDER BY tx_timestamp ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)`. One central settlement account has 40 million transactions, while standard accounts have ~200. The stage running the window function spills 90 GB to disk and runs for 4 hours.  
-*Signature:* `Spark UI shows 199 tasks completed in 2 minutes, while 1 task takes 4 hours, reading 40M rows in a single window frame with massive disk spill.`
+*Signature:* Spark UI shows 199 tasks completed in 2 minutes, while 1 task takes 4 hours, reading 40M rows in a single window frame with massive disk spill.
 
 **Root Cause:**  
 A Window specification with `PARTITION BY account_id` forces all rows for a given account to be colocated on a single executor core in sorted order. Tungsten's `WindowExec` cannot distribute rows sharing the same partition key across multiple executors.
@@ -530,7 +530,7 @@ final_df = tx_df.withColumn("tx_date", F.to_date("tx_timestamp")) \
 
 **Scenario & Symptom:**  
 A daily log ingestion job reads 5,000 files from cloud object storage. 4,999 files are 2MB each, but 1 file is an uncompressed or standard `.csv.gz` file of 42GB created by an upstream database dump. Reading the dataset generates 5,000 tasks, but task 5000 runs for 2.5 hours on a single executor while the cluster sits idle.  
-*Signature:* `Spark cluster utilization drops to 2% (1 core active out of 100 cores), reading from a single massive `.csv.gz` object.`
+*Signature:* Spark cluster utilization drops to 2% (1 core active out of 100 cores), reading from a single massive `.csv.gz` object.
 
 **Root Cause:**  
 Standard Gzip is non-splittable because it uses DEFLATE without sync markers. Spark cannot parallelize the read of a single `.gz` file across multiple tasks. Consequently, 1 core must sequentially decompress and parse all 42GB.
@@ -571,7 +571,7 @@ df_splittable = spark.read.parquet("s3://raw-logs/2024-10-01/*.parquet")
 
 **Scenario & Symptom:**  
 A cybersecurity lakehouse processes IoT events using `flatMapGroupsWithState` to detect anomalous device sessions. A compromised router infected with malware emits 20,000 heartbeat packets per second, while regular devices emit 1 every 5 minutes. Within 4 hours, the streaming query latency spikes from 3 seconds to 12 minutes, and the executor hosting the malware state crashes with `StateStoreProvider OOM`.  
-*Signature:* `Streaming query micro-batch processing time climbs continuously. Spark UI Structured Streaming tab shows watermark progressing but state store memory on one executor growing to 15GB+.`
+*Signature:* Streaming query micro-batch processing time climbs continuously. Spark UI Structured Streaming tab shows watermark progressing but state store memory on one executor growing to 15GB+.
 
 **Root Cause:**  
 The default HDFS/Memory StateStore keeps state in JVM heap. The hot key accumulates hundreds of thousands of state transitions in memory. Furthermore, hash partitioning sends all updates for that compromised device to one executor state partition.
@@ -638,7 +638,7 @@ def update_session_bounded(key, values, state):
 
 **Scenario & Symptom:**  
 An ad-tech platform stores 50TB of clickstream data partitioned physically by `PARTITIONED BY (advertiser_id, date)`. Top advertisers (Google, Amazon) have billions of clicks generating 100,000 files per date folder, while long-tail advertisers generate 1KB files. Query performance collapses due to the small file problem for small advertisers and massive file scanning for large advertisers.  
-*Signature:* `Metadata queries against the Delta transaction log take 4 minutes just to list partitions (`AnalysisException: Path does not exist / slow metastore`). Queries on small advertisers spend 99% of time in file open overhead.`
+*Signature:* Metadata queries against the Delta transaction log take 4 minutes just to list partitions (`AnalysisException: Path does not exist / slow metastore`). Queries on small advertisers spend 99% of time in file open overhead.
 
 **Root Cause:**  
 Hive-style directory partitioning on high-cardinality or skewed columns creates rigid directory trees. It leads to the 'small files problem' for low-volume keys and 'giant skewed partitions' for high-volume keys.
@@ -690,7 +690,7 @@ OPTIMIZE clickstream_events;
 
 **Scenario & Symptom:**  
 A compliance reporting pipeline extracts active customers who have not received marketing opt-out notices. The query uses `WHERE customer_id NOT IN (SELECT customer_id FROM opt_out_notices)`. Although there are 5 million active customers and only 2,000 opt-outs, the query returns zero rows in production.  
-*Signature:* `Query returns an empty result set (0 records) without throwing any syntax or runtime errors.`
+*Signature:* Query returns an empty result set (0 records) without throwing any syntax or runtime errors.
 
 **Root Cause:**  
 Under ANSI three-valued logic (3VL), if the subquery returns even a single row with `customer_id IS NULL`, `x NOT IN (val1, val2, NULL)` evaluates to `UNKNOWN` (equivalent to FALSE). Because `x = NULL` is UNKNOWN, `NOT (UNKNOWN)` remains UNKNOWN, discarding every single record.
@@ -736,7 +736,7 @@ WHERE NOT EXISTS (
 
 **Scenario & Symptom:**  
 A financial KPI dashboard reports that total transactions dropped by 40% month-over-month. Upon investigation, total transactions did not drop; rather, a new mobile app release temporarily stopped sending optional `session_id` tags, and the pipeline calculated transaction count as `COUNT(session_id)`.  
-*Signature:* `Executive metrics show phantom drops in business volume without any system outages or error alerts.`
+*Signature:* Executive metrics show phantom drops in business volume without any system outages or error alerts.
 
 **Root Cause:**  
 `COUNT(column_name)` counts only non-null values for that specific column. `COUNT(*)` and `COUNT(1)` count all rows in the group regardless of nullability.
@@ -780,7 +780,7 @@ daily_metrics = tx_df.groupBy("tx_date").agg(
 
 **Scenario & Symptom:**  
 A data quality reconciliation job checks whether records in staging match records in gold. When matching nullable discount codes (`discount_code = 'NONE'` or `NULL`), matching rows with `NULL` on both sides are dropped. The reconciliation flags 250,000 false-positive discrepancies.  
-*Signature:* `Records with NULL on both source and target fail join or filter conditions and are reported as non-matching.`
+*Signature:* Records with NULL on both source and target fail join or filter conditions and are reported as non-matching.
 
 **Root Cause:**  
 In standard SQL, `NULL = NULL` is NOT TRUE; it evaluates to `NULL` (UNKNOWN). Therefore, `staging.discount_code = gold.discount_code` evaluates to NULL, dropping rows from INNER JOIN or equality checks.
@@ -820,7 +820,7 @@ mismatches = staging_df.join(gold_df, on="record_id") \
 
 **Scenario & Symptom:**  
 A customer profile service concatenates name fields: `title`, `first_name`, `middle_name`, and `last_name` to create a `full_name` column. Customers with no middle name (60% of the customer base) end up with `full_name = NULL`.  
-*Signature:* `Customer identity directory displays NULL for majority of user names, leading to critical downstream export failures.`
+*Signature:* Customer identity directory displays NULL for majority of user names, leading to critical downstream export failures.
 
 **Root Cause:**  
 The SQL standard `CONCAT(a, b, c)` function returns `NULL` if any individual argument is `NULL`.
@@ -863,7 +863,7 @@ users_with_name = users.withColumn(
 
 **Scenario & Symptom:**  
 An audit query needs all registered suppliers, along with their active purchase orders if any exist. The developer writes a `LEFT OUTER JOIN` between suppliers and purchase orders, but adds `WHERE po.order_status = 'ACTIVE'`. As a result, all 10,000 suppliers with zero purchase orders are eliminated from the report.  
-*Signature:* `Suppliers with no purchase orders are missing; query returns only suppliers who currently have active orders.`
+*Signature:* Suppliers with no purchase orders are missing; query returns only suppliers who currently have active orders.
 
 **Root Cause:**  
 The `WHERE` clause is evaluated after the `LEFT JOIN`. For suppliers with no purchase orders, `po.order_status` is `NULL`. The predicate `WHERE NULL = 'ACTIVE'` evaluates to FALSE, discarding all unmatched left-table rows and mutating the LEFT JOIN into an INNER JOIN.
@@ -906,7 +906,7 @@ LEFT JOIN purchase_orders po
 
 **Scenario & Symptom:**  
 A data engineer attempting to replace null phone numbers with secondary phone numbers writes: `df.withColumn('phone', coalesce('primary_phone', 'secondary_phone'))`. However, because they did `from pyspark.sql.functions import *` and had existing DataFrame references, the pipeline throws `AttributeError` or runs partition reduction unexpectedly.  
-*Signature:* ``TypeError: Invalid argument, not a string or column` or unexpected shuffle behavior.`
+*Signature:* `TypeError: Invalid argument, not a string or column` or unexpected shuffle behavior.
 
 **Root Cause:**  
 `DataFrame.coalesce(numPartitions)` reduces the number of partitions without shuffling. `pyspark.sql.functions.coalesce(*cols)` returns the first non-null column. In wildcard imports or careless aliasing, namespace collisions create obscure runtime errors.
@@ -952,7 +952,7 @@ df = df.withColumn(
 
 **Scenario & Symptom:**  
 A crypto exchange calculates the price delta between consecutive trades using `LAG(price) OVER (PARTITION BY symbol ORDER BY trade_timestamp)`. Due to an upstream sensor bug, 1% of trades have `trade_timestamp IS NULL`. In Spark SQL, the default ordering places NULLs first, resulting in distorted price deltas for the earliest legitimate trades.  
-*Signature:* `The first legitimate trade of the day compares its price against a null timestamp trade, resulting in wrong deltas.`
+*Signature:* The first legitimate trade of the day compares its price against a null timestamp trade, resulting in wrong deltas.
 
 **Root Cause:**  
 In Spark SQL, default ascending order treats NULLs as the lowest value (`ASC NULLS FIRST`). If timestamps contain NULLs, they cluster at the start of the window frame, displacing the true earliest trades.
@@ -1001,7 +1001,7 @@ trades_with_delta = clean_trades.withColumn("prev_price", F.lag("price", 1).over
 
 **Scenario & Symptom:**  
 A data engineer wants to prepare a 1TB dataset for high-speed downstream filtering by running `df.repartition(200, 'region_code')`. Because 25% of legacy records have `region_code IS NULL`, the repartitioning job creates 199 partitions of ~3.7GB and 1 partition of 250GB, causing severe out-of-memory errors in downstream stages.  
-*Signature:* `Downstream jobs fail with `FetchFailedException` or `GC overhead limit exceeded` when reading the single 250GB partition.`
+*Signature:* Downstream jobs fail with `FetchFailedException` or `GC overhead limit exceeded` when reading the single 250GB partition.
 
 **Root Cause:**  
 Hash partitioning computes hash codes using `Murmur3Hash`. All NULL values yield a hash of 0 (or a fixed bucket), sending all 250GB of NULL records into a single physical partition.
@@ -1043,7 +1043,7 @@ repartitioned_df.write.format("parquet").save("s3://lake/partitioned_tx/")
 
 **Scenario & Symptom:**  
 A medical risk model categorizes patient blood pressure using a `CASE WHEN` statement: `CASE WHEN bp < 120 THEN 'NORMAL' WHEN bp >= 120 THEN 'ELEVATED' END`. Upstream sensor telemetry frequently sends `bp = NULL`. Because there is no `ELSE` branch, these records become `NULL`, breaking downstream mandatory categorical encoders.  
-*Signature:* `Downstream ML feature pipeline crashes with `IllegalArgumentException: Field status contains unexpected null values`.`
+*Signature:* Downstream ML feature pipeline crashes with `IllegalArgumentException: Field status contains unexpected null values`.
 
 **Root Cause:**  
 If no `WHEN` clause evaluates to TRUE and no `ELSE` clause is specified, SQL `CASE WHEN` defaults to `NULL`. With three-valued logic, `NULL < 120` is UNKNOWN and `NULL >= 120` is UNKNOWN, falling through to the omitted ELSE.
@@ -1091,7 +1091,7 @@ FROM vitals_stream;
 
 **Scenario & Symptom:**  
 An enterprise lakehouse serves a gold dimensional table `dim_customers`. Business requirements mandate that `customer_id` and `tax_id` must never be NULL. However, periodic ingestion batches containing corrupted NULL tax IDs cause the entire pipeline write to fail midway, leaving the orchestration DAG in a failed state.  
-*Signature:* ``DeltaInvariantViolationException: CHECK constraint check_tax_id (tax_id IS NOT NULL) violated by row with tax_id: null`.`
+*Signature:* `DeltaInvariantViolationException: CHECK constraint check_tax_id (tax_id IS NOT NULL) violated by row with tax_id: null`.
 
 **Root Cause:**  
 Delta Lake CHECK constraints and NOT NULL invariants abort the entire transaction when a single violating row is encountered to preserve ACID guarantees.
@@ -1139,7 +1139,7 @@ quarantined_records.write.format("delta").mode("append").saveAsTable("audit.quar
 
 **Scenario & Symptom:**  
 A legacy ingestion pipeline creates Parquet files where some files have column `CustomerId` while other files created by another service have `customerid`. When reading the combined directory with Spark's default configuration, queries either fail or produce inconsistent results.  
-*Signature:* ``AnalysisException: Found duplicate column(s) in the table schema: customerid` or silent column nullification.`
+*Signature:* `AnalysisException: Found duplicate column(s) in the table schema: customerid` or silent column nullification.
 
 **Root Cause:**  
 By default, Spark SQL is case-insensitive (`spark.sql.caseSensitive = false`), but Parquet file metadata is strictly case-sensitive. When schema inference encounters both `CustomerId` and `customerid`, Catalyst treats them as duplicates or fails during partition resolution.
@@ -1180,7 +1180,7 @@ def normalize_schema(df):
 
 **Scenario & Symptom:**  
 A data warehouse reads a partitioned Parquet table spanning 3 years. On October 1st, upstream added a new column `loyalty_tier`. When downstream analytical queries select `loyalty_tier` across the entire 3-year date range, Spark throws `AnalysisException: cannot resolve 'loyalty_tier'` because schema inference only inspected older partitions.  
-*Signature:* ``AnalysisException: cannot resolve 'loyalty_tier' given input columns: [...]` when reading partitioned Parquet directories.`
+*Signature:* `AnalysisException: cannot resolve 'loyalty_tier' given input columns: [...]` when reading partitioned Parquet directories.
 
 **Root Cause:**  
 To avoid slow cloud storage metadata scans, Spark's Parquet reader only infers schema from a subset of files (or summary metadata files). If older files lack the new column and summary metadata is absent, Spark assumes the column does not exist across the dataset.
@@ -1219,7 +1219,7 @@ df.select("customer_id", "loyalty_tier").show()
 
 **Scenario & Symptom:**  
 A telemetry pipeline ingests mobile device logs from IoT devices. In firmware v1, the `metadata` field was serialized as a plain string: `"metadata": "offline_mode"`. In firmware v2, it was upgraded to a nested object: `"metadata": {"network": "5G", "battery": 92}`. Spark's JSON reader crashes with a schema parsing mismatch.  
-*Signature:* ``SparkException: Malformed records are detected in record parsing` or `metadata` column becomes NULL for entire batches.`
+*Signature:* `SparkException: Malformed records are detected in record parsing` or `metadata` column becomes NULL for entire batches.
 
 **Root Cause:**  
 Spark's DataFrame schema is strictly typed. A column cannot simultaneously be of type `StringType` and `StructType`. Schema inference either picks StructType (causing string payloads to be marked malformed) or StringType (failing nested queries).
@@ -1274,7 +1274,7 @@ processed_df = df.withColumn(
 
 **Scenario & Symptom:**  
 A daily ETL job reloads an aggregated gold table with `mode('overwrite')`. One day, upstream changes a column name from `total_rev` to `revenue`. The engineer uses `.option('mergeSchema', 'true')` with overwrite. Unexpectedly, the resulting Delta table now has BOTH `total_rev` (all NULLs for today) and `revenue`, permanently bloating the table schema.  
-*Signature:* `The table schema grows monotonically with dead legacy columns; queries selecting old column names return NULL instead of failing.`
+*Signature:* The table schema grows monotonically with dead legacy columns; queries selecting old column names return NULL instead of failing.
 
 **Root Cause:**  
 `.option('mergeSchema', 'true')` with `mode('overwrite')` merges the incoming schema with the existing historical schema; it does NOT delete missing columns. To completely replace the schema, `overwriteSchema` is required.
@@ -1316,7 +1316,7 @@ df_today.write.format("delta") \
 
 **Scenario & Symptom:**  
 A financial transaction ID column exceeds $2^{31}-1$ (2.14 billion), requiring a type migration from `IntegerType` (INT) to `LongType` (BIGINT). Upstream starts writing INT64 Parquet files. When Spark reads historical INT32 Parquet files alongside new INT64 files, the job crashes with `ParquetDecodingException`.  
-*Signature:* ``org.apache.parquet.io.ParquetDecodingException: Can not read value at 0 in block 0 in file ... INT32 is not compatible with INT64`.`
+*Signature:* `org.apache.parquet.io.ParquetDecodingException: Can not read value at 0 in block 0 in file ... INT32 is not compatible with INT64`.
 
 **Root Cause:**  
 Parquet physical encoding stores primitive types at the page level. Reading physical INT32 data as INT64 requires vectorization support or explicit widening. In older Spark runtimes, vectorized Parquet readers fail to promote physical INT32 to logical INT64 on the fly.
@@ -1358,7 +1358,7 @@ spark.conf.set("spark.sql.parquet.enableVectorizedReader", "false")
 
 **Scenario & Symptom:**  
 A cloud ingestion pipeline uses Databricks Auto Loader (`cloudFiles`) to ingest telemetry JSON files. An upstream team unexpectedly changes `user_id` from integer `12345` to UUID string `'usr_98124a'`. With schema evolution set to rescue, the pipeline doesn't fail, but analytical queries suddenly report that 100% of new users have `user_id = NULL`.  
-*Signature:* `No pipeline failure occurs, but critical business columns turn NULL silently, and the hidden column `_rescued_data` inflates in size.`
+*Signature:* No pipeline failure occurs, but critical business columns turn NULL silently, and the hidden column `_rescued_data` inflates in size.
 
 **Root Cause:**  
 When `cloudFiles.schemaEvolutionMode = 'rescue'` is used, any incoming data that does not match the inferred or declared schema (e.g. string value for an integer column) is diverted into the `_rescued_data` JSON column to prevent ingestion failure.
@@ -1410,7 +1410,7 @@ def alert_on_rescued_data(batch_df, batch_id):
 
 **Scenario & Symptom:**  
 A healthcare system stores patient address as a struct: `STRUCT<street: STRING, city: STRING>`. An external microservice writes Parquet files where the struct fields are ordered `STRUCT<city: STRING, street: STRING>`. When Spark reads the combined dataset, patient street addresses appear in the `city` column and city names appear in the `street` column.  
-*Signature:* `Values are silently swapped between adjacent struct fields without any error or warning.`
+*Signature:* Values are silently swapped between adjacent struct fields without any error or warning.
 
 **Root Cause:**  
 Legacy Parquet readers resolve struct fields positionally (by ordinal index) rather than by name. If two fields share the same datatype (`StringType`), Spark maps physical field 0 to logical field 0 regardless of field names.
@@ -1455,7 +1455,7 @@ spark.conf.set("spark.sql.parquet.fieldId.enabled", "true")
 
 **Scenario & Symptom:**  
 A CDC stream merges real-time database updates into a Delta silver table using `foreachBatch` and `MERGE INTO`. When the source database adds a new column `middle_name`, the streaming micro-batch fails with `AnalysisException: Cannot resolve [middle_name] in target table`.  
-*Signature:* `Streaming pipeline crashes on micro-batch execution; retries fail repeatedly, halting real-time ingestion.`
+*Signature:* Streaming pipeline crashes on micro-batch execution; retries fail repeatedly, halting real-time ingestion.
 
 **Root Cause:**  
 Delta Lake `MERGE INTO` does not automatically evolve the target table schema by default unless explicit Spark configuration flags or merge clauses permit schema evolution.
@@ -1512,7 +1512,7 @@ streaming_df.writeStream.foreachBatch(upsert_to_delta_with_evolution).start()
 
 **Scenario & Symptom:**  
 A SaaS enterprise ingests telemetry payloads from 5,000 corporate clients into a single Bronze lakehouse table. Each client adds custom JSON properties at will. Attempting to maintain a single merged tabular schema results in a Delta table with over 15,000 columns, causing metastore exhaustion, massive transaction log metadata, and query planning timeouts.  
-*Signature:* `Driver takes 10+ minutes during query planning phase in Catalyst; Spark UI shows excessive time spent in `Inferring Schema` and `Catalog.getTable()`.`
+*Signature:* Driver takes 10+ minutes during query planning phase in Catalyst; Spark UI shows excessive time spent in `Inferring Schema` and `Catalog.getTable()`.
 
 **Root Cause:**  
 Wide schemas with thousands of columns degrade Parquet metadata size and Catalyst optimizer rule application times (quadratic complexity in column resolution).
@@ -1559,7 +1559,7 @@ bronze_df.write.format("delta").mode("append").saveAsTable("bronze.tenant_events
 
 **Scenario & Symptom:**  
 A 100TB production Delta table requires renaming 5 columns and dropping a deprecated PII column (`ssn`) to comply with GDPR regulations. Prior to Delta Column Mapping, executing `ALTER TABLE ... DROP COLUMN` required a full rewrite of 100TB of Parquet files, incurring $12,000 in cloud compute and 18 hours of downtime.  
-*Signature:* `Rewriting entire tables just to rename or drop columns creates massive I/O, cost spikes, and potential transaction conflict aborts.`
+*Signature:* Rewriting entire tables just to rename or drop columns creates massive I/O, cost spikes, and potential transaction conflict aborts.
 
 **Root Cause:**  
 Standard Parquet files store column names in the file footer. Dropping or renaming columns traditionally required reading and rewriting every single Parquet file on storage.
@@ -1607,7 +1607,7 @@ ALTER TABLE gold.customers DROP COLUMN ssn;
 
 **Scenario & Symptom:**  
 A financial data pipeline ingests vendor payment files in CSV format. A vendor name contains an unescaped comma: `"Acme Supplies, Inc."`. Spark reads the row with default CSV settings, splitting the name across two columns and shifting the transaction amount into a date column, causing catastrophic silent data corruption.  
-*Signature:* `Analytical queries fail with `NumberFormatException` when aggregating the amount column, or revenue figures are corrupted with dates.`
+*Signature:* Analytical queries fail with `NumberFormatException` when aggregating the amount column, or revenue figures are corrupted with dates.
 
 **Root Cause:**  
 By default, Spark CSV reader treats commas strictly as delimiters unless explicit quoting rules (`quote`, `escape`) are configured. Unquoted commas shift tokens into adjacent columns.
@@ -1650,7 +1650,7 @@ corrupt_df = df.filter(F.col("_corrupt_record").isNotNull())
 
 **Scenario & Symptom:**  
 An ingestion pipeline uses `mode = 'DROPMALFORMED'` to ingest user feedback JSON files. When a third-party webhook sends 100,000 records with an unclosed bracket `{"user": 12, "comment": ...`, Spark silently drops all 100,000 rows. The team discovers 2 weeks later that 20% of customer feedback was completely lost.  
-*Signature:* `Job succeeds with status SUCCESS, but total row count drops significantly with zero error traces.`
+*Signature:* Job succeeds with status SUCCESS, but total row count drops significantly with zero error traces.
 
 **Root Cause:**  
 `DROPMALFORMED` silently discards any row that fails JSON parsing without notification or logging. In contrast, `FAILFAST` aborts immediately, and `PERMISSIVE` preserves the raw record in a designated corruption column.
@@ -1702,7 +1702,7 @@ corrupt_df.write.format("delta").mode("append").saveAsTable("audit.corrupt_feedb
 
 **Scenario & Symptom:**  
 An API exporter writes pretty-printed JSON files (formatted with indentation and newlines across multiple lines). A Spark cluster reads the directory with standard `spark.read.json()`. Tasks fail with `SparkException: Malformed line` or read hundreds of garbage rows consisting of individual JSON property lines.  
-*Signature:* `Single JSON documents are sliced into fragments across tasks; row counts are 20x higher than expected, with fields showing partial JSON syntax.`
+*Signature:* Single JSON documents are sliced into fragments across tasks; row counts are 20x higher than expected, with fields showing partial JSON syntax.
 
 **Root Cause:**  
 By default, Spark assumes JSON and CSV are single-line records (one record per line). The reader splits files at arbitrary byte boundaries and expects newline characters to delimit records. For multi-line JSON, `multiLine=true` is required.
@@ -1741,7 +1741,7 @@ df = spark.read.option("multiLine", "true").json("s3://api-dumps/pretty_printed/
 
 **Scenario & Symptom:**  
 An upstream legacy Spark job killed by an out-of-memory error leaves a partial 0-byte or half-written Parquet file in an unmanaged S3 bucket. Downstream ETL queries reading the directory fail immediately with `IOException: Could not read footer for file`.  
-*Signature:* ``java.io.IOException: Could not read footer for file: s3://landing/part-00123.parquet` halts the entire enterprise warehouse refresh.`
+*Signature:* `java.io.IOException: Could not read footer for file: s3://landing/part-00123.parquet` halts the entire enterprise warehouse refresh.
 
 **Root Cause:**  
 Parquet files store essential metadata (schema, row group offsets, dictionary pages) in the file footer at the very end of the file. If a writer is killed midway, the footer is never written, making the physical file unreadable.
@@ -1779,7 +1779,7 @@ df = spark.read.parquet("s3://landing/unmanaged_parquet/")
 
 **Scenario & Symptom:**  
 An SFTP sync script creates zero-byte files (touch markers) while waiting for incoming partner data. When a daily Spark pipeline runs `spark.read.csv()`, tasks throw `EOFException` or `IllegalArgumentException: filePath is empty`.  
-*Signature:* `Jobs crash during schema inference or initial partition calculation with `java.io.EOFException`.`
+*Signature:* Jobs crash during schema inference or initial partition calculation with `java.io.EOFException`.
 
 **Root Cause:**  
 Zero-byte files confuse CSV/JSON schema inferrers and can crash split calculations when metadata exists without readable payload blocks.
@@ -1823,7 +1823,7 @@ df = spark.read.option("header", "true").csv(valid_files)
 
 **Scenario & Symptom:**  
 A health insurance claims pipeline receives JSON claims from 400 hospital networks. Approximately 0.05% of records have invalid JSON syntax (e.g. truncated packets). The business requires 100% processing of valid claims while quarantining invalid claims with full audit tracking.  
-*Signature:* `Using `FAILFAST` causes 99.95% of legitimate claims to be delayed whenever a single corrupt record arrives.`
+*Signature:* Using `FAILFAST` causes 99.95% of legitimate claims to be delayed whenever a single corrupt record arrives.
 
 **Root Cause:**  
 Strict parsing crashes whole micro-batches. Permissive parsing without capturing `_corrupt_record` leaves corrupt records as all-null rows, which contaminate downstream aggregations.
@@ -1879,7 +1879,7 @@ bad_claims.write.format("delta").mode("append").saveAsTable("quarantine.corrupt_
 
 **Scenario & Symptom:**  
 A web scraping pipeline extracts reviews and emoji comments. Upstream scraping bugs write corrupted UTF-16 surrogate pairs or legacy Windows-1252 / ISO-8859-1 byte sequences into Parquet string columns. When running regex extraction or tokenization, Spark tasks fail with `java.nio.charset.MalformedInputException` or JVM string index out-of-bounds.  
-*Signature:* ``SparkException: Job aborted due to stage failure: java.nio.charset.MalformedInputException: Input length = 1` during regex or string manipulations.`
+*Signature:* `SparkException: Job aborted due to stage failure: java.nio.charset.MalformedInputException: Input length = 1` during regex or string manipulations.
 
 **Root Cause:**  
 The JVM `String` implementation expects valid UTF-16 / UTF-8 sequences. Unpaired high-surrogates or raw binary bytes masquerading as strings violate UTF invariants, breaking JVM string encoders and C++ vectorized execution engines.
@@ -1927,7 +1927,7 @@ sanitized_df = df.withColumn(
 
 **Scenario & Symptom:**  
 A gaming telemetry platform ingests 200 million player action events daily. Game client patches frequently alter field casing, rename attributes (e.g. `score` to `player_score`), or submit integers as strings. If the pipeline rejects these files, game telemetry is halted. If it accepts them blindly, the schema corrupts.  
-*Signature:* `Frequent pipeline halts due to minor client-side format drift.`
+*Signature:* Frequent pipeline halts due to minor client-side format drift.
 
 **Root Cause:**  
 Semi-structured data in production experiences inevitable non-breaking and breaking variations that tabular databases cannot ingest without either strict failure or silent data loss.
@@ -1976,7 +1976,7 @@ silver_df = streaming_df.withColumn(
 
 **Scenario & Symptom:**  
 A payments streaming application reads real-time transactions from an Apache Kafka topic. Once every 3 days, a corrupted 'poison pill' packet (e.g. 0-byte payload or invalid Protobuf/Avro bytes) is published to the topic. The Spark Structured Streaming query fails on deserialization and restarts in an infinite retry crash loop.  
-*Signature:* `Streaming job enters an unrecoverable failure loop (`StreamExecution: query failed with SerializationException`). Real-time SLAs are breached.`
+*Signature:* Streaming job enters an unrecoverable failure loop (`StreamExecution: query failed with SerializationException`). Real-time SLAs are breached.
 
 **Root Cause:**  
 Structured Streaming checkpoints track Kafka offsets. If the micro-batch cannot deserialize a message at offset $K$, restarting the query causes it to reread offset $K$, hitting the same crash indefinitely.
@@ -2052,7 +2052,7 @@ parsed_df.writeStream.foreachBatch(process_micro_batch).start()
 
 **Scenario & Symptom:**  
 A Tier-1 financial ledger ingests 10TB of raw partner transactions daily. Regulatory compliance mandates that no data may ever be discarded, even if corrupted or non-compliant. However, invalid rows must never enter gold accounting tables. Creating duplicate physical copies for quarantine would inflate cloud storage costs by $250,000/year.  
-*Signature:* `Duplicating 10TB/day across valid and invalid buckets doubles egress, storage, and maintenance overhead.`
+*Signature:* Duplicating 10TB/day across valid and invalid buckets doubles egress, storage, and maintenance overhead.
 
 **Root Cause:**  
 Naive quarantine architectures physically copy data into two separate storage locations (`s3://clean/` and `s3://quarantine/`), doubling ingestion I/O and storage fees.
@@ -2104,7 +2104,7 @@ WHERE is_valid = FALSE;
 
 **Scenario & Symptom:**  
 A marketing pipeline deduplicates customer signups. The engineer runs `df.distinct()`, but the final table still contains multiple signups for the same email address because the `signup_timestamp` column differs across rows. The customer receives duplicate welcome emails.  
-*Signature:* `Duplicate records persist in production even after calling `distinct()`.`
+*Signature:* Duplicate records persist in production even after calling `distinct()`.
 
 **Root Cause:**  
 `distinct()` computes uniqueness across ALL columns in the DataFrame row. If any column (e.g. timestamp, click_id) varies, the rows are considered distinct. Deduplication on a business key requires `dropDuplicates(['email'])`.
@@ -2149,7 +2149,7 @@ deterministic_deduped = df.withColumn("row_num", F.row_number().over(w)) \
 
 **Scenario & Symptom:**  
 An order analytics query joins an `orders` fact table (10 million rows, $50M revenue) with a `promotions` table on `promo_code`. Due to an upstream bug, `promotions` contains duplicate rows for promo code `'SUMMER20'`. After the join, the reported revenue doubles to $100M.  
-*Signature:* `Fact table row count expands unexpectedly after a join, inflating financial and operational metrics.`
+*Signature:* Fact table row count expands unexpectedly after a join, inflating financial and operational metrics.
 
 **Root Cause:**  
 If the join key is not unique on the dimension side, an equi-join generates a Cartesian product for matching keys ($M \times N$ rows), multiplying fact table rows.
@@ -2190,7 +2190,7 @@ enriched = orders.join(unique_promos, on="promo_code", how="inner")
 
 **Scenario & Symptom:**  
 An e-commerce order service emits order status updates (`CREATED`, `SHIPPED`, `DELIVERED`). Multiple updates arrive in a single batch with different timestamps for the same `order_id`. A simple `dropDuplicates(['order_id'])` arbitrarily retains an older `CREATED` status instead of `DELIVERED`.  
-*Signature:* `Customers see orders reverted to `CREATED` or `PENDING` status in the gold data mart.`
+*Signature:* Customers see orders reverted to `CREATED` or `PENDING` status in the gold data mart.
 
 **Root Cause:**  
 `dropDuplicates(['order_id'])` is non-deterministic; Spark picks whatever row finishes first in the shuffle buffer, discarding newer updates.
@@ -2235,7 +2235,7 @@ latest_orders = raw_orders \
 
 **Scenario & Symptom:**  
 A logistics tracking system streams driver GPS coordinates from Kafka into a Delta Lake table. Due to network retries, a driver update from 10:00 AM arrives at 10:15 AM, after the 10:10 AM update has already been merged. The 10:00 AM update overwrites the 10:10 AM update, showing the driver moving backwards in time.  
-*Signature:* `Target table state regresses to stale historical values; latest records have older timestamps.`
+*Signature:* Target table state regresses to stale historical values; latest records have older timestamps.
 
 **Root Cause:**  
 A naive `MERGE INTO` statement with `WHEN MATCHED THEN UPDATE SET *` blindly updates the target row whenever the keys match, regardless of which record was created first.
@@ -2278,7 +2278,7 @@ WHEN NOT MATCHED THEN INSERT *;
 
 **Scenario & Symptom:**  
 A CDC batch updates a Delta table containing customer profiles. Within the incoming 15-minute micro-batch, a customer updated their address twice. When running `MERGE INTO`, Spark crashes with `DeltaAnalysisException: Cannot perform MERGE as multiple source rows matched and attempted to modify the same target row in the Delta table`.  
-*Signature:* `Pipeline crashes with `DeltaAnalysisException: Cannot perform MERGE as multiple source rows matched`.`
+*Signature:* Pipeline crashes with `DeltaAnalysisException: Cannot perform MERGE as multiple source rows matched`.
 
 **Root Cause:**  
 The SQL standard mandates that a single target row can only be updated once during a MERGE transaction. If the source DataFrame contains duplicate primary keys, Delta Lake throws an exception to prevent ambiguous updates.
@@ -2327,7 +2327,7 @@ delta_target.alias("t").merge(
 
 **Scenario & Symptom:**  
 A payments platform processes credit card authorizations from an event broker that guarantees at-least-once delivery. Retried authorizations arrive 2-5 minutes after the original. Calling `dropDuplicates(['auth_id'])` in a stateful Structured Streaming job without a watermark causes the state store to grow infinitely until the cluster crashes after 14 days.  
-*Signature:* `Streaming state store size climbs monotonically by 20GB daily; query restarts take 45 minutes; eventually fails with `Container killed by YARN for exceeding memory limits`.`
+*Signature:* Streaming state store size climbs monotonically by 20GB daily; query restarts take 45 minutes; eventually fails with `Container killed by YARN for exceeding memory limits`.
 
 **Root Cause:**  
 Without a watermark, Spark has no eviction policy for `dropDuplicates()`. It must retain every `auth_id` it has ever seen since the inception of the stream in memory forever.
@@ -2373,7 +2373,7 @@ deduped_stream.writeStream \
 
 **Scenario & Symptom:**  
 A PostgreSQL database is replicated to a Delta Lake table via Debezium CDC and Kafka. When a user deletes their account in Postgres, Debezium emits a CDC tombstone record with `op = 'D'`. The standard `MERGE INTO` pipeline ignores the delete flag, leaving deleted user data in the silver table and violating data privacy regulations.  
-*Signature:* `Deleted records in the operational database remain active in the analytics lakehouse indefinitely.`
+*Signature:* Deleted records in the operational database remain active in the analytics lakehouse indefinitely.
 
 **Root Cause:**  
 Most CDC merge scripts only implement `WHEN MATCHED THEN UPDATE` and `WHEN NOT MATCHED THEN INSERT`. Propagating hard deletes requires handling `WHEN MATCHED AND source.op = 'D' THEN DELETE`.
@@ -2423,7 +2423,7 @@ WHEN NOT MATCHED AND source.op IN ('I', 'C') THEN INSERT *;
 
 **Scenario & Symptom:**  
 An SCD Type 2 dimensional pipeline tracks customer address changes. In a single daily batch, a customer moved twice: Address A -> Address B at 10 AM, and Address B -> Address C at 3 PM. A naive SCD2 merge only checks the existing target table, resulting in conflicting overlapping date ranges (`is_current = true` for both Address B and Address C).  
-*Signature:* `Downstream dimension lookups return multiple active rows for the same entity (`WHERE is_current = TRUE` returns 2 rows).`
+*Signature:* Downstream dimension lookups return multiple active rows for the same entity (`WHERE is_current = TRUE` returns 2 rows).
 
 **Root Cause:**  
 Standard SCD Type 2 merge patterns compare incoming rows against the target table. When multiple state changes occur for the same entity within a single incoming batch, they must first be sequenced and chained in-batch before merging into target.
@@ -2471,7 +2471,7 @@ staged_batch = incoming_batch.withColumn(
 
 **Scenario & Symptom:**  
 A 50TB Delta table ingests 5,000 upserts per minute. Each `MERGE INTO` statement modifies ~200 rows scattered across 200 different 500MB Parquet files. Because Delta traditionally rewrites entire Parquet files on update, the system writes 100GB of Parquet files every minute to update 200KB of data, causing massive write amplification and transaction conflicts.  
-*Signature:* `Storage write I/O is 500,000x larger than incoming payload size; jobs abort with `ConcurrentModificationException`.`
+*Signature:* Storage write I/O is 500,000x larger than incoming payload size; jobs abort with `ConcurrentModificationException`.
 
 **Root Cause:**  
 Prior to Deletion Vectors, Delta Lake used copy-on-write (COW): updating a single row in a Parquet file required reading the entire file, writing a new file with the update, and soft-deleting the old file.
@@ -2512,7 +2512,7 @@ OPTIMIZE gold.orders; -- Compacts Deletion Vectors into clean Parquet files
 
 **Scenario & Symptom:**  
 A payments ledger processes real-time transfers from Kafka and writes to both a Delta Lake silver table and an external PostgreSQL relational database. If a worker node crashes midway through a micro-batch, the pipeline retries. While Delta Lake is idempotent via its transaction log, PostgreSQL receives duplicate insert statements, crediting user balances twice.  
-*Signature:* `PostgreSQL relational sink contains duplicate financial transactions while Delta Lake table remains clean.`
+*Signature:* PostgreSQL relational sink contains duplicate financial transactions while Delta Lake table remains clean.
 
 **Root Cause:**  
 Structured Streaming guarantees end-to-end exactly-once ONLY if the target sink supports idempotent or transactional writes. Relational databases using standard `INSERT` without unique constraint upsert (`ON CONFLICT DO NOTHING`) suffer duplicate writes on micro-batch retries.
@@ -2571,7 +2571,7 @@ def write_dual_sinks_idempotent(batch_df, batch_id):
 
 **Scenario & Symptom:**  
 A data engineer writes a PySpark transformation to extract nested fields from a customer profile struct: `df.select('customer.address.city')`. When upstream sends a batch where the `address` struct itself is entirely missing from the schema, Spark throws `AnalysisException: No such struct field address in customer`.  
-*Signature:* ``AnalysisException: No such struct field` halts the pipeline during Catalyst semantic analysis.`
+*Signature:* `AnalysisException: No such struct field` halts the pipeline during Catalyst semantic analysis.
 
 **Root Cause:**  
 Dot notation in string queries fails compilation if the nested field is not explicitly present in the schema definition. When schemas are dynamic or evolved, safe column access requires handling potential missing fields.
@@ -2613,7 +2613,7 @@ df.select(F.col("customer.address.city")).show()
 
 **Scenario & Symptom:**  
 An inventory report calculates total stock across retail stores. Each store row contains an array of 5,000 product stock objects. A junior engineer runs `F.explode('products')` on 1 million store records to calculate the sum of prices, multiplying the dataset from 1 million to 5 billion rows and crashing executors with OutOfMemoryError.  
-*Signature:* `Physical row count multiplies 5,000x; Tungsten memory spills 300GB to disk before tasks crash with `java.lang.OutOfMemoryError: Java heap space`.`
+*Signature:* Physical row count multiplies 5,000x; Tungsten memory spills 300GB to disk before tasks crash with `java.lang.OutOfMemoryError: Java heap space`.
 
 **Root Cause:**  
 `explode()` physically materializes every array element into an individual row, duplicating all other columns across the new rows and causing severe memory amplification.
@@ -2656,7 +2656,7 @@ summary = stores_df.withColumn(
 
 **Scenario & Symptom:**  
 A telecom billing pipeline explodes customer subscriptions to generate monthly line items. Out of 10 million customers, 500,000 are prepaid accounts with an empty array `subscriptions = []` or `NULL`. After calling `explode('subscriptions')`, all 500,000 prepaid customers disappear from the billing ledger.  
-*Signature:* `Total customer count drops by 500,000 immediately after the explode transformation.`
+*Signature:* Total customer count drops by 500,000 immediately after the explode transformation.
 
 **Root Cause:**  
 `explode()` behaves like an INNER JOIN: rows where the array is `NULL` or empty `[]` are completely dropped from the resulting DataFrame.
@@ -2696,7 +2696,7 @@ exploded = df.withColumn("sub", F.explode_outer("subscriptions"))
 
 **Scenario & Symptom:**  
 A clinical trial pipeline processes patient medication schedules stored as an ordered array of dosages: `['10mg', '20mg', '15mg']`. When exploded to analyze titration curves, the original order of administration is lost because distributed shuffle does not guarantee partition row order.  
-*Signature:* `Medication sequence is randomized across distributed partitions; titration trends cannot be determined.`
+*Signature:* Medication sequence is randomized across distributed partitions; titration trends cannot be determined.
 
 **Root Cause:**  
 `explode()` does not preserve or output array element indices; distributed row storage is inherently unordered without an explicit ordinal column.
@@ -2736,7 +2736,7 @@ df_ordered = df.select(
 
 **Scenario & Symptom:**  
 An ad-tech platform formats click URLs stored inside an array of impressions. The existing code explodes the array, applies string formatting, and runs `collect_list()` grouped by user. The pipeline takes 45 minutes and creates massive shuffle disk spill.  
-*Signature:* `Stage contains two full shuffle exchanges (`Exchange hashpartitioning`) and heavy memory overhead in `collect_list`.`
+*Signature:* Stage contains two full shuffle exchanges (`Exchange hashpartitioning`) and heavy memory overhead in `collect_list`.
 
 **Root Cause:**  
 Exploding an array to modify elements and re-aggregating with `collect_list()` is an anti-pattern that destroys data locality and forces expensive distributed shuffles.
@@ -2777,7 +2777,7 @@ recollected = df.withColumn(
 
 **Scenario & Symptom:**  
 A gaming analytics engine calculates the cumulative experience points earned by a player across an array of match scores: `[100, 250, 50, 400]`. Exploding the array and running a window function over 50 million players causes executor container deaths.  
-*Signature:* `Container killed by YARN/Kubernetes (Exit code 137) during window partitioning.`
+*Signature:* Container killed by YARN/Kubernetes (Exit code 137) during window partitioning.
 
 **Root Cause:**  
 Exploding 50 million arrays into 2 billion rows and running an analytical window function requires a full network shuffle and external sort across all player IDs.
@@ -2828,7 +2828,7 @@ running_array_df = df.withColumn(
 
 **Scenario & Symptom:**  
 A core banking migration requires flattening a JSON schema containing 8 levels of nested structs and arrays into a flat relational schema. Manually writing `select('a.b.c.d...')` for 400 fields is unmaintainable and breaks whenever upstream adds or renames nested attributes.  
-*Signature:* `Hardcoded projection scripts become brittle, thousands of lines long, and fail on minor schema additions.`
+*Signature:* Hardcoded projection scripts become brittle, thousands of lines long, and fail on minor schema additions.
 
 **Root Cause:**  
 Hierarchical schemas require dynamic recursive schema traversal to inspect `StructType` and `ArrayType` metadata programmatically at runtime.
@@ -2892,7 +2892,7 @@ flat_df = flatten_dataframe(spark.read.json("s3://banking/complex_json/"))
 
 **Scenario & Symptom:**  
 A timeseries IoT platform stores 100 sensor readings per device heartbeat. The initial design uses an Array-of-Structs: `readings: ARRAY<STRUCT<sensor_id: INT, temp: DOUBLE, pressure: DOUBLE>>`. Analytical queries that only compute average `temp` scan the entire table, running 12x slower than expected and exhausting I/O bandwidth.  
-*Signature:* `Parquet column projection fails to reduce read bytes; queries scanning 1 column read 90% of file size from S3/ADLS.`
+*Signature:* Parquet column projection fails to reduce read bytes; queries scanning 1 column read 90% of file size from S3/ADLS.
 
 **Root Cause:**  
 In Parquet, an `ARRAY<STRUCT<...>>` interleaves all struct fields inside the same nested repetition/definition levels (Dremel encoding). The Parquet reader cannot cleanly isolate the `temp` physical column without reading the repetition markers for `sensor_id` and `pressure`.
@@ -2933,7 +2933,7 @@ df_optimized.select("readings.temps").write.format("noop").mode("overwrite").sav
 
 **Scenario & Symptom:**  
 A real-time cybersecurity lakehouse parses 50 million JSON firewall logs per hour. The pipeline extracts 20 fields using `get_json_object(payload, '$.src_ip')`, `get_json_object(payload, '$.dest_ip')`, etc. The cluster requires 120 worker nodes to keep up with stream throughput, incurring $40,000/month in cloud compute.  
-*Signature:* `CPU utilization on all executors is pegged at 100% in string parsing methods (`JacksonParser.nextToken()`); query throughput is severely bottlenecked.`
+*Signature:* CPU utilization on all executors is pegged at 100% in string parsing methods (`JacksonParser.nextToken()`); query throughput is severely bottlenecked.
 
 **Root Cause:**  
 `get_json_object()` parses the raw JSON string from scratch independently for every single call. Extracting 20 fields parses the exact same string 20 separate times per row! Furthermore, `get_json_object` cannot be vectorized by Databricks Photon or Catalyst.
@@ -2982,7 +2982,7 @@ parsed_df = raw_df.withColumn("data", F.from_json("raw_json", firewall_schema)) 
 
 **Scenario & Symptom:**  
 A social network analytics pipeline generates a bidirectional follower graph from user profile documents. Each user has an array of `following_user_ids`. Joining the exploded follower edges back to a 200GB user attributes table generates massive shuffle write spikes of 4TB and crashes the cluster with disk exhaustion.  
-*Signature:* `Shuffle service crashes with `No space left on device` as shuffle spill overwhelms local SSDs.`
+*Signature:* Shuffle service crashes with `No space left on device` as shuffle spill overwhelms local SSDs.
 
 **Root Cause:**  
 Exploding edges creates high-cardinality foreign keys. Joining exploded edges before projecting necessary columns replicates wide user attribute payloads across billions of temporary rows.
@@ -3028,7 +3028,7 @@ enriched_graph = edges.join(minimal_profiles, edges.dst == minimal_profiles.user
 
 **Scenario & Symptom:**  
 A retail bank in New York runs an end-of-day batch at 8:00 PM EST (01:00 AM UTC next day). The query filters transactions using `WHERE tx_date = current_date()`. Because the cloud Spark cluster runs in UTC, `current_date()` resolves to tomorrow's date, causing the batch to return 0 transactions and report an empty ledger.  
-*Signature:* `End-of-day batch jobs run at night return zero records despite active transaction flow.`
+*Signature:* End-of-day batch jobs run at night return zero records despite active transaction flow.
 
 **Root Cause:**  
 `current_date()` and `current_timestamp()` evaluate against the Spark session's configured timezone (`spark.sql.session.timeZone`, which defaults to the JVM host timezone or UTC in cloud environments).
@@ -3069,7 +3069,7 @@ WHERE tx_date = to_date(from_utc_timestamp(current_timestamp(), 'America/New_Yor
 
 **Scenario & Symptom:**  
 A multinational airline merges flight logs from European (`dd/MM/yyyy`) and US (`MM/dd/yyyy`) reservation systems. When passing ambiguous strings like `'04/05/2024'` to `to_timestamp()`, Spark parses it as April 5th for all flights. For May 4th flights, timestamps are corrupted by a month.  
-*Signature:* `Dates like `'15/04/2024'` throw parse exceptions or return NULL in Spark 3.x, while dates below 12 silently swap days and months.`
+*Signature:* Dates like `'15/04/2024'` throw parse exceptions or return NULL in Spark 3.x, while dates below 12 silently swap days and months.
 
 **Root Cause:**  
 Spark 3.0+ uses Java 8 DateTimeFormatter with strict pattern matching. If no format string is provided or if format varies across sources, `to_timestamp()` either fails or misinterprets month/day ordinals.
@@ -3116,7 +3116,7 @@ df_parsed = df.withColumn(
 
 **Scenario & Symptom:**  
 An electric utility pipeline calculates hourly power consumption by bucketing timestamps with `date_trunc('hour', local_time)`. On the November DST fallback day, the 1:00 AM - 2:00 AM hour occurs twice, combining two distinct hours of power consumption into a single bucket and showing an impossible 200% power spike.  
-*Signature:* `Power grid analytics report duplicate readings and phantom spikes during autumn DST fallback, and missing hours during spring DST spring-forward.`
+*Signature:* Power grid analytics report duplicate readings and phantom spikes during autumn DST fallback, and missing hours during spring DST spring-forward.
 
 **Root Cause:**  
 Local wall-clock time is non-monotonic: it repeats an hour in autumn (25-hour day) and skips an hour in spring (23-hour day). Bucketing on local wall-clock hours creates non-unique chronological buckets.
@@ -3161,7 +3161,7 @@ GROUP BY 1, 2, 4;
 
 **Scenario & Symptom:**  
 A distributed team operates across London, New York, and Bangalore. A Parquet dataset stores flight departure times as `TimestampType`. When an engineer in London writes `'2024-06-01 12:00:00'`, an engineer in New York reading the same Parquet table sees `'2024-06-01 07:00:00'`, causing schedule reconciliation chaos.  
-*Signature:* `Timestamps shift by 5 hours depending on who is querying the table or which cluster runs the job.`
+*Signature:* Timestamps shift by 5 hours depending on who is querying the table or which cluster runs the job.
 
 **Root Cause:**  
 Standard `TimestampType` in Spark represents an instant in time and is automatically converted to/from session local timezone upon reading and display. If local flight departure time was meant to represent local wall-clock time without timezone offset, `TimestampType` causes unintended shifts.
@@ -3203,7 +3203,7 @@ df_ntz.write.format("delta").saveAsTable("gold.flights")
 
 **Scenario & Symptom:**  
 A mobile ride-hailing app streams completed trips to compute driver earnings. Trip events from drivers entering subway tunnels or rural areas are uploaded 45 minutes late when connectivity resumes. The streaming query uses `.withWatermark('trip_end_time', '10 minutes')`. All offline trips are silently discarded, shortchanging drivers by $300,000.  
-*Signature:* `Driver complaints of missing earnings; streaming job reports zero errors, but late events are omitted from sink.`
+*Signature:* Driver complaints of missing earnings; streaming job reports zero errors, but late events are omitted from sink.
 
 **Root Cause:**  
 Structured Streaming watermarks track the maximum observed event time minus the delay threshold. Any record arriving with `event_time < (max_event_time - watermark_delay)` is considered too late and dropped immediately by the state store.
@@ -3244,7 +3244,7 @@ streaming_earnings = rides_stream \
 
 **Scenario & Symptom:**  
 An ad-tech platform joins an `impressions` stream with a `clicks` stream in Structured Streaming. Users click on ads anywhere between 1 second and 30 minutes after seeing them. The engineer adds a watermark only on the impressions stream. The streaming query crashes with `AnalysisException: Cannot perform stream-stream join without watermark on both sides`.  
-*Signature:* ``AnalysisException: Watermark must be defined on both streams for stream-stream outer joins`.`
+*Signature:* `AnalysisException: Watermark must be defined on both streams for stream-stream outer joins`.
 
 **Root Cause:**  
 In stream-stream joins, Spark must buffer unmatched events from both streams in the state store. Without a watermark AND a time range constraint on both sides, the engine would have to retain state indefinitely, leading to memory exhaustion.
@@ -3293,7 +3293,7 @@ joined = impressions.join(
 
 **Scenario & Symptom:**  
 An IoT fraud detection system aggregates login attempts over a 5-minute sliding window. An attacker changes their device clock to `'2099-01-01 00:00:00'`. When this single rogue event enters the stream, Spark advances the global watermark to the year 2099, instantly causing all subsequent legitimate real-world events to be dropped as 'too late'.  
-*Signature:* `Streaming pipeline instantly drops 100% of incoming real-time traffic; state store stops updating.`
+*Signature:* Streaming pipeline instantly drops 100% of incoming real-time traffic; state store stops updating.
 
 **Root Cause:**  
 Spark Structured Streaming advances the watermark based on the maximum event time observed across all partitions. A single future timestamp advances the watermark threshold into the future, causing legitimate real-time events to fall behind the cutoff.
@@ -3344,7 +3344,7 @@ windowed = sanitized_stream.withWatermark("event_time", "10 minutes") \
 
 **Scenario & Symptom:**  
 A 100-node Spark on Kubernetes cluster runs across multiple physical VM hosts. Due to an NTP sync failure, two worker nodes experience a 45-second clock drift relative to the master. File commit locks, Delta Lake transaction log leases, and `current_timestamp()` metadata columns record inconsistent timestamps, causing out-of-order log verification errors.  
-*Signature:* `Delta Lake transactions fail with `ProtocolVersionException` or unexpected timestamp sequencing.`
+*Signature:* Delta Lake transactions fail with `ProtocolVersionException` or unexpected timestamp sequencing.
 
 **Root Cause:**  
 Distributed algorithms rely on hardware clocks being synchronized via NTP/Chrony. Unsynchronized worker clocks cause timestamp inconsistencies across partitions generated in the same task stage.
@@ -3385,7 +3385,7 @@ df_consistent = df.withColumn("created_at", F.lit(batch_utc_now).cast("timestamp
 
 **Scenario & Symptom:**  
 A global card payment network clears merchant transactions. While 95% of transactions clear within 2 seconds, offline airline and cruise ship charges arrive up to 7 days late. Holding 7 days of raw state in a Structured Streaming state store requires 80TB of RAM and crashes executors.  
-*Signature:* `State store memory requirements make pure real-time stream processing economically impossible.`
+*Signature:* State store memory requirements make pure real-time stream processing economically impossible.
 
 **Root Cause:**  
 Long-tail arrival distributions (up to 7 days) exceed the practical memory capacity of in-memory streaming state stores.
@@ -3434,7 +3434,7 @@ WHEN NOT MATCHED THEN
 
 **Scenario & Symptom:**  
 A hedge fund regulatory audit demands an exact recreation of the investment portfolio valuation as it existed on March 15th at 4:00 PM EST. However, historical backfills and late-arriving trade corrections were written into the Delta table on March 18th. Running a naive date filter `WHERE trade_date <= '2024-03-15'` includes the backfilled trades, distorting the audit.  
-*Signature:* `Historical reports cannot be reproduced; backfilled records corrupt point-in-time audit requirements.`
+*Signature:* Historical reports cannot be reproduced; backfilled records corrupt point-in-time audit requirements.
 
 **Root Cause:**  
 Filtering on business date (`trade_date`) incorporates all modifications committed after the audit deadline. True point-in-time reproducibility requires traveling along the storage system commit timeline, not business event time.
@@ -3478,7 +3478,7 @@ FROM gold.positions TIMESTAMP AS OF '2024-03-15 16:00:00-05:00';
 
 **Scenario & Symptom:**  
 A junior data scientist attempts to generate a local matplotlib chart from a 50-million-row DataFrame by running `df.toPandas()` or `df.collect()`. The Spark driver freezes, drops heartbeat communication with the cluster manager, and crashes with `java.lang.OutOfMemoryError: Java heap space`.  
-*Signature:* `Spark Driver process terminates abruptly. Cluster manager reports `Driver killed by orchestrator / lost connection`.`
+*Signature:* Spark Driver process terminates abruptly. Cluster manager reports `Driver killed by orchestrator / lost connection`.
 
 **Root Cause:**  
 `collect()` and `toPandas()` transfer all distributed partitions from across all executors over the network into the single Driver JVM memory space. If the dataset exceeds driver heap (`spark.driver.memory`), Driver crashes immediately.
@@ -3518,7 +3518,7 @@ sample_pdf = df.sample(fraction=0.001, seed=42).limit(10000).toPandas()
 
 **Scenario & Symptom:**  
 A developer adds an explicit broadcast hint `df_fact.join(broadcast(df_dim))` to avoid a shuffle. However, due to unexpected data growth, `df_dim` has grown to 8GB. During query execution, the driver attempts to collect and serialize the 8GB DataFrame to broadcast it to 100 executors, exhausting driver heap.  
-*Signature:* ``SparkException: Job aborted due to stage failure: Total size of serialized results of ... is bigger than spark.driver.maxResultSize` or Driver Heap OOM.`
+*Signature:* `SparkException: Job aborted due to stage failure: Total size of serialized results of ... is bigger than spark.driver.maxResultSize` or Driver Heap OOM.
 
 **Root Cause:**  
 A Broadcast Hash Join requires the Driver to collect the entire broadcast table into its own memory, serialize it into a TorrentBroadcast block, and distribute it to all executors. Broadcasting multi-gigabyte tables overwhelms driver memory.
@@ -3562,7 +3562,7 @@ joined = df_fact.join(F.broadcast(slim_dim), on="product_id")
 
 **Scenario & Symptom:**  
 A digital analytics pipeline calculates unique visitor sessions across 5 billion log rows using `groupBy('user_uuid').agg(countDistinct('session_id'))`. An executor abruptly terminates with `Container killed by YARN for exceeding memory limits. 16.5 GB of 16.0 GB physical memory used`.  
-*Signature:* `YARN/Kubernetes terminates the executor container with `Exit code 137 (SIGKILL)`. Stage fails after several executor retry attempts.`
+*Signature:* YARN/Kubernetes terminates the executor container with `Exit code 137 (SIGKILL)`. Stage fails after several executor retry attempts.
 
 **Root Cause:**  
 High-cardinality aggregation with `countDistinct` prevents partial map-side aggregation (`AggregationIterator`) from freeing memory. The in-memory Tungsten hash map explodes, and off-heap execution memory overflows the physical container boundary.
@@ -3611,7 +3611,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "2000")
 
 **Scenario & Symptom:**  
 A night batch job joining two 500GB tables takes 3.5 hours. Spark UI shows 200 shuffle partitions, and the shuffle stage reports `Spill (Memory): 450 GB` and `Spill (Disk): 120 GB`. Heavy disk I/O degrades executor throughput.  
-*Signature:* `Spark UI Stages tab highlights yellow/red indicators for Spill (Memory) and Spill (Disk). Stage runtime is dominated by disk read/write wait times.`
+*Signature:* Spark UI Stages tab highlights yellow/red indicators for Spill (Memory) and Spill (Disk). Stage runtime is dominated by disk read/write wait times.
 
 **Root Cause:**  
 When shuffle partitions are too large (e.g. 500GB / 200 = 2.5GB per partition), data cannot fit inside the executor's allocated Tungsten execution memory pool (`spark.memory.fraction * spark.memory.storageFraction`). Spark spills in-memory pointers and records to disk, compressing them into temporary files.
@@ -3657,7 +3657,7 @@ spark.conf.set("spark.sql.adaptive.advisoryPartitionSizeInBytes", "134217728") #
 
 **Scenario & Symptom:**  
 A data engineer writes a custom Python parsing function and registers it as a standard PySpark UDF: `@udf('string') def parse_ua(ua): ...`. Processing 100 million records causes the Python worker processes to consume 30GB of memory, thrashing CPU and slowing the pipeline 20x compared to Scala.  
-*Signature:* `Executors show high system CPU usage and excessive context-switching between JVM and Python daemon processes (`python3` processes consume 100% core memory).`
+*Signature:* Executors show high system CPU usage and excessive context-switching between JVM and Python daemon processes (`python3` processes consume 100% core memory).
 
 **Root Cause:**  
 Standard Python UDFs require PySpark to serialize data row-by-row from the JVM heap, pipe it over a Unix domain socket / pipe via Py4J to a separate Python worker process, deserialize it, execute Python bytecode, and serialize the result back to the JVM.
@@ -3713,7 +3713,7 @@ def extract_domain_vectorized(url_series: pd.Series) -> pd.Series:
 
 **Scenario & Symptom:**  
 An NLP inference pipeline runs an embedding model inside a PySpark `@pandas_udf`. While vectorized Pandas UDFs are faster, processing wide text columns causes the Python daemon process to suddenly allocate 18GB of off-heap Arrow memory, exceeding container limits and crashing with `SIGKILL`.  
-*Signature:* ``Container killed by YARN for exceeding memory limits`. Yarn memory diagnostics show off-heap native Python memory exceeding allocation.`
+*Signature:* `Container killed by YARN for exceeding memory limits`. Yarn memory diagnostics show off-heap native Python memory exceeding allocation.
 
 **Root Cause:**  
 By default, PyArrow loads large batches into Python memory (`spark.sql.execution.arrow.maxRecordsPerBatch = 10000`). For wide text or embedding columns, 10,000 rows in a single Arrow table chunk consume gigabytes of off-heap memory.
@@ -3761,7 +3761,7 @@ def compute_embeddings_safe(text_series: pd.Series) -> pd.Series:
 
 **Scenario & Symptom:**  
 A legacy Spark job uses RDD transformations (`rdd.map(lambda r: ...)` or custom Scala case class objects) over 1 billion rows. Spark UI shows that 40% of overall stage execution time is spent in JVM Garbage Collection (`GC Time`), causing CPU saturation and high task latency.  
-*Signature:* `Spark UI Task Details show GC Time > 15-20% of Task Deserialization and Execution Time. Nodes suffer frequent `G1GC pause (young / to-space exhausted)`.`
+*Signature:* Spark UI Task Details show GC Time > 15-20% of Task Deserialization and Execution Time. Nodes suffer frequent `G1GC pause (young / to-space exhausted)`.
 
 **Root Cause:**  
 Creating billions of individual Java/Scala objects fills the JVM Eden space instantly. The Garbage Collector spends immense CPU cycles scanning pointer graphs and copying surviving objects between survivor spaces and old generation.
@@ -3806,7 +3806,7 @@ summary = df.filter(F.col("_c5").isNotNull()) \
 
 **Scenario & Symptom:**  
 A developer writes an outer join between two tables but makes a syntax typo in the join condition: `df1.join(df2, df1.id == df1.id, 'left')` (referencing `df1.id` on both sides). Catalyst cannot find an equi-join condition between the two tables and silently falls back to a BroadcastNestedLoopJoin (BNLJ), causing immediate cluster memory collapse.  
-*Signature:* `Spark UI shows physical plan operator `BroadcastNestedLoopJoin`. Query execution hangs, driver crashes with OOM, or executors run out of heap.`
+*Signature:* Spark UI shows physical plan operator `BroadcastNestedLoopJoin`. Query execution hangs, driver crashes with OOM, or executors run out of heap.
 
 **Root Cause:**  
 Without an equi-join condition linking Table A and Table B, Spark cannot use SortMergeJoin or ShuffleHashJoin. It broadcasts one entire table to all executors and performs a quadratic $O(M \times N)$ nested loop comparison.
@@ -3848,7 +3848,7 @@ joined = df_orders.join(df_customers, df_orders["customer_id"] == df_customers["
 
 **Scenario & Symptom:**  
 A 1,000-core Databricks cluster runs workloads involving PyArrow, RocksDB, and native C++ decompression libraries (Snappy/Zstandard). The executors have 32GB RAM allocated (`spark.executor.memory = 28g`), but the cluster manager kills 20-30 containers per hour for exceeding physical memory limits.  
-*Signature:* ``Container [pid=...] is running 500MB beyond physical memory limits. Current usage: 32.5 GB of 32 GB physical memory used. Killing container.``
+*Signature:* `Container [pid=...] is running 500MB beyond physical memory limits. Current usage: 32.5 GB of 32 GB physical memory used. Killing container.`
 
 **Root Cause:**  
 The default memory overhead in Spark is `max(384MB, 0.10 * executorMemory)`. For a 28GB executor, default overhead is ~2.8GB. Native C++ memory allocated by RocksDB, PyArrow, or Photon lives outside the JVM heap in off-heap memory. When off-heap usage exceeds 2.8GB, the OS/YARN kills the container.
@@ -3889,7 +3889,7 @@ spark.memory.offHeap.size        4g
 
 **Scenario & Symptom:**  
 A financial fraud detection streaming engine processes 100,000 transactions/second 24/7 using RocksDB State Store. After running continuously for 18 days, worker nodes experience node-level memory exhaustion, triggering Kubernetes node evictions and cascading cluster restarts.  
-*Signature:* `Linux OOM-killer terminates the entire JVM or Kubernetes node enters `MemoryPressure` status after weeks of continuous streaming.`
+*Signature:* Linux OOM-killer terminates the entire JVM or Kubernetes node enters `MemoryPressure` status after weeks of continuous streaming.
 
 **Root Cause:**  
 RocksDB allocates native memory for its MemTables and Block Cache outside JVM control. Without bounded memory limits, RocksDB instances across dozens of state partitions continuously consume available host RAM.
@@ -3934,7 +3934,7 @@ spark.conf.set("spark.sql.streaming.stateStore.rocksdb.writeBufferSizeMB", "64")
 
 **Scenario & Symptom:**  
 A query joins a 10-million row fact table with a 50,000-row dimension table. The developer accidentally writes `FROM sales, stores` without a `WHERE sales.store_id = stores.store_id` predicate. The query attempts to generate $10,000,000 \times 50,000 = 500,000,000,000$ (500 billion) rows, crashing the cluster.  
-*Signature:* ``AnalysisException: Detected implicit cartesian product for INNER join between logical plans... Use the CROSS JOIN syntax to allow cartesian products` or executor disk fill-up.`
+*Signature:* `AnalysisException: Detected implicit cartesian product for INNER join between logical plans... Use the CROSS JOIN syntax to allow cartesian products` or executor disk fill-up.
 
 **Root Cause:**  
 Omitting a join condition creates a Cartesian product where every row of the left table joins with every row of the right table.
@@ -3971,7 +3971,7 @@ INNER JOIN store_dim d ON s.store_id = d.store_id;
 
 **Scenario & Symptom:**  
 An analytics query joins an `orders` table (1M rows) with a `customer_addresses` table. Because customers have multiple historical shipping addresses, each order joins with an average of 4 addresses. The output row count explodes from 1 million to 4 million, quadrupling the reported order revenue in the executive BI report.  
-*Signature:* `Analytical BI reports show revenue inflated by 400%; financial reconciliation audits fail.`
+*Signature:* Analytical BI reports show revenue inflated by 400%; financial reconciliation audits fail.
 
 **Root Cause:**  
 A 1:N or N:M relationship in what was assumed to be a 1:1 dimension lookup multiplies matching fact rows.
@@ -4012,7 +4012,7 @@ clean_orders = orders.join(current_addresses, on="customer_id", how="inner")
 
 **Scenario & Symptom:**  
 A data integration pipeline combines clickstream events from Web and Mobile apps. An engineer attempts to unify them using `FULL OUTER JOIN` on `session_id`. However, web and mobile apps generate completely disjoint session ID schemes (`web_xxx` vs `mob_yyy`). The join produces 0 matches, outputting a massive sparse table containing 100% NULLs on opposite sides.  
-*Signature:* `Table size doubles; output contains billions of rows that are 50% NULL.`
+*Signature:* Table size doubles; output contains billions of rows that are 50% NULL.
 
 **Root Cause:**  
 Full Outer Join preserves all rows from both tables. When join keys are disjoint (0 overlap), `FULL OUTER JOIN` degenerates into a row union with double the width and full null-padding.
@@ -4051,7 +4051,7 @@ SELECT 'MOBILE' AS platform, session_id, screen_name AS page, event_time FROM mo
 
 **Scenario & Symptom:**  
 A currency exchange pipeline converts transaction amounts using an exchange rates table that changes daily. The join condition is written as: `ON tx.currency = fx.currency AND tx.tx_time >= fx.valid_from AND tx.tx_time < fx.valid_to`. Catalyst cannot use a Hash or SortMergeJoin due to the inequalities, and query runtime balloons from 3 minutes to 4 hours.  
-*Signature:* `Spark UI shows physical plan `CartesianProduct` or `SortMergeJoin` with massive residual filter time; execution is painfully slow.`
+*Signature:* Spark UI shows physical plan `CartesianProduct` or `SortMergeJoin` with massive residual filter time; execution is painfully slow.
 
 **Root Cause:**  
 Hash joins and SortMergeJoins require at least one equi-join predicate (`a = b`). Pure range or inequality conditions prevent hash-based bucketing, forcing Catalyst to perform quadratic $O(M \times N)$ comparisons.
@@ -4095,7 +4095,7 @@ JOIN exchange_rates_daily fx
 
 **Scenario & Symptom:**  
 A cybersecurity pipeline resolves 100 million client IP addresses to geographic countries using a MaxMind GeoIP database containing 4 million CIDR ranges: `WHERE client_ip_num BETWEEN range_start AND range_end`. The query triggers a Cartesian join and runs out of memory.  
-*Signature:* `Job fails with `OutOfMemoryError` or runs for hours with 0 progress in `CartesianProductExec`.`
+*Signature:* Job fails with `OutOfMemoryError` or runs for hours with 0 progress in `CartesianProductExec`.
 
 **Root Cause:**  
 Point-in-interval queries (`A BETWEEN start AND end`) are non-equi joins. Without an exact equality key, Spark must test every IP against all 4 million IP blocks.
@@ -4143,7 +4143,7 @@ JOIN geo_ranges_binned g
 
 **Scenario & Symptom:**  
 A marketing pipeline finds all customers who made a purchase in the last 30 days. The developer writes: `SELECT DISTINCT c.* FROM customers c JOIN orders o ON c.id = o.customer_id`. With 200 million orders and 10 million customers, the join creates 150 million intermediate rows and forces a massive distributed distinct shuffle.  
-*Signature:* `Stage spills 120GB to disk during the `DISTINCT` aggregation phase after the join.`
+*Signature:* Stage spills 120GB to disk during the `DISTINCT` aggregation phase after the join.
 
 **Root Cause:**  
 `INNER JOIN` multiplies customer rows for every matching order, and `DISTINCT` must then deduplicate all columns across the network. A `LEFT SEMI JOIN` stops scanning the right table as soon as the first match is found, emitting each customer at most once without duplication.
@@ -4182,7 +4182,7 @@ LEFT SEMI JOIN orders o ON c.customer_id = o.customer_id;
 
 **Scenario & Symptom:**  
 A churn analysis query identifies inactive users who have not logged in for 90 days. The query is written as: `WHERE user_id NOT IN (SELECT user_id FROM logins_90d)`. A single test user record has `user_id = NULL` in `logins_90d`. The query returns 0 churned users.  
-*Signature:* `Zero results returned in production without syntax or schema errors.`
+*Signature:* Zero results returned in production without syntax or schema errors.
 
 **Root Cause:**  
 Under SQL ANSI 3-valued logic, `x NOT IN (..., NULL)` is UNKNOWN. A `LEFT ANTI JOIN` avoids this trap because it operates on equality semantics rather than subquery value set expansion.
@@ -4220,7 +4220,7 @@ LEFT ANTI JOIN logins_90d l ON u.user_id = l.user_id;
 
 **Scenario & Symptom:**  
 An enterprise reporting query joins 7 tables: 1 massive fact table (5 billion rows) and 6 dimension tables. Catalyst generates an execution plan that joins the 5-billion-row fact table with a large dimension first, generating a 20-billion-row intermediate shuffle, instead of filtering small dimensions first.  
-*Signature:* `Query takes 3 hours. Spark UI shows intermediate shuffle stages handling billions of unneeded records.`
+*Signature:* Query takes 3 hours. Spark UI shows intermediate shuffle stages handling billions of unneeded records.
 
 **Root Cause:**  
 Spark Cost-Based Optimizer (CBO) is disabled by default (`spark.sql.cbo.enabled = false`) or lacks accurate table/column statistics. Without statistics, Catalyst evaluates joins in left-to-right syntactic order or uses simple heuristics, picking suboptimal join trees.
@@ -4263,7 +4263,7 @@ SET spark.sql.cbo.joinReorder.dp.threshold = 12;
 
 **Scenario & Symptom:**  
 A 100TB fact table is partitioned by `date_key`. A BI query joins `fact_sales` with `dim_date` filtering for `quarter = 'Q3'`. Instead of reading only Q3 partitions (25TB), Spark reads all 100TB from cloud storage, exhausting cluster budget.  
-*Signature:* `Spark UI shows 100% of partition files read; `DynamicPartitionPruning` operator is absent from the physical execution plan.`
+*Signature:* Spark UI shows 100% of partition files read; `DynamicPartitionPruning` operator is absent from the physical execution plan.
 
 **Root Cause:**  
 Dynamic Partition Pruning (DPP) relies on the dimension table being broadcast. If `dim_date` exceeds the broadcast threshold or if the join is forced into a SortMergeJoin, DPP cannot inject runtime partition filters into the fact table scan.
@@ -4308,7 +4308,7 @@ WHERE d.quarter = 'Q3';
 
 **Scenario & Symptom:**  
 A lakehouse fact table of 10 billion rows cannot be broadcast, nor can the filtered dimension (50 million rows). Both tables must shuffle. Even with 1,000 partitions, the shuffle exchange transfers 8TB across the network. 80% of fact records will ultimately be discarded by the join.  
-*Signature:* `Massive shuffle read/write metrics; 80% of shuffled data is immediately dropped post-join.`
+*Signature:* Massive shuffle read/write metrics; 80% of shuffled data is immediately dropped post-join.
 
 **Root Cause:**  
 SortMergeJoin shuffles all rows from both tables before filtering non-matching keys. If most fact rows have no match in the filtered dimension, massive network bandwidth is wasted shuffling doomed rows.
@@ -4350,7 +4350,7 @@ spark.conf.set("spark.sql.optimizer.runtime.bloomFilter.creationSideThreshold", 
 
 **Scenario & Symptom:**  
 A payments reconciliation pipeline calculates merchant balances by summing transaction fees stored as `DoubleType`. Adding fees of $0.10 and $0.20 yields $0.30000000000000004. Over millions of transactions, balance audits fail by thousands of dollars due to floating-point rounding accumulation.  
-*Signature:* `Balance sheets fail exact zero-sum reconciliation audits; pennies drift across ledger accounts.`
+*Signature:* Balance sheets fail exact zero-sum reconciliation audits; pennies drift across ledger accounts.
 
 **Root Cause:**  
 IEEE 754 floating-point numbers (`FloatType`, `DoubleType`) represent base-10 fractional decimals in binary base-2, creating inherent binary rounding approximations.
@@ -4392,7 +4392,7 @@ print(result) # Decimal('0.3000') - Exact, deterministic mathematical precision!
 
 **Scenario & Symptom:**  
 A telecommunications company calculates total bandwidth usage in bytes across subscribers using `IntegerType`. When total usage exceeds $2,147,483,647$ ($2^{31}-1$), the sum wraps into negative numbers (`-2,147,483,400`), resulting in negative customer bills.  
-*Signature:* `Aggregated metrics suddenly turn negative without throwing any arithmetic exceptions or warnings.`
+*Signature:* Aggregated metrics suddenly turn negative without throwing any arithmetic exceptions or warnings.
 
 **Root Cause:**  
 By default in non-ANSI mode (`spark.sql.ansi.enabled = false`), integer arithmetic overflow wraps around based on standard two's-complement binary arithmetic rather than failing or promoting to BIGINT.
@@ -4431,7 +4431,7 @@ spark.conf.set("spark.sql.ansi.enabled", "true")
 
 **Scenario & Symptom:**  
 A bond pricing pipeline performs repeated compound interest calculations on `DECIMAL(38, 18)` numbers. When multiplying two high-precision decimals, Spark SQL truncates fractional digits, turning numbers like `0.000000000000123456` into `0.000000`, causing bond yield calculations to round to zero.  
-*Signature:* `Fractional decimals lose precision and round down to zero during multiplication or division chains.`
+*Signature:* Fractional decimals lose precision and round down to zero during multiplication or division chains.
 
 **Root Cause:**  
 Spark SQL enforces a maximum decimal precision of 38 digits. When multiplying `DECIMAL(p1, s1)` and `DECIMAL(p2, s2)`, result precision is $p1 + p2 + 1$. Because precision cannot exceed 38, Spark caps precision at 38 and trims the scale ($s$), sacrificing fractional digits.
@@ -4470,7 +4470,7 @@ SELECT CAST(1.000001 AS DECIMAL(14, 6)) * CAST(0.000001 AS DECIMAL(14, 6)) AS re
 
 **Scenario & Symptom:**  
 A 50TB partitioned lakehouse table is physically partitioned by `date_key STRING` (e.g. `'20241031'`). A user queries `WHERE date_key = 20241031` (integer literal). Catalyst evaluates the predicate by applying `CAST(date_key AS INT)` to every single partition, disabling directory pruning and scanning all 50TB.  
-*Signature:* `Query scans 100% of physical storage; execution time increases from 2 seconds to 25 minutes.`
+*Signature:* Query scans 100% of physical storage; execution time increases from 2 seconds to 25 minutes.
 
 **Root Cause:**  
 When comparing a String column to an Integer literal, type precedence rules dictate that the String column must be cast to Integer: `CAST(date_key AS INT) = 20241031`. Because the partition column is wrapped in a function, it is non-sargable, preventing storage partition pruning.
@@ -4510,7 +4510,7 @@ WHERE date_key = '20241031'; -- String literal!
 
 **Scenario & Symptom:**  
 A reporting query filters for events after September 1st using string comparison: `WHERE event_date > '2024-9-1'`. Because dates were unpadded strings, the comparison `'2024-10-01' > '2024-9-1'` evaluates to FALSE in lexicographical ASCII comparison. All October and November records are excluded from Q4 reports.  
-*Signature:* `October and November data is missing from Q4 revenue calculations.`
+*Signature:* October and November data is missing from Q4 revenue calculations.
 
 **Root Cause:**  
 In ASCII string comparison, character `'1'` has a lower ordinal value than `'9'`. Therefore, string `'2024-10-01'` is lexicographically smaller than `'2024-9-1'`.
@@ -4548,7 +4548,7 @@ WHERE to_date(date_str, 'yyyy-M-d') > DATE '2024-09-01';
 
 **Scenario & Symptom:**  
 A European customer master table joins identity records from an iOS app and a Windows legacy database on `customer_name`. The name `'Renée'` fails to match across systems. Visually the strings appear identical, but the join drops 8% of European customers.  
-*Signature:* `Identical-looking text fails string equality checks and join conditions.`
+*Signature:* Identical-looking text fails string equality checks and join conditions.
 
 **Root Cause:**  
 Unicode allows characters with accents to be represented in two forms: NFC (Canonical Decomposition followed by Canonical Composition: single code point `U+00E9`) and NFD (Canonical Decomposition: base letter `e` + combining acute accent `U+0301`). In binary string comparison, NFC and NFD strings have different byte sequences.
@@ -4597,7 +4597,7 @@ print(joined.count()) # Returns 1 match! Perfect equality!
 
 **Scenario & Symptom:**  
 A legacy Hive/Impala pipeline wrote Parquet files using the legacy `INT96` timestamp format. When migrating to Spark 3.x with modern Parquet readers, timestamps shift by hundreds of years (e.g. year 1870) or fail with `IllegalArgumentException: Parquet INT96 is deprecated`.  
-*Signature:* `Timestamps show bizarre dates (years 1870 or 2060) or query fails with INT96 rebasing exceptions.`
+*Signature:* Timestamps show bizarre dates (years 1870 or 2060) or query fails with INT96 rebasing exceptions.
 
 **Root Cause:**  
 Legacy Hive used INT96 (12 bytes) for timestamps without timezone metadata, based on the Julian calendar. Modern Spark 3.0+ uses INT64 with Gregorian calendar rebasing (`spark.sql.parquet.datetimeRebaseModeInRead`).
@@ -4637,7 +4637,7 @@ spark.conf.set("spark.sql.parquet.outputTimestampType", "TIMESTAMP_MICROS")
 
 **Scenario & Symptom:**  
 A streaming ingestion pipeline parses Confluent Kafka Avro payloads using `from_avro()`. Deserialization throws `AvroRuntimeException: Not an Avro file` on every single record, failing the streaming pipeline.  
-*Signature:* ``org.apache.avro.AvroRuntimeException: Not an Avro data file` on valid Kafka messages.`
+*Signature:* `org.apache.avro.AvroRuntimeException: Not an Avro data file` on valid Kafka messages.
 
 **Root Cause:**  
 Confluent Schema Registry prepends a 5-byte wire protocol header to every Kafka message (Magic Byte 0x00 + 4-byte Schema ID). Standard Apache Avro readers expect the raw binary payload; the extra 5-byte header breaks the Avro magic number parser.
@@ -4683,7 +4683,7 @@ parsed = clean_binary.select(F.from_avro("avro_body", avro_schema).alias("data")
 
 **Scenario & Symptom:**  
 A machine learning feature store computes aggregations in PySpark, exports them to Parquet, and reads them with Python Pandas. In Pandas, `NaN` values in integer columns force the entire column to cast to `float64`. Downstream feature lookups on customer IDs like `1042.0` fail to match integer `1042`.  
-*Signature:* `Model training features fail join lookups in production Python services due to `.0` float suffix.`
+*Signature:* Model training features fail join lookups in production Python services due to `.0` float suffix.
 
 **Root Cause:**  
 Legacy Pandas uses IEEE 754 `NaN` (float) to represent missing values in numeric series. When reading Parquet files with nullable integer columns, older Pandas runtimes automatically promote the integer column to `float64`.
@@ -4727,7 +4727,7 @@ df_spark = df_spark.withColumn("customer_id", F.col("customer_id").cast("string"
 
 **Scenario & Symptom:**  
 An enterprise lakehouse with 500 pipelines migrates from Spark 2.4 to Spark 3.4 with ANSI SQL compliance (`spark.sql.ansi.enabled = true`). Over 100 batch pipelines fail on day one with `ArithmeticException: overflow`, `DateTimeParseException`, and `AnalysisException: Cannot cast STRING to BIGINT safely`. The team considers disabling ANSI mode, sacrificing data quality.  
-*Signature:* `Massive pipeline failures across production after Spark runtime upgrade; jobs fail on strict casting rules.`
+*Signature:* Massive pipeline failures across production after Spark runtime upgrade; jobs fail on strict casting rules.
 
 **Root Cause:**  
 Spark 3+ ANSI mode changes default behavior from lenient (where overflows return NULL and bad casts return NULL) to strict standard SQL (which throws exceptions on invalid casts or overflows).
