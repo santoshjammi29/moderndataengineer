@@ -1,0 +1,188 @@
+{
+  "version": "3.0.0",
+  "generated": "2026-11-20T08:25:01.801249Z",
+  "hub": {
+    "name": "Modern Data Engineer & Lakehouse Architect Platform",
+    "url": "https://moderndataengineer.uk",
+    "repo": "santoshjammi29/moderndataengineer"
+  },
+  "total_repositories": 13,
+  "total_satellite_entries": 500,
+  "repositories": {
+    "R01": {
+      "slug": "charming-fermi",
+      "github": "santoshjammi29/moderndataengineer",
+      "name": "Web Hub",
+      "role": "Central presentation platform, OpenNext Cloudflare edge runtime, R2 content shard publisher",
+      "pillars": [
+        "All 14 Pillars"
+      ]
+    },
+    "R02": {
+      "slug": "databricks-handbook",
+      "github": "santoshjammi29/databricks-handbook",
+      "name": "Databricks Handbook",
+      "role": "105 Databricks production recipes, Unity Catalog governance, Delta Lake 3.x, Lakeflow, Serverless, DABs, FinOps",
+      "pillars": [
+        "Databricks Platform & Lakehouse"
+      ]
+    },
+    "R03": {
+      "slug": "pyspark-handbook",
+      "github": "santoshjammi29/pyspark-handbook",
+      "name": "PySpark Handbook",
+      "role": "105 PySpark code use cases, Catalyst internals, Tungsten memory, AQE, Arrow UDFs, skew salting",
+      "pillars": [
+        "Apache Spark & Distributed Compute",
+        "Python for Data Engineering"
+      ]
+    },
+    "R04": {
+      "slug": "sql-handbook",
+      "github": "santoshjammi29/sql-handbook",
+      "name": "SQL Handbook",
+      "role": "105 SQL production exercises, query execution plans, MPP distributed joins, MVCC concurrency",
+      "pillars": [
+        "SQL Server & Database Architecture"
+      ]
+    },
+    "R05": {
+      "slug": "dbt-handbook",
+      "github": "santoshjammi29/dbt-handbook",
+      "name": "dbt Handbook",
+      "role": "Production analytics engineering: dbt Mesh, Microbatch incremental, contracts, unit tests, Semantic Layer",
+      "pillars": [
+        "dbt & Analytics Engineering"
+      ]
+    },
+    "R06": {
+      "slug": "streaming-handbook",
+      "github": "santoshjammi29/streaming-handbook",
+      "name": "Streaming Handbook",
+      "role": "Distributed event streaming: Kafka 3.9 KRaft, Apache Flink stateful processing, RocksDB, CDC Debezium",
+      "pillars": [
+        "Real-Time Streaming & Event Architecture"
+      ]
+    },
+    "R07": {
+      "slug": "dataops-cicd-handbook",
+      "github": "santoshjammi29/dataops-cicd-handbook",
+      "name": "DataOps & CI/CD Handbook",
+      "role": "Platform engineering: GitOps, Terraform & Bicep IaC, Write-Audit-Publish, Data Diff, Slim CI",
+      "pillars": [
+        "Apache Airflow & Orchestration",
+        "General Data Engineering & Modeling"
+      ]
+    },
+    "R08": {
+      "slug": "data-system-design-handbook",
+      "github": "santoshjammi29/data-system-design-handbook",
+      "name": "System Design Handbook",
+      "role": "Distributed systems architecture: Table formats (Delta, Iceberg, Hudi), catalog federation, Liquid Clustering",
+      "pillars": [
+        "Modern Lakehouse Architectures",
+        "System Design for Data",
+        "Data Lake Architecture & Formats"
+      ]
+    },
+    "R09": {
+      "slug": "data-engineering-interview-handbook",
+      "github": "santoshjammi29/data-engineering-interview-handbook",
+      "name": "Interview Handbook",
+      "role": "Architectural defense playbook: 20 Knowledge Pillars, 10 125-series playbooks, 595+ production questions",
+      "pillars": [
+        "All 14 Pillars"
+      ]
+    },
+    "R10": {
+      "slug": "azure-cheat-sheet",
+      "github": "santoshjammi29/azure-cheat-sheet",
+      "name": "Azure Cheat Sheet",
+      "role": "Azure Lakehouse & Infrastructure: Microsoft Fabric OneLake, Synapse, Bicep IaC, vector cheat sheets",
+      "pillars": [
+        "Microsoft Fabric & OneLake",
+        "Azure Data Factory & Pipelines",
+        "Power BI & Semantic Layer"
+      ]
+    },
+    "R11": {
+      "slug": "azure-databricks-project-blueprints",
+      "github": "santoshjammi29/azure-databricks-project-blueprints",
+      "name": "Databricks Project Blueprints",
+      "role": "3 Full-scale production reference architectures: Retail Omnichannel Lakehouse, Real-time Fraud, Warehouse Cutover",
+      "pillars": [
+        "Databricks Platform & Lakehouse",
+        "Real-Time Streaming & Event Architecture"
+      ]
+    },
+    "R12": {
+      "slug": "enterprise-banking-risk-alm-lakehouse",
+      "github": "santoshjammi29/enterprise-banking-risk-alm-lakehouse",
+      "name": "Banking Risk Lakehouse",
+      "role": "European banking compliance (DNB, ECB, BCBS 239), IFRS 9 ECL calculations, and IRRBB ALM Monte Carlo simulations",
+      "pillars": [
+        "Modern Lakehouse Architectures",
+        "Databricks Platform & Lakehouse"
+      ]
+    },
+    "R13": {
+      "slug": "spark-experiments",
+      "github": "santoshjammi29/spark-experiments",
+      "name": "Spark Experiments",
+      "role": "Empirical laboratory: Reproducible data skew generation (1M+ rows), two-phase salting benchmarks, query plan analysis",
+      "pillars": [
+        "Apache Spark & Distributed Compute"
+      ]
+    }
+  },
+  "manifests": {
+    "databricks-handbook": {
+      "github": "santoshjammi29/databricks-handbook",
+      "entry_count": 115
+    },
+    "pyspark-handbook": {
+      "github": "santoshjammi29/pyspark-handbook",
+      "entry_count": 115
+    },
+    "sql-handbook": {
+      "github": "santoshjammi29/sql-handbook",
+      "entry_count": 115
+    },
+    "dbt-handbook": {
+      "github": "santoshjammi29/dbt-handbook",
+      "entry_count": 20
+    },
+    "streaming-handbook": {
+      "github": "santoshjammi29/streaming-handbook",
+      "entry_count": 20
+    },
+    "dataops-cicd-handbook": {
+      "github": "santoshjammi29/dataops-cicd-handbook",
+      "entry_count": 20
+    },
+    "data-system-design-handbook": {
+      "github": "santoshjammi29/data-system-design-handbook",
+      "entry_count": 20
+    },
+    "data-engineering-interview-handbook": {
+      "github": "santoshjammi29/data-engineering-interview-handbook",
+      "entry_count": 32
+    },
+    "azure-cheat-sheet": {
+      "github": "santoshjammi29/azure-cheat-sheet",
+      "entry_count": 16
+    },
+    "azure-databricks-project-blueprints": {
+      "github": "santoshjammi29/azure-databricks-project-blueprints",
+      "entry_count": 9
+    },
+    "enterprise-banking-risk-alm-lakehouse": {
+      "github": "santoshjammi29/enterprise-banking-risk-alm-lakehouse",
+      "entry_count": 8
+    },
+    "spark-experiments": {
+      "github": "santoshjammi29/spark-experiments",
+      "entry_count": 10
+    }
+  }
+}
