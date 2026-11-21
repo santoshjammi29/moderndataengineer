@@ -1,19 +1,9 @@
 ---
 name: data-content-generation
-description: |
-  Skill for bulk generating and appending structured JSON data entries to knowledge base files.
-  Activate when:
-  - Adding 50+ new entries to a JSON data array
-  - Generating Q&As, concepts, architecture scenarios, company profiles, Databricks 100 days, cost playbooks, or code matrix examples in bulk
-  - Appending to existing data files without corrupting them
-  - Validating schema constraints, unique kebab-case IDs, primary sources, and JSON syntax integrity
-  - Running parallel data generation scripts across multiple files
-  - Publishing or compiling A4 reference PDFs and cheatsheets
-  - Managing collection shuffle controls and accessibility standards
-
-  DO NOT trigger for:
-  - Adding fewer than 10 entries (do it inline)
-  - Schema design (use a data modeling skill instead)
+description: >
+  Bulk generate, validate, and append structured JSON entries to knowledge base files in src/data/json/. Activate for batch Q&A creation, architecture scenarios, concepts, company profiles, Databricks 100 days, schema validation, kebab-case ID integrity, and A4 reference PDF compilation.
+metadata:
+  short-description: Bulk data generation & JSON knowledge base validation
 ---
 
 # Bulk Data Content Generation & Publishing Skill

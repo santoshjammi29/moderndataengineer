@@ -1,11 +1,9 @@
 ---
 name: whiteboard-architecture-diagrams
-description: |
-  Specialized skill and guideline for generating educational, polished hand-drawn whiteboard sketch style architecture diagrams, system design workflows, and technical infographic images.
-  Activate when:
-  - The user asks to generate an architecture diagram, flow chart, pipeline diagram, or system design image.
-  - The user requests an image explanation in "this style", "whiteboard style", "hand-drawn sketch style", or "diagram style".
-  - Designing visual explanations of data engineering architectures, cloud platforms (Azure, Fabric, Databricks, AWS, GCP), storage engines, or technical under-the-hood mechanisms.
+description: >
+  Generate educational, polished hand-drawn whiteboard sketch style architecture diagrams, system design workflows, and technical infographic images. Activate for whiteboard style diagrams, cloud platform flows (Azure, Fabric, Databricks, AWS, GCP), storage engines, and system under-the-hood schematics.
+metadata:
+  short-description: Hand-drawn whiteboard architecture diagrams & system workflows
 ---
 
 # Whiteboard Architecture Diagrams Skill & Guidelines

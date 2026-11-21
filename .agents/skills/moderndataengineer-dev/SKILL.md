@@ -1,18 +1,9 @@
 ---
 name: moderndataengineer-dev
-description: |
-  Project-specific development workflow for the Modern Data Engineer & Lakehouse Architect Next.js app (moderndataengineer.uk).
-  Activate when working on:
-  - The Next.js app at /Users/santosh/Documents/antigravity/charming-fermi
-  - Adding/modifying data in src/data/json/ (concepts, questions, architecture scenarios, company profiles, Databricks 100, polyglot matrix)
-  - Building new pages under src/app/ (concepts with integrated mindmap, guided learning, company research, architecture hub, qa prep, modern stack, code practice with databricks hub, cheat sheet with pdf downloads hub, etc.)
-  - Running tests, builds, commits, and Git operations for this project
-  - Guided learning, Q&A prep, architecture hub, mind map, or concepts page features
-  - Cloudflare OpenNext edge deployment, R2 asset syncing, BM25F search engine, or PDF downloads API
-
-  DO NOT trigger for:
-  - Other Next.js projects
-  - General data engineering questions unrelated to this app
+description: >
+  Modern Data Engineer & Lakehouse Architect (moderndataengineer.uk) development workflow. Activate for editing Next.js 16 App Router routes in src/app/, updating datasets in src/data/json/, running Vitest suites (npm test), content validation (content:validate, content:shard), Cloudflare OpenNext edge deployment (build:worker, deploy:cf), or R2 asset syncing.
+metadata:
+  short-description: Modern Data Engineer & Lakehouse Architect Next.js development workflow
 ---
 
 # Modern Data Engineer & Lakehouse Architect Dev Skill (`moderndataengineer.uk`)

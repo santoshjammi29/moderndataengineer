@@ -1,13 +1,9 @@
 ---
 name: passport-document-processor
-description: |
-  Specialized skill for high-fidelity cropping, rotation, deskewing, and professional formatting of scanned official identity documents and passport booklets (especially Indian Passports).
-  Activate when:
-  - Cropping flatbed scanner glass borders or backgrounds from passport scans
-  - Correcting inverted, sideways, or 90/270-degree rotated passport bio pages or address pages
-  - Generating print-ready A4 or tight-cropped official PDF submissions
-  - Extracting the standard 2-page Front & Back (Bio Page + Address Page) document for visa or embassy applications
-  - Preserving 100% 300 DPI scan resolution without compression artifacts
+description: >
+  High-fidelity cropping, rotation, deskewing, and formatting of scanned official identity documents and passport booklets. Activate for flatbed scanner border removal, 90/180/270-degree rotation correction, 2-page Front/Back official PDF extraction, and 300 DPI scan preservation.
+metadata:
+  short-description: Official passport & identity document processing
 ---
 
 # Passport & Official Document Processing Skill

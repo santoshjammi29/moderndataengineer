@@ -1,18 +1,9 @@
 ---
 name: nextjs-compact-ui
-description: |
-  Design and refactoring patterns for compact, dense, fast-navigating UI in Next.js data-heavy applications.
-  Activate when:
-  - A user says a page is "too big", "not compact", "hard to navigate", or "overwhelming"
-  - Designing list-heavy pages with 100+ items (Q&A lists, data tables, knowledge bases, concept indexes, architecture scenarios)
-  - Refactoring pages from marketing-style to reference-style layouts
-  - Designing multi-level accessible filter decks, dynamic stretching trees/mindmaps, or command palettes
-  - The user wants VS Code / terminal aesthetic — dense, keyboard-friendly, scannable
-  - Implementing multi-view single-roof hubs (e.g. Glossary, Mind Map, Flashcards) or dense PDF download hubs
-
-  DO NOT trigger for:
-  - Landing pages or marketing pages (they SHOULD be spacious)
-  - Dashboard cards with charts (different visual grammar)
+description: >
+  Design and refactor dense, fast-navigating, VS Code / terminal aesthetic UI in Next.js data-heavy applications. Activate for 100+ item list pages, multi-level accessible filter decks, dynamic mindmap trees, WCAG 2.2 AA contrast compliance, text-wrap balance, and keyboard navigation.
+metadata:
+  short-description: Dense, compact & keyboard-accessible UI engineering
 ---
 
 # Next.js Compact UI Skill

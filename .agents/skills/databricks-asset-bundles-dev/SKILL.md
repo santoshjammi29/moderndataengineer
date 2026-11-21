@@ -1,18 +1,9 @@
 ---
 name: databricks-asset-bundles-dev
-description: |
-  Specialized skill for authoring, configuring, linting, validating, and deploying Databricks Asset Bundles (DABs) Infrastructure-as-Code.
-  Activate when working on:
-  - Authoring or modifying databricks.yml or resource definitions (resources/jobs.yml, resources/dlt_pipelines.yml, resources/unity_catalog.yml, etc.)
-  - Setting up multi-environment CI/CD automation for Databricks Lakehouse pipelines across dev, staging, and production workspaces
-  - Configuring target isolation (mode: development vs mode: production), variable interpolation, and run_as service principals
-  - Validating and linting bundles via `databricks bundle validate -t <target>` or local syntax linters
-  - Deploying workflows, Delta Live Tables (DLT) pipelines, Model Serving endpoints, Dashboards, and Databricks Apps via `databricks bundle deploy`
-  - Integrating GitHub Actions or Azure DevOps pipelines with Databricks CLI and keyless OIDC authentication
-
-  DO NOT trigger for:
-  - Pure Python data manipulation inside notebooks without bundle configuration
-  - Non-Databricks cloud infrastructure (use Terraform directly for general cloud infra)
+description: >
+  Author, configure, lint, validate, and deploy Databricks Asset Bundles (DABs) Infrastructure-as-Code. Activate for databricks.yml, multi-environment CI/CD (dev/staging/prod), target isolation, run_as service principals, bundle validate, bundle deploy, and GitHub Actions OIDC integration.
+metadata:
+  short-description: Databricks Asset Bundles (DABs) IaC & CI/CD deployment
 ---
 
 # Databricks Asset Bundles (DABs) Development Skill

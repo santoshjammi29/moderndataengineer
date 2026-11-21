@@ -1,18 +1,9 @@
 ---
 name: cutting-edge-resume-architect
-description: |
-  Specialized skill for building, updating, and hyper-optimizing cutting-edge technical resumes, CVs, portfolios, and career assets for elite Data Architects, Staff/Principal Engineers, and Tech Leads.
-  Activate when:
-  - Building, updating, or auditing resumes, CVs, or portfolio sites (e.g., moderndataengineer.uk, santosh-jammi-resume.vercel.app)
-  - Tailoring technical resumes to cutting-edge 2026 market standards (GenAI data pipelines, Lakehouse, Fabric, Delta Lake/Iceberg, FinOps, dbt, Memory Triage)
-  - Maximizing ATS (Applicant Tracking System) keyword density and algorithmic ranking (Workday, Taleo, Greenhouse, Lever)
-  - Formulating high-impact quantifiable bullet points using Google's XYZ / STAR framework
-  - Synchronizing multi-format resumes across Web (HTML/CSS/JS), Word (.docx via python-docx), PDF, LinkedIn, and Naukri
-  - Preparing architectural interview roadmaps and system design positioning for tier-1 GCCs and Fortune 500 tech leaders
-
-  DO NOT trigger for:
-  - Non-technical resume writing (sales, HR, entry-level non-IT)
-  - Pure generic cover letters without technical alignment
+description: >
+  Build, update, and optimize high-impact technical resumes, CVs, and portfolios for Data Architects, Staff/Principal Engineers, and Tech Leads. Activate for ATS keyword optimization, Google XYZ / STAR bullet formulas, multi-format sync (Web, Word docx, PDF, LinkedIn), and GCC / BigTech system design positioning.
+metadata:
+  short-description: Technical resume, portfolio & career asset architecture
 ---
 
 # Cutting-Edge Resume Architect & Career Positioning Skill
