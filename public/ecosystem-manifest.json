@@ -1,13 +1,13 @@
 {
   "version": "3.0.0",
-  "generated": "2026-11-21T04:42:03.800699Z",
+  "generated": "2026-11-21T04:54:58.632305Z",
   "hub": {
     "name": "Modern Data Engineer & Lakehouse Architect Platform",
     "url": "https://moderndataengineer.uk",
     "repo": "santoshjammi29/moderndataengineer"
   },
-  "total_repositories": 13,
-  "total_satellite_entries": 504,
+  "total_repositories": 14,
+  "total_satellite_entries": 524,
   "repositories": {
     "R01": {
       "slug": "charming-fermi",
@@ -133,6 +133,15 @@
       "pillars": [
         "Apache Spark & Distributed Compute"
       ]
+    },
+    "R14": {
+      "slug": "security-handbook",
+      "github": "santoshjammi29/security-handbook",
+      "name": "Security Handbook",
+      "role": "Enterprise security patterns: Cloud perimeter, DevSecOps, ETL/ELT governance, Databricks Unity Catalog, ADF, Python cryptography",
+      "pillars": [
+        "Security, Governance & Compliance"
+      ]
     }
   },
   "manifests": {
@@ -183,6 +192,10 @@
     "spark-experiments": {
       "github": "santoshjammi29/spark-experiments",
       "entry_count": 10
+    },
+    "security-handbook": {
+      "github": "santoshjammi29/security-handbook",
+      "entry_count": 20
     }
   }
 }

@@ -116,6 +116,13 @@ REPOSITORIES = {
         "role": "Empirical laboratory: Reproducible data skew generation (1M+ rows), two-phase salting benchmarks, query plan analysis",
         "pillars": ["Apache Spark & Distributed Compute"],
     },
+    "R14": {
+        "slug": "security-handbook",
+        "github": "santoshjammi29/security-handbook",
+        "name": "Security Handbook",
+        "role": "Enterprise security patterns: Cloud perimeter, DevSecOps, ETL/ELT governance, Databricks Unity Catalog, ADF, Python cryptography",
+        "pillars": ["Security, Governance & Compliance"],
+    },
 }
 
 def generate_handbook_manifest(repo_key: str, repo_info: Dict[str, Any]) -> Dict[str, Any]:
