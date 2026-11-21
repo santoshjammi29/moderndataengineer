@@ -1,8 +1,8 @@
 # Modern Data Platform & Lakehouse Architecture Whiteboard Blueprints
 
-> **Repository Master Index**: 52 architect-grade, hand-drawn digital whiteboard schematics across 7 enterprise domains with 5-role persona breakdowns, engine-level mechanisms, failure mode playbooks, and primary documentation links.
+> **Repository Master Index**: 52 architect-grade, hand-drawn digital whiteboard schematics across 7 enterprise domains with 2x2 visual blueprint grids, 5-role persona breakdowns, engine-level mechanisms, failure mode playbooks, and primary documentation links.
 > 
-> 📘 **New Complete Handbook Blueprints (20 Pillars & 8 Playbooks)**: See [`handbook_whiteboard_blueprints.md`](./handbook_whiteboard_blueprints.md) for the end-to-end Dual-Plane & 3-Panel Mermaid whiteboard diagrams covering all 20 Knowledge Pillars and 8 Playbooks from the [Data Engineering Interview Handbook](https://github.com/santoshjammi29/data-engineering-interview-handbook).
+> 📘 **Complete Handbook Blueprints (20 Pillars & 8 Playbooks)**: See [`handbook_whiteboard_blueprints.md`](./handbook_whiteboard_blueprints.md) for the end-to-end Dual-Plane & 3-Panel Mermaid whiteboard diagrams covering all 20 Knowledge Pillars and 8 Playbooks from the [Data Engineering Interview Handbook](https://github.com/santoshjammi29/data-engineering-interview-handbook).
 
 All visual blueprint files are available in this repository under [`assets/whiteboards/`](../../assets/whiteboards) and [`public/diagrams/`](../../public/diagrams).
 They can also be interactively inspected with pan/zoom and theme controls on the live website at [/whiteboards](https://moderndataengineer.uk/whiteboards).
@@ -22,12 +22,60 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 ## Fabric & Power BI
 *4 Architecture Blueprints in this domain*
 
+### 📐 Fabric & Power BI — Visual Blueprints Grid (2x2)
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#fabric-onelake-architecture">
+        <img src="../../assets/whiteboards/fabric_onelake_architecture.webp" alt="Microsoft Fabric Unified Architecture & OneLake" width="100%" />
+      </a>
+      <br><strong><a href="#fabric-onelake-architecture">Microsoft Fabric Unified Architecture & OneLake</a></strong><br>
+      <em>Single SaaS Lakehouse with Zero Data Duplication, Multi-Engine Compute, and Cross-Cloud Shortcuts</em><br>
+      <small>`Microsoft Fabric` · `OneLake` · `Delta Lake` · `Direct Lake`</small><br>
+      <a href="#fabric-onelake-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#powerbi-direct-lake-vertipaq">
+        <img src="../../assets/whiteboards/powerbi_direct_lake_vertipaq.webp" alt="Power BI Direct Lake Mode & VertiPaq Semantic Engine" width="100%" />
+      </a>
+      <br><strong><a href="#powerbi-direct-lake-vertipaq">Power BI Direct Lake Mode & VertiPaq Semantic Engine</a></strong><br>
+      <em>Memory-Mapped Delta Parquet vs Legacy Import and DirectQuery Modes</em><br>
+      <small>`Power BI` · `Direct Lake` · `VertiPaq` · `DAX`</small><br>
+      <a href="#powerbi-direct-lake-vertipaq">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#powerbi-dax-engine-context">
+        <img src="../../assets/whiteboards/powerbi_dax_engine_context.webp" alt="Power BI DAX Engine Mechanics & Context Transition" width="100%" />
+      </a>
+      <br><strong><a href="#powerbi-dax-engine-context">Power BI DAX Engine Mechanics & Context Transition</a></strong><br>
+      <em>Formula Engine vs Storage Engine (VertiPaq) Mechanics, xmSQL Generation, and Context Transition</em><br>
+      <small>`DAX` · `Power BI` · `VertiPaq` · `Formula Engine`</small><br>
+      <a href="#powerbi-dax-engine-context">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#fabric-onelake-direct-lake-architecture">
+        <img src="../../assets/whiteboards/fabric_onelake_direct_lake_architecture.webp" alt="Microsoft Fabric OneLake Shortcuts & Direct Lake Mode" width="100%" />
+      </a>
+      <br><strong><a href="#fabric-onelake-direct-lake-architecture">Microsoft Fabric OneLake Shortcuts & Direct Lake Mode</a></strong><br>
+      <em>Cross-Cloud Zero-Copy Virtualization, ADLS/S3/GCS Integration, and Direct Lake Paging</em><br>
+      <small>`OneLake Shortcuts` · `Direct Lake` · `Cross-Cloud` · `AWS S3`</small><br>
+      <a href="#fabric-onelake-direct-lake-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+</table>
+
+---
+
+<a id="fabric-onelake-architecture"></a>
 ### Microsoft Fabric Unified Architecture & OneLake
 **Single SaaS Lakehouse with Zero Data Duplication, Multi-Engine Compute, and Cross-Cloud Shortcuts**
 
 **Tags:** `Microsoft Fabric` · `OneLake` · `Delta Lake` · `Direct Lake` · `Shortcuts` · `Synapse Data Warehouse` · `Fabric Spark` · `Purview` · `V-Order` · `Capacity Units` · [📖 Official Docs](https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview)
 
-![Microsoft Fabric Unified Architecture & OneLake](../../public/diagrams/fabric_onelake_architecture.webp)
+![Microsoft Fabric Unified Architecture & OneLake](../../assets/whiteboards/fabric_onelake_architecture.webp)
 
 **Overview:** Enterprise-grade SaaS data lakehouse unifying disparate storage accounts into a single hierarchical OneLake namespace (onelake.dfs.fabric.microsoft.com). Eliminates physical data silos by providing zero-copy shortcuts to AWS S3, Google Cloud Storage, and ADLS Gen2, while enabling native multi-engine compute (Spark, Synapse DW, Power BI Direct Lake, KQL Eventhouse, and Data Factory) over standardized Delta Parquet with proprietary V-Order read optimization.
 
@@ -71,14 +119,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Detailed audit logging captured in Microsoft 365 Unified Audit Log (UAL) and Azure Monitor
 - GDPR right-to-be-forgotten executed via Delta ACID DELETE followed by VACUUM with retention overrides
 
+[↑ Return to Fabric & Power BI 2x2 Grid](#fabric-power-bi) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="powerbi-direct-lake-vertipaq"></a>
 ### Power BI Direct Lake Mode & VertiPaq Semantic Engine
 **Memory-Mapped Delta Parquet vs Legacy Import and DirectQuery Modes**
 
 **Tags:** `Power BI` · `Direct Lake` · `VertiPaq` · `DAX` · `Fabric Semantic Model` · `Delta Parquet` · `Import vs DirectQuery` · `V-Order` · `Framing` · [📖 Official Docs](https://learn.microsoft.com/en-us/power-bi/enterprise/directlake-overview)
 
-![Power BI Direct Lake Mode & VertiPaq Semantic Engine](../../public/diagrams/powerbi_direct_lake_vertipaq.webp)
+![Power BI Direct Lake Mode & VertiPaq Semantic Engine](../../assets/whiteboards/powerbi_direct_lake_vertipaq.webp)
 
 **Overview:** Groundbreaking semantic modeling architecture that eliminates the historical trade-off between performance (Import mode) and data freshness (DirectQuery mode). Direct Lake enables the VertiPaq analytics engine to memory-map Delta Parquet columnar chunks directly from OneLake storage into memory on-demand. When combined with V-Order sorted Parquet, it achieves sub-second DAX analytical queries over billions of rows without duplicating data into proprietary Analysis Services model files.
 
@@ -121,14 +172,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Microsoft Entra ID token pass-through for secured OneLake file access
 - Compliance with data residency policies since data remains within OneLake tenant boundaries
 
+[↑ Return to Fabric & Power BI 2x2 Grid](#fabric-power-bi) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="powerbi-dax-engine-context"></a>
 ### Power BI DAX Engine Mechanics & Context Transition
 **Formula Engine vs Storage Engine (VertiPaq) Mechanics, xmSQL Generation, and Context Transition**
 
 **Tags:** `DAX` · `Power BI` · `VertiPaq` · `Formula Engine` · `Storage Engine` · `Context Transition` · `CALCULATE` · `xmSQL` · `Query Optimization` · [📖 Official Docs](https://learn.microsoft.com/en-us/dax/dax-overview)
 
-![Power BI DAX Engine Mechanics & Context Transition](../../public/diagrams/powerbi_dax_engine_context.webp)
+![Power BI DAX Engine Mechanics & Context Transition](../../assets/whiteboards/powerbi_dax_engine_context.webp)
 
 **Overview:** Architectural breakdown of the dual-engine execution model powering DAX analytical queries: the single-threaded Formula Engine (FE) and the highly parallel, in-memory Storage Engine (SE / VertiPaq). Details the internal transition mechanism where `CALCULATE()` and `CALCULATETABLE()` transform existing Row Contexts into equivalent Filter Contexts, triggering SE xmSQL queries, data cache lookups, and callback evaluations.
 
@@ -171,14 +225,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Audit logging of DAX query execution times via Azure Log Analytics and Purview Insights
 - Prevention of unauthorized data exposure through strict relationship cross-filtering rules
 
+[↑ Return to Fabric & Power BI 2x2 Grid](#fabric-power-bi) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="fabric-onelake-direct-lake-architecture"></a>
 ### Microsoft Fabric OneLake Shortcuts & Direct Lake Mode
 **Cross-Cloud Zero-Copy Virtualization, ADLS/S3/GCS Integration, and Direct Lake Paging**
 
 **Tags:** `OneLake Shortcuts` · `Direct Lake` · `Cross-Cloud` · `AWS S3` · `Google Cloud Storage` · `ADLS Gen2` · `Storage Virtualization` · `Zero Copy` · `Federation` · [📖 Official Docs](https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts)
 
-![Microsoft Fabric OneLake Shortcuts & Direct Lake Mode](../../public/diagrams/fabric_onelake_direct_lake_architecture.webp)
+![Microsoft Fabric OneLake Shortcuts & Direct Lake Mode](../../assets/whiteboards/fabric_onelake_direct_lake_architecture.webp)
 
 **Overview:** Deep architectural integration between OneLake's cross-cloud storage virtualization (Shortcuts) and Power BI Direct Lake mode. Illustrates how OneLake maps external object stores (Amazon S3, Google Cloud Storage, Azure Data Lake Gen2) into the Fabric unified namespace with zero data egress or duplication, enabling VertiPaq to execute Direct Lake queries directly across federated multi-cloud data lakes.
 
@@ -221,17 +278,147 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Strict compliance with regional data residency laws by verifying shortcut targets remain within approved geographic regions
 - Zero-trust credential lifecycle management using short-lived OIDC tokens
 
+[↑ Return to Fabric & Power BI 2x2 Grid](#fabric-power-bi) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
 ## Data Pipelines & Ingestion
 *12 Architecture Blueprints in this domain*
 
+### 📐 Data Pipelines & Ingestion — Visual Blueprints Grid (2x2)
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#apache-airflow-distributed-architecture">
+        <img src="../../assets/whiteboards/apache_airflow_architecture.webp" alt="Apache Airflow Distributed Production Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#apache-airflow-distributed-architecture">Apache Airflow Distributed Production Architecture</a></strong><br>
+      <em>High-Availability Schedulers, Celery/Kubernetes Executors, Metadata DB Pooling, and State Machines</em><br>
+      <small>`Apache Airflow` · `Orchestration` · `Celery Executor` · `Kubernetes Executor`</small><br>
+      <a href="#apache-airflow-distributed-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#dbt-analytics-engineering-dag">
+        <img src="../../assets/whiteboards/dbt_analytics_engineering_dag.webp" alt="dbt (Data Build Tool) Modern Analytics Engineering DAG" width="100%" />
+      </a>
+      <br><strong><a href="#dbt-analytics-engineering-dag">dbt (Data Build Tool) Modern Analytics Engineering DAG</a></strong><br>
+      <em>Modular SQL Transformation Mesh, Incremental Strategies, Snapshot SCD2, and Semantic Layer</em><br>
+      <small>`dbt` · `Analytics Engineering` · `DAG` · `Incremental Models`</small><br>
+      <a href="#dbt-analytics-engineering-dag">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#adf-hybrid-integration-runtime">
+        <img src="../../assets/whiteboards/adf_hybrid_architecture.webp" alt="Azure Data Factory Enterprise Hybrid Ingestion Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#adf-hybrid-integration-runtime">Azure Data Factory Enterprise Hybrid Ingestion Architecture</a></strong><br>
+      <em>Control Plane vs Data Plane, Self-Hosted Integration Runtime (SHIR), and Private Endpoints</em><br>
+      <small>`Azure Data Factory` · `SHIR` · `Integration Runtime` · `Hybrid Cloud`</small><br>
+      <a href="#adf-hybrid-integration-runtime">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#kafka-event-streaming-pipeline">
+        <img src="../../assets/whiteboards/kafka_event_streaming_pipeline.webp" alt="Real-Time Event Streaming & Kafka Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#kafka-event-streaming-pipeline">Real-Time Event Streaming & Kafka Architecture</a></strong><br>
+      <em>Distributed Broker Clusters, KRaft Consensus, Partitioning, and Consumer Rebalance Protocols</em><br>
+      <small>`Apache Kafka` · `Event Streaming` · `KRaft` · `Partitions`</small><br>
+      <a href="#kafka-event-streaming-pipeline">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#cdc-debezium-lakehouse-pipeline">
+        <img src="../../assets/whiteboards/cdc_debezium_lakehouse_pipeline.webp" alt="Real-Time Change Data Capture (CDC) Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#cdc-debezium-lakehouse-pipeline">Real-Time Change Data Capture (CDC) Architecture</a></strong><br>
+      <em>Transaction Log Decoding (WAL/Binlog), Kafka Connect, and Lakehouse ACID Merge Ingestion</em><br>
+      <small>`Debezium` · `CDC` · `Change Data Capture` · `PostgreSQL WAL`</small><br>
+      <a href="#cdc-debezium-lakehouse-pipeline">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#databricks-medallion-pipeline">
+        <img src="../../assets/whiteboards/databricks_medallion_architecture.webp" alt="Databricks Medallion Lakehouse Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#databricks-medallion-pipeline">Databricks Medallion Lakehouse Architecture</a></strong><br>
+      <em>Multi-Hop Refinement: Bronze (Raw Append), Silver (Cleaned/Enriched), and Gold (Business Marts)</em><br>
+      <small>`Databricks` · `Medallion` · `Bronze` · `Silver`</small><br>
+      <a href="#databricks-medallion-pipeline">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#delta-live-tables-pipeline">
+        <img src="../../assets/whiteboards/databricks_dlt_pipeline.webp" alt="Delta Live Tables (DLT) Pipeline Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#delta-live-tables-pipeline">Delta Live Tables (DLT) Pipeline Architecture</a></strong><br>
+      <em>Declarative Lakehouse ETL, Streaming Tables vs Materialized Views, and Quality Expectations</em><br>
+      <small>`Delta Live Tables` · `DLT` · `Declarative ETL` · `Streaming Tables`</small><br>
+      <a href="#delta-live-tables-pipeline">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#databricks-dabs-devops-pipeline">
+        <img src="../../assets/whiteboards/databricks_dabs_devops_pipeline.webp" alt="Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#databricks-dabs-devops-pipeline">Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture</a></strong><br>
+      <em>Declarative Infrastructure-as-Code, Multi-Environment Targets, and GitOps Automation</em><br>
+      <small>`Databricks Asset Bundles` · `DABs` · `CI/CD` · `DevOps`</small><br>
+      <a href="#databricks-dabs-devops-pipeline">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#lakehouse-ingestion-autoloader">
+        <img src="../../assets/whiteboards/lakehouse_ingestion_autoloader_architecture.webp" alt="End-to-End Batch & Incremental Lakehouse Ingestion" width="100%" />
+      </a>
+      <br><strong><a href="#lakehouse-ingestion-autoloader">End-to-End Batch & Incremental Lakehouse Ingestion</a></strong><br>
+      <em>Auto Loader (cloudFiles), File Notification Queues, Schema Evolution & Idempotent Bronze Ingestion</em><br>
+      <small>`Auto Loader` · `cloudFiles` · `Incremental Ingestion` · `Bronze Layer`</small><br>
+      <a href="#lakehouse-ingestion-autoloader">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#streaming-dlq-recovery-flow">
+        <img src="../../assets/whiteboards/streaming_dlq_recovery_flow_architecture.webp" alt="Stateful Streaming Failure Recovery & Dead-Letter Queue (DLQ) Remediation" width="100%" />
+      </a>
+      <br><strong><a href="#streaming-dlq-recovery-flow">Stateful Streaming Failure Recovery & Dead-Letter Queue (DLQ) Remediation</a></strong><br>
+      <em>Poison Pill Quarantine, Circuit Breakers, Checkpoint State Recovery & Replay Lifecycle</em><br>
+      <small>`Dead-Letter Queue` · `DLQ` · `Structured Streaming` · `Stateful Stream`</small><br>
+      <a href="#streaming-dlq-recovery-flow">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#data-ingestion-strategy-matrix">
+        <img src="../../assets/whiteboards/data_ingestion_strategy_matrix_architecture.webp" alt="Enterprise Data Movement & Replication Strategy Decision Flow" width="100%" />
+      </a>
+      <br><strong><a href="#data-ingestion-strategy-matrix">Enterprise Data Movement & Replication Strategy Decision Flow</a></strong><br>
+      <em>Evaluating Batch ELT, Log-Based CDC, Streaming, Zero-Copy Shortcuts & Database Mirroring</em><br>
+      <small>`Data Ingestion` · `CDC` · `Batch ELT` · `Streaming`</small><br>
+      <a href="#data-ingestion-strategy-matrix">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#orchestration-backfill-lifecycle">
+        <img src="../../assets/whiteboards/orchestration_backfill_lifecycle_architecture.webp" alt="Pipeline Orchestration Lifecycle, State Machine & Catchup Backfill" width="100%" />
+      </a>
+      <br><strong><a href="#orchestration-backfill-lifecycle">Pipeline Orchestration Lifecycle, State Machine & Catchup Backfill</a></strong><br>
+      <em>Task Execution States, Upstream Dependencies, SLA Monitoring, Catchup & Historical Backfilling</em><br>
+      <small>`Orchestration` · `Apache Airflow` · `State Machine` · `Backfill`</small><br>
+      <a href="#orchestration-backfill-lifecycle">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+</table>
+
+---
+
+<a id="apache-airflow-distributed-architecture"></a>
 ### Apache Airflow Distributed Production Architecture
 **High-Availability Schedulers, Celery/Kubernetes Executors, Metadata DB Pooling, and State Machines**
 
 **Tags:** `Apache Airflow` · `Orchestration` · `Celery Executor` · `Kubernetes Executor` · `Metadata Database` · `Redis` · `Scheduler HA` · `PgBouncer` · `TaskInstance` · [📖 Official Docs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
 
-![Apache Airflow Distributed Production Architecture](../../public/diagrams/apache_airflow_architecture.webp)
+![Apache Airflow Distributed Production Architecture](../../assets/whiteboards/apache_airflow_architecture.webp)
 
 **Overview:** Production-grade distributed orchestration topology featuring multi-master high-availability Schedulers, horizontal worker scaling via Celery or KubernetesExecutor, message brokering (Redis/RabbitMQ), and connection pooling (PgBouncer) over PostgreSQL metadata databases. Demonstrates the complete DAG parsing loop, task state machine transitions, and external worker execution models.
 
@@ -275,14 +462,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Secure secrets management integrating HashiCorp Vault or Azure Key Vault secrets backends
 - Task-level execution metadata published to open lineage standards (OpenLineage / Marquez)
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="dbt-analytics-engineering-dag"></a>
 ### dbt (Data Build Tool) Modern Analytics Engineering DAG
 **Modular SQL Transformation Mesh, Incremental Strategies, Snapshot SCD2, and Semantic Layer**
 
 **Tags:** `dbt` · `Analytics Engineering` · `DAG` · `Incremental Models` · `Snapshots` · `SCD Type 2` · `Data Testing` · `Semantic Layer` · `Jinja` · `Documentation` · [📖 Official Docs](https://docs.getdbt.com/docs/build/models)
 
-![dbt (Data Build Tool) Modern Analytics Engineering DAG](../../public/diagrams/dbt_analytics_engineering_dag.webp)
+![dbt (Data Build Tool) Modern Analytics Engineering DAG](../../assets/whiteboards/dbt_analytics_engineering_dag.webp)
 
 **Overview:** Architectural representation of modern analytics engineering workflow using dbt. Covers the complete transformation mesh from staging raw sources to intermediate business logic and dimensional presentation marts. Details Jinja macro compilation, incremental materialization strategies (merge, insert_overwrite), snapshot-based Slowly Changing Dimensions (SCD Type 2), automated schema/data testing, and metadata-driven documentation generation.
 
@@ -326,14 +516,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Auditability of all data transformation logic version-controlled in Git repositories
 - Exposure tracking mapping downstream BI dashboards directly to source dbt models
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="adf-hybrid-integration-runtime"></a>
 ### Azure Data Factory Enterprise Hybrid Ingestion Architecture
 **Control Plane vs Data Plane, Self-Hosted Integration Runtime (SHIR), and Private Endpoints**
 
 **Tags:** `Azure Data Factory` · `SHIR` · `Integration Runtime` · `Hybrid Cloud` · `Private Endpoints` · `Data Management Gateway` · `ExpressRoute` · `Data Integration Units` · [📖 Official Docs](https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime)
 
-![Azure Data Factory Enterprise Hybrid Ingestion Architecture](../../public/diagrams/adf_hybrid_architecture.webp)
+![Azure Data Factory Enterprise Hybrid Ingestion Architecture](../../assets/whiteboards/adf_hybrid_architecture.webp)
 
 **Overview:** Enterprise hybrid data integration topology separating the ADF cloud Control Plane from secure, on-premises/cloud-isolated Data Planes. Focuses on the Self-Hosted Integration Runtime (SHIR) high-availability multi-node clustering, outbound-only HTTPS relay communication over port 443 via Azure Service Bus, Data Integration Unit (DIU) throughput sizing, and Managed Virtual Network private endpoint connectivity.
 
@@ -376,14 +569,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Comprehensive pipeline audit and execution logs forwarded to Azure Log Analytics
 - Compliance with data sovereignty mandates by pinning SHIR runtime execution to geographic regions
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="kafka-event-streaming-pipeline"></a>
 ### Real-Time Event Streaming & Kafka Architecture
 **Distributed Broker Clusters, KRaft Consensus, Partitioning, and Consumer Rebalance Protocols**
 
 **Tags:** `Apache Kafka` · `Event Streaming` · `KRaft` · `Partitions` · `Consumer Groups` · `Zero-Copy` · `Page Cache` · `Exactly-Once` · `Producer Idempotence` · [📖 Official Docs](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)
 
-![Real-Time Event Streaming & Kafka Architecture](../../public/diagrams/kafka_event_streaming_pipeline.webp)
+![Real-Time Event Streaming & Kafka Architecture](../../assets/whiteboards/kafka_event_streaming_pipeline.webp)
 
 **Overview:** Production event streaming architecture illustrating high-throughput, fault-tolerant publish-subscribe messaging with Apache Kafka. Details the distributed commit log, KRaft metadata quorum consensus (replacing ZooKeeper), partition leader/follower replication (In-Sync Replicas), OS page-cache memory mechanics, Linux sendfile() zero-copy data transfer, consumer group cooperative sticky rebalance protocols, and end-to-end exactly-once processing (EOS).
 
@@ -427,14 +623,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - End-to-end payload encryption in transit (TLS) and at rest (LUKS / EBS encryption)
 - Data retention and log compaction policies enforcing compliance with data minimization laws
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="cdc-debezium-lakehouse-pipeline"></a>
 ### Real-Time Change Data Capture (CDC) Architecture
 **Transaction Log Decoding (WAL/Binlog), Kafka Connect, and Lakehouse ACID Merge Ingestion**
 
 **Tags:** `Debezium` · `CDC` · `Change Data Capture` · `PostgreSQL WAL` · `MySQL Binlog` · `Kafka Connect` · `Delta Lake` · `MERGE INTO` · `apply_changes` · `Streaming` · [📖 Official Docs](https://debezium.io/documentation/reference/stable/architecture.html)
 
-![Real-Time Change Data Capture (CDC) Architecture](../../public/diagrams/cdc_debezium_lakehouse_pipeline.webp)
+![Real-Time Change Data Capture (CDC) Architecture](../../assets/whiteboards/cdc_debezium_lakehouse_pipeline.webp)
 
 **Overview:** End-to-end Change Data Capture (CDC) pipeline capturing low-latency row-level mutations from relational databases without taxing operational workloads. Follows the transaction log mining process (PostgreSQL WAL via pgoutput, MySQL Binlog, SQL Server CDC), Debezium Kafka Connect serialization with schema history, streaming event ingestion via Kafka topics, and idempotent ACID deduplication and merge into Delta Lake / Lakehouse tables.
 
@@ -477,14 +676,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Strict adherence to data deletion mandates by propagating tombstone deletes into downstream gold marts
 - Replication traffic encrypted over TLS using database SSL certificates
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="databricks-medallion-pipeline"></a>
 ### Databricks Medallion Lakehouse Architecture
 **Multi-Hop Refinement: Bronze (Raw Append), Silver (Cleaned/Enriched), and Gold (Business Marts)**
 
 **Tags:** `Databricks` · `Medallion` · `Bronze` · `Silver` · `Gold` · `Delta Lake` · `Auto Loader` · `Liquid Clustering` · `Data Quality` · `Multi-Hop` · [📖 Official Docs](https://docs.databricks.com/en/lakehouse/medallion.html)
 
-![Databricks Medallion Lakehouse Architecture](../../public/diagrams/databricks_medallion_architecture.webp)
+![Databricks Medallion Lakehouse Architecture](../../assets/whiteboards/databricks_medallion_architecture.webp)
 
 **Overview:** Foundational architectural pattern of modern enterprise lakehouses. Visualizes the multi-hop refinement pipeline progressing from raw ingestion (Bronze) through standardized, cleansed, deduplicated enterprise views (Silver) to business-level dimensional star schemas and aggregated data marts (Gold). Integrates Databricks Auto Loader, streaming checkpoints, Delta ACID transactions, and Liquid Clustering.
 
@@ -528,18 +730,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automated lineage tracing data provenance from source files all the way to final Gold dashboard metrics
 - Data retention policies: 90 days in Bronze, 2 years in Silver, indefinite in Gold
 
-**Authoritative Cross-References & Production Blueprints:**
-- 🏛️ **Production Databricks Medallion Blueprint**: [`docs/architecture/10_production_databricks_medallion_blueprint_and_runbook.md`](../architecture/10_production_databricks_medallion_blueprint_and_runbook.md) — Complete DDL, Auto Loader, DLT Liquid Clustering, and Unity Catalog security setup.
-- 🎯 **100 Databricks Interview Questions (Domain 01: Architecture)**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md#section-01-architecture--questions-0110`](../interview_prep/100_databricks_interview_defense_playbook.md#section-01-architecture--questions-0110) (Q01: Lakehouse vs Data Lake, Q05: Bronze/Silver/Gold).
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
 
 ---
 
+<a id="delta-live-tables-pipeline"></a>
 ### Delta Live Tables (DLT) Pipeline Architecture
 **Declarative Lakehouse ETL, Streaming Tables vs Materialized Views, and Quality Expectations**
 
 **Tags:** `Delta Live Tables` · `DLT` · `Declarative ETL` · `Streaming Tables` · `Materialized Views` · `Expectations` · `Data Quality` · `Event Log` · `Databricks` · [📖 Official Docs](https://docs.databricks.com/en/delta-live-tables/index.html)
 
-![Delta Live Tables (DLT) Pipeline Architecture](../../public/diagrams/databricks_dlt_pipeline.webp)
+![Delta Live Tables (DLT) Pipeline Architecture](../../assets/whiteboards/databricks_dlt_pipeline.webp)
 
 **Overview:** Architecture of Databricks Delta Live Tables (DLT), the declarative pipeline framework that simplifies ETL engineering. Demonstrates the distinction between Streaming Tables (incremental append-only data) and Materialized Views (recomputed or incremental aggregations), automated pipeline DAG generation, data quality enforcement using Expectations (@dlt.expect), automated maintenance, and real-time event log telemetry.
 
@@ -583,14 +784,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automatic lineage generation integrated natively with Unity Catalog
 - Zero-credential cluster execution using Unity Catalog managed identity service principals
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="databricks-dabs-devops-pipeline"></a>
 ### Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture
 **Declarative Infrastructure-as-Code, Multi-Environment Targets, and GitOps Automation**
 
 **Tags:** `Databricks Asset Bundles` · `DABs` · `CI/CD` · `DevOps` · `Infrastructure as Code` · `GitOps` · `GitHub Actions` · `Azure DevOps` · `Serverless Workflows` · [📖 Official Docs](https://docs.databricks.com/en/dev-tools/bundles/index.html)
 
-![Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture](../../public/diagrams/databricks_dabs_devops_pipeline.webp)
+![Databricks Asset Bundles (DABs) & Serverless CI/CD Architecture](../../assets/whiteboards/databricks_dabs_devops_pipeline.webp)
 
 **Overview:** Modern DataOps and enterprise CI/CD deployment architecture using Databricks Asset Bundles (DABs). Illustrates declarative infrastructure-as-code packaging (databricks.yml) governing jobs, DLT pipelines, models, and cluster resources across dev, staging, and production workspaces. Demonstrates automated linting, validation (bundle validate), artifact packaging, Git branch deployment triggers, and service principal execution.
 
@@ -634,14 +838,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automated security scanning of dependencies and Python packages during CI builds
 - Environment configuration isolation preventing accidental execution of test code against production data
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="lakehouse-ingestion-autoloader"></a>
 ### End-to-End Batch & Incremental Lakehouse Ingestion
 **Auto Loader (cloudFiles), File Notification Queues, Schema Evolution & Idempotent Bronze Ingestion**
 
 **Tags:** `Auto Loader` · `cloudFiles` · `Incremental Ingestion` · `Bronze Layer` · `Schema Evolution` · `Rescued Data Column` · `File Notification` · `Directory Listing` · `RocksDB State Store` · `Delta Lake` · `Structured Streaming` · [📖 Official Docs](https://docs.databricks.com/en/ingestion/auto-loader/index.html)
 
-![End-to-End Batch & Incremental Lakehouse Ingestion](../../public/diagrams/lakehouse_ingestion_autoloader_architecture.webp)
+![End-to-End Batch & Incremental Lakehouse Ingestion](../../assets/whiteboards/lakehouse_ingestion_autoloader_architecture.webp)
 
 **Overview:** Production-grade incremental lakehouse ingestion pattern utilizing Apache Spark's Auto Loader (`cloudFiles`) to process millions of incoming semi-structured files from cloud object storage (S3, ADLS Gen2, GCS) into Bronze Delta tables. Combines automatic cloud notification queues (AWS SNS/SQS, Azure Event Grid) with an embedded RocksDB state store for exactly-once metadata tracking, asynchronous schema inference, automatic schema evolution, and malformed record quarantine via `_rescued_data`.
 
@@ -685,14 +892,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Storage access controlled through cloud storage IAM policies and short-lived credential vending
 - GDPR deletion support via Delta Lake ACID table vacuuming following Bronze redaction pipelines
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="streaming-dlq-recovery-flow"></a>
 ### Stateful Streaming Failure Recovery & Dead-Letter Queue (DLQ) Remediation
 **Poison Pill Quarantine, Circuit Breakers, Checkpoint State Recovery & Replay Lifecycle**
 
 **Tags:** `Dead-Letter Queue` · `DLQ` · `Structured Streaming` · `Stateful Stream` · `Poison Pill` · `Circuit Breaker` · `Kafka` · `Checkpointing` · `Failure Recovery` · `Idempotency` · `Data Observability` · [📖 Official Docs](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#recovering-from-failures-with-checkpointing)
 
-![Stateful Streaming Failure Recovery & Dead-Letter Queue (DLQ) Remediation](../../public/diagrams/streaming_dlq_recovery_flow_architecture.webp)
+![Stateful Streaming Failure Recovery & Dead-Letter Queue (DLQ) Remediation](../../assets/whiteboards/streaming_dlq_recovery_flow_architecture.webp)
 
 **Overview:** Comprehensive resilience architecture for mission-critical streaming pipelines encountering unparseable payloads, schema violations, or stateful crashes. Combines an in-line poison pill routing gate, a configurable circuit breaker threshold, a partitioned Dead-Letter Queue (Kafka topic / Delta quarantine table), and an automated triage and re-injection loop that preserves consumer offsets and maintains 99.99% pipeline uptime.
 
@@ -736,14 +946,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Detailed audit logging of all DLQ reprocessing and manual record injection actions
 - SOC 2 compliance verified via automated alerting when pipeline availability deviates from SLA
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="data-ingestion-strategy-matrix"></a>
 ### Enterprise Data Movement & Replication Strategy Decision Flow
 **Evaluating Batch ELT, Log-Based CDC, Streaming, Zero-Copy Shortcuts & Database Mirroring**
 
 **Tags:** `Data Ingestion` · `CDC` · `Batch ELT` · `Streaming` · `Zero-Copy` · `Shortcuts` · `Mirroring` · `Lakehouse Ingestion` · `Decision Tree` · `Architecture Strategy` · `Data Engineering` · [📖 Official Docs](https://docs.databricks.com/en/ingestion/index.html)
 
-![Enterprise Data Movement & Replication Strategy Decision Flow](../../public/diagrams/data_ingestion_strategy_matrix_architecture.webp)
+![Enterprise Data Movement & Replication Strategy Decision Flow](../../assets/whiteboards/data_ingestion_strategy_matrix_architecture.webp)
 
 **Overview:** Architectural decision matrix and flow diagram evaluating modern data ingestion patterns based on business latency SLAs, source engine constraints, network egress, and compute cost. Compares scheduled Batch ELT, Log-Based Change Data Capture (CDC), Real-Time Event Streaming, Zero-Copy Object Storage Shortcuts, and Managed Database Mirroring to guide architects toward the optimal ingestion archetype.
 
@@ -787,14 +1000,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automated lineage tracking registering source endpoints and target lakehouse table dependencies
 - Compliance with data residency regulations by restricting cross-region shortcuts and replication
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="orchestration-backfill-lifecycle"></a>
 ### Pipeline Orchestration Lifecycle, State Machine & Catchup Backfill
 **Task Execution States, Upstream Dependencies, SLA Monitoring, Catchup & Historical Backfilling**
 
 **Tags:** `Orchestration` · `Apache Airflow` · `State Machine` · `Backfill` · `Catchup` · `Task Dependencies` · `SLA Monitoring` · `Retry Policy` · `Idempotency` · `DataOps` · [📖 Official Docs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dag-run.html#catchup)
 
-![Pipeline Orchestration Lifecycle, State Machine & Catchup Backfill](../../public/diagrams/orchestration_backfill_lifecycle_architecture.webp)
+![Pipeline Orchestration Lifecycle, State Machine & Catchup Backfill](../../assets/whiteboards/orchestration_backfill_lifecycle_architecture.webp)
 
 **Overview:** Deep-dive architecture into production pipeline orchestration lifecycles, task instance state machines, and historical catchup backfill operations. Visualizes the exact state transitions (None -> Scheduled -> Queued -> Running -> Success/Failed/Up_for_Retry), task dependency evaluation, concurrency throttling, SLA miss alerting, and safe historical backfilling practices across Apache Airflow, Dagster, and Databricks Lakeflow.
 
@@ -838,17 +1054,107 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Secure credential retrieval via HashiCorp Vault or AWS Secrets Manager integrations
 - Full audit trail recording user identity for every manual state override or rerun action
 
+[↑ Return to Data Pipelines & Ingestion 2x2 Grid](#data-pipelines-ingestion) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
 ## Platform Landscape
 *8 Architecture Blueprints in this domain*
 
+### 📐 Platform Landscape — Visual Blueprints Grid (2x2)
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#databricks-platform-master">
+        <img src="../../assets/whiteboards/databricks_ecosystem_landscape.webp" alt="Databricks Unified Data Intelligence Platform" width="100%" />
+      </a>
+      <br><strong><a href="#databricks-platform-master">Databricks Unified Data Intelligence Platform</a></strong><br>
+      <em>Lakehouse Storage, Unity Catalog Governance, Multi-Engine Compute, and Mosaic AI</em><br>
+      <small>`Databricks` · `Data Intelligence Platform` · `Unity Catalog` · `Photon`</small><br>
+      <a href="#databricks-platform-master">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#rag-vector-search-data-pipeline">
+        <img src="../../assets/whiteboards/rag_vector_search_data_pipeline.webp" alt="Enterprise RAG & Vector Data Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#rag-vector-search-data-pipeline">Enterprise RAG & Vector Data Architecture</a></strong><br>
+      <em>Document Ingestion, Chunking Strategies, Vector Indexing (HNSW), Hybrid Search, and LLM Reranking</em><br>
+      <small>`RAG` · `Vector Search` · `Generative AI` · `HNSW`</small><br>
+      <a href="#rag-vector-search-data-pipeline">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#enterprise-edge-client-architecture">
+        <img src="../../assets/whiteboards/enterprise_edge_architecture.webp" alt="Enterprise Edge Architecture: Data, Edge & Client Flow" width="100%" />
+      </a>
+      <br><strong><a href="#enterprise-edge-client-architecture">Enterprise Edge Architecture: Data, Edge & Client Flow</a></strong><br>
+      <em>IoT Edge Gateways, MQTT/OPC-UA Telemetry, Cloud Ingestion Hubs, and Offline Client Sync</em><br>
+      <small>`Edge Computing` · `IoT Hub` · `MQTT` · `OPC-UA`</small><br>
+      <a href="#enterprise-edge-client-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#distributed-systems-resilience-architecture">
+        <img src="../../assets/whiteboards/distributed_systems_resilience_architecture.webp" alt="Distributed Systems Design: High-Throughput & Resilient Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#distributed-systems-resilience-architecture">Distributed Systems Design: High-Throughput & Resilient Architecture</a></strong><br>
+      <em>Circuit Breakers, Bulkheads, Token Bucket Rate Limiting, Backoff with Jitter, and Idempotency Keys</em><br>
+      <small>`Distributed Systems` · `Resilience` · `Circuit Breaker` · `Bulkhead`</small><br>
+      <a href="#distributed-systems-resilience-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#lakehouse-finops-cost-optimization">
+        <img src="../../assets/whiteboards/lakehouse_finops_cost_optimization.webp" alt="Enterprise Lakehouse FinOps & Cloud Cost Optimization" width="100%" />
+      </a>
+      <br><strong><a href="#lakehouse-finops-cost-optimization">Enterprise Lakehouse FinOps & Cloud Cost Optimization</a></strong><br>
+      <em>Compute Unit Economics, Spot vs On-Demand, Cluster Sizing, Auto-Termination, and Storage Tiering</em><br>
+      <small>`FinOps` · `Cost Optimization` · `Databricks DBUs` · `Fabric CUs`</small><br>
+      <a href="#lakehouse-finops-cost-optimization">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#lakehouse-cicd-promotion-lifecycle">
+        <img src="../../assets/whiteboards/lakehouse_cicd_promotion_lifecycle_architecture.webp" alt="Enterprise Lakehouse CI/CD Multi-Environment Promotion & Rollback Flow" width="100%" />
+      </a>
+      <br><strong><a href="#lakehouse-cicd-promotion-lifecycle">Enterprise Lakehouse CI/CD Multi-Environment Promotion & Rollback Flow</a></strong><br>
+      <em>Databricks Asset Bundles (DABs), dbt Core, Automated PR Validation & Blue/Green Table Promotion</em><br>
+      <small>`CI/CD` · `Databricks Asset Bundles` · `DABs` · `DevOps`</small><br>
+      <a href="#lakehouse-cicd-promotion-lifecycle">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#lakehouse-bcdr-failover">
+        <img src="../../assets/whiteboards/lakehouse_bcdr_failover_architecture.webp" alt="Lakehouse Disaster Recovery (BCDR) Cross-Region Failover & Split-Brain Prevention" width="100%" />
+      </a>
+      <br><strong><a href="#lakehouse-bcdr-failover">Lakehouse Disaster Recovery (BCDR) Cross-Region Failover & Split-Brain Prevention</a></strong><br>
+      <em>Cross-Region Storage Replication, Catalog Metadata Sync, RPO/RTO SLAs & Split-Brain Fencing</em><br>
+      <small>`Disaster Recovery` · `BCDR` · `High Availability` · `Failover`</small><br>
+      <a href="#lakehouse-bcdr-failover">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#governed-agentic-rag-pipeline">
+        <img src="../../assets/whiteboards/governed_agentic_rag_pipeline_architecture.webp" alt="Governed Agentic AI & Enterprise Vector Search Pipeline with ACL Propagation" width="100%" />
+      </a>
+      <br><strong><a href="#governed-agentic-rag-pipeline">Governed Agentic AI & Enterprise Vector Search Pipeline with ACL Propagation</a></strong><br>
+      <em>Document Parsing, Semantic Chunking, Vector Embeddings, Hybrid Search & Preserving ACL Security</em><br>
+      <small>`Agentic AI` · `RAG` · `Vector Search` · `ACL Propagation`</small><br>
+      <a href="#governed-agentic-rag-pipeline">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+</table>
+
+---
+
+<a id="databricks-platform-master"></a>
 ### Databricks Unified Data Intelligence Platform
 **Lakehouse Storage, Unity Catalog Governance, Multi-Engine Compute, and Mosaic AI**
 
 **Tags:** `Databricks` · `Data Intelligence Platform` · `Unity Catalog` · `Photon` · `Serverless` · `Mosaic AI` · `Delta Lake` · `Lakehouse` · `UniForm` · [📖 Official Docs](https://docs.databricks.com/en/introduction/index.html)
 
-![Databricks Unified Data Intelligence Platform](../../public/diagrams/databricks_ecosystem_landscape.webp)
+![Databricks Unified Data Intelligence Platform](../../assets/whiteboards/databricks_ecosystem_landscape.webp)
 
 **Overview:** Master reference architecture of the Databricks Data Intelligence Platform. Details the unified ecosystem built on open Lakehouse storage (AWS S3, ADLS Gen2, GCS) with Delta Lake and Apache Iceberg (via UniForm), centralized cross-workspace governance via Unity Catalog, elastic multi-engine compute (Photon, Serverless SQL Warehouses, Automated Jobs), and integrated Generative AI capabilities (Mosaic AI, Vector Search, AI Functions).
 
@@ -892,14 +1198,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Comprehensive audit records streamed in real time to `system.access.audit`
 - FedRAMP, HIPAA, SOC 2, and GDPR compliant storage and processing boundaries
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="rag-vector-search-data-pipeline"></a>
 ### Enterprise RAG & Vector Data Architecture
 **Document Ingestion, Chunking Strategies, Vector Indexing (HNSW), Hybrid Search, and LLM Reranking**
 
 **Tags:** `RAG` · `Vector Search` · `Generative AI` · `HNSW` · `Embeddings` · `Hybrid Search` · `BM25` · `LLM` · `Reranker` · `Databricks Vector Search` · [📖 Official Docs](https://docs.databricks.com/en/generative-ai/vector-search.html)
 
-![Enterprise RAG & Vector Data Architecture](../../public/diagrams/rag_vector_search_data_pipeline.webp)
+![Enterprise RAG & Vector Data Architecture](../../assets/whiteboards/rag_vector_search_data_pipeline.webp)
 
 **Overview:** Production Retrieval-Augmented Generation (RAG) and vector search ingestion pipeline for enterprise knowledge systems. Illustrates multi-modal document ingestion (PDFs, docs, tickets), semantic text chunking, embedding generation (BGE, OpenAI, GTE), vector database indexing using Hierarchical Navigable Small World (HNSW) graphs, hybrid retrieval (dense vector semantic search + sparse BM25 keyword search), reciprocal rank fusion (RRF), cross-encoder reranking, and MLflow evaluation.
 
@@ -943,14 +1252,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - MLflow tracking logging all user prompts, retrieved chunks, and model responses for compliance auditing
 - Zero data retention agreements ensuring corporate data is never used to train public foundation models
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="enterprise-edge-client-architecture"></a>
 ### Enterprise Edge Architecture: Data, Edge & Client Flow
 **IoT Edge Gateways, MQTT/OPC-UA Telemetry, Cloud Ingestion Hubs, and Offline Client Sync**
 
 **Tags:** `Edge Computing` · `IoT Hub` · `MQTT` · `OPC-UA` · `Event Hubs` · `Edge Gateway` · `Stream Processing` · `Offline Sync` · `WebSockets` · [📖 Official Docs](https://learn.microsoft.com/en-us/azure/iot-edge/about-iot-edge)
 
-![Enterprise Edge Architecture: Data, Edge & Client Flow](../../public/diagrams/enterprise_edge_architecture.webp)
+![Enterprise Edge Architecture: Data, Edge & Client Flow](../../assets/whiteboards/enterprise_edge_architecture.webp)
 
 **Overview:** Comprehensive edge-to-cloud architecture detailing IoT device telemetry ingestion, industrial protocol translation (OPC-UA, MQTT, Modbus), local edge filtering and buffering on edge gateways (Azure IoT Edge, AWS Greengrass), secure cloud streaming ingestion (IoT Hub, Event Hubs, Kafka), real-time lakehouse stream processing, and low-latency bidirectional client synchronization (WebSockets, PWA offline caches).
 
@@ -994,14 +1306,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Tamper-evident audit logging for all remote cloud-to-device firmware updates and control commands
 - Strict compliance with industrial safety standards (IEC 62443 / ISO 27001)
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="distributed-systems-resilience-architecture"></a>
 ### Distributed Systems Design: High-Throughput & Resilient Architecture
 **Circuit Breakers, Bulkheads, Token Bucket Rate Limiting, Backoff with Jitter, and Idempotency Keys**
 
 **Tags:** `Distributed Systems` · `Resilience` · `Circuit Breaker` · `Bulkhead` · `Rate Limiting` · `Exponential Backoff` · `Jitter` · `Idempotency` · `Chaos Engineering` · [📖 Official Docs](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 
-![Distributed Systems Design: High-Throughput & Resilient Architecture](../../public/diagrams/distributed_systems_resilience_architecture.webp)
+![Distributed Systems Design: High-Throughput & Resilient Architecture](../../assets/whiteboards/distributed_systems_resilience_architecture.webp)
 
 **Overview:** Architectural blueprint of resilience and high-throughput design patterns for distributed enterprise data platforms. Visualizes circuit breaker state machines (Closed, Open, Half-Open), bulkhead resource isolation, token bucket / leaky bucket rate limiting, exponential backoff with full jitter to eliminate thundering herd retries, distributed locking, idempotency keys, and graceful degradation strategies under downstream failure.
 
@@ -1045,14 +1360,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Auditability of all DLQ message payloads before manual reprocessing or purging
 - Chaos engineering testing verifying disaster recovery runbooks meet regulatory standards
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="lakehouse-finops-cost-optimization"></a>
 ### Enterprise Lakehouse FinOps & Cloud Cost Optimization
 **Compute Unit Economics, Spot vs On-Demand, Cluster Sizing, Auto-Termination, and Storage Tiering**
 
 **Tags:** `FinOps` · `Cost Optimization` · `Databricks DBUs` · `Fabric CUs` · `Spot Instances` · `Cluster Policies` · `Storage Tiering` · `VACUUM` · `Auto-Termination` · `System Tables` · [📖 Official Docs](https://docs.databricks.com/en/admin/account-settings/system-tables/index.html)
 
-![Enterprise Lakehouse FinOps & Cloud Cost Optimization](../../public/diagrams/lakehouse_finops_cost_optimization.webp)
+![Enterprise Lakehouse FinOps & Cloud Cost Optimization](../../assets/whiteboards/lakehouse_finops_cost_optimization.webp)
 
 **Overview:** Comprehensive FinOps framework and technical cost optimization methodology for modern cloud lakehouses. Dissects compute unit economics (Databricks DBUs, Microsoft Fabric CUs, Snowflake Credits), EC2/VM spot instance bidding with on-demand fallback, cluster auto-termination enforcement, right-sizing worker nodes (CPU vs Memory vs Storage optimized), automated Delta Lake VACUUM hygiene, and chargeback/showback reporting via system tables.
 
@@ -1096,14 +1414,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Compliance with corporate financial governance and IT spend audit standards
 - Budget threshold alerts triggering automated pager alerts when monthly spend exceeds 80%
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="lakehouse-cicd-promotion-lifecycle"></a>
 ### Enterprise Lakehouse CI/CD Multi-Environment Promotion & Rollback Flow
 **Databricks Asset Bundles (DABs), dbt Core, Automated PR Validation & Blue/Green Table Promotion**
 
 **Tags:** `CI/CD` · `Databricks Asset Bundles` · `DABs` · `DevOps` · `dbt` · `GitOps` · `Multi-Environment` · `Promotion Lifecycle` · `Rollback Strategy` · `DataOps` · `Blue-Green` · [📖 Official Docs](https://docs.databricks.com/en/dev-tools/bundles/ci-cd.html)
 
-![Enterprise Lakehouse CI/CD Multi-Environment Promotion & Rollback Flow](../../public/diagrams/lakehouse_cicd_promotion_lifecycle_architecture.webp)
+![Enterprise Lakehouse CI/CD Multi-Environment Promotion & Rollback Flow](../../assets/whiteboards/lakehouse_cicd_promotion_lifecycle_architecture.webp)
 
 **Overview:** Enterprise-grade CI/CD and deployment promotion lifecycle for modern lakehouse platforms. Demonstrates the complete GitOps path from local developer workspaces (VS Code, Databricks CLI) through automated Pull Request testing (Ruff, mypy, pytest in ephemeral schemas), gated staging integration validation, and zero-downtime production deployment via Databricks Asset Bundles (DABs) and blue/green table promotion with automated rollback.
 
@@ -1147,14 +1468,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automated vulnerability scanning of all Python dependencies via Dependabot / Snyk in CI
 - SOC 2 and ISO 27001 compliance validated via automated pull request review approvals
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="lakehouse-bcdr-failover"></a>
 ### Lakehouse Disaster Recovery (BCDR) Cross-Region Failover & Split-Brain Prevention
 **Cross-Region Storage Replication, Catalog Metadata Sync, RPO/RTO SLAs & Split-Brain Fencing**
 
 **Tags:** `Disaster Recovery` · `BCDR` · `High Availability` · `Failover` · `Cross-Region` · `Replication` · `Split-Brain` · `RPO` · `RTO` · `Delta Deep Clone` · `Unity Catalog` · [📖 Official Docs](https://docs.databricks.com/en/admin/disaster-recovery.html)
 
-![Lakehouse Disaster Recovery (BCDR) Cross-Region Failover & Split-Brain Prevention](../../public/diagrams/lakehouse_bcdr_failover_architecture.webp)
+![Lakehouse Disaster Recovery (BCDR) Cross-Region Failover & Split-Brain Prevention](../../assets/whiteboards/lakehouse_bcdr_failover_architecture.webp)
 
 **Overview:** Enterprise disaster recovery (BCDR) and business continuity architecture for cloud lakehouse platforms. Outlines active-passive and active-active topologies across geographic regions (e.g. East US to West US), covering asynchronous storage replication (Azure GRS, AWS S3 CRR), catalog metadata synchronization (Delta Deep Clone, Unity Catalog federation), strict RPO/RTO bounds, DNS health routing, and quorum fencing to prevent disastrous split-brain dual writes.
 
@@ -1198,14 +1522,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Documented and certified annual DR failover drills with executive sign-off and audit documentation
 - Geographic data sovereignty compliance verifying replication stays within approved national borders
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="governed-agentic-rag-pipeline"></a>
 ### Governed Agentic AI & Enterprise Vector Search Pipeline with ACL Propagation
 **Document Parsing, Semantic Chunking, Vector Embeddings, Hybrid Search & Preserving ACL Security**
 
 **Tags:** `Agentic AI` · `RAG` · `Vector Search` · `ACL Propagation` · `Governance` · `Hybrid Search` · `Embeddings` · `Unity Catalog` · `LLM` · `Enterprise AI` · `MLflow` · [📖 Official Docs](https://docs.databricks.com/en/generative-ai/vector-search.html)
 
-![Governed Agentic AI & Enterprise Vector Search Pipeline with ACL Propagation](../../public/diagrams/governed_agentic_rag_pipeline_architecture.webp)
+![Governed Agentic AI & Enterprise Vector Search Pipeline with ACL Propagation](../../assets/whiteboards/governed_agentic_rag_pipeline_architecture.webp)
 
 **Overview:** Production-grade, enterprise-governed Retrieval-Augmented Generation (RAG) and Agentic AI architecture. Ingests unstructured documents (PDFs, contracts, internal wikis) and structured Delta tables, applies semantic chunking and dense vector embedding, preserves source Access Control Lists (ACLs) directly on vector metadata, and executes hybrid search (dense semantic + BM25 sparse keyword) with strict pre-retrieval security filtering so LLM agents never leak unauthorized data.
 
@@ -1249,17 +1576,67 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Comprehensive MLflow tracing recording prompt text, retrieved contexts, and model outputs for audit review
 - Guardrail validation preventing prompt injection attacks, toxic content generation, and PII leakage
 
+[↑ Return to Platform Landscape 2x2 Grid](#platform-landscape) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
 ## Governance & Security
 *4 Architecture Blueprints in this domain*
 
+### 📐 Governance & Security — Visual Blueprints Grid (2x2)
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#unity-catalog-governance">
+        <img src="../../assets/whiteboards/unity_catalog_architecture.webp" alt="Unity Catalog Unified Governance & 3-Level Namespace" width="100%" />
+      </a>
+      <br><strong><a href="#unity-catalog-governance">Unity Catalog Unified Governance & 3-Level Namespace</a></strong><br>
+      <em>Centralized Metastore, 3-Level Namespace, Dynamic Row/Column Masking, and Delta Sharing</em><br>
+      <small>`Unity Catalog` · `Data Governance` · `3-Level Namespace` · `Row Filters`</small><br>
+      <a href="#unity-catalog-governance">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#purview-governance-catalog">
+        <img src="../../assets/whiteboards/purview_governance_catalog.webp" alt="Microsoft Purview Enterprise Governance Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#purview-governance-catalog">Microsoft Purview Enterprise Governance Architecture</a></strong><br>
+      <em>Unified Multi-Cloud Data Map, Automated Scanning, Business Glossary, and End-to-End Lineage</em><br>
+      <small>`Microsoft Purview` · `Data Governance` · `Data Map` · `Data Lineage`</small><br>
+      <a href="#purview-governance-catalog">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#data-quality-wap-quarantine">
+        <img src="../../assets/whiteboards/data_quality_wap_quarantine_architecture.webp" alt="Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow" width="100%" />
+      </a>
+      <br><strong><a href="#data-quality-wap-quarantine">Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow</a></strong><br>
+      <em>Data Contracts, Automated Validation Gates, Zero-Downtime Fast-Forwarding & Quarantine</em><br>
+      <small>`Data Quality` · `Write-Audit-Publish` · `WAP Pattern` · `Data Contracts`</small><br>
+      <a href="#data-quality-wap-quarantine">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#lakehouse-access-masking-lifecycle">
+        <img src="../../assets/whiteboards/lakehouse_access_masking_lifecycle_architecture.webp" alt="Lakehouse Fine-Grained Access Control, Dynamic Masking & Entra/ABAC Enforcement" width="100%" />
+      </a>
+      <br><strong><a href="#lakehouse-access-masking-lifecycle">Lakehouse Fine-Grained Access Control, Dynamic Masking & Entra/ABAC Enforcement</a></strong><br>
+      <em>Role-Based & Attribute-Based Access Control (RBAC/ABAC), Row Filters & Column Masking Rules</em><br>
+      <small>`Access Control` · `Dynamic Masking` · `Row-Level Security` · `RLS`</small><br>
+      <a href="#lakehouse-access-masking-lifecycle">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+</table>
+
+---
+
+<a id="unity-catalog-governance"></a>
 ### Unity Catalog Unified Governance & 3-Level Namespace
 **Centralized Metastore, 3-Level Namespace, Dynamic Row/Column Masking, and Delta Sharing**
 
 **Tags:** `Unity Catalog` · `Data Governance` · `3-Level Namespace` · `Row Filters` · `Column Masks` · `Delta Sharing` · `Audit Logging` · `System Tables` · `Lineage` · [📖 Official Docs](https://docs.databricks.com/en/data-governance/unity-catalog/index.html)
 
-![Unity Catalog Unified Governance & 3-Level Namespace](../../public/diagrams/unity_catalog_architecture.webp)
+![Unity Catalog Unified Governance & 3-Level Namespace](../../assets/whiteboards/unity_catalog_architecture.webp)
 
 **Overview:** Comprehensive reference architecture of Databricks Unity Catalog, the enterprise unified governance layer for data, analytics, and AI. Illustrates the centralized metastore hierarchy (`catalog.schema.table_or_view`), fine-grained access control with dynamic Row Filters and Column Masks, automated runtime data lineage across SQL and Python, Unity Catalog Volumes for unstructured data, and open zero-copy data exchange with Delta Sharing.
 
@@ -1303,18 +1680,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Zero plain-text cloud storage access keys; all access mediated via short-lived temporary STS tokens
 - Tag-based access control (ABAC) automatically applying security policies to newly created tables
 
-**Authoritative Cross-References & Production Security DDL:**
-- 🛡️ **Production Unity Catalog Security Setup**: [`docs/architecture/10_production_databricks_medallion_blueprint_and_runbook.md#12-unity-catalog-security-setup-ddl`](../architecture/10_production_databricks_medallion_blueprint_and_runbook.md#12-unity-catalog-security-setup-ddl) — Concrete DDL for `IS_ACCOUNT_GROUP_MEMBER()` Dynamic Data Masking and Row-Level Security.
-- 🎯 **100 Databricks Interview Questions (Domain 07: Unity Catalog)**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md#section-07-unity-catalog-access-is-an-architecture-decision--questions-6170`](../interview_prep/100_databricks_interview_defense_playbook.md#section-07-unity-catalog-access-is-an-architecture-decision--questions-6170) (Q61–Q70).
+[↑ Return to Governance & Security 2x2 Grid](#governance-security) · [Top of Catalog](#domain-table-of-contents)
 
 ---
 
+<a id="purview-governance-catalog"></a>
 ### Microsoft Purview Enterprise Governance Architecture
 **Unified Multi-Cloud Data Map, Automated Scanning, Business Glossary, and End-to-End Lineage**
 
 **Tags:** `Microsoft Purview` · `Data Governance` · `Data Map` · `Data Lineage` · `Data Catalog` · `Business Glossary` · `Automated Scanning` · `Classification` · `Sensitivity Labels` · [📖 Official Docs](https://learn.microsoft.com/en-us/purview/purview)
 
-![Microsoft Purview Enterprise Governance Architecture](../../public/diagrams/purview_governance_catalog.webp)
+![Microsoft Purview Enterprise Governance Architecture](../../assets/whiteboards/purview_governance_catalog.webp)
 
 **Overview:** Enterprise multi-cloud governance and metadata management architecture using Microsoft Purview. Illustrates the centralized Data Map powered by an Apache Atlas graph engine, automated metadata and schema scanning across heterogeneous environments (Azure, AWS, SAP, on-prem SQL, Fabric, Power BI), enterprise business glossary mapping, automated PII classification rules, sensitivity labeling, and end-to-end data lineage visualization.
 
@@ -1358,14 +1734,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Automated data access workflow governance requiring steward approval before granting access
 - Data minimization and retention tracking highlighting orphaned data assets past their retention limits
 
+[↑ Return to Governance & Security 2x2 Grid](#governance-security) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="data-quality-wap-quarantine"></a>
 ### Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow
 **Data Contracts, Automated Validation Gates, Zero-Downtime Fast-Forwarding & Quarantine**
 
 **Tags:** `Data Quality` · `Write-Audit-Publish` · `WAP Pattern` · `Data Contracts` · `Circuit Breaker` · `Quarantine` · `Great Expectations` · `Soda Core` · `Delta Lake` · `Apache Iceberg` · `Observability` · [📖 Official Docs](https://docs.delta.io/latest/delta-constraints.html)
 
-![Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow](../../public/diagrams/data_quality_wap_quarantine_architecture.webp)
+![Data Quality Observability & Write-Audit-Publish (WAP) Circuit Breaker Flow](../../assets/whiteboards/data_quality_wap_quarantine_architecture.webp)
 
 **Overview:** Production architecture for zero-downtime data quality enforcement using the Write-Audit-Publish (WAP) pattern and automated quarantine circuit breakers. New data is written into an isolated staging branch or partition, audited against formal Data Contracts using automated assertion engines (Great Expectations, Soda, Delta Constraints), and only published to downstream production consumers via zero-copy atomic fast-forwarding if all quality gates pass.
 
@@ -1409,14 +1788,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Quarantine tables isolated with restricted access permissions to prevent unauthorized viewing of bad data
 - Regulatory compliance with BCBS 239 and SOX financial reporting data accuracy mandates
 
+[↑ Return to Governance & Security 2x2 Grid](#governance-security) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="lakehouse-access-masking-lifecycle"></a>
 ### Lakehouse Fine-Grained Access Control, Dynamic Masking & Entra/ABAC Enforcement
 **Role-Based & Attribute-Based Access Control (RBAC/ABAC), Row Filters & Column Masking Rules**
 
 **Tags:** `Access Control` · `Dynamic Masking` · `Row-Level Security` · `RLS` · `Column-Level Security` · `CLS` · `ABAC` · `RBAC` · `Unity Catalog` · `Microsoft Purview` · `Data Security` · `PII` · [📖 Official Docs](https://docs.databricks.com/en/data-governance/unity-catalog/row-column-filters.html)
 
-![Lakehouse Fine-Grained Access Control, Dynamic Masking & Entra/ABAC Enforcement](../../public/diagrams/lakehouse_access_masking_lifecycle_architecture.webp)
+![Lakehouse Fine-Grained Access Control, Dynamic Masking & Entra/ABAC Enforcement](../../assets/whiteboards/lakehouse_access_masking_lifecycle_architecture.webp)
 
 **Overview:** Comprehensive security architecture for fine-grained data governance across enterprise lakehouses. Demonstrates how unified catalogs (Unity Catalog, Microsoft Purview) enforce Role-Based (RBAC) and Attribute-Based (ABAC) Access Control. Illustrates dynamic column masking (e.g. hashing SSNs or credit cards based on user group membership) and dynamic row-level security (RLS) filters applied at query runtime without duplicating physical data.
 
@@ -1460,17 +1842,119 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Tamper-evident audit logging in `system.access.audit` satisfying SOC 2 and ISO 27001 access control audits
 - Automated periodic access review (PAR) workflows to certify privilege grants every 90 days
 
+[↑ Return to Governance & Security 2x2 Grid](#governance-security) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
 ## Storage Engine
 *9 Architecture Blueprints in this domain*
 
+### 📐 Storage Engine — Visual Blueprints Grid (2x2)
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#delta-lake-under-the-hood">
+        <img src="../../assets/whiteboards/delta_lake_mechanism.webp" alt="How Delta Lake Works Under the Hood" width="100%" />
+      </a>
+      <br><strong><a href="#delta-lake-under-the-hood">How Delta Lake Works Under the Hood</a></strong><br>
+      <em>Transaction Log Protocol (_delta_log/), Checkpoint Parquet Files, State Replay, and OCC</em><br>
+      <small>`Delta Lake` · `Storage Engine` · `_delta_log` · `ACID`</small><br>
+      <a href="#delta-lake-under-the-hood">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#apache-iceberg-open-table-format">
+        <img src="../../assets/whiteboards/apache_iceberg_open_table_format.webp" alt="Apache Iceberg Open Table Format Mechanics" width="100%" />
+      </a>
+      <br><strong><a href="#apache-iceberg-open-table-format">Apache Iceberg Open Table Format Mechanics</a></strong><br>
+      <em>3-Level Metadata Tree, Manifest Lists, In-Place Partition Evolution, and Hidden Partitioning</em><br>
+      <small>`Apache Iceberg` · `Open Table Format` · `Manifest List` · `Manifest Files`</small><br>
+      <a href="#apache-iceberg-open-table-format">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#open-table-formats-lakehouse">
+        <img src="../../assets/whiteboards/open_table_formats_lakehouse_architecture.webp" alt="Open Table Formats Blueprint: Lakehouse Storage Engines" width="100%" />
+      </a>
+      <br><strong><a href="#open-table-formats-lakehouse">Open Table Formats Blueprint: Lakehouse Storage Engines</a></strong><br>
+      <em>Comparative Technical Architecture: Delta Lake vs Apache Iceberg vs Apache Hudi</em><br>
+      <small>`Open Table Formats` · `Delta Lake` · `Apache Iceberg` · `Apache Hudi`</small><br>
+      <a href="#open-table-formats-lakehouse">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#open-file-formats-storage">
+        <img src="../../assets/whiteboards/open_file_formats_storage_architecture.webp" alt="Open File Formats Blueprint: Physical Storage Engines" width="100%" />
+      </a>
+      <br><strong><a href="#open-file-formats-storage">Open File Formats Blueprint: Physical Storage Engines</a></strong><br>
+      <em>Columnar vs Row-Based: Parquet, ORC, and Avro Encoding, Compression, and Memory Layouts</em><br>
+      <small>`File Formats` · `Parquet` · `ORC` · `Avro`</small><br>
+      <a href="#open-file-formats-storage">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#databricks-optimization-techniques-architecture">
+        <img src="../../assets/whiteboards/databricks_optimization_techniques_architecture.webp" alt="6 Delta Lake Optimization Techniques: Lakehouse Performance & Storage Hygiene" width="100%" />
+      </a>
+      <br><strong><a href="#databricks-optimization-techniques-architecture">6 Delta Lake Optimization Techniques: Lakehouse Performance & Storage Hygiene</a></strong><br>
+      <em>Compaction (OPTIMIZE), Z-Ordering, Liquid Clustering, VACUUM, Partitioning, and Deletion Vectors</em><br>
+      <small>`Delta Lake` · `Optimization` · `Compaction` · `Z-Order`</small><br>
+      <a href="#databricks-optimization-techniques-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#spark-savemode-architecture">
+        <img src="../../assets/whiteboards/spark_savemode_architecture_diagram.webp" alt="Apache Spark SaveMode Handling & Storage Execution Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#spark-savemode-architecture">Apache Spark SaveMode Handling & Storage Execution Architecture</a></strong><br>
+      <em>Append, Overwrite, ErrorIfExists, Ignore: File vs Partition vs Table Overwrite Mechanics</em><br>
+      <small>`Apache Spark` · `SaveMode` · `Append` · `Overwrite`</small><br>
+      <a href="#spark-savemode-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#delta-vs-iceberg-architecture">
+        <img src="../../assets/whiteboards/delta_lake_vs_iceberg_architecture.webp" alt="Delta Lake vs. Apache Iceberg Storage & Metadata Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#delta-vs-iceberg-architecture">Delta Lake vs. Apache Iceberg Storage & Metadata Architecture</a></strong><br>
+      <em>Single-Directory Transaction Logs vs Hierarchical Snapshot Trees: Concurrency, Evolution & Interoperability</em><br>
+      <small>`Delta Lake` · `Apache Iceberg` · `Storage Architecture` · `UniForm`</small><br>
+      <a href="#delta-vs-iceberg-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#lakehouse-acid-concurrency">
+        <img src="../../assets/whiteboards/lakehouse_acid_concurrency.webp" alt="Lakehouse ACID Concurrency & Write Conflict Resolution Matrix" width="100%" />
+      </a>
+      <br><strong><a href="#lakehouse-acid-concurrency">Lakehouse ACID Concurrency & Write Conflict Resolution Matrix</a></strong><br>
+      <em>Optimistic Concurrency Control (OCC), Conflict Scenarios, and Serializable vs WriteSerializable Isolation</em><br>
+      <small>`ACID` · `Concurrency Control` · `Optimistic Concurrency Control` · `OCC`</small><br>
+      <a href="#lakehouse-acid-concurrency">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#table-maintenance-compaction-vacuum">
+        <img src="../../assets/whiteboards/table_maintenance_compaction_vacuum_architecture.webp" alt="Open Table Maintenance Lifecycle: Bin-Packing, Liquid Clustering & Safe VACUUM" width="100%" />
+      </a>
+      <br><strong><a href="#table-maintenance-compaction-vacuum">Open Table Maintenance Lifecycle: Bin-Packing, Liquid Clustering & Safe VACUUM</a></strong><br>
+      <em>Small-File Bin-Packing (OPTIMIZE), Liquid Clustering, Deletion Vector Merging & Safe VACUUM Retention</em><br>
+      <small>`Table Maintenance` · `Delta Lake` · `Compaction` · `Bin-Packing`</small><br>
+      <a href="#table-maintenance-compaction-vacuum">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top"></td>
+  </tr>
+</table>
+
+---
+
+<a id="delta-lake-under-the-hood"></a>
 ### How Delta Lake Works Under the Hood
 **Transaction Log Protocol (_delta_log/), Checkpoint Parquet Files, State Replay, and OCC**
 
 **Tags:** `Delta Lake` · `Storage Engine` · `_delta_log` · `ACID` · `Optimistic Concurrency Control` · `Checkpoints` · `Parquet` · `Atomic Commits` · `Time Travel` · `Log Compaction` · [📖 Official Docs](https://docs.delta.io/latest/delta-intro.html)
 
-![How Delta Lake Works Under the Hood](../../public/diagrams/delta_lake_mechanism.webp)
+![How Delta Lake Works Under the Hood](../../assets/whiteboards/delta_lake_mechanism.webp)
 
 **Overview:** Deep under-the-hood architectural dissection of Delta Lake's ACID transaction protocol. Details the physical organization of the `_delta_log/` directory, monotonic JSON commit files (`000000.json`), checkpoint Parquet files (`000010.checkpoint.parquet`), log state reconstruction algorithms, cloud storage atomic commit primitives (`putIfAbsent`), Optimistic Concurrency Control (OCC), and metadata compaction.
 
@@ -1514,14 +1998,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Complete point-in-time reproducible auditability for SOX and financial reporting
 - Compliance with GDPR right-to-be-forgotten verified by checking RemoveFile tombstone expiration
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="apache-iceberg-open-table-format"></a>
 ### Apache Iceberg Open Table Format Mechanics
 **3-Level Metadata Tree, Manifest Lists, In-Place Partition Evolution, and Hidden Partitioning**
 
 **Tags:** `Apache Iceberg` · `Open Table Format` · `Manifest List` · `Manifest Files` · `Avro` · `Snapshot Isolation` · `Hidden Partitioning` · `Partition Evolution` · `Schema Evolution` · [📖 Official Docs](https://iceberg.apache.org/docs/latest/spec/)
 
-![Apache Iceberg Open Table Format Mechanics](../../public/diagrams/apache_iceberg_open_table_format.webp)
+![Apache Iceberg Open Table Format Mechanics](../../assets/whiteboards/apache_iceberg_open_table_format.webp)
 
 **Overview:** Architectural breakdown of the Apache Iceberg open table format. Details the 3-level hierarchical metadata tree (Iceberg Catalog -> Snapshot metadata.json -> Manifest List Avro -> Manifest Files Avro -> Parquet Data Files). Covers snapshot isolation, hidden partitioning without directory-encoded values, in-place partition and schema evolution using immutable field IDs, and row-level delete strategies (Copy-on-Write vs Merge-on-Read).
 
@@ -1565,14 +2052,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Accurate time travel auditing across snapshots for legal discovery and financial compliance
 - Complete data erasure verification for GDPR by purging historical snapshots and running vacuum procedures
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="open-table-formats-lakehouse"></a>
 ### Open Table Formats Blueprint: Lakehouse Storage Engines
 **Comparative Technical Architecture: Delta Lake vs Apache Iceberg vs Apache Hudi**
 
 **Tags:** `Open Table Formats` · `Delta Lake` · `Apache Iceberg` · `Apache Hudi` · `Lakehouse` · `ACID` · `UniForm` · `Storage Architecture` · `CDC Ingestion` · [📖 Official Docs](https://iceberg.apache.org/docs/latest/spec/)
 
-![Open Table Formats Blueprint: Lakehouse Storage Engines](../../public/diagrams/open_table_formats_lakehouse_architecture.webp)
+![Open Table Formats Blueprint: Lakehouse Storage Engines](../../assets/whiteboards/open_table_formats_lakehouse_architecture.webp)
 
 **Overview:** Comprehensive comparative architecture evaluating the Big Three open lakehouse table formats: Delta Lake, Apache Iceberg, and Apache Hudi. Details their underlying metadata designs, transaction log models, concurrency control mechanisms, file skipping efficiencies, row-level mutation strategies, multi-engine interoperability, and cross-format translation layers (Databricks UniForm, OneTable/XTable).
 
@@ -1616,14 +2106,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Point-in-time time travel auditability satisfying strict financial regulatory standards
 - Cryptographic file integrity validation ensuring data durability on commodity object stores
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="open-file-formats-storage"></a>
 ### Open File Formats Blueprint: Physical Storage Engines
 **Columnar vs Row-Based: Parquet, ORC, and Avro Encoding, Compression, and Memory Layouts**
 
 **Tags:** `File Formats` · `Parquet` · `ORC` · `Avro` · `Columnar Storage` · `Dictionary Encoding` · `Snappy` · `ZSTD` · `Run Length Encoding` · `Bit Packing` · [📖 Official Docs](https://parquet.apache.org/docs/overview/)
 
-![Open File Formats Blueprint: Physical Storage Engines](../../public/diagrams/open_file_formats_storage_architecture.webp)
+![Open File Formats Blueprint: Physical Storage Engines](../../assets/whiteboards/open_file_formats_storage_architecture.webp)
 
 **Overview:** Deep physical storage architecture comparing open data file formats: Apache Parquet, Apache ORC, and Apache Avro. Dissects internal byte layouts, columnar vs row-based storage paradigms, compression algorithms (Snappy, ZSTD, Gzip), encoding schemes (Dictionary, RLE, Bit-Packing), header/footer metadata structures, and memory-mapped file reading mechanics.
 
@@ -1667,14 +2160,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Long-term data preservation compliance backed by Apache open source project specifications
 - Tamper detection through embedded CRC checksums on every Parquet data page
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="databricks-optimization-techniques-architecture"></a>
 ### 6 Delta Lake Optimization Techniques: Lakehouse Performance & Storage Hygiene
 **Compaction (OPTIMIZE), Z-Ordering, Liquid Clustering, VACUUM, Partitioning, and Deletion Vectors**
 
 **Tags:** `Delta Lake` · `Optimization` · `Compaction` · `Z-Order` · `Liquid Clustering` · `VACUUM` · `Deletion Vectors` · `Partitioning` · `Performance` · `FinOps` · [📖 Official Docs](https://docs.delta.io/latest/optimizations-oss.html)
 
-![6 Delta Lake Optimization Techniques: Lakehouse Performance & Storage Hygiene](../../public/diagrams/databricks_optimization_techniques_architecture.webp)
+![6 Delta Lake Optimization Techniques: Lakehouse Performance & Storage Hygiene](../../assets/whiteboards/databricks_optimization_techniques_architecture.webp)
 
 **Overview:** Comprehensive technical blueprint of the 6 fundamental Delta Lake performance and storage hygiene levers: 1) File Compaction (OPTIMIZE), 2) Multi-Dimensional Z-Ordering, 3) Next-Generation Liquid Clustering (CLUSTER BY), 4) Storage Reclamation (VACUUM), 5) Strategic Partitioning, and 6) Low-Latency Deletion Vectors. Details their physical mechanisms, algorithmic implementations, and operational best practices.
 
@@ -1718,14 +2214,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - FinOps audit tracking storage footprint reductions achieved via weekly hygiene jobs
 - Tamper-evident transaction logs recording every optimization and vacuum maintenance event
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="spark-savemode-architecture"></a>
 ### Apache Spark SaveMode Handling & Storage Execution Architecture
 **Append, Overwrite, ErrorIfExists, Ignore: File vs Partition vs Table Overwrite Mechanics**
 
 **Tags:** `Apache Spark` · `SaveMode` · `Append` · `Overwrite` · `Dynamic Partition Overwrite` · `Hadoop OutputCommitter` · `Delta Lake` · `ACID Overwrite` · `replaceWhere` · [📖 Official Docs](https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes)
 
-![Apache Spark SaveMode Handling & Storage Execution Architecture](../../public/diagrams/spark_savemode_architecture_diagram.webp)
+![Apache Spark SaveMode Handling & Storage Execution Architecture](../../assets/whiteboards/spark_savemode_architecture_diagram.webp)
 
 **Overview:** Deep architectural analysis of Apache Spark SaveMode behaviors across classic distributed file systems and modern ACID Lakehouse engines. Details the mechanics of Append, Overwrite, ErrorIfExists, and Ignore. Dissects dangerous non-atomic full-table wipes in vanilla Parquet vs atomic partition swaps using Dynamic Partition Overwrites (`spark.sql.sources.partitionOverwriteMode=dynamic`) and safe predicate-based overwrites in Delta Lake (`replaceWhere`).
 
@@ -1769,14 +2268,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Compliance with data immutability standards by enforcing Append-only modes on regulatory tables
 - Deterministic reproducibility of past states using Delta time-travel rollback capabilities
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="delta-vs-iceberg-architecture"></a>
 ### Delta Lake vs. Apache Iceberg Storage & Metadata Architecture
 **Single-Directory Transaction Logs vs Hierarchical Snapshot Trees: Concurrency, Evolution & Interoperability**
 
 **Tags:** `Delta Lake` · `Apache Iceberg` · `Storage Architecture` · `UniForm` · `Metadata Tree` · `Transaction Log` · `Snapshot Isolation` · `Partition Evolution` · `Lakehouse` · [📖 Official Docs](https://iceberg.apache.org/docs/latest/spec/)
 
-![Delta Lake vs. Apache Iceberg Storage & Metadata Architecture](../../public/diagrams/delta_lake_vs_iceberg_architecture.webp)
+![Delta Lake vs. Apache Iceberg Storage & Metadata Architecture](../../assets/whiteboards/delta_lake_vs_iceberg_architecture.webp)
 
 **Overview:** Architectural head-to-head comparison between the two dominant modern open table formats: Delta Lake and Apache Iceberg. Examines their divergent metadata strategies (Delta's single-directory atomic transaction log with Parquet checkpoints vs Iceberg's 3-level hierarchical Avro manifest tree), partition evolution capabilities, concurrency handling under heavy multi-writer contention, and cross-format interoperability via Databricks UniForm.
 
@@ -1820,14 +2322,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Cross-format time travel reproducibility ensuring regulatory compliance across both engines
 - Granular access control enforced at the catalog layer (Unity Catalog / Iceberg REST Catalog)
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="lakehouse-acid-concurrency"></a>
 ### Lakehouse ACID Concurrency & Write Conflict Resolution Matrix
 **Optimistic Concurrency Control (OCC), Conflict Scenarios, and Serializable vs WriteSerializable Isolation**
 
 **Tags:** `ACID` · `Concurrency Control` · `Optimistic Concurrency Control` · `OCC` · `Write Conflicts` · `Serializable` · `WriteSerializable` · `Delta Lake` · `Isolation Levels` · [📖 Official Docs](https://docs.delta.io/latest/concurrency-control.html)
 
-![Lakehouse ACID Concurrency & Write Conflict Resolution Matrix](../../public/diagrams/lakehouse_acid_concurrency.webp)
+![Lakehouse ACID Concurrency & Write Conflict Resolution Matrix](../../assets/whiteboards/lakehouse_acid_concurrency.webp)
 
 **Overview:** Exhaustive technical breakdown of Lakehouse ACID concurrency control and write conflict arbitration. Details the Optimistic Concurrency Control (OCC) conflict detection algorithm, conflict matrices across concurrent write operations (Append vs Append, Append vs Update, Update vs Delete, Concurrent Compaction), and the critical distinctions between WriteSerializable and Serializable isolation levels.
 
@@ -1871,14 +2376,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Prevention of data corruption and partial data writes under all network failure conditions
 - Auditability of all concurrent mutation events stored in transaction logs
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="table-maintenance-compaction-vacuum"></a>
 ### Open Table Maintenance Lifecycle: Bin-Packing, Liquid Clustering & Safe VACUUM
 **Small-File Bin-Packing (OPTIMIZE), Liquid Clustering, Deletion Vector Merging & Safe VACUUM Retention**
 
 **Tags:** `Table Maintenance` · `Delta Lake` · `Compaction` · `Bin-Packing` · `OPTIMIZE` · `VACUUM` · `Liquid Clustering` · `Deletion Vectors` · `Storage Hygiene` · `Apache Iceberg` · `FinOps` · [📖 Official Docs](https://docs.delta.io/latest/delta-utility.html#vacuum)
 
-![Open Table Maintenance Lifecycle: Bin-Packing, Liquid Clustering & Safe VACUUM](../../public/diagrams/table_maintenance_compaction_vacuum_architecture.webp)
+![Open Table Maintenance Lifecycle: Bin-Packing, Liquid Clustering & Safe VACUUM](../../assets/whiteboards/table_maintenance_compaction_vacuum_architecture.webp)
 
 **Overview:** Exhaustive physical storage and lifecycle hygiene architecture for open table formats (Delta Lake, Apache Iceberg). Details the 3-phase maintenance cycle: resolving small-file fragmentation via `OPTIMIZE` bin-packing (consolidating 2-5MB files into 512MB-1GB targets), rewriting multi-dimensional sort keys via Liquid Clustering, consolidating Deletion Vector tombstones, and executing safe `VACUUM` operations that purge unreferenced data files while strictly respecting time-travel retention windows.
 
@@ -1922,17 +2430,139 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Prevents compliance violations by ensuring historical table versions remain queryable throughout audit periods
 - Automated policy enforcement through cloud storage lifecycle rules complementing table-level vacuuming
 
+[↑ Return to Storage Engine 2x2 Grid](#storage-engine) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
 ## Compute & Optimization
 *11 Architecture Blueprints in this domain*
 
+### 📐 Compute & Optimization — Visual Blueprints Grid (2x2)
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#spark-catalyst-photon-engine">
+        <img src="../../assets/whiteboards/catalyst_photon_engine.webp" alt="Databricks Compute: Catalyst Optimizer, AQE & Photon" width="100%" />
+      </a>
+      <br><strong><a href="#spark-catalyst-photon-engine">Databricks Compute: Catalyst Optimizer, AQE & Photon</a></strong><br>
+      <em>4-Phase Catalyst Compilation, Whole-Stage CodeGen, and Native C++ Vectorized Photon Execution</em><br>
+      <small>`Apache Spark` · `Catalyst Optimizer` · `Photon` · `AQE`</small><br>
+      <a href="#spark-catalyst-photon-engine">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#spark-shuffle-memory-execution">
+        <img src="../../assets/whiteboards/spark_shuffle_memory_execution.webp" alt="Apache Spark Memory Architecture & Shuffle Mechanics" width="100%" />
+      </a>
+      <br><strong><a href="#spark-shuffle-memory-execution">Apache Spark Memory Architecture & Shuffle Mechanics</a></strong><br>
+      <em>JVM Heap Layout, Execution vs Storage Dynamic Borrowing, SortShuffleWriter, and Spilling</em><br>
+      <small>`Apache Spark` · `Memory Management` · `Shuffle` · `JVM Heap`</small><br>
+      <a href="#spark-shuffle-memory-execution">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#sql-server-query-engine-optimization">
+        <img src="../../assets/whiteboards/sql_server_query_engine_optimization.webp" alt="SQL Server & Relational Query Engine Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#sql-server-query-engine-optimization">SQL Server & Relational Query Engine Architecture</a></strong><br>
+      <em>Relational Engine (CBO) vs Storage Engine (Buffer Pool), B-Tree Indexing, and Query Store</em><br>
+      <small>`SQL Server` · `Relational Engine` · `Storage Engine` · `Buffer Pool`</small><br>
+      <a href="#sql-server-query-engine-optimization">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#python-arrow-polars-architecture">
+        <img src="../../assets/whiteboards/python_arrow_polars_architecture.webp" alt="Modern Python Data Architecture: Apache Arrow, Polars & Zero-Copy IPC" width="100%" />
+      </a>
+      <br><strong><a href="#python-arrow-polars-architecture">Modern Python Data Architecture: Apache Arrow, Polars & Zero-Copy IPC</a></strong><br>
+      <em>Columnar Memory Layout, SIMD Vectorization, Polars Rust Engine, and Zero-Copy PyCapsule IPC</em><br>
+      <small>`Python` · `Apache Arrow` · `Polars` · `Rust`</small><br>
+      <a href="#python-arrow-polars-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#spark-data-skew-aqe-optimization">
+        <img src="../../assets/whiteboards/spark_data_skew_aqe_optimization.webp" alt="Apache Spark Data Skew Remediation & AQE Optimization" width="100%" />
+      </a>
+      <br><strong><a href="#spark-data-skew-aqe-optimization">Apache Spark Data Skew Remediation & AQE Optimization</a></strong><br>
+      <em>Straggler Task Diagnosis, Salting Techniques, AQE Skew Join Splitting, and Broadcast Switching</em><br>
+      <small>`Apache Spark` · `Data Skew` · `AQE` · `Stragglers`</small><br>
+      <a href="#spark-data-skew-aqe-optimization">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#spark-join-decision-tree">
+        <img src="../../assets/whiteboards/spark_join_decision_tree.webp" alt="Apache Spark Join Strategy Selection Decision Tree" width="100%" />
+      </a>
+      <br><strong><a href="#spark-join-decision-tree">Apache Spark Join Strategy Selection Decision Tree</a></strong><br>
+      <em>BHJ, SHJ, SMJ, BNLJ, and CPJ: Decision Flowchart, Memory Budgets, and Sort-Merge Optimization</em><br>
+      <small>`Apache Spark` · `Join Strategies` · `Broadcast Hash Join` · `Sort Merge Join`</small><br>
+      <a href="#spark-join-decision-tree">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#spark-aqe-dynamic-optimization">
+        <img src="../../assets/whiteboards/spark_aqe_architecture_diagram.webp" alt="Apache Spark Adaptive Query Execution (AQE) Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#spark-aqe-dynamic-optimization">Apache Spark Adaptive Query Execution (AQE) Architecture</a></strong><br>
+      <em>Runtime Feedback Loop, Dynamic Shuffle Partition Coalescing, Join Switching, and Skew Splitting</em><br>
+      <small>`Apache Spark` · `AQE` · `Adaptive Query Execution` · `Dynamic Optimization`</small><br>
+      <a href="#spark-aqe-dynamic-optimization">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#spark-memory-management-spill">
+        <img src="../../assets/whiteboards/spark_memory_management_spill_diagram.webp" alt="Apache Spark Memory Management & Shuffle Spilling Mechanics" width="100%" />
+      </a>
+      <br><strong><a href="#spark-memory-management-spill">Apache Spark Memory Management & Shuffle Spilling Mechanics</a></strong><br>
+      <em>Execution vs Storage Dynamic Eviction, Memory Spill vs Disk Spill, and Off-Heap Tungsten Tuning</em><br>
+      <small>`Apache Spark` · `Memory Management` · `Shuffle Spill` · `Disk Spill`</small><br>
+      <a href="#spark-memory-management-spill">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#spark-streaming-state-store">
+        <img src="../../assets/whiteboards/spark_streaming_state_store.webp" alt="Spark Structured Streaming State Store & Watermarking Mechanics" width="100%" />
+      </a>
+      <br><strong><a href="#spark-streaming-state-store">Spark Structured Streaming State Store & Watermarking Mechanics</a></strong><br>
+      <em>HDFSBackedStateStore vs RocksDB, Stateful Streaming Aggregations, and Watermark State Eviction</em><br>
+      <small>`Spark Streaming` · `Structured Streaming` · `State Store` · `RocksDB`</small><br>
+      <a href="#spark-streaming-state-store">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#photon-engine-vs-jvm">
+        <img src="../../assets/whiteboards/photon_engine_vs_jvm.webp" alt="Databricks Photon Native C++ Engine vs. Classic Spark JVM" width="100%" />
+      </a>
+      <br><strong><a href="#photon-engine-vs-jvm">Databricks Photon Native C++ Engine vs. Classic Spark JVM</a></strong><br>
+      <em>Instruction-Level Vectorization, CPU Cache Locality, SIMD Registers, and Zero-GC Memory Management</em><br>
+      <small>`Databricks Photon` · `Classic Spark JVM` · `C++ Engine` · `Vectorized Execution`</small><br>
+      <a href="#photon-engine-vs-jvm">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#spark-broadcast-accumulators">
+        <img src="../../assets/whiteboards/spark_broadcast_accumulators.webp" alt="Apache Spark Broadcast Variables vs. Accumulators Architecture" width="100%" />
+      </a>
+      <br><strong><a href="#spark-broadcast-accumulators">Apache Spark Broadcast Variables vs. Accumulators Architecture</a></strong><br>
+      <em>Distributed Shared Variables: Peer-to-Peer BitTorrent Broadcast vs Driver-Aggregated Counters</em><br>
+      <small>`Apache Spark` · `Broadcast Variables` · `Accumulators` · `Distributed Shared Memory`</small><br>
+      <a href="#spark-broadcast-accumulators">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top"></td>
+  </tr>
+</table>
+
+---
+
+<a id="spark-catalyst-photon-engine"></a>
 ### Databricks Compute: Catalyst Optimizer, AQE & Photon
 **4-Phase Catalyst Compilation, Whole-Stage CodeGen, and Native C++ Vectorized Photon Execution**
 
 **Tags:** `Apache Spark` · `Catalyst Optimizer` · `Photon` · `AQE` · `Whole-Stage CodeGen` · `Physical Plan` · `Logical Plan` · `Janino` · `SIMD` · `C++ Engine` · [📖 Official Docs](https://docs.databricks.com/en/runtime/photon.html)
 
-![Databricks Compute: Catalyst Optimizer, AQE & Photon](../../public/diagrams/catalyst_photon_engine.webp)
+![Databricks Compute: Catalyst Optimizer, AQE & Photon](../../assets/whiteboards/catalyst_photon_engine.webp)
 
 **Overview:** Comprehensive architectural blueprint of modern distributed query execution in Apache Spark and Databricks. Dissects the 4 phases of the Catalyst Optimizer (Analysis, Logical Optimization, Physical Planning, Code Generation) alongside Databricks Photon, the native C++ vectorized execution engine that bypasses the JVM entirely with SIMD instructions, hardware cache locality, and runtime adaptive tuning.
 
@@ -1976,14 +2606,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Comprehensive audit records of query execution plans captured in system tables
 - Resource governance preventing single rogue queries from monopolizing cluster CPU resources
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="spark-shuffle-memory-execution"></a>
 ### Apache Spark Memory Architecture & Shuffle Mechanics
 **JVM Heap Layout, Execution vs Storage Dynamic Borrowing, SortShuffleWriter, and Spilling**
 
 **Tags:** `Apache Spark` · `Memory Management` · `Shuffle` · `JVM Heap` · `Off-Heap` · `SortShuffleWriter` · `Spill` · `Tungsten` · `Netty` · `Executor Tuning` · [📖 Official Docs](https://spark.apache.org/docs/latest/tuning.html#memory-management-overview)
 
-![Apache Spark Memory Architecture & Shuffle Mechanics](../../public/diagrams/spark_shuffle_memory_execution.webp)
+![Apache Spark Memory Architecture & Shuffle Mechanics](../../assets/whiteboards/spark_shuffle_memory_execution.webp)
 
 **Overview:** Exhaustive technical dissection of Apache Spark executor memory architecture and distributed shuffle mechanics. Details the JVM heap allocation (Reserved Memory 300MB, User Memory 25%, Spark Memory 75% dynamically shared between Execution and Storage), off-heap Tungsten memory, the complete shuffle lifecycle (Map Output Tracker, SortShuffleWriter, Netty network transport, ShuffleBlockFetcherIterator), and memory spilling triage.
 
@@ -2027,14 +2660,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Audit logging capturing resource usage anomalies and cluster memory saturation
 - Compliance with data residency policies by ensuring shuffle disk spill remains within approved local disks
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="sql-server-query-engine-optimization"></a>
 ### SQL Server & Relational Query Engine Architecture
 **Relational Engine (CBO) vs Storage Engine (Buffer Pool), B-Tree Indexing, and Query Store**
 
 **Tags:** `SQL Server` · `Relational Engine` · `Storage Engine` · `Buffer Pool` · `Query Store` · `B-Tree` · `Execution Plans` · `Parameter Sniffing` · `TempDB` · `Index Optimization` · [📖 Official Docs](https://learn.microsoft.com/en-us/sql/relational-databases/performance/execution-plans)
 
-![SQL Server & Relational Query Engine Architecture](../../public/diagrams/sql_server_query_engine_optimization.webp)
+![SQL Server & Relational Query Engine Architecture](../../assets/whiteboards/sql_server_query_engine_optimization.webp)
 
 **Overview:** Architectural breakdown of classic relational database engine mechanics, focusing on Microsoft SQL Server and Azure SQL DB. Explores the dual-engine separation between the Relational Engine (Parser, Algebrizer, Cost-Based Optimizer) and the Storage Engine (Buffer Pool, Access Methods, Transaction Manager, WAL log). Covers B-tree clustered/non-clustered index mechanics, Query Store plan regression diagnostics, parameter sniffing triage, and TempDB contention.
 
@@ -2078,14 +2714,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - SQL Server Audit logging every authentication, DDL modification, and privileged query
 - Role-based security adhering to strict database principle of least privilege
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="python-arrow-polars-architecture"></a>
 ### Modern Python Data Architecture: Apache Arrow, Polars & Zero-Copy IPC
 **Columnar Memory Layout, SIMD Vectorization, Polars Rust Engine, and Zero-Copy PyCapsule IPC**
 
 **Tags:** `Python` · `Apache Arrow` · `Polars` · `Rust` · `Zero-Copy` · `SIMD` · `DuckDB` · `Columnar Memory` · `PyCapsule` · `High Performance` · [📖 Official Docs](https://pola.rs/)
 
-![Modern Python Data Architecture: Apache Arrow, Polars & Zero-Copy IPC](../../public/diagrams/python_arrow_polars_architecture.webp)
+![Modern Python Data Architecture: Apache Arrow, Polars & Zero-Copy IPC](../../assets/whiteboards/python_arrow_polars_architecture.webp)
 
 **Overview:** State-of-the-art modern Python data engineering architecture moving beyond legacy single-threaded Pandas. Details the Apache Arrow in-memory columnar format, validity bitmaps, SIMD hardware acceleration, zero-copy inter-process communication (PyCapsule / Arrow C Data Interface), and the Polars query engine written in Rust featuring multithreaded work-stealing execution, lazy expression optimization, and streaming larger-than-RAM processing.
 
@@ -2129,14 +2768,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Integration with enterprise corporate artifact repositories for vetted Python packages
 - Auditability of Python pipeline execution logs and data processing metrics
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="spark-data-skew-aqe-optimization"></a>
 ### Apache Spark Data Skew Remediation & AQE Optimization
 **Straggler Task Diagnosis, Salting Techniques, AQE Skew Join Splitting, and Broadcast Switching**
 
 **Tags:** `Apache Spark` · `Data Skew` · `AQE` · `Stragglers` · `Salting` · `Adaptive Query Execution` · `Skew Join` · `Broadcast Join` · `Partition Tuning` · [📖 Official Docs](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)
 
-![Apache Spark Data Skew Remediation & AQE Optimization](../../public/diagrams/spark_data_skew_aqe_optimization.webp)
+![Apache Spark Data Skew Remediation & AQE Optimization](../../assets/whiteboards/spark_data_skew_aqe_optimization.webp)
 
 **Overview:** Comprehensive engineering guide to diagnosing and mitigating data skew in Apache Spark distributed jobs. Details the symptoms of data skew (99% completed stage stuck on 1 straggler task, executor OOMs), manual mitigation patterns (Salting with random prefixes and replication), and native Adaptive Query Execution (AQE) automatic skew join detection and partition splitting.
 
@@ -2180,19 +2822,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Audit trails tracking job runtimes and automated remediation events
 - Predictable SLA compliance for regulatory and financial reporting pipelines
 
-**Authoritative Cross-References & Hands-On Labs:**
-- 🧪 **Hands-On Reproducibility Lab**: [`docs/engineering/synthetic_skew_and_spill_lab.md`](../engineering/synthetic_skew_and_spill_lab.md) — Step-by-step synthetic script for manufacturing 90% key skew, observing Spark UI stragglers, and curing via AQE / selective two-phase salting.
-- 🎯 **100 Databricks Interview Questions**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md#section-06-performance--triage-stop-the-spill--questions-5160`](../interview_prep/100_databricks_interview_defense_playbook.md#section-06-performance--triage-stop-the-spill--questions-5160) (Q51–Q60).
-- 📖 **Distributed Performance Deep Dive**: [`docs/engineering/distributed_core_joins_and_skew_deep_dive.md`](../engineering/distributed_core_joins_and_skew_deep_dive.md).
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
 
 ---
 
+<a id="spark-join-decision-tree"></a>
 ### Apache Spark Join Strategy Selection Decision Tree
 **BHJ, SHJ, SMJ, BNLJ, and CPJ: Decision Flowchart, Memory Budgets, and Sort-Merge Optimization**
 
 **Tags:** `Apache Spark` · `Join Strategies` · `Broadcast Hash Join` · `Sort Merge Join` · `Shuffle Hash Join` · `Cartesian Product` · `Join Decision Tree` · `Tuning` · [📖 Official Docs](https://spark.apache.org/docs/latest/sql-performance-tuning.html#join-strategy-hints)
 
-![Apache Spark Join Strategy Selection Decision Tree](../../public/diagrams/spark_join_decision_tree.webp)
+![Apache Spark Join Strategy Selection Decision Tree](../../assets/whiteboards/spark_join_decision_tree.webp)
 
 **Overview:** Comprehensive decision tree and engineering guide for distributed join strategy selection in Apache Spark. Compares the 5 distributed join algorithms: 1) Broadcast Hash Join (BHJ), 2) Shuffle Hash Join (SHJ), 3) Sort Merge Join (SMJ), 4) Broadcast Nested Loop Join (BNLJ), and 5) Cartesian Product Join (CPJ). Details the exact decision criteria based on join conditions (equi vs non-equi), table sizes, sortability, memory budgets, and join hints.
 
@@ -2236,18 +2876,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Resource governance preventing memory-intensive join spills from starving peer workloads
 - Data protection verification ensuring broadcasted lookup datasets do not expose restricted data
 
-**Authoritative Cross-References & Join Flowcharts:**
-- 📊 **Physical Visual Join Flowcharts (BHJ, SMJ, SHJ, BNLJ)**: [`docs/engineering/distributed_core_joins_and_skew_deep_dive.md#42-physical-visualizations-of-join-execution`](../engineering/distributed_core_joins_and_skew_deep_dive.md#42-physical-visualizations-of-join-execution).
-- 🎯 **100 Databricks Interview Questions**: [`docs/interview_prep/100_databricks_interview_defense_playbook.md`](../interview_prep/100_databricks_interview_defense_playbook.md) (Q53: BHJ vs SMJ, Q34: Left Join row count inflation).
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
 
 ---
 
+<a id="spark-aqe-dynamic-optimization"></a>
 ### Apache Spark Adaptive Query Execution (AQE) Architecture
 **Runtime Feedback Loop, Dynamic Shuffle Partition Coalescing, Join Switching, and Skew Splitting**
 
 **Tags:** `Apache Spark` · `AQE` · `Adaptive Query Execution` · `Dynamic Optimization` · `Shuffle Coalescing` · `Join Switching` · `Skew Join` · `Runtime Statistics` · [📖 Official Docs](https://spark.apache.org/docs/latest/sql-performance-tuning.html#adaptive-query-execution)
 
-![Apache Spark Adaptive Query Execution (AQE) Architecture](../../public/diagrams/spark_aqe_architecture_diagram.webp)
+![Apache Spark Adaptive Query Execution (AQE) Architecture](../../assets/whiteboards/spark_aqe_architecture_diagram.webp)
 
 **Overview:** Deep architectural blueprint of Adaptive Query Execution (AQE) in Apache Spark. Details the runtime feedback loop where query stages are executed incrementally, materializing shuffle partition statistics, and dynamically re-optimizing the remaining physical execution plan. Covers the 3 core AQE optimizations: dynamic shuffle partition coalescing, runtime join strategy switching (SortMergeJoin to BroadcastHashJoin), and dynamic skew join mitigation.
 
@@ -2291,14 +2930,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Auditability of all dynamic plan rewrites captured in query history telemetry
 - Platform-wide resilience preventing un-tuned developer queries from destabilizing shared clusters
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="spark-memory-management-spill"></a>
 ### Apache Spark Memory Management & Shuffle Spilling Mechanics
 **Execution vs Storage Dynamic Eviction, Memory Spill vs Disk Spill, and Off-Heap Tungsten Tuning**
 
 **Tags:** `Apache Spark` · `Memory Management` · `Shuffle Spill` · `Disk Spill` · `Memory Spill` · `Tungsten` · `Off-Heap` · `LZ4 Compression` · `Executor Tuning` · `OOM Triage` · [📖 Official Docs](https://spark.apache.org/docs/latest/tuning.html#memory-management-overview)
 
-![Apache Spark Memory Management & Shuffle Spilling Mechanics](../../public/diagrams/spark_memory_management_spill_diagram.webp)
+![Apache Spark Memory Management & Shuffle Spilling Mechanics](../../assets/whiteboards/spark_memory_management_spill_diagram.webp)
 
 **Overview:** Deep-dive technical investigation into Apache Spark memory management and shuffle spilling mechanics. Explores the internal memory pools (Execution vs Storage), dynamic memory eviction rules, Tungsten off-heap unrolled page allocation, the mathematical difference between Memory Spill and Disk Spill, and step-by-step triage playbooks for eliminating performance-killing disk thrashing and Out-Of-Memory (OOM) errors.
 
@@ -2342,14 +2984,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Cluster policy guardrails enforcing memory-to-core ratios across developer environments
 - Predictable pipeline execution times ensuring compliance with data delivery SLAs
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="spark-streaming-state-store"></a>
 ### Spark Structured Streaming State Store & Watermarking Mechanics
 **HDFSBackedStateStore vs RocksDB, Stateful Streaming Aggregations, and Watermark State Eviction**
 
 **Tags:** `Spark Streaming` · `Structured Streaming` · `State Store` · `RocksDB` · `Watermarking` · `Stateful Processing` · `Event Time` · `Deduplication` · `Checkpoints` · [📖 Official Docs](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#watermarking)
 
-![Spark Structured Streaming State Store & Watermarking Mechanics](../../public/diagrams/spark_streaming_state_store.webp)
+![Spark Structured Streaming State Store & Watermarking Mechanics](../../assets/whiteboards/spark_streaming_state_store.webp)
 
 **Overview:** Architectural breakdown of stateful stream processing in Apache Spark Structured Streaming. Compares in-memory JVM heap state storage (HDFSBackedStateStore) against native off-heap embedded key-value storage (RocksDBStateStore). Details stateful stream-stream joins, event-time watermarking (`withWatermark`), late-arriving data handling, state snapshotting to cloud storage checkpoints, and bounded state eviction.
 
@@ -2393,14 +3038,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Complete auditability of streaming pipeline progress via structured event listeners
 - Disaster recovery resilience ensuring zero data loss through continuous checkpoint replication
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="photon-engine-vs-jvm"></a>
 ### Databricks Photon Native C++ Engine vs. Classic Spark JVM
 **Instruction-Level Vectorization, CPU Cache Locality, SIMD Registers, and Zero-GC Memory Management**
 
 **Tags:** `Databricks Photon` · `Classic Spark JVM` · `C++ Engine` · `Vectorized Execution` · `SIMD` · `AVX-512` · `Garbage Collection` · `Tungsten` · `CPU Cache Locality` · [📖 Official Docs](https://docs.databricks.com/en/runtime/photon.html)
 
-![Databricks Photon Native C++ Engine vs. Classic Spark JVM](../../public/diagrams/photon_engine_vs_jvm.webp)
+![Databricks Photon Native C++ Engine vs. Classic Spark JVM](../../assets/whiteboards/photon_engine_vs_jvm.webp)
 
 **Overview:** Architectural shootout between the Databricks native C++ Photon execution engine and classic Apache Spark JVM execution. Explores instruction-level vectorization, CPU L1/L2 cache line alignment, SIMD register pipelining, explicit off-heap C++ memory allocation vs JVM Garbage Collection overhead, and operator-level performance benchmarking across analytical SQL, heavy joins, and aggregations.
 
@@ -2444,14 +3092,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Audit telemetry recording Photon execution metrics in system billing and query history tables
 - Zero plain-text memory leakage ensured through strict memory zeroing protocols
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="spark-broadcast-accumulators"></a>
 ### Apache Spark Broadcast Variables vs. Accumulators Architecture
 **Distributed Shared Variables: Peer-to-Peer BitTorrent Broadcast vs Driver-Aggregated Counters**
 
 **Tags:** `Apache Spark` · `Broadcast Variables` · `Accumulators` · `Distributed Shared Memory` · `BitTorrent Protocol` · `Driver Memory` · `Task Execution` · `Performance Tuning` · [📖 Official Docs](https://spark.apache.org/docs/latest/rdd-programming-guide.html#broadcast-variables)
 
-![Apache Spark Broadcast Variables vs. Accumulators Architecture](../../public/diagrams/spark_broadcast_accumulators.webp)
+![Apache Spark Broadcast Variables vs. Accumulators Architecture](../../assets/whiteboards/spark_broadcast_accumulators.webp)
 
 **Overview:** Architectural comparison of Apache Spark's two fundamental distributed shared variable abstractions: Broadcast Variables (read-only cached data distributed across executors via peer-to-peer BitTorrent protocols) and Accumulators (write-only distributed counters aggregated on the Driver). Details their physical memory lifecycle, network transmission protocols, executor caching, and operational pitfalls.
 
@@ -2495,17 +3146,67 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Cluster resource governance preventing massive broadcast distributions from monopolizing network bandwidth
 - Immutable audit logs tracking custom metric collection events across all production pipeline runs
 
+[↑ Return to Compute & Optimization 2x2 Grid](#compute-optimization) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
 ## Data Modeling & Architecture
 *4 Architecture Blueprints in this domain*
 
+### 📐 Data Modeling & Architecture — Visual Blueprints Grid (2x2)
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#kimball-dimensional-star-schema">
+        <img src="../../assets/whiteboards/kimball_dimensional_star_schema.webp" alt="Kimball Dimensional Modeling & Enterprise Star Schema" width="100%" />
+      </a>
+      <br><strong><a href="#kimball-dimensional-star-schema">Kimball Dimensional Modeling & Enterprise Star Schema</a></strong><br>
+      <em>Bus Matrix, Conformed Dimensions, Fact Grain Definition, and Columnar Lakehouse Optimization</em><br>
+      <small>`Kimball` · `Dimensional Modeling` · `Star Schema` · `Fact Tables`</small><br>
+      <a href="#kimball-dimensional-star-schema">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#data-vault-enterprise-architecture">
+        <img src="../../assets/whiteboards/data_vault_enterprise_architecture.webp" alt="Data Vault 2.0 Architecture & Lakehouse Modeling" width="100%" />
+      </a>
+      <br><strong><a href="#data-vault-enterprise-architecture">Data Vault 2.0 Architecture & Lakehouse Modeling</a></strong><br>
+      <em>Hubs, Links, Satellites: Scalable Raw Vault, Business Vault, and Information Marts</em><br>
+      <small>`Data Vault 2.0` · `Hubs` · `Links` · `Satellites`</small><br>
+      <a href="#data-vault-enterprise-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="#data-mesh-enterprise-architecture">
+        <img src="../../assets/whiteboards/data_mesh_enterprise_architecture.webp" alt="Enterprise Data Mesh: Decentralized Domains & Data Products" width="100%" />
+      </a>
+      <br><strong><a href="#data-mesh-enterprise-architecture">Enterprise Data Mesh: Decentralized Domains & Data Products</a></strong><br>
+      <em>The 4 Core Principles: Domain Ownership, Data as a Product, Self-Serve Platform, and Federated Governance</em><br>
+      <small>`Data Mesh` · `Data Products` · `Domain-Driven Design` · `Self-Serve Platform`</small><br>
+      <a href="#data-mesh-enterprise-architecture">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="#scd-types-lakehouse">
+        <img src="../../assets/whiteboards/scd_types_lakehouse.webp" alt="Slowly Changing Dimensions (SCD Types 1, 2, 3, 4, 6) in Modern Lakehouses" width="100%" />
+      </a>
+      <br><strong><a href="#scd-types-lakehouse">Slowly Changing Dimensions (SCD Types 1, 2, 3, 4, 6) in Modern Lakehouses</a></strong><br>
+      <em>Complete SCD Taxonomy, HashDiff Change Detection, Non-Overlapping Intervals, and DLT apply_changes</em><br>
+      <small>`Slowly Changing Dimensions` · `SCD` · `SCD Type 2` · `Delta Lake`</small><br>
+      <a href="#scd-types-lakehouse">🔍 Inspect Deep Dive & Architecture →</a>
+    </td>
+  </tr>
+</table>
+
+---
+
+<a id="kimball-dimensional-star-schema"></a>
 ### Kimball Dimensional Modeling & Enterprise Star Schema
 **Bus Matrix, Conformed Dimensions, Fact Grain Definition, and Columnar Lakehouse Optimization**
 
 **Tags:** `Kimball` · `Dimensional Modeling` · `Star Schema` · `Fact Tables` · `Dimensions` · `Bus Matrix` · `Conformed Dimensions` · `Surrogate Keys` · `Lakehouse Modeling` · [📖 Official Docs](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/)
 
-![Kimball Dimensional Modeling & Enterprise Star Schema](../../public/diagrams/kimball_dimensional_star_schema.webp)
+![Kimball Dimensional Modeling & Enterprise Star Schema](../../assets/whiteboards/kimball_dimensional_star_schema.webp)
 
 **Overview:** Enterprise-grade dimensional modeling blueprint based on the Kimball methodology, adapted for modern cloud lakehouses. Details the Enterprise Data Warehouse Bus Matrix, fact table grains (transaction, periodic snapshot, accumulating snapshot), dimension types (conformed, degenerate, role-playing, outrigger), surrogate keys vs deterministic hash keys, and star-join query optimization over columnar storage engines.
 
@@ -2549,14 +3250,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Consistent access control policies inherited across shared dimensional data marts
 - Compliance with financial accounting standards through immutable transaction fact records
 
+[↑ Return to Data Modeling & Architecture 2x2 Grid](#data-modeling-architecture) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="data-vault-enterprise-architecture"></a>
 ### Data Vault 2.0 Architecture & Lakehouse Modeling
 **Hubs, Links, Satellites: Scalable Raw Vault, Business Vault, and Information Marts**
 
 **Tags:** `Data Vault 2.0` · `Hubs` · `Links` · `Satellites` · `Raw Vault` · `Business Vault` · `Information Marts` · `Hash Keys` · `PIT Tables` · `Bridge Tables` · [📖 Official Docs](https://datavaultalliance.com/)
 
-![Data Vault 2.0 Architecture & Lakehouse Modeling](../../public/diagrams/data_vault_enterprise_architecture.webp)
+![Data Vault 2.0 Architecture & Lakehouse Modeling](../../assets/whiteboards/data_vault_enterprise_architecture.webp)
 
 **Overview:** Comprehensive reference architecture of Data Vault 2.0 designed for modern enterprise lakehouses. Details the 3 core structural components: Hubs (core business concepts), Links (relationships and transactions), and Satellites (descriptive context and historical tracking). Explores the complete journey from Raw Vault ingestion through Business Vault enrichment (Point-in-Time PIT tables, Bridge tables) to consumer-facing Information Marts (star schemas).
 
@@ -2600,14 +3304,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Compliance with strict financial and banking regulations (BCBS 239, Basel III)
 - Auditable right-to-be-forgotten deletion workflows managed via specialized GDPR satellite masking
 
+[↑ Return to Data Modeling & Architecture 2x2 Grid](#data-modeling-architecture) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="data-mesh-enterprise-architecture"></a>
 ### Enterprise Data Mesh: Decentralized Domains & Data Products
 **The 4 Core Principles: Domain Ownership, Data as a Product, Self-Serve Platform, and Federated Governance**
 
 **Tags:** `Data Mesh` · `Data Products` · `Domain-Driven Design` · `Self-Serve Platform` · `Federated Governance` · `Data Contracts` · `Decentralization` · `Enterprise Architecture` · [📖 Official Docs](https://martinfowler.com/articles/data-mesh-principles.html)
 
-![Enterprise Data Mesh: Decentralized Domains & Data Products](../../public/diagrams/data_mesh_enterprise_architecture.webp)
+![Enterprise Data Mesh: Decentralized Domains & Data Products](../../assets/whiteboards/data_mesh_enterprise_architecture.webp)
 
 **Overview:** Organizational and technical architecture of Enterprise Data Mesh, moving away from centralized monolithic data teams. Visualizes the 4 Core Principles formulated by Zhamak Dehghani: 1) Domain-Oriented Decentralized Data Ownership, 2) Data as a Product, 3) Self-Serve Data Infrastructure as a Platform, and 4) Federated Computational Governance. Details data product archetypes, output ports, and automated data contracts.
 
@@ -2651,14 +3358,17 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Clear ownership attribution and accountability for data quality and regulatory compliance
 - Cross-domain audit trails tracking every data product consumption event and SLA metric
 
+[↑ Return to Data Modeling & Architecture 2x2 Grid](#data-modeling-architecture) · [Top of Catalog](#domain-table-of-contents)
+
 ---
 
+<a id="scd-types-lakehouse"></a>
 ### Slowly Changing Dimensions (SCD Types 1, 2, 3, 4, 6) in Modern Lakehouses
 **Complete SCD Taxonomy, HashDiff Change Detection, Non-Overlapping Intervals, and DLT apply_changes**
 
 **Tags:** `Slowly Changing Dimensions` · `SCD` · `SCD Type 2` · `Delta Lake` · `MERGE INTO` · `apply_changes` · `HashDiff` · `Time Travel` · `Data Modeling` · `Effective Dates` · [📖 Official Docs](https://docs.delta.io/latest/delta-update.html#slowly-changing-data-scd-type-2-with-delta-lake)
 
-![Slowly Changing Dimensions (SCD Types 1, 2, 3, 4, 6) in Modern Lakehouses](../../public/diagrams/scd_types_lakehouse.webp)
+![Slowly Changing Dimensions (SCD Types 1, 2, 3, 4, 6) in Modern Lakehouses](../../assets/whiteboards/scd_types_lakehouse.webp)
 
 **Overview:** Comprehensive taxonomy and lakehouse implementation blueprint for Slowly Changing Dimensions (SCD Types 0, 1, 2, 3, 4, and 6). Focuses on modern lakehouse SCD Type 2 mechanics: deterministic HashDiff change detection, non-overlapping validity date intervals (effective_date, end_date, is_current), atomic Delta Lake MERGE INTO statements, and automated orchestration via Delta Live Tables (apply_changes_into).
 
@@ -2701,5 +3411,7 @@ They can also be interactively inspected with pan/zoom and theme controls on the
 - Accurate point-in-time tax and accounting auditability across historical tax years
 - Standardized procedures for GDPR 'Right to be Forgotten' across all historical SCD2 rows
 - Immutable audit records capturing who modified each attribute and at what exact timestamp
+
+[↑ Return to Data Modeling & Architecture 2x2 Grid](#data-modeling-architecture) · [Top of Catalog](#domain-table-of-contents)
 
 ---

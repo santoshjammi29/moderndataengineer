@@ -1,13 +1,13 @@
 {
   "version": "3.0.0",
-  "generated": "2026-11-20T08:25:01.801249Z",
+  "generated": "2026-11-21T04:42:03.800699Z",
   "hub": {
     "name": "Modern Data Engineer & Lakehouse Architect Platform",
     "url": "https://moderndataengineer.uk",
     "repo": "santoshjammi29/moderndataengineer"
   },
   "total_repositories": 13,
-  "total_satellite_entries": 500,
+  "total_satellite_entries": 504,
   "repositories": {
     "R01": {
       "slug": "charming-fermi",
@@ -146,7 +146,7 @@
     },
     "sql-handbook": {
       "github": "santoshjammi29/sql-handbook",
-      "entry_count": 115
+      "entry_count": 119
     },
     "dbt-handbook": {
       "github": "santoshjammi29/dbt-handbook",
