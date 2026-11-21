@@ -29,6 +29,11 @@ export const PLATFORM_CONFIG = {
     streamingHandbook: "https://github.com/santoshjammi29/streaming-handbook",
     dataSystemDesignHandbook: "https://github.com/santoshjammi29/data-system-design-handbook",
     dataopsHandbook: "https://github.com/santoshjammi29/dataops-cicd-handbook",
+    azureDatabricksBlueprints: "https://github.com/santoshjammi29/azure-databricks-project-blueprints",
+    enterpriseBankingRiskLakehouse: "https://github.com/santoshjammi29/enterprise-banking-risk-alm-lakehouse",
+    sparkExperiments: "https://github.com/santoshjammi29/spark-experiments",
+    interviewHandbook: "https://github.com/santoshjammi29/data-engineering-interview-handbook",
+    securityHandbook: "https://github.com/santoshjammi29/security-handbook",
   },
 
   // Edge & Multi-Region Caching Policies (seconds)

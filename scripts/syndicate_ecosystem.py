@@ -2,7 +2,7 @@
 """
 Ecosystem Content Syndication & Cross-Repo Coupling Engine
 ===========================================================
-Traverses all 13 repositories in the Modern Data Engineering Lakehouse Ecosystem,
+Traverses all 14 repositories in the Modern Data Engineering Lakehouse Ecosystem,
 generates individual repository manifests, normalizes schemas, verifies bidirectional
 cross-references, and updates the canonical ecosystem-manifest.json.
 
@@ -303,7 +303,7 @@ def main():
     print("======================================================================")
 
     # 1. Distribute Taxonomy
-    print("\n▶ [1/4] Synchronizing TAXONOMY.md across all 13 repositories...")
+    print("\n▶ [1/4] Synchronizing TAXONOMY.md across all 14 repositories...")
     sync_taxonomy_to_repos()
     print("  ✓ TAXONOMY.md synchronized to all available repos.")
 
