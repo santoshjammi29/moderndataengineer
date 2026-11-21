@@ -89,7 +89,7 @@ def build_handbook_section(repo_name, pillars, total_topics, concepts, anchor=No
         lines.append(anchor_tag.strip())
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total_topics} Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: This repository implements **{total_topics} production topics** from the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty.")
+    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: This repository implements **{total_topics} production topics** from the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
     lines.append("")
     lines.append("### 📑 Topics Directory at a Glance")
     lines.append("")
@@ -186,7 +186,7 @@ def update_blueprints_readme(concepts):
     lines = []
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Architectural Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Production architectural topics and lakehouse engine primitives implemented across the 3 project blueprints, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty.")
+    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Production architectural topics and lakehouse engine primitives implemented across the 3 project blueprints, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
     lines.append("")
     lines.append("### 📑 Project Topics Directory at a Glance")
     lines.append("")
@@ -258,7 +258,7 @@ def update_banking_readme(concepts):
     lines = []
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Regulatory & Lakehouse Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Production regulatory engineering and lakehouse primitives implemented across the 3 European banking analytics engines, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty.")
+    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Production regulatory engineering and lakehouse primitives implemented across the 3 European banking analytics engines, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
     lines.append("")
     lines.append("### 📑 Regulatory & Engine Topics Directory at a Glance")
     lines.append("")
@@ -328,7 +328,13 @@ def update_spark_experiments_readme(concepts):
     lines = []
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Spark Tuning Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Advanced Apache Spark optimization and execution engine concepts covered throughout the visual experiments, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty.")
+    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Advanced Apache Spark optimization and execution engine concepts covered throughout the visual experiments, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
+    lines.append("")
+    lines.append("### 📑 Spark Experiments Topics Directory at a Glance")
+    lines.append("")
+    lines.append("| Focus Domain | Topic Count | Core Primitives Covered | Status |")
+    lines.append("|:---|:---:|:---|:---:|")
+    lines.append(f"| ⚡ **Spark Internals & Tuning** | **{total}** | Catalyst Optimizer, Tungsten Off-Heap, AQE, Data Skew Salting | ✅ Documented |")
     lines.append("")
     lines.append(build_category_table(exp_items, "Apache Spark Execution, Memory & Query Optimization", "⚡"))
     lines.append("")
@@ -337,6 +343,122 @@ def update_spark_experiments_readme(concepts):
 
     if replace_or_insert_section(readme_path, section_md, "## Contact"):
         print(f"Updated {repo_name} ({total} topics)")
+
+def update_security_handbook_readme(concepts):
+    repo_name = "security-handbook"
+    readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
+    term_map = {c["term"]: c for c in concepts}
+
+    p1_terms = [
+        'Databricks Secrets', 'Databricks Secret Scopes (Azure Key Vault)', 'Secrets Management',
+        'Custom Secret Backends', 'Airflow Connection Secrets Backend', 'Token Bucket Algorithm',
+        'Token Bucket Rate Limiting Algorithm'
+    ]
+    p2_terms = [
+        'Managed Virtual Network (Managed VNet)', 'Managed Private Endpoints',
+        'ADF Managed Private Endpoint Provisioning & Timeout Bypass'
+    ]
+    p3_terms = [
+        'Unity Catalog', 'Unity Catalog Architecture', 'Unity Catalog Enterprise Governance',
+        'Unity Catalog Fine-Grained Access Control', 'Unity Catalog 3-Level Namespace & Attribute-Based Access Control (ABAC)',
+        'Dynamic Views for Security', 'Unity Catalog Dynamic Row Filters & Column Masks',
+        'Unity Catalog Dynamic Column Masking & Row Filters', 'Attribute-Based Dynamic Column Masking (ABAC)',
+        'Row-Level Security (RLS)', 'Object-Level Security (OLS) & Dynamic RLS at Scale',
+        'Unity Catalog Volumes (Managed vs. External)'
+    ]
+    p4_terms = [
+        'Audit Logging', 'Unity Catalog System Tables', 'Unity Catalog System Tables for Lakehouse FinOps',
+        'Data Lineage', 'Unity Catalog Lineage Tracking', 'OpenLineage Operational Telemetry Standard',
+        'OpenLineage Standard Operational Run Facets', 'Data Quality Evidence with Lineage',
+        'Column-Level Encryption & Tokenization (FPE)', 'Temporal Tables & Point-In-Time Bi-Temporal Auditing',
+        'Data Mesh Federated Governance & Data Product Contracts (ODCS)', 'Data Mesh Federated Governance',
+        'Governance with Unity Catalog + Purview', 'Purview Metadata Enrichment & Non-Destructive Cataloging',
+        'Delta Lake VACUUM & Retention Governance', 'FinOps Cost Attribution Matrix for Shared Catalogs'
+    ]
+
+    p1_items = [term_map[t] for t in p1_terms if t in term_map]
+    p2_items = [term_map[t] for t in p2_terms if t in term_map]
+    p3_items = [term_map[t] for t in p3_terms if t in term_map]
+    p4_items = [term_map[t] for t in p4_terms if t in term_map]
+    total = len(p1_items) + len(p2_items) + len(p3_items) + len(p4_items)
+
+    lines = []
+    lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Security & Governance Topics Covered)")
+    lines.append("")
+    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Core zero-trust, identity, encryption, and governance primitives implemented throughout the security handbook, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
+    lines.append("")
+    lines.append("### 📑 Security & Governance Topics Directory at a Glance")
+    lines.append("")
+    lines.append("| Security Pillar | Topic Count | Key Core Primitives Covered | Status |")
+    lines.append("|:---|:---:|:---|:---:|")
+    lines.append(f"| 🔐 **Zero-Trust Identity & Secrets** | **{len(p1_items)}** | Databricks Secrets, Key Vault Scopes, Airflow Secrets, Token Bucket | ✅ Documented |")
+    lines.append(f"| 🌐 **Perimeter & Network Isolation** | **{len(p2_items)}** | Managed VNets, Managed Private Endpoints, Private Link | ✅ Documented |")
+    lines.append(f"| 🏛️ **Unity Catalog & Access Control** | **{len(p3_items)}** | 3-Level Namespaces, Dynamic Row Filters & Column Masks, ABAC | ✅ Documented |")
+    lines.append(f"| 📜 **Lineage, Audit & Governance** | **{len(p4_items)}** | OpenLineage, System Tables, Purview Metadata, Bi-Temporal Auditing | ✅ Documented |")
+    lines.append("")
+    lines.append(build_category_table(p1_items, "Zero-Trust Identity, Authentication & Secrets Management", "🔐"))
+    lines.append("")
+    lines.append(build_category_table(p2_items, "Cloud Network Isolation & Perimeter Defense", "🌐"))
+    lines.append("")
+    lines.append(build_category_table(p3_items, "Unity Catalog, Fine-Grained Access Control & Dynamic Data Masking", "🏛️"))
+    lines.append("")
+    lines.append(build_category_table(p4_items, "Data Lineage, Auditing & Regulatory Governance", "📜"))
+    lines.append("")
+    lines.append("---")
+    section_md = "\n".join(lines)
+
+    if replace_or_insert_section(readme_path, section_md, "## 📚 Curriculum Modules Overview"):
+        print(f"Updated {repo_name} ({total} topics)")
+
+def update_interview_handbook_readme(concepts):
+    repo_name = "data-engineering-interview-handbook"
+    readme_path = os.path.join(BASE_DIR, repo_name, "README.md")
+
+    categories = [
+        ("SPARK & DATABRICKS", "Apache Spark & Distributed Compute Engine", "⚡"),
+        ("DATABRICKS", "Databricks Platform, Unity Catalog & Delta Lake 3.x", "⚡"),
+        ("MODERN LAKEHOUSE", "Real-Time Streaming Lakehouse, CDC & Table Formats", "🌊"),
+        ("DATALAKE ARCHITECTURE", "Modern Data Lake Architecture, Storage Layouts & Formats", "🌊"),
+        ("APACHE AIRFLOW", "Apache Airflow & Pipeline Orchestration", "🌪️"),
+        ("ADF", "Azure Data Factory (ADF) & Resilient Orchestration", "🔄"),
+        ("DBT", "dbt Core, Analytics Engineering & Semantic Modeling", "🛠️"),
+        ("FABRIC", "Microsoft Fabric & OneLake Architecture", "⚡"),
+        ("DATABASE ARCHITECTURE", "Database Architecture, Distributed Sharding & Cloud MPP", "🏛️"),
+        ("SQL SERVER", "Relational SQL, Query Optimization & Transaction Engine", "⚡"),
+        ("PYTHON", "Python & Vectorized Data Engineering Primitives", "🐍"),
+        ("GENERAL DE", "General Data Engineering, Dimensional Modeling & Governance", "🚀"),
+        ("POWER BI", "Power BI & VertiPaq Analytics Engine", "📊"),
+        ("SYSTEM DESIGN", "Distributed Systems Design & Fault Tolerance", "🏛️")
+    ]
+
+    total_topics = len(concepts)
+
+    lines = []
+    lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total_topics} Interview Defense Topics Covered)")
+    lines.append("")
+    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: This handbook provides production-grade architectural defense, internal mechanics, and code implementations across **all {total_topics} verified concepts** from the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
+    lines.append("")
+    lines.append("### 📑 Technical Curriculum Topics Directory at a Glance")
+    lines.append("")
+    lines.append("| Knowledge Pillar Domain | Topic Count | Sample Core Primitives Covered | Status |")
+    lines.append("|:---|:---:|:---|:---:|")
+
+    for cat_name, pillar_title, icon in categories:
+        matching = [c for c in concepts if c["category"] == cat_name]
+        sample_terms = ", ".join([c["term"] for c in matching[:4]]) + f", and {len(matching)-4} more"
+        lines.append(f"| {icon} **{pillar_title}** | **{len(matching)}** | {sample_terms} | ✅ Fully Documented |")
+    lines.append("")
+
+    for cat_name, pillar_title, icon in categories:
+        matching = [c for c in concepts if c["category"] == cat_name]
+        lines.append(build_category_table(matching, pillar_title, icon))
+        lines.append("")
+
+    lines.append("---")
+    section_md = "\n".join(lines)
+
+    if replace_or_insert_section(readme_path, section_md, "## 🌐 The Modern Data Engineering Lakehouse Ecosystem (14 Repositories)"):
+        print(f"Updated {repo_name} ({total_topics} topics)")
 
 def main():
     concepts = load_concepts()
@@ -381,6 +503,8 @@ def main():
     update_blueprints_readme(concepts)
     update_banking_readme(concepts)
     update_spark_experiments_readme(concepts)
+    update_security_handbook_readme(concepts)
+    update_interview_handbook_readme(concepts)
     print("\nAll repositories updated with sorted topics and minimized details!")
 
 if __name__ == "__main__":
