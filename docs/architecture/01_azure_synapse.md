@@ -6,12 +6,12 @@ Azure Synapse Analytics represents Microsoft's unified enterprise analytics serv
 
 ```mermaid
 flowchart TD
-    Client[Client Applications / Power BI / SSMS] -->|ODBC / JDBC / ADO.NET| ControlNode[Control Node (Brain / Coordinator)]
+    Client["Client Applications / Power BI / SSMS"] -->|ODBC / JDBC / ADO.NET| ControlNode["Control Node (Brain / Coordinator)"]
     
     subgraph Synapse_Dedicated_SQL_Pool["Synapse Dedicated SQL Pool (MPP)"]
-        ControlNode -->|DMS (Data Movement Service)| Compute1["Compute Node 1"]
-        ControlNode -->|DMS (Data Movement Service)| Compute2["Compute Node 2"]
-        ControlNode -->|DMS (Data Movement Service)| ComputeN["Compute Node N (up to 60)"]
+        ControlNode -->|DMS Data Movement Service| Compute1["Compute Node 1"]
+        ControlNode -->|DMS Data Movement Service| Compute2["Compute Node 2"]
+        ControlNode -->|DMS Data Movement Service| ComputeN["Compute Node N (up to 60)"]
         
         Compute1 --> Dist1["Distributions (1..k)"]
         Compute2 --> Dist2["Distributions (k+1..m)"]
@@ -130,7 +130,7 @@ flowchart LR
     end
     
     subgraph Analytical_Sync["Zero-ETL Auto-Sync"]
-        StorageEngine -->|Internal Lock-Free Sync (<2 min latency)| ColStore[(Analytical Store: Columnar Parquet)]
+        StorageEngine -->|Internal Lock-Free Sync under 2 min| ColStore["Analytical Store: Columnar Parquet"]
     end
     
     subgraph Synapse_Query["Analytical Compute"]

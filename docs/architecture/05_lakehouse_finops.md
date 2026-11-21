@@ -33,11 +33,11 @@ Storage costs compound exponentially over time if retention policies are neglect
 
 ```mermaid
 flowchart TD
-    BronzeRaw[Bronze Raw Landing: ADLS / S3] -->|Day 0-30: Hot Tier ($0.018/GB)| HotStorage[Hot Storage Tier]
-    HotStorage -->|After 30 Days: Move to Cool ($0.010/GB)| CoolStorage[Cool Storage Tier]
-    CoolStorage -->|After 90 Days: Move to Cold ($0.0036/GB)| ColdStorage[Cold Storage Tier]
-    ColdStorage -->|After 365 Days: Move to Archive ($0.00099/GB)| ArchiveStorage[Archive / Glacier Tier]
-    ArchiveStorage -->|After 7 Years: Regulatory Purge| DeleteNode[Permanent Deletion]
+    BronzeRaw["Bronze Raw Landing: ADLS / S3"] -->|Day 0-30: Hot Tier \$0.018/GB| HotStorage["Hot Storage Tier"]
+    HotStorage -->|After 30 Days: Move to Cool \$0.010/GB| CoolStorage["Cool Storage Tier"]
+    CoolStorage -->|After 90 Days: Move to Cold \$0.0036/GB| ColdStorage["Cold Storage Tier"]
+    ColdStorage -->|After 365 Days: Move to Archive \$0.00099/GB| ArchiveStorage["Archive / Glacier Tier"]
+    ArchiveStorage -->|After 7 Years: Regulatory Purge| DeleteNode["Permanent Deletion"]
 ```
 
 ### 2.1 The ZSTD vs. Snappy Compression Benchmark

@@ -1885,7 +1885,7 @@ ightarrow$ Delta Lake).
 ```mermaid
 flowchart TD
     A["Millions of TPS Clients / Edge Gateways"] -->|Layer 4 NLB / Geo-DNS| B["Edge API Gateway / Ingestion Tier"]
-    B -->|Partition Key = Hash(Account_ID)| C["Distributed Apache Kafka / Pulsar Cluster<br/>(500+ Partitions, NVMe Tiered Storage)"]
+    B -->|Partition Key: Hash of Account_ID| C["Distributed Apache Kafka / Pulsar Cluster<br/>(500+ Partitions, NVMe Tiered Storage)"]
     C -->|Sub-second Stream Processing| D["Apache Flink / Spark Structured Streaming<br/>(RocksDB State Store, Auto-scaled Workers)"]
     D -->|Low-Latency Point Reads/Writes| E["NoSQL Serving Layer<br/>(ScyllaDB / DynamoDB / Cassandra)"]
     D -->|Bulk Append Micro-Batches| F["Lakehouse Storage (ADLS / S3)<br/>(Delta Lake / Apache Iceberg)"]
@@ -1907,8 +1907,8 @@ flowchart LR
     B --> C["Streaming Engine (Flink / Spark Streaming)"]
     D["Online Feature Store<br/>(Redis / Feast)"] -->|Enrich: 30-day velocity, avg spend| C
     E["Rules & ML Inference<br/>(Triton / ONNX Runtime)"] -->|Evaluate Risk Score| C
-    C -->|Score > 0.85| F["Block & Alert: payments.blocked"]
-    C -->|Score <= 0.85| G["Approve: payments.approved"]
+    C -->|Score above 0.85| F["Block & Alert: payments.blocked"]
+    C -->|Score 0.85 or below| G["Approve: payments.approved"]
     C -->|All Events| H["Delta Lake Silver/Gold<br/>(Model Retraining Pipeline)"]
 ```
 **Key Technical Design Elements:**

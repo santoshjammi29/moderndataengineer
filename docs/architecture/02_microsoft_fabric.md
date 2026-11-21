@@ -78,8 +78,8 @@ Direct Lake mode is Fabric's flagship breakthrough in business intelligence perf
 ```mermaid
 flowchart LR
     subgraph Traditional_PBI["Traditional BI Bottlenecks"]
-        ADLS_Old[(Data Lake)] -->|Slow Scheduled Refresh (Overnight)| ImportCache[VertiPaq In-Memory Cache]
-        SQL_Old[(Synapse SQL)] -->|Slow On-the-Fly SQL Translation| DQ[DirectQuery Translation Engine]
+        ADLS_Old["Data Lake"] -->|Slow Scheduled Refresh Overnight| ImportCache["VertiPaq In-Memory Cache"]
+        SQL_Old["Synapse SQL"] -->|Slow On-the-Fly SQL Translation| DQ["DirectQuery Translation Engine"]
     end
 
     subgraph DirectLake_Mode["Fabric Direct Lake Architecture"]
