@@ -3,7 +3,7 @@
 ## Practice Scenario 1: Global E-Commerce Real-Time Clickstream & Inventory (50TB/Day)
 
 ### 1.1 The Business & Technical Problem
-A multinational e-commerce retailer processes **50 Terabytes of raw events daily** across web, mobile apps, and physical retail point-of-sale (POS) terminals. 
+A multinational e-commerce retailer processes **50 Terabytes of raw events daily** across web, mobile apps, and physical retail point-of-sale (POS) terminals.
 - **Business Objective**: Real-time fraud detection during checkout ($<50\text{ms}$ SLA), dynamic cart abandonment re-engagement within 5 minutes, and live executive inventory tracking without running batch refreshes.
 - **Key Challenges**: Massive traffic spikes during Black Friday ($10\times$ baseline), multi-region inventory consistency, and avoiding high operational cloud bills.
 
@@ -202,11 +202,11 @@ flowchart TD
 ```mermaid
 flowchart TD
     Start[New Enterprise Data Workload Evaluation] --> Q1{Is real-time stream latency < 500ms required?}
-    
+
     Q1 -- YES --> Q2{Complex stateful event windowing or simple point lookup?}
     Q2 -- Stateful Streams --> EngFlink[Apache Flink + Event Hubs / Kafka]
     Q2 -- Point Lookup / Ingestion --> EngCosmos[Azure Cosmos DB Autoscale / ScyllaDB]
-    
+
     Q1 -- NO --> Q3{What is the primary consumption pattern?}
     Q3 -- Executive Power BI Dashboards --> EngFabric[Microsoft Fabric OneLake + Direct Lake]
     Q3 -- Heavy Batch ETL & Large-scale ML --> EngSpark[Databricks Lakehouse / Fabric Spark]

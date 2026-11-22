@@ -7,7 +7,7 @@ Modern data architectures diverge sharply from monolithic RDBMS by utilizing **p
 ```mermaid
 flowchart TD
     NoSQL[Modern Distributed NoSQL & Vector Engines]
-    
+
     NoSQL --> Document[Document Stores]
     NoSQL --> KeyValue[Key-Value & In-Memory]
     NoSQL --> WideColumn[Wide-Column / LSM Stores]
@@ -15,7 +15,7 @@ flowchart TD
 
     Document --> CosmosDoc[Azure Cosmos DB NoSQL API]
     Document --> Mongo[MongoDB / Atlas]
-    
+
     KeyValue --> Dynamo[Amazon DynamoDB]
     KeyValue --> RedisEngine[Redis / Dragonfly]
     KeyValue --> Aero[Aerospike]
@@ -56,14 +56,14 @@ Example: Provisioning 50,000 RU/s = 500 * $0.008 * 730 = $2,920/month per region
 | **Standard Provisioned** | Predictable, continuous high-throughput streams (e.g. IoT telemetry, banking ledger). | Fixed RU/s allocated 24/7. Continuous billing regardless of utilization. | Lowest unit cost per RU if sustained utilization exceeds 75%. |
 
 ### 2.3 Partition Key Strategy: Defeating the Hot Partition Trap
-Every Cosmos DB container has a physical partition limit of **50 GB** and **10,000 RU/s**. 
+Every Cosmos DB container has a physical partition limit of **50 GB** and **10,000 RU/s**.
 - **Anti-Pattern (Hot Partition)**: Partitioning by `TenantType` (where 'Enterprise' represents 90% of traffic). The physical partition hosting 'Enterprise' saturates its 10,000 RU/s and responds with `HTTP 429 (Too Many Requests)`, even though the container has 50,000 total RU/s provisioned.
 - **Production Solution (Synthetic Partition Keys)**: Combine the tenant ID with a randomized or deterministic hash suffix:
 $$\text{PartitionKey} = \text{TenantId} + \text{"\_"} + (\text{UserId} \pmod{10})$$
 This evenly scatters write traffic across 10 distinct physical partitions.
 
 ### 2.4 Cosmos DB Change Feed: Event-Driven Streaming
-The Change Feed outputs an immutable log of document inserts and updates in the order they occurred. 
+The Change Feed outputs an immutable log of document inserts and updates in the order they occurred.
 - Integrated natively with **Azure Functions** and **Azure Event Hubs**.
 - Powers zero-ETL real-time projections: when an order document is updated in Cosmos DB, the Change Feed pushes the diff directly to downstream materialized views, search indexes, or fraud detection ML models.
 
@@ -78,7 +78,7 @@ flowchart LR
     WriteReq[Incoming Write Request] --> CommitLog[Append to Disk CommitLog]
     WriteReq --> Memtable[In-Memory Memtable]
     Memtable -->|Flush when full| SSTables[Immutable Disk SSTables]
-    
+
     subgraph Background_Compaction["Compaction Engine"]
         SSTables --> Compaction[Compaction Process Merges Duplicates & Clears Tombstones]
         Compaction --> CleanSSTable[Optimized SSTables]

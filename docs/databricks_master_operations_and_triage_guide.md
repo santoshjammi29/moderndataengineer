@@ -448,7 +448,7 @@ ON target.customer_id = source.customer_id
 
 -- 1. When matched and record marked as soft-deleted in source: Update active flag
 WHEN MATCHED AND source.is_deleted = true THEN
-  UPDATE SET 
+  UPDATE SET
     target.is_active = false,
     target.updated_at = current_timestamp()
 
@@ -491,7 +491,7 @@ WHEN NOT MATCHED THEN
 -- =============================================================================
 
 -- QUALIFY eliminates subquery nesting for Top-N ranking per partition
-SELECT 
+SELECT
     customer_id,
     order_id,
     amount,
@@ -512,7 +512,7 @@ PIVOT (
 );
 
 -- Higher-Order Functions: Transform array of structs directly in SQL
-SELECT 
+SELECT
     order_id,
     TRANSFORM(line_items, item -> item.unit_price * item.quantity) AS item_totals,
     FILTER(line_items, item -> item.quantity > 10) AS wholesale_items,
@@ -556,7 +556,7 @@ RESTORE TABLE prod_catalog.silver.transactions TO VERSION AS OF 14;
 -- =============================================================================
 
 -- Identify Top 10 Most Expensive Clusters by DBU Consumption in Last 30 Days
-SELECT 
+SELECT
     usage_metadata.cluster_id,
     sku_name,
     SUM(usage_quantity) AS total_dbus_consumed,
@@ -569,7 +569,7 @@ ORDER BY total_dbus_consumed DESC
 LIMIT 10;
 
 -- Audit: Detect users querying PII/Sensitive Tables in Unity Catalog
-SELECT 
+SELECT
     event_time,
     user_identity.email,
     action_name,
@@ -708,14 +708,14 @@ spark.conf.set("spark.sql.adaptive.advisoryPartitionSizeInBytes", "134217728") #
 # Fix 1: Switch from WriteSerializable to Snapshot Isolation if transaction consistency allows
 # Set at table level:
 spark.sql("""
-    ALTER TABLE prod_catalog.silver.transactions 
+    ALTER TABLE prod_catalog.silver.transactions
     SET TBLPROPERTIES ('delta.isolationLevel' = 'SnapshotIsolation')
 """)
 
 # Fix 2: Migrate from static partitions to Liquid Clustering
 # Liquid clustering allows concurrent writes to non-overlapping file sets without partition locks
 spark.sql("""
-    ALTER TABLE prod_catalog.silver.transactions 
+    ALTER TABLE prod_catalog.silver.transactions
     CLUSTER BY (customer_id, created_date)
 """)
 
@@ -862,9 +862,9 @@ def upsert_to_delta(micro_batch_df, batch_id):
     """
     if micro_batch_df.isEmpty():
         return
-    
+
     target_delta = DeltaTable.forName(spark, "prod_catalog.silver.streaming_orders")
-    
+
     # In-microbatch deduplication in case multiple records with same key exist in single batch
     from pyspark.sql.window import Window
     window_spec = (
@@ -875,7 +875,7 @@ def upsert_to_delta(micro_batch_df, batch_id):
         .filter("row_num = 1")
         .drop("row_num")
     )
-    
+
     (
         target_delta.alias("t")
         .merge(window_spec.alias("s"), "t.order_id = s.order_id")
@@ -963,11 +963,11 @@ control_stats AS (
     FROM etl_metadata.control.pipeline_watermarks
     WHERE pipeline_name = 'adw_orders_incremental_ingest'
 )
-SELECT 
+SELECT
     c.control_watermark_ts,
     t.target_max_ts,
     s.source_max_ts,
-    CASE 
+    CASE
         WHEN c.control_watermark_ts < t.target_max_ts THEN 'WARNING: Watermark lagging behind target table'
         WHEN c.control_watermark_ts > t.target_max_ts THEN 'CRITICAL ALERT: Watermark advanced beyond target data!'
         ELSE 'SYNCHRONIZED'
@@ -1008,8 +1008,8 @@ df_python.createOrReplaceTempView("high_value_orders")
 ```sql
 -- Step 3: Query the Python-created view immediately in a SQL cell (%sql)
 %sql
-SELECT 
-    customer_id, 
+SELECT
+    customer_id,
     COUNT(order_id) AS high_value_order_count,
     SUM(amount) AS total_high_value_spend
 FROM high_value_orders
@@ -1056,7 +1056,7 @@ resources:
       schedule:
         quartz_cron_expression: "0 0 2 * * ?" # Run daily at 02:00 UTC
         timezone_id: "UTC"
-      
+
       job_clusters:
         - job_cluster_key: "serverless_etl_cluster"
           new_cluster:

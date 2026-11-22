@@ -260,6 +260,18 @@ def generate_handbook_manifest(repo_key: str, repo_info: Dict[str, Any]) -> Dict
                     "pillars": repo_info["pillars"],
                 })
 
+    # 9. Curriculum Topics Directory (topics/README.md)
+    topics_file = repo_dir / "topics" / "README.md"
+    if topics_file.exists():
+        entries.append({
+            "id": f"{repo_info['slug']}-curriculum-topics",
+            "type": "curriculum_topics_catalog",
+            "title": f"Topics Directory: {repo_info['name']}",
+            "difficulty": "L200",
+            "relative_path": "topics/README.md",
+            "pillars": repo_info["pillars"],
+        })
+
     # Deduplicate entries by ID
     unique_entries = []
     seen_ids = set()

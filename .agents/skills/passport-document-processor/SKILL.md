@@ -48,35 +48,35 @@ def detect_booklet_bbox(img_bgr):
     # Downscale for robust morphological operations
     small = cv2.resize(img_bgr, (620, 877))
     gray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
-    
+
     # Morphological gradient to isolate physical paper borders
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
     grad = cv2.morphologyEx(gray, cv2.MORPH_GRADIENT, kernel)
-    
+
     # Mask out scanner platen extreme margins
     grad[:12, :] = 0
     grad[:, :12] = 0
     grad[:, -12:] = 0
     grad[530:, :] = 0
-    
+
     _, thresh = cv2.threshold(grad, 12, 255, cv2.THRESH_BINARY)
     closed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, (11, 11)))
-    
+
     cnts, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     valid_cnts = [c for c in cnts if cv2.contourArea(c) > 2000 and cv2.boundingRect(c)[1] < 500]
-    
+
     if not valid_cnts:
         return 0, 0, w_orig, int(h_orig * 0.55)
-        
+
     all_pts = np.vstack(valid_cnts)
     x, y, w, h = cv2.boundingRect(all_pts)
-    
+
     # Safety margin: ~16px in full res to preserve rounded corners and binding
     x = max(0, x - 4)
     y = max(0, y - 4)
     w = min(620 - x, w + 8)
     h = min(530 - y, h + 8)
-    
+
     scale_x = w_orig / 620.0
     scale_y = h_orig / 877.0
     return int(x * scale_x), int(y * scale_y), int(w * scale_x), int(h * scale_y)

@@ -160,10 +160,7 @@ Without broadcast variables, if a task references a local lookup dictionary, Spa
 
 ---
 
-
-
 ---
-
 
 # Pillar 02: Databricks Lakehouse & Unity Catalog
 **Category:** `DATABRICKS` | **Domain:** `Lakehouse Governance & Databricks Platform`
@@ -180,7 +177,7 @@ Unity Catalog organizes data in a 3-tier hierarchy: `catalog.schema.table`.
 - **Dynamic Row Filtering & Column Masking:** Defined using native SQL UDFs without creating duplicate sanitized views:
 ```sql
 -- Column Masking for PII
-CREATE FUNCTION mask_ssn(ssn STRING) RETURN 
+CREATE FUNCTION mask_ssn(ssn STRING) RETURN
   CASE WHEN is_account_group_member('hr_admins') THEN ssn ELSE 'XXX-XX-' || RIGHT(ssn, 4) END;
 ALTER TABLE hr_catalog.payroll.employees ALTER COLUMN ssn SET MASK mask_ssn;
 
@@ -323,7 +320,7 @@ SELECT
     ROUND(SUM(usage.usage_quantity * pricing.pricing.default), 2) AS estimated_usd_cost
 FROM system.billing.usage usage
 JOIN system.billing.list_prices pricing
-  ON usage.cloud = pricing.cloud 
+  ON usage.cloud = pricing.cloud
   AND usage.sku_name = pricing.sku_name
   AND usage.usage_start_time >= pricing.price_start_time
   AND (pricing.price_end_time IS NULL OR usage.usage_end_time < pricing.price_end_time)
@@ -336,10 +333,7 @@ LIMIT 5;
 
 ---
 
-
-
 ---
-
 
 # Pillar 03: Modern Lakehouse & ACID Table Formats
 **Category:** `MODERN LAKEHOUSE` | **Domain:** `Storage Architectures & Table Formats`
@@ -460,10 +454,7 @@ OPTIMIZE gold_orders WHERE order_date >= CURRENT_DATE() - INTERVAL 2 DAYS;
 
 ---
 
-
-
 ---
-
 
 # Pillar 04: Data Lake Architecture & Object Storage
 **Category:** `DATALAKE ARCHITECTURE` | **Domain:** `Cloud Storage & Data Lake Infrastructure`
@@ -584,10 +575,7 @@ Catalog Federation allows a central query engine to query external catalogs (e.g
 
 ---
 
-
-
 ---
-
 
 # Pillar 05: Apache Airflow & Orchestration
 **Category:** `APACHE AIRFLOW` | **Domain:** `Pipeline Orchestration & Workflow Scheduling`
@@ -723,10 +711,7 @@ Airflow 2.0+ supports running multiple Scheduler instances concurrently in an ac
 
 ---
 
-
-
 ---
-
 
 # Pillar 06: Azure Data Factory (ADF) & Integration Runtimes
 **Category:** `ADF` | **Domain:** `Cloud ETL & Orchestration`
@@ -848,10 +833,7 @@ DIU (Data Integration Unit) represents compute capacity (combination of CPU, mem
 
 ---
 
-
-
 ---
-
 
 # Pillar 07: dbt (Data Build Tool) & Analytics Engineering
 **Category:** `DBT` | **Domain:** `Analytics Engineering & Transformation`
@@ -984,10 +966,7 @@ dbt Mesh splits monolithic enterprise dbt projects into autonomous, domain-speci
 
 ---
 
-
-
 ---
-
 
 # Pillar 08: Microsoft Fabric & Unified Analytics
 **Category:** `FABRIC` | **Domain:** `Unified SaaS Analytics & Microsoft Fabric`
@@ -1087,7 +1066,9 @@ Microsoft Purview integrates natively with Fabric OneLake:
 **Production ALM Workflow:**
 1. Connect Fabric workspace to an Azure DevOps / GitHub Git repository.
 2. Workspaces serialize assets (notebooks, reports, lakehouses) into source-controlled JSON/YAML files.
-3. **Fabric Deployment Pipelines:** Facilitate moving content across **Development $ightarrow$ Test $ightarrow$ Production** workspaces with automated stage comparison and selective deployment.
+3. **Fabric Deployment Pipelines:** Facilitate moving content across **Development $
+ightarrow$ Test $
+ightarrow$ Production** workspaces with automated stage comparison and selective deployment.
 
 ---
 
@@ -1102,10 +1083,7 @@ Microsoft Purview integrates natively with Fabric OneLake:
 
 ---
 
-
-
 ---
-
 
 # Pillar 09: Database Architecture & Distributed Systems
 **Category:** `DATABASE ARCHITECTURE` | **Domain:** `Database Internals & Distributed Storage`
@@ -1228,10 +1206,7 @@ When users write data (e.g. update profile) and immediately refresh the page, re
 
 ---
 
-
-
 ---
-
 
 # Pillar 10: SQL Server & T-SQL Mastery
 **Category:** `SQL SERVER` | **Domain:** `Relational Databases & Enterprise T-SQL`
@@ -1373,10 +1348,7 @@ OPTION (MAXRECURSION 100);
 
 ---
 
-
-
 ---
-
 
 # Pillar 11: Python for Data Engineering & High-Performance Pipelines
 **Category:** `PYTHON` | **Domain:** `Software Engineering & Data Processing`
@@ -1551,10 +1523,7 @@ When tight numeric loops, custom hashing, or binary parsing consume 90%+ of pipe
 
 ---
 
-
-
 ---
-
 
 # Pillar 12: Data Modeling, CDC & Streaming Ingestion
 **Category:** `GENERAL DE` | **Domain:** `Data Architecture & Integration`
@@ -1637,7 +1606,7 @@ $$\text{Partitions} = \max\left(\frac{500}{50}, \frac{500}{25}\right) = \max(10,
 **Production DLQ Architecture:**
 1. Catch deserialization or validation errors; wrap payload with error metadata (stack trace, timestamp, source topic, partition, offset).
 2. Publish to `topic.dlq` without stopping the primary stream.
-3. Alert engineering team when DLQ message count exceeds threshold (e.g. $> 10\text{ messages/min}$). 
+3. Alert engineering team when DLQ message count exceeds threshold (e.g. $> 10\text{ messages/min}$).
 4. Implement an administrative reprocessing tool that replays fixed DLQ records back to the main topic once upstream bugs are patched.
 
 ---
@@ -1676,10 +1645,7 @@ A Factless Fact Table contains no numerical measures or metrics; it consists pur
 
 ---
 
-
-
 ---
-
 
 # Pillar 13: Power BI, Semantic Layer & Serving
 **Category:** `POWER BI` | **Domain:** `Business Intelligence & Serving Layer`
@@ -1795,10 +1761,7 @@ In Composite Models, create a pre-aggregated table (e.g. `agg_sales_monthly`) ca
 
 ---
 
-
-
 ---
-
 
 # Pillar 14: Enterprise System Design at Scale
 **Category:** `SYSTEM DESIGN` | **Domain:** `Enterprise Architecture & System Design`
@@ -1929,7 +1892,4 @@ In Composite Models, create a pre-aggregated table (e.g. `agg_sales_monthly`) ca
 
 ---
 
-
-
 ---
-

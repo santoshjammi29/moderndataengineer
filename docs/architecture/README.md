@@ -52,11 +52,11 @@ The platform provides 52 architect-grade digital whiteboard schematics across 7 
 ```mermaid
 flowchart TD
     Start["New Analytical Workload Specification"]
-    
+
     Start --> Vol{"Data Volume & Concurrency?"}
     Vol -- "< 100 GB & Single User" --> InProc["Use <b>DuckDB + Polars</b><br/>(In-process, zero cluster spinup, sub-second queries)"]
     Vol -- "> 1 TB & High Concurrency" --> Distributed{"Workload Pattern?"}
-    
+
     Distributed -- "Batch ETL & ML Feature Prep" --> SparkEngine["Use <b>Apache Spark / Databricks</b><br/>(Catalyst, Photon, Liquid Clustering, AQE Skew Split)"]
     Distributed -- "Interactive BI over Lakehouse" --> DirectLake["Use <b>Fabric Direct Lake / Trino</b><br/>(In-memory VertiPaq, sub-second DAX, OneLake Shortcuts)"]
     Distributed -- "Sub-second Streaming CDC / Fraud" --> FlinkEngine["Use <b>Apache Flink / Spark Structured Streaming</b><br/>(Stateful RocksDB on NVMe, continuous event processing)"]

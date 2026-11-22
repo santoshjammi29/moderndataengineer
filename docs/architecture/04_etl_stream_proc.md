@@ -31,7 +31,7 @@ flowchart TD
     DataStream[Continuous Unbounded Event Stream] -->|Sub-second stateful processing| Flink[Apache Flink]
     DataLake[(Petabyte Lakehouse: Iceberg / Delta)] -->|Heavy Batch ETL & ML Training| Spark[Apache Spark / Databricks]
     DataLake -->|Interactive Ad-hoc SQL Federation| Trino[Trino / Presto Engine]
-    
+
     Flink --> RealTimeAlerts[Real-Time Fraud Alerts / Ops Dashboards]
     Spark --> GoldTables[(Curated Gold Aggregations)]
     Trino --> BIUsers[High-Concurrency BI Analyst Queries]
@@ -123,7 +123,7 @@ Full table refreshes on multi-billion row tables are financially prohibitive. db
     incremental_strategy = 'merge'
 ) }}
 
-SELECT 
+SELECT
     order_id,
     customer_id,
     order_status,

@@ -70,7 +70,7 @@ flowchart LR
     DataFoundation --> App2[2. Real-Time Fraud & Anomaly Defense]
     DataFoundation --> App3[3. Personalization & Recommendation Engine]
     DataFoundation --> App4[4. Monetized Data Clean Rooms & Sharing]
-    
+
     App1 --> Rev1[Direct B2B Subscription Upsell: +$1,200/mo per tenant]
     App2 --> Rev2[Direct Fraud Loss Prevention: Saves Millions]
     App3 --> Rev3[E-Commerce Conversion Lift: +15-25% GMV]

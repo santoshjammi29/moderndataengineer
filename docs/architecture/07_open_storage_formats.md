@@ -271,7 +271,7 @@ Avro stores records contiguously in a binary row-oriented format:
 ```mermaid
 flowchart TD
     Start["What is the primary architectural requirement?"]
-    
+
     Start --> RealTimeStream{"Real-time Streaming Event Ingestion?"}
     RealTimeStream -- Yes --> EvtDest{"Write Target?"}
     EvtDest -- Kafka / Message Bus --> AvroAns["Use <b>Apache Avro</b><br/>(Low write latency, Schema Registry, compact row bytes)"]

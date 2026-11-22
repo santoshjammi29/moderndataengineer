@@ -79,7 +79,7 @@ $$\text{Partitions} = \max\left(\frac{500}{50}, \frac{500}{25}\right) = \max(10,
 **Production DLQ Architecture:**
 1. Catch deserialization or validation errors; wrap payload with error metadata (stack trace, timestamp, source topic, partition, offset).
 2. Publish to `topic.dlq` without stopping the primary stream.
-3. Alert engineering team when DLQ message count exceeds threshold (e.g. $> 10\text{ messages/min}$). 
+3. Alert engineering team when DLQ message count exceeds threshold (e.g. $> 10\text{ messages/min}$).
 4. Implement an administrative reprocessing tool that replays fixed DLQ records back to the main topic once upstream bugs are patched.
 
 ---

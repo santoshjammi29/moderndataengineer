@@ -73,15 +73,15 @@ CREATE SCHEMA IF NOT EXISTS gold_analytics;
 
 -- 2. Define Dynamic Data Masking Function for PII (Credit Cards / SSN)
 CREATE OR REPLACE FUNCTION silver_curated.mask_pii(val STRING)
-RETURN CASE 
+RETURN CASE
     WHEN IS_ACCOUNT_GROUP_MEMBER('compliance_officers') THEN val
     ELSE CONCAT('XXXX-XXXX-XXXX-', RIGHT(val, 4))
 END;
 
 -- 3. Define Row-Level Security Function for Regional Isolation
 CREATE OR REPLACE FUNCTION gold_analytics.region_filter(region STRING)
-RETURN 
-    IS_ACCOUNT_GROUP_MEMBER('executive_leadership') 
+RETURN
+    IS_ACCOUNT_GROUP_MEMBER('executive_leadership')
     OR (IS_ACCOUNT_GROUP_MEMBER('eu_analysts') AND region = 'EU')
     OR (IS_ACCOUNT_GROUP_MEMBER('us_analysts') AND region = 'US');
 ```
@@ -186,7 +186,7 @@ orders_salted = orders_df.withColumn(
 customers_exploded = customers_df.withColumn(
     "salt_array",
     F.when(
-        F.col("customer_id").isin(HOT_CUSTOMERS), 
+        F.col("customer_id").isin(HOT_CUSTOMERS),
         F.array([F.lit(i) for i in range(SALT_FACTOR)])
     ).otherwise(F.array(F.lit(0)))
 ).withColumn("salt", F.explode("salt_array")).drop("salt_array")

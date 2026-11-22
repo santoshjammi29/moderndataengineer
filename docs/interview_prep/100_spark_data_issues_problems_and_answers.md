@@ -155,7 +155,6 @@
 - **Problem 99** `[Architect]`: [Cross-Platform Float and NaN Serialization Discrepancies](#problem-99-cross-platform-float-and-nan-serialization-discrepancies)
 - **Problem 100** `[Architect]`: [Schema Evolution Type Narrowing Lockouts & ANSI SQL Compliance Migration](#problem-100-schema-evolution-type-narrowing-lockouts-ansi-sql-compliance-migration)
 
-
 ---
 
 # Category 1: Extreme Data Skew & Key Imbalance
@@ -207,7 +206,6 @@ final_df = joined_valid.unionByName(null_events)
 ```
 
 **Architect Rule:** In any distributed join, NULL foreign keys provide zero join matches but hash to a single partition; always filter them before the shuffle or assign random negative surrogate IDs to distribute them evenly across reducers.
-
 
 ---
 
@@ -267,7 +265,6 @@ final_summary = partial_agg.withColumn(
 
 **Architect Rule:** When high-cardinality placeholder values skew an aggregation, apply two-phase aggregation: salt the hot key with random integers, aggregate partially across reducers, strip the salt, and aggregate globally.
 
-
 ---
 
 <a id="problem-03-asymmetric-dimension-join-skew-failing-sortmergejoin"></a>
@@ -312,7 +309,6 @@ result_df = events_df.join(F.broadcast(artists_df), on="artist_id", how="inner")
 
 **Architect Rule:** Broadcast Hash Join completely avoids the shuffle and sort phases; whenever a skewed dimension table fits safely in driver and executor memory (up to a few GBs), broadcasting it bypasses data skew entirely.
 
-
 ---
 
 <a id="problem-04-adaptive-query-execution-aqe-skew-join-threshold-tuning"></a>
@@ -356,7 +352,6 @@ spark.conf.set("spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes", "6
 ```
 
 **Architect Rule:** AQE skew join optimization uses dual criteria (absolute size and factor over median); in workloads with high-variance partitions, lower `skewedPartitionFactor` to 2.5-3.0 and `skewedPartitionThresholdInBytes` to 64MB so Spark automatically splits stragglers.
-
 
 ---
 
@@ -411,7 +406,6 @@ joined_salted = cdrs_salted.join(telemetry_replicated, on="join_key", how="inner
 
 **Architect Rule:** When both sides of a join are too large to broadcast and have a known skewed key, salt the fact table with a random integer and explode the second table across all salt values to parallelize the join across $N$ partitions.
 
-
 ---
 
 <a id="problem-06-explode-induced-skew-from-super-entity-nested-arrays"></a>
@@ -463,7 +457,6 @@ chunked_df = invoices_df.withColumn(
 ```
 
 **Architect Rule:** Exploding multi-hundred-thousand element arrays creates JVM object allocation storms; replace naive `explode()` with higher-order functions (`aggregate`, `transform`) or chunk arrays into smaller batches before flattening.
-
 
 ---
 
@@ -520,7 +513,6 @@ final_df = tx_df.withColumn("tx_date", F.to_date("tx_timestamp")) \
 
 **Architect Rule:** When window functions partition by a skewed key, you cannot partition across workers directly; break the problem into a two-level prefix sum: pre-aggregate into coarse time buckets (e.g. daily) and compute intraday windows partitioned by (account_id, date).
 
-
 ---
 
 <a id="problem-08-uneven-s3adls-object-sizes-non-splittable-gzip-stragglers"></a>
@@ -560,7 +552,6 @@ df_splittable = spark.read.parquet("s3://raw-logs/2024-10-01/*.parquet")
 ```
 
 **Architect Rule:** Standard Gzip (`.gz`) is fundamentally non-splittable in Hadoop/Spark; single giant gzip files bottleneck execution to a single core regardless of cluster size. Require splittable codecs (Bzip2, Snappy, Zstandard) or Parquet/ORC at ingestion boundaries.
-
 
 ---
 
@@ -611,23 +602,22 @@ def update_session_bounded(key, values, state):
     if state.hasTimedOut:
         state.remove()
         return []
-    
+
     current_count = state.getOption() or 0
     new_events = list(values)
-    
+
     # Cap maximum accumulated state to prevent bot poison pills
     if current_count > 10000:
         # Flag alert and evict or drop
         state.setTimeoutDuration("1 hour")
         return [Row(device_id=key, status="ABUSE_THROTTLED")]
-        
+
     state.update(current_count + len(new_events))
     state.setTimeoutDuration("30 minutes")
     return [Row(device_id=key, status="OK")]
 ```
 
 **Architect Rule:** For stateful Spark streaming on skewed real-time streams, always switch from the default in-memory HDFS state store to the off-heap RocksDB state store and enforce strict per-key state bounding and timeouts.
-
 
 ---
 
@@ -678,7 +668,6 @@ OPTIMIZE clickstream_events;
 
 **Architect Rule:** Never physically partition Delta tables by high-cardinality or skewed columns; adopt Delta Lake Liquid Clustering (`CLUSTER BY`), which dynamically groups data without directory proliferation and adapts to skew.
 
-
 ---
 
 # Category 2: Nulls, Three-Valued Logic & Missing Data Traps
@@ -726,7 +715,6 @@ WHERE NOT EXISTS (
 
 **Architect Rule:** `NOT IN` with a nullable subquery is an infamous SQL trap: a single NULL collapses the entire predicate to UNKNOWN; always use `LEFT ANTI JOIN` or `NOT EXISTS` in production Spark pipelines.
 
-
 ---
 
 <a id="problem-12-countcolumn-vs-count-vs-count1-metric-inaccuracies"></a>
@@ -770,7 +758,6 @@ daily_metrics = tx_df.groupBy("tx_date").agg(
 
 **Architect Rule:** `COUNT(column)` ignores NULL values while `COUNT(*)` counts physical records; never use `COUNT(column)` for business volume metrics unless deliberately filtering missing values.
 
-
 ---
 
 <a id="problem-13-equality-comparison-with-null-col-null-vs-eqnullsafe"></a>
@@ -809,7 +796,6 @@ mismatches = staging_df.join(gold_df, on="record_id") \
 ```
 
 **Architect Rule:** In SQL and Spark, `NULL = NULL` is UNKNOWN; always use the null-safe equality operator `<=>` (`eqNullSafe` in PySpark) when comparing nullable attributes or joining on nullable dimensions.
-
 
 ---
 
@@ -853,7 +839,6 @@ users_with_name = users.withColumn(
 
 **Architect Rule:** `concat()` is poisoned by a single NULL operand; always use `concat_ws()` (concatenate with separator), which inherently skips NULL values and prevents silent data nullification.
 
-
 ---
 
 <a id="problem-15-outer-join-predicate-placement-turning-outer-joins-into-inner-joins"></a>
@@ -882,8 +867,8 @@ WHERE po.order_status = 'ACTIVE'; -- Kills the LEFT JOIN!
 -- Production-Grade Solution: Move Filter Predicate into ON Join Condition
 SELECT s.supplier_id, s.supplier_name, po.order_id, po.amount
 FROM suppliers s
-LEFT JOIN purchase_orders po 
-    ON s.supplier_id = po.supplier_id 
+LEFT JOIN purchase_orders po
+    ON s.supplier_id = po.supplier_id
     AND po.order_status = 'ACTIVE'; -- Filters right table BEFORE the join!
 
 -- In PySpark:
@@ -895,7 +880,6 @@ LEFT JOIN purchase_orders po
 ```
 
 **Architect Rule:** Filtering right-table columns in the `WHERE` clause eliminates rows with generated NULLs, turning a LEFT OUTER JOIN into an INNER JOIN; always push right-side predicates into the `ON` clause or pre-filter the right DataFrame.
-
 
 ---
 
@@ -941,7 +925,6 @@ df = df.withColumn(
 ```
 
 **Architect Rule:** Never use wildcard imports (`from pyspark.sql.functions import *`); always import `from pyspark.sql import functions as F` to prevent namespace collisions between `F.coalesce()` (null replacement) and `DataFrame.coalesce()` (partition reduction).
-
 
 ---
 
@@ -991,7 +974,6 @@ trades_with_delta = clean_trades.withColumn("prev_price", F.lag("price", 1).over
 
 **Architect Rule:** Spark's default sort behavior is `ASC NULLS FIRST`; in time-series window functions (`LAG`, `LEAD`), always specify `asc_nulls_last()` or filter NULL timestamps upstream to avoid window boundary poisoning.
 
-
 ---
 
 <a id="problem-18-null-key-shuffling-to-a-single-reducer-during-repartitioncol"></a>
@@ -1033,7 +1015,6 @@ repartitioned_df.write.format("parquet").save("s3://lake/partitioned_tx/")
 
 **Architect Rule:** `df.repartition(N, 'col')` routes all NULL values to a single partition; when partitioning on a nullable column with high nullity, salt the NULL values with random integers to distribute them evenly across physical partitions.
 
-
 ---
 
 <a id="problem-19-three-valued-logic-in-case-when-expressions-without-else-default"></a>
@@ -1052,7 +1033,7 @@ If no `WHEN` clause evaluates to TRUE and no `ELSE` clause is specified, SQL `CA
 ```sql
 -- Failing Spark SQL:
 SELECT patient_id,
-       CASE 
+       CASE
            WHEN systolic < 120 THEN 'NORMAL'
            WHEN systolic >= 120 AND systolic < 140 THEN 'ELEVATED'
            WHEN systolic >= 140 THEN 'HIGH'
@@ -1064,7 +1045,7 @@ FROM vitals_stream;
 ```sql
 -- Production-Grade Solution: Explicit Null Check and Fallback ELSE Clause
 SELECT patient_id,
-       CASE 
+       CASE
            WHEN systolic IS NULL THEN 'UNKNOWN_MISSING'
            WHEN systolic < 120 THEN 'NORMAL'
            WHEN systolic < 140 THEN 'ELEVATED'
@@ -1080,7 +1061,6 @@ FROM vitals_stream;
 ```
 
 **Architect Rule:** In SQL `CASE WHEN` constructs, omitted `ELSE` clauses silently evaluate to `NULL`; in production pipelines, always provide an explicit `otherwise()`/`ELSE` clause and handle NULL input states explicitly.
-
 
 ---
 
@@ -1127,7 +1107,6 @@ quarantined_records.write.format("delta").mode("append").saveAsTable("audit.quar
 
 **Architect Rule:** Delta Lake constraints strictly enforce ACID integrity by throwing invariant exceptions on violation; protect production pipelines by implementing a pre-write split pattern that diverts violating rows to a quarantine table while committing valid records.
 
-
 ---
 
 # Category 3: Schema Drift, Polymorphism & Evolution
@@ -1170,7 +1149,6 @@ def normalize_schema(df):
 
 **Architect Rule:** Spark SQL is case-insensitive by default while storage formats like Parquet are case-sensitive; enforce lowercase snake_case schema normalization at the raw ingestion layer to prevent ambiguous reference exceptions.
 
-
 ---
 
 <a id="problem-22-missing-columns-in-historical-parquet-partitions-during-schema-evolution"></a>
@@ -1208,7 +1186,6 @@ df.select("customer_id", "loyalty_tier").show()
 ```
 
 **Architect Rule:** Reading evolved Parquet partitions requires `.option('mergeSchema', 'true')` to merge schemas across historical files; adopting Delta Lake eliminates this overhead by maintaining the canonical schema in its ACID transaction log.
-
 
 ---
 
@@ -1264,7 +1241,6 @@ processed_df = df.withColumn(
 
 **Architect Rule:** When upstream schemas exhibit polymorphic fields (e.g. primitive vs struct), read the column as raw `StringType` and use `from_json()` inside conditional `F.when()` expressions to deserialize valid JSON objects without dropping legacy strings.
 
-
 ---
 
 <a id="problem-24-delta-lake-mergeschema-vs-overwriteschema-dynamics"></a>
@@ -1306,7 +1282,6 @@ df_today.write.format("delta") \
 
 **Architect Rule:** In Delta Lake, `.option('mergeSchema', 'true')` unions the schemas and preserves legacy columns; use `.option('overwriteSchema', 'true')` with `mode('overwrite')` to intentionally drop old columns and reset the table schema definition.
 
-
 ---
 
 <a id="problem-25-data-type-widening-failures-in-parquet-dictionary-encoding"></a>
@@ -1347,7 +1322,6 @@ spark.conf.set("spark.sql.parquet.enableVectorizedReader", "false")
 ```
 
 **Architect Rule:** Vectorized Parquet readers reject physical type mismatches (INT32 vs INT64); resolve this by enabling Delta Lake Type Widening or temporarily disabling `spark.sql.parquet.enableVectorizedReader` during migration pipelines.
-
 
 ---
 
@@ -1400,7 +1374,6 @@ def alert_on_rescued_data(batch_df, batch_id):
 
 **Architect Rule:** Auto Loader's `rescue` mode prevents pipeline downtime by diverting type mismatches to `_rescued_data`; always implement monitoring on `_rescued_data` to detect silent column nullification caused by breaking upstream type changes.
 
-
 ---
 
 <a id="problem-27-struct-field-reordering-in-parquet-causing-misaligned-column-values"></a>
@@ -1445,7 +1418,6 @@ spark.conf.set("spark.sql.parquet.fieldId.enabled", "true")
 
 **Architect Rule:** Positional schema resolution in Parquet silently swaps data between struct fields of identical types; eliminate positional ambiguity by enabling Delta Lake Column Mapping (`delta.columnMapping.mode = 'name'`).
 
-
 ---
 
 <a id="problem-28-schema-evolution-during-streaming-merge-into-delta-tables"></a>
@@ -1488,7 +1460,7 @@ from delta.tables import DeltaTable
 
 def upsert_to_delta_with_evolution(microBatchDF, batchId):
     deltaTable = DeltaTable.forName(spark, "silver_table")
-    
+
     # spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
     # allows Delta to automatically ALTER the target table to add incoming columns:
     (deltaTable.alias("t")
@@ -1501,7 +1473,6 @@ streaming_df.writeStream.foreachBatch(upsert_to_delta_with_evolution).start()
 ```
 
 **Architect Rule:** Delta Lake `MERGE INTO` requires `spark.databricks.delta.schema.autoMerge.enabled = true` to automatically widen the target table schema during streaming CDC micro-batches without manual DDL intervention.
-
 
 ---
 
@@ -1549,7 +1520,6 @@ bronze_df.write.format("delta").mode("append").saveAsTable("bronze.tenant_events
 
 **Architect Rule:** Never allow multi-tenant dynamic schemas to widen a single physical Delta table into thousands of columns; store semi-structured data as a raw string/variant in Bronze and project strongly typed schemas via tenant-specific views in Silver.
 
-
 ---
 
 <a id="problem-30-delta-lake-column-mapping-and-zero-copy-renames-and-drops"></a>
@@ -1595,7 +1565,6 @@ ALTER TABLE gold.customers DROP COLUMN ssn;
 
 **Architect Rule:** Delta Lake Column Mapping (`delta.columnMapping.mode = 'name'`) decouples logical SQL column names from physical Parquet storage keys, enabling instantaneous, zero-copy column renames and drops without rewriting underlying data files.
 
-
 ---
 
 # Category 4: Corrupt, Malformed & Truncated Ingestion Records
@@ -1639,7 +1608,6 @@ corrupt_df = df.filter(F.col("_corrupt_record").isNotNull())
 ```
 
 **Architect Rule:** Never read CSV files without defining an explicit schema and configuring quote/escape delimiters; always capture shifted or malformed records using `columnNameOfCorruptRecord`.
-
 
 ---
 
@@ -1692,7 +1660,6 @@ corrupt_df.write.format("delta").mode("append").saveAsTable("audit.corrupt_feedb
 
 **Architect Rule:** Never use `DROPMALFORMED` in production ingestion pipelines; use `PERMISSIVE` with `columnNameOfCorruptRecord` to safely isolate malformed payloads into an audit quarantine table without data loss.
 
-
 ---
 
 <a id="problem-33-multi-line-json-and-csv-split-errors-across-distributed-chunks"></a>
@@ -1731,7 +1698,6 @@ df = spark.read.option("multiLine", "true").json("s3://api-dumps/pretty_printed/
 
 **Architect Rule:** Pretty-printed JSON requires `.option('multiLine', 'true')` because Spark defaults to single-line parsing; however, `multiLine=true` disables parallel file splitting, making JSON Lines (`NDJSON`) the preferred enterprise standard.
 
-
 ---
 
 <a id="problem-34-corrupted-parquet-file-footers-from-aborted-upstream-writers"></a>
@@ -1768,7 +1734,6 @@ df = spark.read.parquet("s3://landing/unmanaged_parquet/")
 ```
 
 **Architect Rule:** Unmanaged Parquet files are vulnerable to missing footers from interrupted writes; use `spark.sql.files.ignoreCorruptFiles = true` for temporary recovery, and mandate Delta Lake for transactional ACID immunity.
-
 
 ---
 
@@ -1812,7 +1777,6 @@ df = spark.read.option("header", "true").csv(valid_files)
 ```
 
 **Architect Rule:** Zero-byte marker files created by ingestion scripts crash schema inference; use Databricks Auto Loader or programmatic Hadoop FileSystem file-length filters to prune 0-byte objects before reading.
-
 
 ---
 
@@ -1869,7 +1833,6 @@ bad_claims.write.format("delta").mode("append").saveAsTable("quarantine.corrupt_
 
 **Architect Rule:** Include `_corrupt_record` in your declared schema and configure `columnNameOfCorruptRecord` to bifurcate streams into a clean silver table and an auditable quarantine table without stalling the pipeline.
 
-
 ---
 
 <a id="problem-37-non-utf-8-characters-and-high-surrogate-code-points-in-string-functions"></a>
@@ -1916,7 +1879,6 @@ sanitized_df = df.withColumn(
 ```
 
 **Architect Rule:** Corrupt encodings and isolated surrogate code points crash JVM string parsers; sanitize raw strings by re-encoding through UTF-8 or stripping invalid surrogate byte sequences before applying downstream transformations.
-
 
 ---
 
@@ -1965,7 +1927,6 @@ silver_df = streaming_df.withColumn(
 ```
 
 **Architect Rule:** Auto Loader's `_rescued_data` column acts as an automated safety net for semi-structured data, capturing type mismatches and undeclared columns so downstream silver pipelines can recover data without ingestion halts.
-
 
 ---
 
@@ -2024,24 +1985,23 @@ parsed_df = payload_df.withColumn(
 # Step 3: Branching in foreachBatch
 def process_micro_batch(microBatchDF, batchId):
     microBatchDF.persist()
-    
+
     # Clean records
     clean_records = microBatchDF.filter(F.col("parsed_data.payment_id").isNotNull()) \
         .select("parsed_data.*")
     clean_records.write.format("delta").mode("append").saveAsTable("silver.payments")
-    
+
     # Poison pill / Corrupt records -> Egress to Dead-Letter Topic or Quarantine Delta Table
     dead_letters = microBatchDF.filter(F.col("parsed_data.payment_id").isNull())
     if not dead_letters.isEmpty():
         dead_letters.write.format("delta").mode("append").saveAsTable("quarantine.kafka_dead_letters")
-        
+
     microBatchDF.unpersist()
 
 parsed_df.writeStream.foreachBatch(process_micro_batch).start()
 ```
 
 **Architect Rule:** Never allow deserialization errors to kill a Kafka streaming loop; retain Kafka offsets and metadata, deserialize permissively, and branch poisoned payloads into a Dead-Letter Queue (DLQ) within `foreachBatch`.
-
 
 ---
 
@@ -2073,14 +2033,14 @@ quarantine_df.write.format("delta").save("s3://storage/corrupt/") # Duplicates s
 
 -- Step 2: Create Zero-Copy Secured Views for Downstream Consumers:
 CREATE OR REPLACE VIEW silver.clean_transactions AS
-SELECT 
+SELECT
     from_json(raw_payload, 'schema_definition') AS data,
     ingestion_time
 FROM bronze.raw_transactions
 WHERE is_valid = TRUE;
 
 CREATE OR REPLACE VIEW audit.quarantined_transactions AS
-SELECT 
+SELECT
     raw_payload,
     validation_errors,
     ingestion_time
@@ -2091,7 +2051,6 @@ WHERE is_valid = FALSE;
 ```
 
 **Architect Rule:** Implement the Zero-Copy Quarantine Pattern by writing all raw records to a single Bronze Delta table with validation flags, then projecting clean and quarantined datasets through virtual views without duplicating physical storage.
-
 
 ---
 
@@ -2139,7 +2098,6 @@ deterministic_deduped = df.withColumn("row_num", F.row_number().over(w)) \
 
 **Architect Rule:** `distinct()` operates across all columns in a row; use `dropDuplicates(['business_key'])` for subset deduplication, and prefer `row_number()` over an explicit timestamp window for deterministic retention.
 
-
 ---
 
 <a id="problem-42-many-to-many-join-multiplying-row-counts-and-corrupting-metrics"></a>
@@ -2175,11 +2133,10 @@ unique_promos = promos.dropDuplicates(["promo_code"])
 enriched = orders.join(unique_promos, on="promo_code", how="inner")
 
 # Step 3: Production Invariant Check: Verify row count did not expand:
-# assert enriched.count() <= orders.count(), "DATA INTEGRITY ERROR: Join expanded fact row count!" 
+# assert enriched.count() <= orders.count(), "DATA INTEGRITY ERROR: Join expanded fact row count!"
 ```
 
 **Architect Rule:** Non-unique dimension tables trigger many-to-many join explosions; always enforce uniqueness on dimension keys via `dropDuplicates()` or validate 1:N cardinality prior to joining with fact tables.
-
 
 ---
 
@@ -2225,7 +2182,6 @@ latest_orders = raw_orders \
 
 **Architect Rule:** `dropDuplicates()` provides no ordering guarantees; for CDC streams and state updates, always use `row_number() OVER (PARTITION BY key ORDER BY timestamp DESC)` with a secondary tie-breaker.
 
-
 ---
 
 <a id="problem-44-out-of-order-kafka-offsets-overwriting-newer-state-in-delta-lake"></a>
@@ -2256,8 +2212,8 @@ WHEN NOT MATCHED THEN INSERT *;
 MERGE INTO silver.driver_status target
 USING incoming_stream source
 ON target.driver_id = source.driver_id
-WHEN MATCHED AND source.event_timestamp > target.event_timestamp THEN 
-    UPDATE SET 
+WHEN MATCHED AND source.event_timestamp > target.event_timestamp THEN
+    UPDATE SET
         target.latitude = source.latitude,
         target.longitude = source.longitude,
         target.event_timestamp = source.event_timestamp,
@@ -2267,7 +2223,6 @@ WHEN NOT MATCHED THEN INSERT *;
 ```
 
 **Architect Rule:** Never execute unconditional `WHEN MATCHED THEN UPDATE SET *` in streaming CDC; always add a temporal gate `WHEN MATCHED AND source.event_time > target.event_time` to prevent stale updates from overwriting fresh state.
-
 
 ---
 
@@ -2317,7 +2272,6 @@ delta_target.alias("t").merge(
 
 **Architect Rule:** Delta Lake `MERGE INTO` requires target rows to match at most one source row; always deduplicate the source micro-batch using `row_number()` over the primary key before executing the merge.
 
-
 ---
 
 <a id="problem-46-idempotent-streaming-ingestion-with-dropduplicates-within-watermark"></a>
@@ -2362,7 +2316,6 @@ deduped_stream.writeStream \
 ```
 
 **Architect Rule:** Stateful deduplication in Structured Streaming (`dropDuplicates`) requires an event-time watermark (`withWatermark`); otherwise, the state store retains keys indefinitely and inevitably crashes with an out-of-memory error.
-
 
 ---
 
@@ -2413,7 +2366,6 @@ WHEN NOT MATCHED AND source.op IN ('I', 'C') THEN INSERT *;
 
 **Architect Rule:** Complete CDC synchronization requires three merge branches: `WHEN MATCHED AND op = 'D' THEN DELETE`, `WHEN MATCHED THEN UPDATE`, and `WHEN NOT MATCHED AND op != 'D' THEN INSERT`.
 
-
 ---
 
 <a id="problem-48-in-batch-deduplication-for-scd-type-2-ingestion-pipelines"></a>
@@ -2461,7 +2413,6 @@ staged_batch = incoming_batch.withColumn(
 
 **Architect Rule:** When building SCD Type 2 pipelines, always use `LEAD()` window functions to chain multiple state transitions within the incoming batch before merging against the target table to ensure non-overlapping validity intervals.
 
-
 ---
 
 <a id="problem-49-high-throughput-cdc-upsert-with-delta-deletion-vectors"></a>
@@ -2502,7 +2453,6 @@ OPTIMIZE gold.orders; -- Compacts Deletion Vectors into clean Parquet files
 
 **Architect Rule:** Enable Delta Lake Deletion Vectors (`delta.enableDeletionVectors = true`) for high-frequency CDC workloads to eliminate copy-on-write amplification; updates and deletes write tiny Roaring Bitmaps instead of rewriting massive Parquet files.
 
-
 ---
 
 <a id="problem-50-end-to-end-exactly-once-guarantees-across-streaming-delta-and-external-sinks"></a>
@@ -2523,7 +2473,7 @@ Structured Streaming guarantees end-to-end exactly-once ONLY if the target sink 
 def write_dual_sinks(batch_df, batch_id):
     # Delta sink is transactional and idempotent:
     batch_df.write.format("delta").mode("append").saveAsTable("silver.ledger")
-    
+
     # Non-idempotent relational write! If this fails or crashes later, retrying batch_id writes duplicates!
     batch_df.write.format("jdbc") \
         .option("url", "jdbc:postgresql://db:5432/bank") \
@@ -2538,15 +2488,15 @@ def write_dual_sinks(batch_df, batch_id):
 def write_dual_sinks_idempotent(batch_df, batch_id):
     # 1. Delta Sink (ACID Idempotent)
     batch_df.write.format("delta").mode("append").saveAsTable("silver.ledger")
-    
+
     # 2. Relational Sink: Use Upsert / ON CONFLICT or Staging Table with Batch ID Transaction
     # In PostgreSQL, write to staging table and commit atomically:
     properties = {"user": "admin", "password": "secret", "driver": "org.postgresql.Driver"}
-    
+
     # Write to a temporary batch-specific staging table:
     staging_table = f"staging_ledger_{batch_id}"
     batch_df.write.jdbc(url="jdbc:postgresql://db:5432/bank", table=staging_table, mode="overwrite", properties=properties)
-    
+
     # Atomically upsert from staging to target table using single SQL transaction:
     upsert_sql = f"""
         INSERT INTO ledger (tx_id, user_id, amount, tx_time)
@@ -2558,7 +2508,6 @@ def write_dual_sinks_idempotent(batch_df, batch_id):
 ```
 
 **Architect Rule:** Spark Structured Streaming provides at-least-once execution; true end-to-end exactly-once semantics requires an idempotent target sink using transactional batch IDs or `ON CONFLICT DO NOTHING` upsert logic.
-
 
 ---
 
@@ -2603,7 +2552,6 @@ df.select(F.col("customer.address.city")).show()
 
 **Architect Rule:** Never rely on schema inference for nested structs; provide an explicit schema where nested fields are declared nullable, ensuring queries against missing fields return NULL rather than crashing with `AnalysisException`.
 
-
 ---
 
 <a id="problem-52-memory-exhaustion-from-naive-explode-on-massive-arrays"></a>
@@ -2646,7 +2594,6 @@ summary = stores_df.withColumn(
 
 **Architect Rule:** Never use `explode()` followed by `groupBy()` simply to calculate array aggregates; use the higher-order function `aggregate()` to compute totals in-place without multiplying rows or shuffling data.
 
-
 ---
 
 <a id="problem-53-preserving-records-with-null-or-empty-arrays-using-explodeouter"></a>
@@ -2685,7 +2632,6 @@ exploded = df.withColumn("sub", F.explode_outer("subscriptions"))
 ```
 
 **Architect Rule:** `explode()` drops rows where the array is empty or NULL; always use `explode_outer()` whenever you need to preserve the parent entity regardless of array cardinality.
-
 
 ---
 
@@ -2726,7 +2672,6 @@ df_ordered = df.select(
 
 **Architect Rule:** When array order is significant (e.g. time-series, sequential trials), use `posexplode()` to capture the zero-based array index alongside the exploded value.
 
-
 ---
 
 <a id="problem-55-higher-order-function-transform-to-avoid-costly-explode-and-group"></a>
@@ -2766,7 +2711,6 @@ recollected = df.withColumn(
 ```
 
 **Architect Rule:** Avoid the explode-and-recollect anti-pattern; use the higher-order function `transform(array, x -> expression)` to apply element-level transformations in-place with zero shuffle overhead.
-
 
 ---
 
@@ -2818,7 +2762,6 @@ running_array_df = df.withColumn(
 
 **Architect Rule:** Use `aggregate(array, init, (acc, x) -> ...)` for in-array stateful reductions and running totals without blowing up row counts or invoking distributed window operators.
 
-
 ---
 
 <a id="problem-57-dynamically-flattening-deeply-nested-multi-level-schemas-via-recursion"></a>
@@ -2855,7 +2798,7 @@ from pyspark.sql import functions as F
 def flatten_dataframe(df):
     flat_cols = []
     nested_cols = []
-    
+
     for field in df.schema.fields:
         if isinstance(field.dataType, StructType):
             for sub_field in field.dataType.fields:
@@ -2867,9 +2810,9 @@ def flatten_dataframe(df):
             flat_cols.append(F.col(field.name))
         else:
             flat_cols.append(F.col(field.name))
-            
+
     df_transformed = df.select(flat_cols + nested_cols)
-    
+
     # Recursively check if any struct fields remain
     has_struct = any(isinstance(f.dataType, StructType) for f in df_transformed.schema.fields)
     if has_struct:
@@ -2881,7 +2824,6 @@ flat_df = flatten_dataframe(spark.read.json("s3://banking/complex_json/"))
 ```
 
 **Architect Rule:** Use recursive metadata traversal over `df.schema.fields` to dynamically inspect `StructType` fields and project flattened alias expressions without hardcoding nested paths.
-
 
 ---
 
@@ -2922,7 +2864,6 @@ df_optimized.select("readings.temps").write.format("noop").mode("overwrite").sav
 ```
 
 **Architect Rule:** Array-of-Structs (`ARRAY<STRUCT>`) degrades Parquet columnar pruning because nested fields share definition levels; transform to Struct-of-Arrays (`STRUCT<ARRAY>`) to enable pure columnar sub-field projection and maximize compression.
-
 
 ---
 
@@ -2972,7 +2913,6 @@ parsed_df = raw_df.withColumn("data", F.from_json("raw_json", firewall_schema)) 
 
 **Architect Rule:** Never use multiple `get_json_object()` calls on the same payload; use `from_json()` with a static schema to parse the entire JSON string in a single vectorized pass.
 
-
 ---
 
 <a id="problem-60-explode-join-multiplication-in-graph-edge-generation"></a>
@@ -3016,7 +2956,6 @@ enriched_graph = edges.join(minimal_profiles, edges.dst == minimal_profiles.user
 
 **Architect Rule:** When generating graph edges or exploding relationships, strictly prune DataFrame schemas down to primitive numeric IDs before the join, avoiding shuffle replication of wide attribute payloads.
 
-
 ---
 
 # Category 7: Timestamp, Timezone & Late-Arriving Event Data
@@ -3058,7 +2997,6 @@ WHERE tx_date = to_date(from_utc_timestamp(current_timestamp(), 'America/New_Yor
 ```
 
 **Architect Rule:** `current_date()` resolves to the cluster JVM timezone (typically UTC); always configure `spark.sql.session.timeZone` or use `from_utc_timestamp()` to align date boundaries with operational business hours.
-
 
 ---
 
@@ -3106,7 +3044,6 @@ df_parsed = df.withColumn(
 
 **Architect Rule:** Never assume date string uniformity across heterogeneous sources; use `coalesce()` with multiple explicit `to_timestamp()` format patterns or condition parsing on source-system regional metadata.
 
-
 ---
 
 <a id="problem-63-daylight-savings-time-dst-transitions-breaking-fixed-hourly-partitions"></a>
@@ -3125,7 +3062,7 @@ Local wall-clock time is non-monotonic: it repeats an hour in autumn (25-hour da
 ```sql
 -- Failing Spark SQL:
 -- Bucketing on wall-clock local time subject to DST:
-SELECT 
+SELECT
     date_trunc('hour', local_timestamp) AS hour_bucket,
     meter_id,
     SUM(kwh) AS total_kwh
@@ -3137,7 +3074,7 @@ GROUP BY 1, 2; -- Duplicates 01:00 AM on DST fallback!
 ```sql
 -- Production-Grade Solution: Bucket on Monotonic UTC Epoch Seconds
 -- Always truncate and group on UTC timestamps:
-SELECT 
+SELECT
     date_trunc('hour', utc_timestamp) AS utc_hour_bucket,
     meter_id,
     SUM(kwh) AS total_kwh,
@@ -3150,7 +3087,6 @@ GROUP BY 1, 2, 4;
 ```
 
 **Architect Rule:** Local wall-clock time is discontinuous due to Daylight Savings Time; always perform timeseries aggregation, windowing, and partitioning on monotonic UTC timestamps and convert to local time only at presentation.
-
 
 ---
 
@@ -3193,7 +3129,6 @@ df_ntz.write.format("delta").saveAsTable("gold.flights")
 
 **Architect Rule:** Use `TimestampNTZ` (timestamp without timezone) for wall-clock concepts like hotel check-ins or flight schedules that must remain invariant regardless of the reader's local session timezone.
 
-
 ---
 
 <a id="problem-65-late-arriving-event-time-dropped-by-overly-aggressive-watermarks"></a>
@@ -3233,7 +3168,6 @@ streaming_earnings = rides_stream \
 ```
 
 **Architect Rule:** Watermarks permanently discard events older than the threshold; size real-time watermarks to accommodate $p99$ mobile/network delays (e.g. 2-4 hours) and complement streaming with a nightly reconciliation batch for extreme stragglers.
-
 
 ---
 
@@ -3282,7 +3216,6 @@ joined = impressions.join(
 ```
 
 **Architect Rule:** Stream-stream joins require watermarks on BOTH streams plus an explicit temporal range constraint (e.g. `clicks.time BETWEEN imp.time AND imp.time + INTERVAL 1 HOUR`) to allow deterministic state store eviction.
-
 
 ---
 
@@ -3334,7 +3267,6 @@ windowed = sanitized_stream.withWatermark("event_time", "10 minutes") \
 
 **Architect Rule:** A single rogue future timestamp can poison the global streaming watermark and cause all subsequent real-time events to be dropped; always filter `event_time <= current_timestamp() + interval N minutes` at the stream boundary.
 
-
 ---
 
 <a id="problem-68-distributed-clock-drift-across-worker-nodes-breaking-leases"></a>
@@ -3375,7 +3307,6 @@ df_consistent = df.withColumn("created_at", F.lit(batch_utc_now).cast("timestamp
 
 **Architect Rule:** Do not rely on distributed worker system clocks for batch coordination; capture a single canonical timestamp on the driver and broadcast it via `F.lit(driver_timestamp)` to guarantee uniform audit metadata.
 
-
 ---
 
 <a id="problem-69-handling-7-day-delayed-transactions-in-financial-reconciliation-lakehouses"></a>
@@ -3407,8 +3338,8 @@ streaming_df.withWatermark("tx_time", "7 days") \ # 80TB State Store! OOM Crash!
 -- Delta Lake MERGE INTO handles late-arriving transactions up to 30 days seamlessly:
 MERGE INTO gold.fact_merchant_daily_sales target
 USING (
-    SELECT 
-        merchant_id, 
+    SELECT
+        merchant_id,
         to_date(tx_time) AS tx_date,
         SUM(amount) AS daily_amount
     FROM bronze.transactions
@@ -3416,14 +3347,13 @@ USING (
     GROUP BY 1, 2
 ) source
 ON target.merchant_id = source.merchant_id AND target.tx_date = source.tx_date
-WHEN MATCHED THEN 
+WHEN MATCHED THEN
     UPDATE SET target.daily_amount = target.daily_amount + source.daily_amount
-WHEN NOT MATCHED THEN 
+WHEN NOT MATCHED THEN
     INSERT (merchant_id, tx_date, daily_amount) VALUES (source.merchant_id, source.tx_date, source.daily_amount);
 ```
 
 **Architect Rule:** Do not force multi-day late arrival handling into streaming state stores; use a tight 2-hour watermark for streaming dashboards and reconcile multi-day delayed records via incremental Delta Lake `MERGE INTO` batch jobs.
-
 
 ---
 
@@ -3466,7 +3396,6 @@ FROM gold.positions TIMESTAMP AS OF '2024-03-15 16:00:00-05:00';
 
 **Architect Rule:** Business event dates do not guarantee historical audit integrity; use Delta Lake Time Travel (`TIMESTAMP AS OF` or `VERSION AS OF`) to query the immutable snapshot of data as it physically existed at the audit deadline.
 
-
 ---
 
 # Category 8: Memory Pressure, Disk Spill & Out of Memory (OOM)
@@ -3507,7 +3436,6 @@ sample_pdf = df.sample(fraction=0.001, seed=42).limit(10000).toPandas()
 ```
 
 **Architect Rule:** `collect()` and `toPandas()` serialize distributed data onto the single driver; always push down filtering, sampling, or aggregation in Spark, and enforce `spark.sql.driver.maxResultSize` to protect driver stability.
-
 
 ---
 
@@ -3551,7 +3479,6 @@ joined = df_fact.join(F.broadcast(slim_dim), on="product_id")
 ```
 
 **Architect Rule:** Broadcasting requires the driver to collect and serialize the entire dataset in JVM memory; never force broadcast hints on tables exceeding a few hundred megabytes without explicitly sizing driver heap to 3x-4x the table footprint.
-
 
 ---
 
@@ -3601,7 +3528,6 @@ spark.conf.set("spark.sql.shuffle.partitions", "2000")
 
 **Architect Rule:** `countDistinct()` on high-cardinality keys prevents map-side aggregation and exhausts container memory; replace with `approx_count_distinct()` (HyperLogLog++) or pre-deduplicate with `.distinct()` before grouping.
 
-
 ---
 
 <a id="problem-74-tungsten-shuffle-spill-memory-vs-disk-spill-in-unsafesort"></a>
@@ -3646,7 +3572,6 @@ spark.conf.set("spark.sql.adaptive.advisoryPartitionSizeInBytes", "134217728") #
 ```
 
 **Architect Rule:** Tungsten shuffle spill occurs when partition sizes exceed available execution memory; eliminate spill by sizing shuffle partitions so each task processes between 100MB and 200MB of uncompressed data.
-
 
 ---
 
@@ -3703,7 +3628,6 @@ def extract_domain_vectorized(url_series: pd.Series) -> pd.Series:
 
 **Architect Rule:** Standard Python UDFs suffer severe IPC and row-by-row serialization overhead; replace them with native Spark SQL functions (`parse_url`, `regexp_extract`) or vectorized Pandas UDFs powered by Apache Arrow.
 
-
 ---
 
 <a id="problem-76-pyarrow-vectorized-pandas-udf-memory-footprint-batch-chunking"></a>
@@ -3751,7 +3675,6 @@ def compute_embeddings_safe(text_series: pd.Series) -> pd.Series:
 
 **Architect Rule:** Vectorized Pandas UDFs can exhaust off-heap memory on wide text columns; reduce `spark.sql.execution.arrow.maxRecordsPerBatch` and increase `spark.executor.memoryOverhead` to prevent container `SIGKILL` terminations.
 
-
 ---
 
 <a id="problem-77-high-jvm-garbage-collection-overhead-from-billions-of-tiny-java-objects"></a>
@@ -3796,7 +3719,6 @@ summary = df.filter(F.col("_c5").isNotNull()) \
 
 **Architect Rule:** RDDs instantiate billions of JVM objects causing massive GC pauses; migrate to DataFrame/SQL APIs where Project Tungsten stores data in compact off-heap binary format without JVM object allocation.
 
-
 ---
 
 <a id="problem-78-broadcast-nested-loop-join-bnlj-memory-blowup-on-missing-join-conditions"></a>
@@ -3838,7 +3760,6 @@ joined = df_orders.join(df_customers, df_orders["customer_id"] == df_customers["
 
 **Architect Rule:** Typos in join predicates cause Catalyst to fall back to `BroadcastNestedLoopJoin` (BNLJ), leading to quadratic memory explosions; inspect query plans with `.explain()` to verify equi-joins and keep `spark.sql.crossJoin.enabled = false`.
 
-
 ---
 
 <a id="problem-79-sizing-driver-vs-executor-memory-overhead-for-off-heap-native-buffers"></a>
@@ -3878,7 +3799,6 @@ spark.memory.offHeap.size        4g
 ```
 
 **Architect Rule:** Container Exit Code 137 occurs when off-heap allocations exceed memory overhead; for PyArrow, RocksDB, and Photon workloads, increase `spark.executor.memoryOverhead` to 25-30% of total container memory.
-
 
 ---
 
@@ -3922,7 +3842,6 @@ spark.conf.set("spark.sql.streaming.stateStore.rocksdb.writeBufferSizeMB", "64")
 
 **Architect Rule:** In 24/7 Structured Streaming, unconstrained RocksDB instances can exhaust host memory; enable `spark.sql.streaming.stateStore.rocksdb.boundedMemoryUsage = true` and specify `maxMemoryUsageMB` to strictly bound off-heap native memory.
 
-
 ---
 
 # Category 9: Join Explosions, Cartesian Products & Cardinality Blowups
@@ -3961,7 +3880,6 @@ INNER JOIN store_dim d ON s.store_id = d.store_id;
 
 **Architect Rule:** Legacy comma-separated joins easily cause accidental Cartesian explosions; always use explicit ANSI `INNER JOIN ... ON` syntax and set `spark.sql.crossJoin.enabled = false` to intercept missing join keys during planning.
 
-
 ---
 
 <a id="problem-82-many-to-many-join-multiplying-fact-row-counts-silently"></a>
@@ -3997,11 +3915,10 @@ current_addresses = addresses.filter(F.col("is_default_shipping") == True)
 clean_orders = orders.join(current_addresses, on="customer_id", how="inner")
 
 # Automated Pipeline Test Assertion:
-# assert clean_orders.count() == orders.count(), "INTEGRITY VIOLATION: Join multiplied fact rows!" 
+# assert clean_orders.count() == orders.count(), "INTEGRITY VIOLATION: Join multiplied fact rows!"
 ```
 
 **Architect Rule:** Joining facts with multi-record dimensions silently multiplies financial metrics; filter dimensions to unique primary keys (e.g. `is_current = true`) before joining and assert that row counts do not expand.
-
 
 ---
 
@@ -4040,7 +3957,6 @@ SELECT 'MOBILE' AS platform, session_id, screen_name AS page, event_time FROM mo
 ```
 
 **Architect Rule:** Do not use `FULL OUTER JOIN` to merge disparate event streams sharing no common join keys; use `UNION ALL` or `unionByName()` to stack schemas vertically without creating sparse null-padded Cartesian row overhead.
-
 
 ---
 
@@ -4084,7 +4000,6 @@ JOIN exchange_rates_daily fx
 ```
 
 **Architect Rule:** Catalyst cannot hash-partition on inequality predicates; convert continuous range conditions into discrete calendar date equi-joins (`to_date(event_time) = fx.date`) to unlock high-speed SortMerge or BroadcastHash joins.
-
 
 ---
 
@@ -4133,7 +4048,6 @@ JOIN geo_ranges_binned g
 
 **Architect Rule:** Optimize point-in-interval range joins by discretizing ranges into coarse equi-join hash bins (e.g. 16-bit prefix bins) to eliminate 99.9% of candidate pairs before evaluating the inequality.
 
-
 ---
 
 <a id="problem-86-semi-join-vs-inner-join-distinct-performance-differential"></a>
@@ -4172,7 +4086,6 @@ LEFT SEMI JOIN orders o ON c.customer_id = o.customer_id;
 
 **Architect Rule:** Never use `INNER JOIN` + `DISTINCT` when filtering for entity existence; use `LEFT SEMI JOIN` to short-circuit on the first match, preventing row multiplication and eliminating expensive distinct shuffles.
 
-
 ---
 
 <a id="problem-87-anti-join-with-null-keys-silently-discarding-records"></a>
@@ -4209,7 +4122,6 @@ LEFT ANTI JOIN logins_90d l ON u.user_id = l.user_id;
 ```
 
 **Architect Rule:** `NOT IN` collapses to empty when the target subquery contains NULLs; use `LEFT ANTI JOIN` in Spark to guarantee accurate entity exclusion and optimal Catalyst join planning.
-
 
 ---
 
@@ -4252,7 +4164,6 @@ SET spark.sql.cbo.joinReorder.dp.threshold = 12;
 ```
 
 **Architect Rule:** Catalyst can make disastrous join order decisions in multi-table queries without metadata; enable Cost-Based Optimizer (`spark.sql.cbo.enabled = true`) and run `ANALYZE TABLE ... COMPUTE STATISTICS` to let Spark find the optimal join tree.
-
 
 ---
 
@@ -4298,7 +4209,6 @@ WHERE d.quarter = 'Q3';
 
 **Architect Rule:** Dynamic Partition Pruning (DPP) skips irrelevant fact table partitions at runtime based on dimension filters, but DPP requires the dimension side to be broadcast; use `/*+ BROADCAST */` hints on the filtering dimension to guarantee DPP activation.
 
-
 ---
 
 <a id="problem-90-enterprise-fact-dimension-join-optimization-runtime-bloom-filter-joins"></a>
@@ -4337,7 +4247,6 @@ spark.conf.set("spark.sql.optimizer.runtime.bloomFilter.creationSideThreshold", 
 ```
 
 **Architect Rule:** Runtime Bloom Filter Joins (`spark.sql.optimizer.runtime.bloomFilter.enabled = true`) build an in-memory bitset from the dimension to prune non-matching fact rows at the Parquet scan level, slashing shuffle network traffic by up to 80%.
-
 
 ---
 
@@ -4382,7 +4291,6 @@ print(result) # Decimal('0.3000') - Exact, deterministic mathematical precision!
 
 **Architect Rule:** Never use `DoubleType` or `FloatType` for currency or monetary accounting; always use `DecimalType(precision, scale)` to avoid IEEE 754 binary floating-point drift.
 
-
 ---
 
 <a id="problem-92-silent-integer-overflow-in-spark-3x-vs-sparksqlansienabled"></a>
@@ -4421,7 +4329,6 @@ spark.conf.set("spark.sql.ansi.enabled", "true")
 
 **Architect Rule:** Non-ANSI Spark wraps integer overflows silently into negative numbers; protect pipelines by casting accumulation columns to `BIGINT` and enabling `spark.sql.ansi.enabled = true`.
 
-
 ---
 
 <a id="problem-93-decimal-precision-and-scale-truncation-in-multi-step-calculations"></a>
@@ -4440,7 +4347,7 @@ Spark SQL enforces a maximum decimal precision of 38 digits. When multiplying `D
 ```sql
 -- Failing Spark SQL:
 -- Decimal multiplication capping at 38 precision:
-SELECT CAST(1.000000000000000001 AS DECIMAL(38, 18)) * 
+SELECT CAST(1.000000000000000001 AS DECIMAL(38, 18)) *
        CAST(0.000000000000000001 AS DECIMAL(38, 18)) AS result;
 -- Truncates scale, returning 0.000000!
 ```
@@ -4459,7 +4366,6 @@ SELECT CAST(1.000001 AS DECIMAL(14, 6)) * CAST(0.000001 AS DECIMAL(14, 6)) AS re
 ```
 
 **Architect Rule:** Spark decimals cap at 38 precision; multiplying two `DECIMAL(38, 18)` numbers forces scale reduction and fractional truncation. Right-size precision (e.g. `DECIMAL(18, 6)`) and set `allowPrecisionLoss = false`.
-
 
 ---
 
@@ -4490,7 +4396,7 @@ WHERE date_key = 20241031; -- Integer literal! Forces full table scan of 50TB!
 -- Always match the exact datatype of the partition column:
 SELECT *
 FROM fact_sales
-WHERE date_key = '20241031'; -- String literal! 
+WHERE date_key = '20241031'; -- String literal!
 
 -- Catalyst immediately matches partition path 'date_key=20241031' and reads only 500MB!
 
@@ -4499,7 +4405,6 @@ WHERE date_key = '20241031'; -- String literal!
 ```
 
 **Architect Rule:** Passing numeric literals to string partition columns wraps the column in an implicit `CAST()`, destroying partition pruning and forcing a full table scan; always match filter literal types to partition schema types.
-
 
 ---
 
@@ -4537,7 +4442,6 @@ WHERE to_date(date_str, 'yyyy-M-d') > DATE '2024-09-01';
 ```
 
 **Architect Rule:** String date comparisons follow ASCII alphabetical rules where `'2024-10'` is less than `'2024-9'`; always cast to `DateType` or enforce zero-padded ISO-8601 formatting (`'2024-09-01'`) for date filters.
-
 
 ---
 
@@ -4587,7 +4491,6 @@ print(joined.count()) # Returns 1 match! Perfect equality!
 
 **Architect Rule:** Visually identical international strings fail joins when encoded in different Unicode forms (NFC vs NFD); normalize all text columns using `normalize(col, 'NFC')` during bronze ingestion.
 
-
 ---
 
 <a id="problem-97-parquet-int96-deprecation-and-nanosecond-timestamp-shifts"></a>
@@ -4607,7 +4510,7 @@ Legacy Hive used INT96 (12 bytes) for timestamps without timezone metadata, base
 # Failing Spark 3.x Parquet Read:
 # Reading legacy INT96 Parquet table:
 df = spark.read.parquet("s3://legacy/hive_int96_table/")
-# Fails with SparkUpgradeException: You may see a different result from Spark 2.4 because 
+# Fails with SparkUpgradeException: You may see a different result from Spark 2.4 because
 # Spark 3.0 uses the Proleptic Gregorian calendar...
 ```
 
@@ -4626,7 +4529,6 @@ spark.conf.set("spark.sql.parquet.outputTimestampType", "TIMESTAMP_MICROS")
 ```
 
 **Architect Rule:** Legacy Hive Parquet tables used deprecated INT96 Julian timestamps; set `spark.sql.parquet.int96RebaseModeInRead = 'LEGACY'` to read them safely, and standardize writes on INT64 `TIMESTAMP_MICROS` in Delta Lake.
-
 
 ---
 
@@ -4673,7 +4575,6 @@ parsed = clean_binary.select(F.from_avro("avro_body", avro_schema).alias("data")
 
 **Architect Rule:** Confluent Avro streams prepend a 5-byte wire-format header to Kafka messages; strip bytes 1-5 via `substring(value, 6)` before calling `from_avro()`, or configure native Schema Registry integration.
 
-
 ---
 
 <a id="problem-99-cross-platform-float-and-nan-serialization-discrepancies"></a>
@@ -4717,7 +4618,6 @@ df_spark = df_spark.withColumn("customer_id", F.col("customer_id").cast("string"
 
 **Architect Rule:** Legacy Pandas casts nullable integers to `float64` to accommodate `NaN`, causing ID corruption; store primary identifiers as `StringType` or enforce Pandas `Int64` nullable integer extension types across the ML serving boundary.
 
-
 ---
 
 <a id="problem-100-schema-evolution-type-narrowing-lockouts-ansi-sql-compliance-migration"></a>
@@ -4760,6 +4660,5 @@ FROM raw_logs;
 ```
 
 **Architect Rule:** When migrating to ANSI SQL compliance in Spark 3.x/4.x, replace standard `CAST()` and arithmetic operators with `TRY_CAST()`, `TRY_TO_TIMESTAMP()`, and `TRY_DIVIDE()` to preserve fault-tolerant NULL semantics on malformed inputs.
-
 
 ---

@@ -45,7 +45,7 @@ flowchart TD
 OneLake is often called the *"OneDrive for Data"*. Every Microsoft 365 and Fabric tenant has exactly one OneLake, eliminating data silos between departments.
 
 ### 2.1 Delta Parquet as the Universal Format
-Every compute engine in Fabric (Spark, Warehouse, Power BI, KQL) reads and writes the exact same underlying open format: **Delta Lake (Parquet with ACID transaction logs)**. 
+Every compute engine in Fabric (Spark, Warehouse, Power BI, KQL) reads and writes the exact same underlying open format: **Delta Lake (Parquet with ACID transaction logs)**.
 - When Fabric Spark writes a table, the Fabric SQL Warehouse can immediately query it without data movement or external table definitions.
 - Power BI reads the exact same Delta parquet files into memory via **Direct Lake**.
 
