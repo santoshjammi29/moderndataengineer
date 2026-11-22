@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/repo-header.svg" width="100%" alt="Repository Header Banner" />
+</p>
+
 # Modern Data Engineer & Lakehouse Architect (`moderndataengineer.uk`)
 
 <p align="center">
