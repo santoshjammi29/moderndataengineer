@@ -32,6 +32,7 @@ import {
   X,
   ChevronRight,
   Filter,
+  Github,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { THEME_OPTIONS } from "@/components/ui/theme-switcher";
@@ -82,6 +83,7 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 const QUICK_NAV_HUBS = [
   { label: "Guided Tracks", href: "/guided-learning", icon: Sparkles, badge: `${CONTENT_COUNTS.guidedTracks} Tracks` },
   { label: "Key Concepts", href: "/concepts", icon: BookOpen, badge: `${formatContentCount(CONTENT_COUNTS.concepts)}+ Terms` },
+  { label: "Repository Library", href: "/repositories", icon: Github, badge: "14 public projects" },
   { label: "Q&A Prep Hub", href: "/qa-prep", icon: MessageSquare, badge: `${formatContentCount(CONTENT_COUNTS.qa)}+ Drills` },
   { label: "Architecture Hub", href: "/architecture", icon: Cpu, badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+ Scenarios` },
   { label: "Databricks Hub", href: "/code-practice/databricks", icon: Flame, badge: "148+ Ops" },
@@ -247,6 +249,7 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
   const staticRoutes: CommandItem[] = useMemo(
     () => [
       { id: "nav-home", title: "Home Dashboard", category: "Navigation", page: "Home", icon: Sparkles, href: "/", badge: "Main" },
+      { id: "nav-repositories", title: "Public Repository Library (14 Projects)", category: "Navigation", page: "Repositories", icon: Github, href: "/repositories", badge: "GitHub" },
       { id: "nav-guided", title: `Guided Learning (${CONTENT_COUNTS.guidedTracks} Structured Tracks)`, category: "Navigation", page: "Guided Learning", icon: BookMarked, href: "/guided-learning", badge: "Core" },
       { id: "nav-concepts", title: `Key Concepts (${formatContentCount(CONTENT_COUNTS.concepts)}+ Terms)`, category: "Navigation", page: "Key Concepts", icon: BookOpen, href: "/concepts", badge: "Easy" },
       { id: "nav-qa", title: `Q&A Prep Hub (${formatContentCount(CONTENT_COUNTS.qa)} Questions)`, category: "Navigation", page: "Q&A Prep", icon: MessageSquare, href: "/qa-prep", badge: "SM-2" },

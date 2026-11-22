@@ -20,6 +20,7 @@ import {
   Home,
   Sparkles,
   Workflow,
+  Github,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isSubHrefActive } from "@/data/navigation-data";
@@ -53,6 +54,13 @@ const NAV_SECTIONS: NavSection[] = [
     href: "/search-topics",
     icon: Search,
     badge: "New",
+  },
+  {
+    id: "repositories",
+    label: "Repositories",
+    href: "/repositories",
+    icon: Github,
+    badge: "14 projects",
   },
   {
     id: "guided-learning",

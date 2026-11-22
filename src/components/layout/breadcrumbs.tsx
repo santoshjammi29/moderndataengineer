@@ -16,6 +16,7 @@ interface Crumb {
 const ROUTE_LABELS: Record<string, string> = {
   "/": "Home",
   "/learning-paths": "Learning Paths",
+  "/repositories": "Repository Library",
   "/architecture": "Architecture Hub",
   "/whiteboards": "Whiteboard Architecture Hub",
   "/blueprints": "Whiteboards & Blueprints",
