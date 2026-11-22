@@ -5,8 +5,6 @@ import { useMemo, useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
-  BookOpen,
-  Braces,
   CheckCircle2,
   Code2,
   Database,
@@ -18,9 +16,7 @@ import {
   ShieldCheck,
   Sparkles,
   Terminal,
-  Workflow,
   X,
-  Zap,
 } from "lucide-react";
 import {
   LEARNING_PATHS,
@@ -384,7 +380,14 @@ export function RepositoryHub() {
               <Link href={path.href} className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-300 hover:text-blue-200">
                 Start this stage <ArrowRight size={13} />
               </Link>
-              <p className="mt-2 font-mono text-[10px] text-[var(--muted-foreground)]">{path.repositoryLabel}</p>
+              <a
+                href={REPOSITORIES.find((repository) => repository.slug === path.repository)?.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-flex items-center gap-1 font-mono text-[10px] text-[var(--muted-foreground)] transition-colors hover:text-blue-300"
+              >
+                Source: {path.repositoryLabel} <ExternalLink size={10} />
+              </a>
             </article>
           ))}
         </div>
