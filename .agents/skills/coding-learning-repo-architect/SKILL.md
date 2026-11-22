@@ -53,7 +53,7 @@ When structuring a new learning repository or reorganizing an existing one, sele
 ```mermaid
 flowchart TD
     Start["What is the primary learning objective?"] --> Q1{"Is it theory, code, or a full project?"}
-    
+
     Q1 -->|"Code & Algorithms"| A1["Archetype 2: Code-Test-Doc Triad<br/>(trekhleb, TheAlgorithms)"]
     Q1 -->|"Building real systems"| A2["Archetype 6: First-Principles Project<br/>(build-your-own-x, project-based)"]
     Q1 -->|"Engineering standards & idioms"| A3["Archetype 3: Golden Rule & Anti-Pattern<br/>(nodebestpractices, clean-code)"]
