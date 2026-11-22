@@ -13,7 +13,7 @@ Unity Catalog organizes data in a 3-tier hierarchy: `catalog.schema.table`.
 - **Dynamic Row Filtering & Column Masking:** Defined using native SQL UDFs without creating duplicate sanitized views:
 ```sql
 -- Column Masking for PII
-CREATE FUNCTION mask_ssn(ssn STRING) RETURN 
+CREATE FUNCTION mask_ssn(ssn STRING) RETURN
   CASE WHEN is_account_group_member('hr_admins') THEN ssn ELSE 'XXX-XX-' || RIGHT(ssn, 4) END;
 ALTER TABLE hr_catalog.payroll.employees ALTER COLUMN ssn SET MASK mask_ssn;
 
@@ -156,7 +156,7 @@ SELECT
     ROUND(SUM(usage.usage_quantity * pricing.pricing.default), 2) AS estimated_usd_cost
 FROM system.billing.usage usage
 JOIN system.billing.list_prices pricing
-  ON usage.cloud = pricing.cloud 
+  ON usage.cloud = pricing.cloud
   AND usage.sku_name = pricing.sku_name
   AND usage.usage_start_time >= pricing.price_start_time
   AND (pricing.price_end_time IS NULL OR usage.usage_end_time < pricing.price_end_time)

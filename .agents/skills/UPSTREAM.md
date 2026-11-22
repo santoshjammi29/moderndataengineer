@@ -9,6 +9,7 @@ Packages and their supporting files originate from:
 - [santoshjammi29/security-handbook](https://github.com/santoshjammi29/security-handbook): `security-handbook`, covering Zero Trust cloud perimeter defense, keyless OIDC workload identity federation, envelope encryption (DEK/KEK), DevSecOps supply-chain security (Trivy, Cosign, SBOM), ADF managed identities, Databricks Unity Catalog dynamic masking & RLS, and 6 incident triage runbooks.
 - [santoshjammi29/databricks-handbook](https://github.com/santoshjammi29/databricks-handbook): The Databricks Handbook, covering 105 production Databricks recipes, Unity Catalog, Delta Lake 3.x, Lakeflow Jobs & Pipelines, DBSQL, DABs, Databricks Apps, Mosaic AI, and FinOps System Tables.
 - [santoshjammi29/azure-databricks-project-blueprints](https://github.com/santoshjammi29/azure-databricks-project-blueprints): Enterprise Azure Databricks production project blueprints covering Omnichannel Retail Lakehouse, Real-Time Payments Fraud & AML Monitoring, and Legacy Warehouse Modernization with cutover controls.
+- `coding-learning-repo-architect`: Synthesis of 25 top-starred GitHub educational repositories (~5M+ stars) covering the 8 structural archetypes, 4-tier progressive disclosure, code-test-doc triad, anti-pattern contrast, and automated CI test harnesses.
 
 Each imported package includes the upstream MIT license.
 

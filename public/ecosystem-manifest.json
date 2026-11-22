@@ -1,13 +1,13 @@
 {
   "version": "3.0.0",
-  "generated": "2026-11-21T04:54:58.632305Z",
+  "generated": "2026-11-22T07:34:24.148538Z",
   "hub": {
     "name": "Modern Data Engineer & Lakehouse Architect Platform",
     "url": "https://moderndataengineer.uk",
     "repo": "santoshjammi29/moderndataengineer"
   },
   "total_repositories": 14,
-  "total_satellite_entries": 524,
+  "total_satellite_entries": 537,
   "repositories": {
     "R01": {
       "slug": "charming-fermi",
@@ -147,55 +147,55 @@
   "manifests": {
     "databricks-handbook": {
       "github": "santoshjammi29/databricks-handbook",
-      "entry_count": 115
+      "entry_count": 116
     },
     "pyspark-handbook": {
       "github": "santoshjammi29/pyspark-handbook",
-      "entry_count": 115
+      "entry_count": 116
     },
     "sql-handbook": {
       "github": "santoshjammi29/sql-handbook",
-      "entry_count": 119
+      "entry_count": 120
     },
     "dbt-handbook": {
       "github": "santoshjammi29/dbt-handbook",
-      "entry_count": 20
+      "entry_count": 21
     },
     "streaming-handbook": {
       "github": "santoshjammi29/streaming-handbook",
-      "entry_count": 20
+      "entry_count": 21
     },
     "dataops-cicd-handbook": {
       "github": "santoshjammi29/dataops-cicd-handbook",
-      "entry_count": 20
+      "entry_count": 21
     },
     "data-system-design-handbook": {
       "github": "santoshjammi29/data-system-design-handbook",
-      "entry_count": 20
+      "entry_count": 21
     },
     "data-engineering-interview-handbook": {
       "github": "santoshjammi29/data-engineering-interview-handbook",
-      "entry_count": 32
+      "entry_count": 33
     },
     "azure-cheat-sheet": {
       "github": "santoshjammi29/azure-cheat-sheet",
-      "entry_count": 16
+      "entry_count": 17
     },
     "azure-databricks-project-blueprints": {
       "github": "santoshjammi29/azure-databricks-project-blueprints",
-      "entry_count": 9
+      "entry_count": 10
     },
     "enterprise-banking-risk-alm-lakehouse": {
       "github": "santoshjammi29/enterprise-banking-risk-alm-lakehouse",
-      "entry_count": 8
+      "entry_count": 9
     },
     "spark-experiments": {
       "github": "santoshjammi29/spark-experiments",
-      "entry_count": 10
+      "entry_count": 11
     },
     "security-handbook": {
       "github": "santoshjammi29/security-handbook",
-      "entry_count": 20
+      "entry_count": 21
     }
   }
 }

@@ -118,7 +118,7 @@ SELECT
         PARTITION BY user_id ORDER BY travel_date
     ) AS origin_city,
     LAST_VALUE(city) OVER (
-        PARTITION BY user_id ORDER BY travel_date 
+        PARTITION BY user_id ORDER BY travel_date
         ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
     ) AS final_destination_city
 FROM travel_history;
@@ -242,7 +242,7 @@ col_null_counts.show()
 
 # 2. Row-wise Null Count
 null_expression = sum([
-    F.when(F.col(c).isNull(), 1).otherwise(0) 
+    F.when(F.col(c).isNull(), 1).otherwise(0)
     for c in df.columns
 ])
 df_with_row_nulls = df.withColumn("row_null_count", null_expression)
@@ -792,7 +792,7 @@ WHEN MATCHED AND target.address <> source.address THEN
 
 -- Step 2: Insert the new active version
 INSERT INTO dim_customers
-SELECT 
+SELECT
     uuid(), source.customer_id, source.address, source.effective_time, '9999-12-31', true
 FROM customer_updates source;
 ```
@@ -811,7 +811,7 @@ SELECT
     SUM(CASE WHEN txn_type = 'CREDIT' THEN amount ELSE 0 END) AS total_credited,
     SUM(CASE WHEN txn_type = 'DEBIT' THEN amount ELSE 0 END) AS total_debited,
     ROUND(
-        COUNT(CASE WHEN txn_type = 'DEBIT' THEN 1 END) * 1.0 / 
+        COUNT(CASE WHEN txn_type = 'DEBIT' THEN 1 END) * 1.0 /
         NULLIF(COUNT(CASE WHEN txn_type = 'CREDIT' THEN 1 END), 0), 2
     ) AS debit_to_credit_ratio
 FROM transactions
@@ -1008,16 +1008,14 @@ $$\text{Executor Memory} = \text{Reserved (300MB)} + \text{Spark Memory (75%)} +
 2. **Task Creation:** Each Stage is converted into a `TaskSet`. The number of tasks equals the number of partitions in that stage.
 3. **Task Execution:** The `TaskScheduler` sends serialized task definitions over RPC to available Executor worker threads. Executors deserialize the bytecode, run whole-stage code-generated Java loops over partition records, write shuffle output or final storage files, and send task completion metrics back to the Driver.
 
-
 ---
-
 
 ## Section 2: Apache Kafka Production Engineering (Questions 51 – 55)
 
 ### Q51: Explain your real time experience in Kafka.
 
 **Direct 30-Second Answer:**
-"In our production enterprise payments and telemetry lakehouse, I architected a multi-cluster Apache Kafka deployment (KRaft mode) processing over **150,000 events/second** (peaks of 250MB/sec). 
+"In our production enterprise payments and telemetry lakehouse, I architected a multi-cluster Apache Kafka deployment (KRaft mode) processing over **150,000 events/second** (peaks of 250MB/sec).
 My responsibilities included:
 1. **Topic Partition Topology:** Sizing partitions based on consumer throughput ($P = \max(T/P_{prod}, T/P_{cons})$) across 32 partitions per high-velocity topic.
 2. **End-to-End Exactly-Once Semantics (EOS):** Configuring idempotent producers (`enable.idempotence=true`), transactional producer coordinators, and `read_committed` consumer isolation.
@@ -1103,9 +1101,7 @@ sequenceDiagram
 3. **Delta Lake Schema Evolution:**
    When writing to Delta Lake, enable `.option("mergeSchema", "true")`. Delta automatically appends new columns to the `_delta_log` metadata without rewriting historical Parquet files.
 
-
 ---
-
 
 ## Section 3: Spark Structured Streaming (Questions 56 – 60)
 
@@ -1191,9 +1187,7 @@ spark.conf.set(
    - *Symptom:* 99 out of 100 tasks finish in 100ms; 1 task runs for 3 minutes.
    - *Fix:* Check partition key distribution; salt skewed keys or repartition incoming streaming DataFrame across worker cores before stateful aggregation.
 
-
 ---
-
 
 ## Section 4: Azure Cloud & Databricks (Questions 61 – 90)
 
@@ -1453,9 +1447,7 @@ Databricks interacts with ADLS Gen2 using the **ABFS (Azure Blob File System) dr
 - **Modern Security Architecture:** Access is governed via **Unity Catalog External Locations** backed by **Azure Managed Identities**. Compute clusters never hold raw storage keys or SAS tokens.
 - **Direct Cloud Object Access:** Data reads stream directly from ADLS Gen2 blobs into worker memory using multi-threaded parallel HTTP GET requests.
 
-
 ---
-
 
 ---
 
@@ -1626,9 +1618,7 @@ Delta Lake handles concurrent transactions without locking the entire table:
 | **Partition Evolution** | No | No | Yes (via Liquid Clustering) | Yes (Hidden Partitioning) |
 | **Primary Ecosystem** | General Analytics | Kafka / Ingestion | Databricks, Spark, Fabric | Snowflake, Trino, AWS Athena |
 
-
 ---
-
 
 ## Section 5: AWS Cloud Big Data Stack (Questions 91 – 95)
 
@@ -1695,9 +1685,7 @@ AWS Glue is a fully managed, serverless ETL service built on Apache Spark.
    - Used for complex enterprise dependency graphs involving hybrid clouds, 50+ interconnected DAGs, and custom Python sensors.
 3. **AWS Glue Workflows:** Lightweight built-in DAG orchestrator utilizing Glue Triggers (On Demand, Scheduled, or Conditional on job success).
 
-
 ---
-
 
 ## Section 6: Project Experience & Interview Defense (Questions 96 – 110)
 
@@ -1873,9 +1861,7 @@ ightarrow$ Delta Lake).
   2. *In-Batch Deduplication:* Apply `df.dropDuplicates(["business_key", "timestamp"])`.
   3. *Downstream ACID Upsert:* Use Delta `MERGE INTO` with a condition `WHEN MATCHED AND source.updated_at > target.updated_at THEN UPDATE SET *`.
 
-
 ---
-
 
 ## Section 7: System Design & Enterprise Scenarios (Questions 111 – 115)
 
@@ -1969,9 +1955,7 @@ flowchart LR
 - **Major Challenge - State & Schema Drift across Environments:** Dev schemas had manual column additions that were missing in production Delta tables.
   - *Fix:* Enforced all DDL migrations through versioned migration scripts (using `dbx` and Liquibase for Delta Lake) and blocked manual workspace schema modifications via Unity Catalog privilege revoking.
 
-
 ---
-
 
 ## Section 8: Managerial & Behavioral Leadership (Questions 116 – 125)
 
@@ -2084,6 +2068,4 @@ flowchart LR
    - Establish compute budgets with automated alerts at 80% and 100% threshold consumption.
    - Shift workers to Spot VM instances with on-demand fallback.
 
-
 ---
-

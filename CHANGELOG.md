@@ -1,5 +1,31 @@
 # Changelog
 
+## v2.2 — Ecosystem Cross-Repository Topics Expansion, Whiteboard Synchronization & Production Code Scenarios (2026-11-22)
+
+### 🧠 Ecosystem-Wide Topics Directory Expansion (15 Repositories)
+- **Dedicated `topics/README.md` Catalogs**: Generated standalone curriculum topic directories across all 15 repositories, classifying every topic by difficulty (`🟢 Easy`, `🟡 Intermediate`, `🔴 Advanced`, `🟣 Architect`), with architectural definitions, core principles, local implementation paths, and deep-links to the web hub (`moderndataengineer.uk/concepts`).
+- **Collapsible In-Page Matrices**: Regenerated `## 🧠 Core Curriculum Concepts & Topics` tables across all handbooks from the 921-concept encyclopedia (`data_concepts.json`), adding support for `security-handbook` (37 curated topics) and `data-engineering-interview-handbook` (all 921 topics across 14 domains).
+
+### 📐 Master Whiteboard Blueprints & High-Resolution Cheatsheets
+- **Security & Governance Visual Grid**: Replaced generic diagrams in `security-handbook/README.md` with an 8-item 4x2 visual grid (Unity Catalog 3-Tier Security, Lakehouse Dynamic Masking, Purview Governance, BCDR Multi-Region Failover, DevSecOps OIDC Promotion, Governed Agentic RAG, Data Mesh Security Contracts, WAP Quarantine).
+- **Visual Cheatsheet Synchronization**: Synchronized `handbook_whiteboard_blueprints.md` and 3 master visual cheatsheets (`spark_architecture_catalyst_cheatsheet.jpg`, `spark_join_strategies_decision_matrix.jpg`, `spark_performance_skew_spill_triage.jpg`) across all 14 handbooks with explicit navigation links.
+
+### 🛠️ Production Incident Runbooks & Code Scenarios Upgrade
+- **Replaced Placeholder Boilerplate Across 24 Runbooks**: Eliminated generic commands across `streaming-handbook`, `dbt-handbook`, `dataops-cicd-handbook`, and `data-system-design-handbook`.
+- **Domain-Specific Implementations**:
+  - `streaming-handbook`: Kafka `CooperativeStickyAssignor`, Flink unaligned checkpointing, Debezium CDC WAL disaster recovery, PySpark Structured Streaming DLQ pipeline with metadata headers, RocksDB state store off-heap tuning, and Kafka throttled partition reassignment.
+  - `dbt-handbook`: dbt incremental merge drift resolution, snapshot SCD2 collision cleanup SQL, circular dependency DAG decoupling (`int_` models), full-refresh credit exhaustion guardrail macro, model contract YAML enforcement, and slim CI state deferral GitHub Actions workflows.
+  - `dataops-cicd-handbook`: Terraform `force-unlock` disaster recovery, schema migration expand/contract patterns, Airflow circuit breakers, Kubernetes pod OOMKilled cgroups tuning (`-XX:MaxRAMPercentage=75.0`), keyless OIDC token rotation, dynamic IQR anomaly detection, and Apache Iceberg WAP SQL with an Airflow Dynamic Task Mapping DAG.
+  - `data-system-design-handbook`: Multi-region Delta Lake Time Travel conflict reconciliation script, metadata commit compaction (`OPTIMIZE ZORDER` & `VACUUM`), OpenLineage SparkListener telemetry, Databricks SQL runaway query watchdog, catalog outage storage bypass mounts, and Azure storage key rotation with Managed Identities.
+  - `security-handbook`: Python automated emergency key revocation, Azure Key Vault dynamic database connection pool rotation, and Python AES-256-GCM envelope encryption with GDPR cryptographic shredding.
+
+### 📚 README Hierarchy Standardization & Markdown Compaction
+- **Standardized 8-Panel Layout**: Applied consistent 8-panel information architecture across all handbooks.
+- **Automated Markdown Compaction**: Stripped trailing whitespace, normalized excessive blank lines, and enforced clean markdown formatting across 500 markdown files.
+- **Content & Search Compaction**: Sharded and compacted 12,091 search documents into MiniSearch inverted indices.
+
+---
+
 ## v2.1 — Databricks Data Intelligence Platform Manual, 52-Blueprint Whiteboard Mastery & 11-PDF Enterprise Library (2026-11-17)
 
 ### 📘 Databricks Data Intelligence Platform: End-to-End Technical Manual (Level 100–400)

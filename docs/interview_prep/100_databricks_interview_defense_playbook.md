@@ -44,7 +44,7 @@
 * **Defend the Trade-Off**: Generic all-purpose interactive clusters support arbitrary Python libraries and ML models, but struggle with concurrent multi-user BI queries where single-tenant Spark schedulers queue tasks behind long queries.
 
 ### Q05: What belongs in Bronze, Silver and Gold?
-* **30-Second Answer**: 
+* **30-Second Answer**:
   * **Bronze (Raw Ingestion)**: Append-only, raw source data ingested with zero transformations. Preserves the original schema, full historical timeline, arrival timestamps, source file metadata, and a `_rescued_data` column for corrupt payloads.
   * **Silver (Cleaned & Conformed)**: Cleaned, deduplicated, standardized, validated data. Schema enforced, business keys conformed, domain-level deduplication applied, and modeled into 3NF or SCD Type 1/Type 2 tables.
   * **Gold (Business Aggregates)**: Star-schema fact and dimension tables, aggregated metrics, feature stores, and customer-facing data products ready for executive dashboards, ML inference, and BI reporting.
@@ -62,7 +62,7 @@
 * **Defend the Trade-Off**: Managing 3 workspaces adds configuration overhead, but prevents catastrophic data corruption, accidental production table drops, and credential leakage.
 
 ### Q08: What changes when a notebook moves into production?
-* **30-Second Answer**: 
+* **30-Second Answer**:
   1. **Compute**: Moves from an interactive shared cluster to a dedicated, ephemeral **Job Cluster** running under a dedicated Service Principal.
   2. **Code**: Hardcoded credentials and paths are replaced with Unity Catalog 3-tier references and `dbutils.secrets` or task parameters.
   3. **Structure**: Monolithic notebook cells are refactored into modular Python modules or Databricks Asset Bundles (DABs).

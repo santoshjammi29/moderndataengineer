@@ -173,4 +173,3 @@ All color combinations are mathematically verified to exceed WCAG 2.2 AA (4.5:1 
 ---
 
 [← Back to Design System Directory](./README.md) • [Documentation Hub](../README.md)
-

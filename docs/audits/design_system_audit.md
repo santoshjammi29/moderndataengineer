@@ -127,4 +127,3 @@ All 42 screenshots across 6 breakpoints (375px, 414px, 768px, 1024px, 1440px, 19
 ---
 
 [← Back to Audits Directory](./README.md) • [Documentation Hub](../README.md)
-

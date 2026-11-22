@@ -256,11 +256,11 @@ For large-scale equi-joins where neither table fits in a broadcast join:
 flowchart TD
     subgraph ContainerMem ["Executor Container Memory (Allocated by YARN / K8s)"]
         Overhead["Memory Overhead (spark.executor.memoryOverhead)\n(Default: max(384MB, 10% of Heap)\nUsed for: PySpark daemon, Off-heap buffers, OS Page Cache"]
-        
+
         subgraph JVMHeap ["JVM Heap Memory (spark.executor.memory)"]
             Reserved["Reserved Memory: 300 MB (Hardcoded internal Spark engine)"]
             UserMem["User Memory: 40% of (Heap - 300MB)\n(Custom data structures, UDF variables, internal metadata)"]
-            
+
             subgraph SparkMem ["Unified Spark Memory Pool: 60% of (Heap - 300MB)"]
                 StorageMem["Storage Memory (~50%)\nCached DataFrames & Broadcast Vars"] <-->|"Dynamic Borrowing"| ExecMem["Execution Memory (~50%)\nShuffle buffers, Joins, Sorts, Hash Maps"]
             end
@@ -358,8 +358,8 @@ joined_valid = valid_orders.join(customers, "customer_id", "inner")
 # 3. Union nulls back with null dimension columns
 from pyspark.sql.functions import lit
 null_orders_aligned = null_orders.selectExpr(
-    "*", 
-    "NULL as customer_name", 
+    "*",
+    "NULL as customer_name",
     "NULL as customer_tier"
 )
 

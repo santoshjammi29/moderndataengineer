@@ -7,17 +7,17 @@ Azure Synapse Analytics represents Microsoft's unified enterprise analytics serv
 ```mermaid
 flowchart TD
     Client["Client Applications / Power BI / SSMS"] -->|ODBC / JDBC / ADO.NET| ControlNode["Control Node (Brain / Coordinator)"]
-    
+
     subgraph Synapse_Dedicated_SQL_Pool["Synapse Dedicated SQL Pool (MPP)"]
         ControlNode -->|DMS Data Movement Service| Compute1["Compute Node 1"]
         ControlNode -->|DMS Data Movement Service| Compute2["Compute Node 2"]
         ControlNode -->|DMS Data Movement Service| ComputeN["Compute Node N (up to 60)"]
-        
+
         Compute1 --> Dist1["Distributions (1..k)"]
         Compute2 --> Dist2["Distributions (k+1..m)"]
         ComputeN --> DistN["Distributions (..60)"]
     end
-    
+
     subgraph Storage_Layer["Decoupled Storage (Azure Storage Blob / ADLS Gen2)"]
         Dist1 -.-> ADLS1[(Remote Storage 60 Shards)]
         Dist2 -.-> ADLS2[(Remote Storage 60 Shards)]
@@ -102,7 +102,7 @@ Synapse Serverless SQL Pool is a distributed query processing engine that enable
 1. **Always Use Parquet or Delta**: Columnar formats allow Serverless SQL to read only the projected columns and use Parquet page-level dictionary stats for filter pushdown.
 2. **File Level Partition Pruning (`filepath()` and `filename()`)**:
 ```sql
-SELECT 
+SELECT
     r.filepath(1) AS [Year],
     r.filepath(2) AS [Month],
     SUM(r.TotalAmount) AS MonthlyRevenue
@@ -128,11 +128,11 @@ flowchart LR
         OLTP[Transactional Store: Row-oriented / Document]
         StorageEngine[Cosmos DB Background Engine]
     end
-    
+
     subgraph Analytical_Sync["Zero-ETL Auto-Sync"]
         StorageEngine -->|Internal Lock-Free Sync under 2 min| ColStore["Analytical Store: Columnar Parquet"]
     end
-    
+
     subgraph Synapse_Query["Analytical Compute"]
         ColStore -->|Direct Vectorized Query| SynapseServerless[Synapse Serverless SQL / Spark]
         SynapseServerless --> PBI[Power BI Real-Time Dashboard]
