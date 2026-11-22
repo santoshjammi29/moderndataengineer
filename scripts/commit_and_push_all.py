@@ -33,7 +33,7 @@ REPOSITORIES = [
     ("security-handbook", "santoshjammi29/security-handbook", "Security Handbook"),
 ]
 
-COMMIT_MSG = "feat: implement top-25 GitHub educational standards (ROADMAP, CONTRIBUTING, AGENTS, editorconfig)"
+COMMIT_MSG = "feat: organize topics and roadmaps by functional section then difficulty with default collapsed decks"
 
 def run_cmd(cmd, cwd):
     return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
