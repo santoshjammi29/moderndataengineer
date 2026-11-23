@@ -30,20 +30,20 @@ RUNBOOKS = {
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Consumer Group Rebalance Storm & Extreme Lag"] --> InspectLag["Step 1: Check Group State via kafka-consumer-groups.sh"]
+    Alert["SEV-1 Alert: Consumer Group<br/>Rebalance Storm & Extreme Lag"] --> InspectLag["Step 1: Check Group State via<br/>kafka-consumer-groups.sh"]
     InspectLag --> StateCheck{"Group State?"}
     
-    StateCheck -->|"PreparingRebalance / CompletingRebalance"| StormDetect["Rebalance Storm Active"]
+    StateCheck -->|"PreparingRebalance /<br/>CompletingRebalance"| StormDetect["Rebalance Storm Active"]
     StateCheck -->|"Dead / Empty"| DeadGroup["Consumers Disconnected or Crashed"]
     StateCheck -->|"Stable with Growing Lag"| SlowConsumers["Consumer Processing Bottleneck"]
     
-    StormDetect --> PollCheck{"Poll Interval Exceeded? (max.poll.interval.ms)"}
-    PollCheck -->|Yes| FixPoll["Reduce max.poll.records & Increase max.poll.interval.ms"]
-    PollCheck -->|No| StickyCheck["Upgrade to CooperativeStickyAssignor"]
+    StormDetect --> PollCheck{"Poll Interval Exceeded?<br/>(max.poll.interval.ms)"}
+    PollCheck -->|Yes| FixPoll["Reduce max.poll.records & Increase<br/>max.poll.interval.ms"]
+    PollCheck -->|No| StickyCheck["Upgrade to<br/>CooperativeStickyAssignor"]
     
-    SlowConsumers --> DownstreamCheck{"Downstream Sink Throttling (Delta/DB)?"}
-    DownstreamCheck -->|Yes| SinkOptimize["Scale Sink Partitions & Batch Flush Size"]
-    DownstreamCheck -->|No| ScaleConsumers["Scale Consumer Pod Replicas up to Partition Count"]
+    SlowConsumers --> DownstreamCheck{"Downstream Sink Throttling<br/>(Delta/DB)?"}
+    DownstreamCheck -->|Yes| SinkOptimize["Scale Sink Partitions & Batch<br/>Flush Size"]
+    DownstreamCheck -->|No| ScaleConsumers["Scale Consumer Pod Replicas up to<br/>Partition Count"]
 ```
 
 ---
@@ -150,16 +150,16 @@ finally:
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Flink Checkpoint Expired / Backpressure > 0.8"] --> InspectBackpressure["Step 1: Query Flink REST API for Operator Backpressure"]
+    Alert["SEV-1 Alert: Flink Checkpoint<br/>Expired / Backpressure &gt; 0.8"] --> InspectBackpressure["Step 1: Query Flink REST API for<br/>Operator Backpressure"]
     InspectBackpressure --> IdentifyBottleneck{"Locate Bottleneck Operator"}
     
-    IdentifyBottleneck -->|"Sink Operator"| SinkIssue["Downstream Delta/Kafka Storage Throttling"]
-    IdentifyBottleneck -->|"Stateful Window / Join Operator"| StateIssue["RocksDB GC Pauses or State Bloat"]
+    IdentifyBottleneck -->|"Sink Operator"| SinkIssue["Downstream Delta/Kafka Storage<br/>Throttling"]
+    IdentifyBottleneck -->|"Stateful Window / Join<br/>Operator"| StateIssue["RocksDB GC Pauses or State Bloat"]
     IdentifyBottleneck -->|"Deserialization / CPU Operator"| CpuIssue["Compute Resource Starvation"]
     
-    SinkIssue --> EnableUnaligned["Enable Unaligned Checkpoints & Buffer Debloating"]
-    StateIssue --> TuneRocksDB["Tune RocksDB Block Cache & Write Buffers"]
-    CpuIssue --> ScaleTaskManagers["Scale TaskManager Slots & Heap Memory"]
+    SinkIssue --> EnableUnaligned["Enable Unaligned Checkpoints &<br/>Buffer Debloating"]
+    StateIssue --> TuneRocksDB["Tune RocksDB Block Cache & Write<br/>Buffers"]
+    CpuIssue --> ScaleTaskManagers["Scale TaskManager Slots & Heap<br/>Memory"]
 ```
 
 ---
@@ -244,15 +244,15 @@ env.set_state_backend(state_backend)
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: PostgreSQL WAL Disk > 85% & Debezium Lagging"] --> CheckDisk["Step 1: Check Replication Slot Disk Retained in Postgres"]
+    Alert["SEV-1 Alert: PostgreSQL WAL Disk<br/>&gt; 85% & Debezium Lagging"] --> CheckDisk["Step 1: Check Replication Slot<br/>Disk Retained in Postgres"]
     CheckDisk --> SlotState{"Replication Slot Active?"}
     
-    SlotState -->|"Active: Lagging"| ThrottleCheck["Debezium is Throttled or Blocked on Kafka"]
-    SlotState -->|"Inactive: Abandoned"| DropSlot["Drop Abandoned Slot Immediately to Reclaim WAL Disk"]
+    SlotState -->|"Active: Lagging"| ThrottleCheck["Debezium is Throttled or Blocked<br/>on Kafka"]
+    SlotState -->|"Inactive: Abandoned"| DropSlot["Drop Abandoned Slot Immediately to<br/>Reclaim WAL Disk"]
     
     ThrottleCheck --> SchemaCheck{"Schema Registry Rejection?"}
-    SchemaCheck -->|Yes| FixSchema["Update Schema Registry Compatibility Mode"]
-    SchemaCheck -->|No| ScaleConnect["Scale Kafka Connect Worker Tasks & Memory"]
+    SchemaCheck -->|Yes| FixSchema["Update Schema Registry<br/>Compatibility Mode"]
+    SchemaCheck -->|No| ScaleConnect["Scale Kafka Connect Worker Tasks &<br/>Memory"]
 ```
 
 ---
@@ -347,15 +347,15 @@ curl -X PUT -H "Content-Type: application/json" \
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: Structured Streaming Query Crashed with Malformed JSON"] --> ParseError["Step 1: Check Driver Exception for Parse Mode"]
+    Alert["SEV-2 Alert: Structured Streaming<br/>Query Crashed with Malformed JSON"] --> ParseError["Step 1: Check Driver Exception for<br/>Parse Mode"]
     ParseError --> ModeCheck{"Parse Mode?"}
     
     ModeCheck -->|"FAILFAST"| CrashDetected["FAILFAST crashed micro-batch"]
-    ModeCheck -->|"PERMISSIVE"| PermissiveCheck["Check _corrupt_record column handling"]
+    ModeCheck -->|"PERMISSIVE"| PermissiveCheck["Check _corrupt_record column<br/>handling"]
     
-    CrashDetected --> ApplyPermissive["Configure PERMISSIVE mode with columnNameOfCorruptRecord"]
-    ApplyPermissive --> BranchStream["Split Stream into Valid Delta Sink and DLQ Kafka Sink"]
-    BranchStream --> ResumeQuery["Restart Streaming Query from Checkpoint"]
+    CrashDetected --> ApplyPermissive["Configure PERMISSIVE mode with<br/>columnNameOfCorruptRecord"]
+    ApplyPermissive --> BranchStream["Split Stream into Valid Delta Sink<br/>and DLQ Kafka Sink"]
+    BranchStream --> ResumeQuery["Restart Streaming Query from<br/>Checkpoint"]
 ```
 
 ---
@@ -488,14 +488,14 @@ query.awaitTermination()
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Spark Executor Killed (Exit Code 137 / OOMKilled)"] --> CheckLogs["Step 1: Inspect Executor Memory Logs (Off-Heap vs On-Heap)"]
+    Alert["SEV-1 Alert: Spark Executor Killed<br/>(Exit Code 137 / OOMKilled)"] --> CheckLogs["Step 1: Inspect Executor Memory<br/>Logs (Off-Heap vs On-Heap)"]
     CheckLogs --> MemoryCategory{"Where is Memory Growing?"}
     
-    MemoryCategory -->|"JVM Heap (java.lang.OutOfMemoryError)"| HeapLeak["Tune Spark Heap & State Watermarking"]
-    MemoryCategory -->|"Native RSS Memory (Container Eviction)"| NativeLeak["RocksDB Native Block Cache & MemTable Unbounded"]
+    MemoryCategory -->|"JVM Heap<br/>(java.lang.OutOfMemoryError)"| HeapLeak["Tune Spark Heap & State<br/>Watermarking"]
+    MemoryCategory -->|"Native RSS Memory (Container<br/>Eviction)"| NativeLeak["RocksDB Native Block Cache &<br/>MemTable Unbounded"]
     
-    NativeLeak --> SetBoundedMemory["Configure RocksDB Memory Bounds in spark.sql.streaming"]
-    SetBoundedMemory --> TuneCompaction["Tune Block Cache Size & MemTable Count"]
+    NativeLeak --> SetBoundedMemory["Configure RocksDB Memory Bounds in<br/>spark.sql.streaming"]
+    SetBoundedMemory --> TuneCompaction["Tune Block Cache Size & MemTable<br/>Count"]
     TuneCompaction --> RestartExecutors["Restart Stream with Memory Caps"]
 ```
 
@@ -576,16 +576,16 @@ stream_df = raw_df \
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Kafka Under-Replicated Partitions > 0"] --> IdentifyBrokers["Step 1: Identify Offline or Degraded Brokers"]
+    Alert["SEV-1 Alert: Kafka<br/>Under-Replicated Partitions &gt; 0"] --> IdentifyBrokers["Step 1: Identify Offline or<br/>Degraded Brokers"]
     IdentifyBrokers --> BrokerState{"Broker Health Status?"}
     
-    BrokerState -->|"Broker Down / Hardware Failure"| RestartBroker["Restart Broker or Provision Replacement Node"]
-    BrokerState -->|"Broker Online / Disk I/O Bottleneck"| DiskBottleneck["Disk Saturation / Slow Follower"]
+    BrokerState -->|"Broker Down / Hardware Failure"| RestartBroker["Restart Broker or Provision<br/>Replacement Node"]
+    BrokerState -->|"Broker Online / Disk I/O<br/>Bottleneck"| DiskBottleneck["Disk Saturation / Slow Follower"]
     
-    RestartBroker --> PartitionRebalance["Generate Throttled Partition Reassignment Plan"]
-    DiskBottleneck --> ThrottleReplication["Apply Bandwidth Throttle on Inter-Broker Replication"]
-    PartitionRebalance --> ExecuteRebalance["Execute kafka-reassign-partitions.sh"]
-    ExecuteRebalance --> VerifyISR["Verify Partitions Rejoin In-Sync Replicas (ISR)"]
+    RestartBroker --> PartitionRebalance["Generate Throttled Partition<br/>Reassignment Plan"]
+    DiskBottleneck --> ThrottleReplication["Apply Bandwidth Throttle on<br/>Inter-Broker Replication"]
+    PartitionRebalance --> ExecuteRebalance["Execute<br/>kafka-reassign-partitions.sh"]
+    ExecuteRebalance --> VerifyISR["Verify Partitions Rejoin In-Sync<br/>Replicas (ISR)"]
 ```
 
 ---
@@ -689,17 +689,17 @@ RUNBOOKS["dbt-handbook"] = {
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: dbt Incremental MERGE Failed (Column Count / Type Mismatch)"] --> InspectError["Step 1: Inspect dbt Log for Missing / Added Column"]
+    Alert["SEV-1 Alert: dbt Incremental MERGE<br/>Failed (Column Count / Type<br/>Mismatch)"] --> InspectError["Step 1: Inspect dbt Log for<br/>Missing / Added Column"]
     InspectError --> DriftType{"Schema Drift Type?"}
     
-    DriftType -->|"New Column Added Upstream"| OnSchemaChange["Configure on_schema_change: append_new_columns"]
+    DriftType -->|"New Column Added Upstream"| OnSchemaChange["Configure on_schema_change:<br/>append_new_columns"]
     DriftType -->|"Column Data Type Mutated"| TypeDrift["Apply Explicit CAST in Model SQL"]
-    DriftType -->|"Column Renamed or Dropped"| ColumnDrop["Configure on_schema_change: sync_all_columns"]
+    DriftType -->|"Column Renamed or Dropped"| ColumnDrop["Configure on_schema_change:<br/>sync_all_columns"]
     
-    OnSchemaChange --> RunModel["Run Targeted dbt Model with --select"]
+    OnSchemaChange --> RunModel["Run Targeted dbt Model with<br/>--select"]
     TypeDrift --> RunModel
     ColumnDrop --> RunModel
-    RunModel --> VerifyMerge["Verify Target Table Schema Updated & MERGE Succeeded"]
+    RunModel --> VerifyMerge["Verify Target Table Schema Updated<br/>& MERGE Succeeded"]
 ```
 
 ---
@@ -806,15 +806,15 @@ models:
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: Duplicate Active Rows in SCD2 Snapshot (dbt_valid_to IS NULL > 1)"] --> FindDuplicates["Step 1: Identify Duplicate Primary Keys in Snapshot Table"]
+    Alert["SEV-2 Alert: Duplicate Active Rows<br/>in SCD2 Snapshot (dbt_valid_to IS<br/>NULL &gt; 1)"] --> FindDuplicates["Step 1: Identify Duplicate Primary<br/>Keys in Snapshot Table"]
     FindDuplicates --> CauseCheck{"Collision Cause?"}
     
-    CauseCheck -->|"Same updated_at Timestamp"| TimestampCollision["High-Frequency Updates within Single Microsecond"]
+    CauseCheck -->|"Same updated_at Timestamp"| TimestampCollision["High-Frequency Updates within<br/>Single Microsecond"]
     CauseCheck -->|"Snapshot Interrupted Mid-Run"| PartialCommit["Uncommitted Snapshot Run"]
     
-    TimestampCollision --> SwitchStrategy["Switch Snapshot Strategy to check_cols: 'all'"]
-    PartialCommit --> RepairActive["Execute Atomic SQL Deduplication & Re-open Current State"]
-    SwitchStrategy --> ReSnapshot["Execute dbt snapshot --select <model>"]
+    TimestampCollision --> SwitchStrategy["Switch Snapshot Strategy to<br/>check_cols: 'all'"]
+    PartialCommit --> RepairActive["Execute Atomic SQL Deduplication &<br/>Re-open Current State"]
+    SwitchStrategy --> ReSnapshot["Execute dbt snapshot --select<br/>&lt;model>"]
     RepairActive --> ReSnapshot
 ```
 
@@ -923,15 +923,15 @@ WHERE dbt_scd_id IN (
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: dbt Compilation Failed with Cycle in Model Graph"] --> ParseCycle["Step 1: Extract Cycle Path from dbt compile Error"]
+    Alert["SEV-2 Alert: dbt Compilation<br/>Failed with Cycle in Model Graph"] --> ParseCycle["Step 1: Extract Cycle Path from<br/>dbt compile Error"]
     ParseCycle --> AnalyzeModels{"Where is the Cycle?"}
     
-    AnalyzeModels -->|"Two Marts referencing each other"| CrossRef["Direct Cross-Reference between Marts"]
-    AnalyzeModels -->|"Staging referencing Mart via View"| LayerViolation["Layer Boundary Violation (Staging -> Mart)"]
+    AnalyzeModels -->|"Two Marts referencing each<br/>other"| CrossRef["Direct Cross-Reference between<br/>Marts"]
+    AnalyzeModels -->|"Staging referencing Mart via<br/>View"| LayerViolation["Layer Boundary Violation (Staging<br/>-> Mart)"]
     
-    CrossRef --> ExtractIntermediate["Create Common Intermediate Model (int_)"]
-    LayerViolation --> EnforceStagingRule["Refactor Staging to depend strictly on source()"]
-    ExtractIntermediate --> CompileCheck["Run dbt compile --select state:modified+"]
+    CrossRef --> ExtractIntermediate["Create Common Intermediate Model<br/>(int_)"]
+    LayerViolation --> EnforceStagingRule["Refactor Staging to depend<br/>strictly on source()"]
+    ExtractIntermediate --> CompileCheck["Run dbt compile --select<br/>state:modified+"]
     EnforceStagingRule --> CompileCheck
 ```
 
@@ -1001,14 +1001,14 @@ GROUP BY customer_id
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Warehouse Spend Spike / Accidental --full-refresh in Prod"] --> KillQuery["Step 1: Immediately Kill Active Full-Refresh Query"]
-    KillQuery --> CheckTableSize["Step 2: Inspect Target Table Size & Scan Volume"]
+    Alert["SEV-1 Alert: Warehouse Spend Spike<br/>/ Accidental --full-refresh in<br/>Prod"] --> KillQuery["Step 1: Immediately Kill Active<br/>Full-Refresh Query"]
+    KillQuery --> CheckTableSize["Step 2: Inspect Target Table Size<br/>& Scan Volume"]
     
     CheckTableSize --> TableStatus{"Table Corrupted / Dropped?"}
-    TableStatus -->|"Table Dropped (dbt DROP TABLE)"| RestoreTimeTravel["Restore Table via Delta/Snowflake Time Travel"]
+    TableStatus -->|"Table Dropped (dbt DROP TABLE)"| RestoreTimeTravel["Restore Table via Delta/Snowflake<br/>Time Travel"]
     TableStatus -->|"Query Killed Mid-Write"| RebuildIncremental["Rebuild Incremental Watermark"]
     
-    RestoreTimeTravel --> InstallGuardrail["Deploy prevent_prod_full_refresh Macro"]
+    RestoreTimeTravel --> InstallGuardrail["Deploy prevent_prod_full_refresh<br/>Macro"]
     RebuildIncremental --> InstallGuardrail
 ```
 
@@ -1080,15 +1080,15 @@ on-run-start:
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: dbt Model Contract Violation Detected"] --> CheckContract["Step 1: Check Contract Diff in dbt test Output"]
+    Alert["SEV-2 Alert: dbt Model Contract<br/>Violation Detected"] --> CheckContract["Step 1: Check Contract Diff in dbt<br/>test Output"]
     CheckContract --> ViolationType{"Violation Type?"}
     
-    ViolationType -->|"Column Type Mismatch"| CastError["Upstream Changed Type (e.g. Integer -> String)"]
+    ViolationType -->|"Column Type Mismatch"| CastError["Upstream Changed Type (e.g.<br/>Integer -> String)"]
     ViolationType -->|"Missing Guaranteed Column"| DropError["Upstream Dropped Required Column"]
-    ViolationType -->|"Constraint Check Failed"| NotNullError["NULL values violating NOT NULL constraint"]
+    ViolationType -->|"Constraint Check Failed"| NotNullError["NULL values violating NOT NULL<br/>constraint"]
     
-    CastError --> QuarantineRoute["Route Batch to Quarantine Staging Table"]
-    DropError --> AlertProducer["Trigger PagerDuty to Upstream Service Team"]
+    CastError --> QuarantineRoute["Route Batch to Quarantine Staging<br/>Table"]
+    DropError --> AlertProducer["Trigger PagerDuty to Upstream<br/>Service Team"]
     NotNullError --> QuarantineRoute
 ```
 
@@ -1146,15 +1146,15 @@ FROM {{ source('billing', 'raw_payments') }}
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: PR CI Failed with Model Not Found in Deferred State"] --> DownloadManifest["Step 1: Check Production manifest.json Freshness"]
+    Alert["SEV-2 Alert: PR CI Failed with<br/>Model Not Found in Deferred State"] --> DownloadManifest["Step 1: Check Production<br/>manifest.json Freshness"]
     DownloadManifest --> ManifestAge{"Manifest Age?"}
     
-    ManifestAge -->|"> 24 Hours Old"| StaleManifest["Manifest is Stale / Missing Newly Merged Models"]
-    ManifestAge -->|"< 24 Hours Old"| MissingObject["Deferred Object Does Not Exist in Production Database"]
+    ManifestAge -->|"&gt; 24 Hours Old"| StaleManifest["Manifest is Stale / Missing Newly<br/>Merged Models"]
+    ManifestAge -->|"&lt; 24 Hours Old"| MissingObject["Deferred Object Does Not Exist in<br/>Production Database"]
     
-    StaleManifest --> FetchLatestArtifact["Download Latest manifest.json from Production Deployment"]
-    MissingObject --> FallbackBuild["Build Missing Dependencies in PR Schema"]
-    FetchLatestArtifact --> RerunCI["Rerun CI: dbt build --select state:modified+ --defer"]
+    StaleManifest --> FetchLatestArtifact["Download Latest manifest.json from<br/>Production Deployment"]
+    MissingObject --> FallbackBuild["Build Missing Dependencies in PR<br/>Schema"]
+    FetchLatestArtifact --> RerunCI["Rerun CI: dbt build --select<br/>state:modified+ --defer"]
     FallbackBuild --> RerunCI
 ```
 
@@ -1227,14 +1227,14 @@ RUNBOOKS["dataops-cicd-handbook"] = {
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Terraform Apply Blocked by Error acquiring the state lock"] --> VerifyRunner["Step 1: Verify Active CI Runner Pipelines"]
-    VerifyRunner --> IsRunnerDead{"Is Locking CI Pipeline Still Running?"}
+    Alert["SEV-1 Alert: Terraform Apply<br/>Blocked by Error acquiring the<br/>state lock"] --> VerifyRunner["Step 1: Verify Active CI Runner<br/>Pipelines"]
+    VerifyRunner --> IsRunnerDead{"Is Locking CI Pipeline Still<br/>Running?"}
     
     IsRunnerDead -->|"Yes: Legitimate Deployment"| WaitPipeline["Wait for Active Runner to Complete"]
-    IsRunnerDead -->|"No: Crashed / Aborted Runner"| ForceUnlock["Step 2: Force Unlock Lock ID via CLI"]
+    IsRunnerDead -->|"No: Crashed / Aborted Runner"| ForceUnlock["Step 2: Force Unlock Lock ID via<br/>CLI"]
     
-    ForceUnlock --> RefreshState["Step 3: Run terraform refresh to Reconcile Drift"]
-    RefreshState --> PlanReview["Review terraform plan -detailed-exitcode"]
+    ForceUnlock --> RefreshState["Step 3: Run terraform refresh to<br/>Reconcile Drift"]
+    RefreshState --> PlanReview["Review terraform plan<br/>-detailed-exitcode"]
 ```
 
 ---
@@ -1291,13 +1291,13 @@ terraform plan -out=tfplan.binary -detailed-exitcode
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Migration Stalled or Failed on Production Database"] --> CheckLock["Step 1: Check Migration Lock Table (flyway_schema_history)"]
+    Alert["SEV-1 Alert: Migration Stalled or<br/>Failed on Production Database"] --> CheckLock["Step 1: Check Migration Lock Table<br/>(flyway_schema_history)"]
     CheckLock --> IsLocked{"Is Migration Locked?"}
     
-    IsLocked -->|"Yes: Stalled Lock"| UnlockMigration["Release Migration Lock & Terminate Hanging DDL"]
-    IsLocked -->|"No: Failed Execution"| EvaluateDDL["Evaluate Transactional vs Non-Transactional DDL"]
+    IsLocked -->|"Yes: Stalled Lock"| UnlockMigration["Release Migration Lock & Terminate<br/>Hanging DDL"]
+    IsLocked -->|"No: Failed Execution"| EvaluateDDL["Evaluate Transactional vs<br/>Non-Transactional DDL"]
     
-    UnlockMigration --> ForwardOnlyFix["Apply Forward-Only Non-Destructive Expand/Contract Migration"]
+    UnlockMigration --> ForwardOnlyFix["Apply Forward-Only Non-Destructive<br/>Expand/Contract Migration"]
     EvaluateDDL --> ForwardOnlyFix
 ```
 
@@ -1351,13 +1351,13 @@ UPDATE customers SET phone_e164 = phone WHERE phone_e164 IS NULL;
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: Pipeline Stalled by Quality Assertion Gate Failure"] --> InspectAssertion["Step 1: Inspect Assertion Failure Details"]
+    Alert["SEV-2 Alert: Pipeline Stalled by<br/>Quality Assertion Gate Failure"] --> InspectAssertion["Step 1: Inspect Assertion Failure<br/>Details"]
     InspectAssertion --> SeverityCheck{"Assertion Criticality?"}
     
-    SeverityCheck -->|"Critical Primary Key / NULL Violation"| QuarantineBatch["Trigger Circuit Breaker & Route Batch to Quarantine"]
-    SeverityCheck -->|"Non-Critical Volume Variance"| WarnAndProceed["Emit Warning Alert & Allow Pipeline to Proceed"]
+    SeverityCheck -->|"Critical Primary Key / NULL<br/>Violation"| QuarantineBatch["Trigger Circuit Breaker & Route<br/>Batch to Quarantine"]
+    SeverityCheck -->|"Non-Critical Volume Variance"| WarnAndProceed["Emit Warning Alert & Allow<br/>Pipeline to Proceed"]
     
-    QuarantineBatch --> NotifyDataProductOwner["Dispatch Slack / PagerDuty Alert with Assertion Diagnostics"]
+    QuarantineBatch --> NotifyDataProductOwner["Dispatch Slack / PagerDuty Alert<br/>with Assertion Diagnostics"]
 ```
 
 ---
@@ -1414,14 +1414,14 @@ def validate_silver_dataset(df):
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Kubernetes Worker Pod Terminated with ExitCode 137"] --> InspectPod["Step 1: Run kubectl describe pod"]
+    Alert["SEV-1 Alert: Kubernetes Worker Pod<br/>Terminated with ExitCode 137"] --> InspectPod["Step 1: Run kubectl describe pod"]
     InspectPod --> ReasonCheck{"Termination Reason?"}
     
-    ReasonCheck -->|"OOMKilled (Exit Code 137)"| MemoryEviction["Pod Exceeded spec.resources.limits.memory"]
+    ReasonCheck -->|"OOMKilled (Exit Code 137)"| MemoryEviction["Pod Exceeded<br/>spec.resources.limits.memory"]
     ReasonCheck -->|"Node Eviction (DiskPressure)"| DiskEviction["Node Ephemeral Storage Full"]
     
-    MemoryEviction --> TuneJVM["Set -XX:MaxRAMPercentage=75.0 & Increase Memory Limit"]
-    DiskEviction --> CleanLogs["Prune Docker Container Images & Spark Local Scratch Dirs"]
+    MemoryEviction --> TuneJVM["Set -XX:MaxRAMPercentage=75.0 &<br/>Increase Memory Limit"]
+    DiskEviction --> CleanLogs["Prune Docker Container Images &<br/>Spark Local Scratch Dirs"]
 ```
 
 ---
@@ -1479,9 +1479,9 @@ spec:
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: CI Secret Leaked in Build Logs or Compromised Runner"] --> RevokeCreds["Step 1: Immediately Invalidate Secret in Cloud IAM"]
-    RevokeCreds --> AuditLogs["Step 2: Query CloudTrail / Azure Activity Log for Misuse"]
-    AuditLogs --> MigrateOIDC["Step 3: Replace Static Secrets with Keyless OIDC Federation"]
+    Alert["SEV-1 Alert: CI Secret Leaked in<br/>Build Logs or Compromised Runner"] --> RevokeCreds["Step 1: Immediately Invalidate<br/>Secret in Cloud IAM"]
+    RevokeCreds --> AuditLogs["Step 2: Query CloudTrail / Azure<br/>Activity Log for Misuse"]
+    AuditLogs --> MigrateOIDC["Step 3: Replace Static Secrets<br/>with Keyless OIDC Federation"]
 ```
 
 ---
@@ -1541,14 +1541,14 @@ jobs:
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: On-Call Engineer Alert Fatigue (> 20 False Alarms/Day)"] --> AnalyzeAlerts["Step 1: Categorize High-Volume False Positive Monitors"]
+    Alert["SEV-2 Alert: On-Call Engineer<br/>Alert Fatigue (&gt; 20 False<br/>Alarms/Day)"] --> AnalyzeAlerts["Step 1: Categorize High-Volume<br/>False Positive Monitors"]
     AnalyzeAlerts --> MonitorType{"Monitor Type?"}
     
-    MonitorType -->|"Static Row Count Threshold"| StaticVolume["Static Count Fails on Weekends / Holidays"]
-    MonitorType -->|"Static Freshness Threshold"| StaticFreshness["Freshness Threshold Misses Batch Cadence"]
+    MonitorType -->|"Static Row Count Threshold"| StaticVolume["Static Count Fails on Weekends /<br/>Holidays"]
+    MonitorType -->|"Static Freshness Threshold"| StaticFreshness["Freshness Threshold Misses Batch<br/>Cadence"]
     
-    StaticVolume --> DynamicIQR["Switch to 14-Day Moving Average & Interquartile Range (IQR)"]
-    StaticFreshness --> DynamicFreshness["Configure Schedule-Aware SLA Windows"]
+    StaticVolume --> DynamicIQR["Switch to 14-Day Moving Average &<br/>Interquartile Range (IQR)"]
+    StaticFreshness --> DynamicFreshness["Configure Schedule-Aware SLA<br/>Windows"]
 ```
 
 ---
@@ -1605,14 +1605,14 @@ RUNBOOKS["data-system-design-handbook"] = {
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Active-Active Lakehouse Split-Brain Detected"] --> IsolateSecondary["Step 1: Quench Secondary Region Writes (Set Read-Only)"]
-    IsolateSecondary --> CompareCommitLogs["Step 2: Compare Delta Log Versions across Primary & Secondary"]
+    Alert["SEV-1 Alert: Active-Active<br/>Lakehouse Split-Brain Detected"] --> IsolateSecondary["Step 1: Quench Secondary Region<br/>Writes (Set Read-Only)"]
+    IsolateSecondary --> CompareCommitLogs["Step 2: Compare Delta Log Versions<br/>across Primary & Secondary"]
     
     CompareCommitLogs --> DivergenceCheck{"Commit Log Diverged?"}
-    DivergenceCheck -->|"Secondary has uncommitted transactions"| ExtractDiff["Step 3: Extract Delta Time Travel Delta Diff from Secondary"]
+    DivergenceCheck -->|"Secondary has uncommitted<br/>transactions"| ExtractDiff["Step 3: Extract Delta Time Travel<br/>Delta Diff from Secondary"]
     
-    ExtractDiff --> ReconcilePrimary["Step 4: Execute Deterministic MERGE into Primary Region"]
-    ReconcilePrimary --> ResyncSecondary["Step 5: Overwrite Secondary Storage via Deep Clone"]
+    ExtractDiff --> ReconcilePrimary["Step 4: Execute Deterministic<br/>MERGE into Primary Region"]
+    ReconcilePrimary --> ResyncSecondary["Step 5: Overwrite Secondary<br/>Storage via Deep Clone"]
 ```
 
 ---
@@ -1700,13 +1700,13 @@ spark.sql(f"CREATE OR REPLACE TABLE delta.`{secondary_path}` DEEP CLONE delta.`{
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: Spark Query Planning Exceeds 60s (Metadata Bloat)"] --> CountMetadata["Step 1: Count Commit Files in _delta_log or metadata/"]
-    CountMetadata --> ThresholdCheck{"Commit File Count > 10,000?"}
+    Alert["SEV-2 Alert: Spark Query Planning<br/>Exceeds 60s (Metadata Bloat)"] --> CountMetadata["Step 1: Count Commit Files in<br/>_delta_log or metadata/"]
+    CountMetadata --> ThresholdCheck{"Commit File Count &gt; 10,000?"}
     
     ThresholdCheck -->|Yes| CompactionNeeded["Metadata File Explosion Detected"]
     ThresholdCheck -->|No| CheckDriverMemory["Check Driver Heap & GC Pauses"]
     
-    CompactionNeeded --> ForceCheckpoint["Force Multi-Part Checkpoint Generation"]
+    CompactionNeeded --> ForceCheckpoint["Force Multi-Part Checkpoint<br/>Generation"]
     ForceCheckpoint --> RunVacuum["Execute VACUUM RETAIN 168 HOURS"]
     RunVacuum --> OptimizeBinPack["Execute OPTIMIZE ZORDER BY"]
 ```
@@ -1767,13 +1767,13 @@ SET TBLPROPERTIES (
 
 ```mermaid
 flowchart TD
-    Alert["SEV-2 Alert: Broken OpenLineage Telemetry / Audit Lineage Gap"] --> TestEndpoint["Step 1: Test OpenLineage Backend Endpoint Reachability"]
+    Alert["SEV-2 Alert: Broken OpenLineage<br/>Telemetry / Audit Lineage Gap"] --> TestEndpoint["Step 1: Test OpenLineage Backend<br/>Endpoint Reachability"]
     TestEndpoint --> Reachable{"HTTP 200 OK?"}
     
-    Reachable -->|"No: Connection Refused"| RestoreBackend["Restart Marquez / Purview Ingestion Service"]
-    Reachable -->|"Yes: Dropping Facets"| CheckSparkListener["Inspect Spark OpenLineage SparkListener Config"]
+    Reachable -->|"No: Connection Refused"| RestoreBackend["Restart Marquez / Purview<br/>Ingestion Service"]
+    Reachable -->|"Yes: Dropping Facets"| CheckSparkListener["Inspect Spark OpenLineage<br/>SparkListener Config"]
     
-    RestoreBackend --> ResendRunEvents["Replay Missed RunEvents from Pipeline Run Logs"]
+    RestoreBackend --> ResendRunEvents["Replay Missed RunEvents from<br/>Pipeline Run Logs"]
     CheckSparkListener --> PatchListener["Update openlineage-spark Jar & URL"]
 ```
 
@@ -1821,9 +1821,9 @@ spark.openlineage.namespace=production-lakehouse
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Production SLA Pipeline Queued Behind Ad-Hoc Query"] --> IdentifyRogue["Step 1: Query Active Queries by Runtime & Memory Usage"]
-    IdentifyRogue --> KillRogue["Step 2: Terminate Runaway Query Immediately"]
-    KillRogue --> IsolateWorkloads["Step 3: Route Ad-Hoc Analytics to Dedicated Warehouse"]
+    Alert["SEV-1 Alert: Production SLA<br/>Pipeline Queued Behind Ad-Hoc<br/>Query"] --> IdentifyRogue["Step 1: Query Active Queries by<br/>Runtime & Memory Usage"]
+    IdentifyRogue --> KillRogue["Step 2: Terminate Runaway Query<br/>Immediately"]
+    KillRogue --> IsolateWorkloads["Step 3: Route Ad-Hoc Analytics to<br/>Dedicated Warehouse"]
 ```
 
 ---
@@ -1877,11 +1877,11 @@ SET AUTO_TERMINATION_MINUTES = 10,
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Unity Catalog / Glue Unavailable (Metadata Resolution Failed)"] --> FailoverCatalog["Step 1: Switch to Read-Only Catalog Replica"]
+    Alert["SEV-1 Alert: Unity Catalog / Glue<br/>Unavailable (Metadata Resolution<br/>Failed)"] --> FailoverCatalog["Step 1: Switch to Read-Only<br/>Catalog Replica"]
     FailoverCatalog --> SuccessCheck{"Replica Responding?"}
     
-    SuccessCheck -->|Yes| DirectTraffic["Route Query Engines to Secondary Catalog Endpoint"]
-    SuccessCheck -->|No| DirectPathFallback["Bypass Catalog via Direct Object Storage Paths (delta.`abfss://...`)"]
+    SuccessCheck -->|Yes| DirectTraffic["Route Query Engines to Secondary<br/>Catalog Endpoint"]
+    SuccessCheck -->|No| DirectPathFallback["Bypass Catalog via Direct Object<br/>Storage Paths<br/>(delta.`abfss://...`)"]
 ```
 
 ---
@@ -1928,10 +1928,10 @@ df_orders.join(df_customers, "customer_id").createOrReplaceTempView("emergency_o
 
 ```mermaid
 flowchart TD
-    Alert["SEV-1 Alert: Storage Account Key / SAS Token Leaked Publicly"] --> RotateKey["Step 1: Immediately Regenerate Secondary Storage Key"]
-    RotateKey --> SwapApps["Step 2: Swap Applications to New Key"]
-    SwapApps --> InvalidatePrimary["Step 3: Regenerate Leaked Primary Storage Key"]
-    InvalidatePrimary --> RevokeSAS["Step 4: Invalidate All Active User Delegation SAS Tokens"]
+    Alert["SEV-1 Alert: Storage Account Key /<br/>SAS Token Leaked Publicly"] --> RotateKey["Step 1: Immediately Regenerate<br/>Secondary Storage Key"]
+    RotateKey --> SwapApps["Step 2: Swap Applications to New<br/>Key"]
+    SwapApps --> InvalidatePrimary["Step 3: Regenerate Leaked Primary<br/>Storage Key"]
+    InvalidatePrimary --> RevokeSAS["Step 4: Invalidate All Active User<br/>Delegation SAS Tokens"]
 ```
 
 ---

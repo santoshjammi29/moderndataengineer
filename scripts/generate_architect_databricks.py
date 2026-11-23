@@ -10,13 +10,13 @@ Architecting a multi-workspace enterprise environment federated by a single **Un
 ### The Blueprint
 ```mermaid
 flowchart TD
-    Account["Databricks Account Console (Central Governance & SCIM)"] --> UC[("Unity Catalog Metastore (East US Region)")]
+    Account["Databricks Account Console<br/>(Central Governance & SCIM)"] --> UC[("Unity Catalog Metastore (East US<br/>Region)")]
     UC -->|"Catalog Isolation: READ ONLY"| WS_Dev["Workspace: dev-analytics"]
     UC -->|"Catalog Isolation: READ/WRITE"| WS_Stage["Workspace: staging-analytics"]
-    UC -->|"Catalog Isolation: RESTRICTED PROD"| WS_Prod["Workspace: prod-analytics"]
-    WS_Dev & WS_Stage & WS_Prod --> Storage[("OneLake / ADLS Gen2 Storage Account")]
-    Storage --> DeltaLog["_delta_log/ (ACID Commits & Checkpoints)"]
-    DeltaLog --> Engine["Photon Serverless Compute / Power BI Direct Lake"]
+    UC -->|"Catalog Isolation: RESTRICTED<br/>PROD"| WS_Prod["Workspace: prod-analytics"]
+    WS_Dev & WS_Stage & WS_Prod --> Storage[("OneLake / ADLS Gen2 Storage<br/>Account")]
+    Storage --> DeltaLog["_delta_log/ (ACID Commits &<br/>Checkpoints)"]
+    DeltaLog --> Engine["Photon Serverless Compute / Power<br/>BI Direct Lake"]
 ```
 
 ### The Implementation
@@ -64,12 +64,12 @@ Evaluating and architecting a petabyte-scale comparison between **Databricks Lak
 ### The Blueprint
 ```mermaid
 flowchart TD
-    DataIngest["Petabyte-Scale Ingestion (Streaming + Batch)"] --> Router{"Engine Specialization Router"}
-    Router -->|"Heavy ETL / Streaming / PySpark / ML"| Databricks["Databricks Lakehouse (Photon + Spark)"]
-    Router -->|"High-Concurrency BI / Ad-Hoc SQL"| Snowflake["Snowflake Data Cloud"]
-    Databricks --> OpenLake[("Customer Storage: Delta Lake / Iceberg (ADLS/S3)")]
-    Snowflake --> SnowflakeStorage[("Snowflake Managed Micro-Partitions / Iceberg Tables")]
-    OpenLake -.->|"Iceberg / UniForm / Delta Sharing"| Snowflake
+    DataIngest["Petabyte-Scale Ingestion<br/>(Streaming + Batch)"] --> Router{"Engine Specialization Router"}
+    Router -->|"Heavy ETL / Streaming /<br/>PySpark / ML"| Databricks["Databricks Lakehouse (Photon +<br/>Spark)"]
+    Router -->|"High-Concurrency BI / Ad-Hoc<br/>SQL"| Snowflake["Snowflake Data Cloud"]
+    Databricks --> OpenLake[("Customer Storage: Delta Lake /<br/>Iceberg (ADLS/S3)")]
+    Snowflake --> SnowflakeStorage[("Snowflake Managed Micro-Partitions<br/>/ Iceberg Tables")]
+    OpenLake -.->|"Iceberg / UniForm / Delta<br/>Sharing"| Snowflake
 ```
 
 ### The Implementation

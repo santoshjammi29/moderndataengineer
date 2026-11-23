@@ -12,21 +12,21 @@ This lab is designed to run in any **Databricks Notebook**, **Azure Synapse Spar
 ```mermaid
 flowchart TD
     subgraph Part1 ["Phase 1: Synthesize Data & Force Spill"]
-        GenFact["Generate 10M Rows Fact Table\n90% of rows = 'HOT_ENTERPRISE_CORP'\n10% of rows = Normal (0..10,000)"]
-        GenDim["Generate 10,001 Rows Dimension Table"]
-        DisableBroadcast["Disable Broadcast Join (autoBroadcastJoinThreshold = -1)\nForce Sort-Merge Join (SMJ)"]
+        GenFact["Generate 10M Rows Fact Table<br/>90% of rows =<br/>'HOT_ENTERPRISE_CORP'<br/>10% of rows = Normal (0..10,000)"]
+        GenDim["Generate 10,001 Rows Dimension<br/>Table"]
+        DisableBroadcast["Disable Broadcast Join<br/>(autoBroadcastJoinThreshold = -1)<br/>Force Sort-Merge Join (SMJ)"]
         GenFact --> DisableBroadcast
         GenDim --> DisableBroadcast
-        DisableBroadcast --> ExecuteJoin["Execute Join\nTriggers Shuffle Barrier & Disk Spill"]
+        DisableBroadcast --> ExecuteJoin["Execute Join<br/>Triggers Shuffle Barrier & Disk<br/>Spill"]
     end
 
     subgraph Part2 ["Phase 2: Spark UI Observation"]
-        ExecuteJoin --> UIInspection["Spark UI: 199 Tasks take ~1s\n1 Straggler Task takes ~30s\nSpill (Memory): ~4 GB\nSpill (Disk): ~1.2 GB"]
+        ExecuteJoin --> UIInspection["Spark UI: 199 Tasks take ~1s<br/>1 Straggler Task takes ~30s<br/>Spill (Memory): ~4 GB<br/>Spill (Disk): ~1.2 GB"]
     end
 
     subgraph Part3 ["Phase 3: Compare Resolutions"]
-        UIInspection --> FixAQE["Cure 1: Enable AQE Skew Join\nspark.sql.adaptive.skewJoin.enabled = true\nDynamic partition splitting"]
-        UIInspection --> FixSalt["Cure 2: Selective Two-Phase Salting\nAdd random 0..K-1 suffix to HOT keys\nReplicate dimension keys"]
+        UIInspection --> FixAQE["Cure 1: Enable AQE Skew Join<br/>spark.sql.adaptive.skewJoin.enabled<br/>= true<br/>Dynamic partition splitting"]
+        UIInspection --> FixSalt["Cure 2: Selective Two-Phase<br/>Salting<br/>Add random 0..K-1 suffix to HOT<br/>keys<br/>Replicate dimension keys"]
     end
 ```
 

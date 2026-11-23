@@ -15,27 +15,27 @@ flowchart TD
         DB[Cosmos DB / SQL Server / Dataverse]
     end
 
-    subgraph OneLake_Fabric["OneLake Universal Storage Layer (Delta Parquet Native)"]
-        Shortcuts["OneLake Shortcuts (Zero-Copy Virtualization)"]
+    subgraph OneLake_Fabric["OneLake Universal Storage Layer (Delta<br/>Parquet Native)"]
+        Shortcuts["OneLake Shortcuts (Zero-Copy<br/>Virtualization)"]
         DeltaTables[(Unified Delta Parquet Tables)]
     end
 
-    MultiCloud_Sources -->|Zero Egress / Zero Copy| Shortcuts
+    MultiCloud_Sources -->|"Zero Egress / Zero Copy"| Shortcuts
     Shortcuts --> DeltaTables
 
     subgraph Fabric_Compute_Engines["Shared Fabric Compute Engines (F-SKU Pool)"]
         SparkEng["Fabric Spark (PySpark / Scala)"]
         WareEng["Fabric Warehouse (T-SQL Engine)"]
-        KustoEng["Real-Time Intelligence (KQL Eventhouse)"]
-        PbiEng["Power BI Direct Lake (VertiPaq Engine)"]
-        DataFactory["Data Factory (Pipelines & Dataflows Gen2)"]
+        KustoEng["Real-Time Intelligence (KQL<br/>Eventhouse)"]
+        PbiEng["Power BI Direct Lake (VertiPaq<br/>Engine)"]
+        DataFactory["Data Factory (Pipelines &<br/>Dataflows Gen2)"]
     end
 
     DeltaTables <-->|Direct Vectorized Access| SparkEng
     DeltaTables <-->|Direct Vectorized Access| WareEng
     DeltaTables <-->|Direct Stream Ingestion| KustoEng
     DeltaTables -->|Zero Cache Refresh| PbiEng
-    DeltaTables <-->|ETL / ELT Movement| DataFactory
+    DeltaTables <-->|"ETL / ELT Movement"| DataFactory
 ```
 
 ---
@@ -78,12 +78,12 @@ Direct Lake mode is Fabric's flagship breakthrough in business intelligence perf
 ```mermaid
 flowchart LR
     subgraph Traditional_PBI["Traditional BI Bottlenecks"]
-        ADLS_Old["Data Lake"] -->|Slow Scheduled Refresh Overnight| ImportCache["VertiPaq In-Memory Cache"]
-        SQL_Old["Synapse SQL"] -->|Slow On-the-Fly SQL Translation| DQ["DirectQuery Translation Engine"]
+        ADLS_Old["Data Lake"] -->|"Slow Scheduled Refresh<br/>Overnight"| ImportCache["VertiPaq In-Memory Cache"]
+        SQL_Old["Synapse SQL"] -->|"Slow On-the-Fly SQL<br/>Translation"| DQ["DirectQuery Translation Engine"]
     end
 
     subgraph DirectLake_Mode["Fabric Direct Lake Architecture"]
-        OneLake[(OneLake Delta Parquet)] -->|Zero ETL / Sub-second Load| PBI_Memory[VertiPaq Memory Directly Pages Delta Columns]
+        OneLake[(OneLake Delta Parquet)] -->|"Zero ETL / Sub-second Load"| PBI_Memory[VertiPaq Memory Directly Pages Delta Columns]
         PBI_Memory --> Dash[Interactive Executive Report]
     end
 ```

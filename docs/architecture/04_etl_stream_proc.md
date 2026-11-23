@@ -29,8 +29,8 @@ When data volumes expand from gigabytes to tens or hundreds of terabytes, distri
 ```mermaid
 flowchart TD
     DataStream[Continuous Unbounded Event Stream] -->|Sub-second stateful processing| Flink[Apache Flink]
-    DataLake[(Petabyte Lakehouse: Iceberg / Delta)] -->|Heavy Batch ETL & ML Training| Spark[Apache Spark / Databricks]
-    DataLake -->|Interactive Ad-hoc SQL Federation| Trino[Trino / Presto Engine]
+    DataLake[("Petabyte Lakehouse: Iceberg /<br/>Delta")] -->|"Heavy Batch ETL & ML Training"| Spark[Apache Spark / Databricks]
+    DataLake -->|"Interactive Ad-hoc SQL<br/>Federation"| Trino[Trino / Presto Engine]
 
     Flink --> RealTimeAlerts[Real-Time Fraud Alerts / Ops Dashboards]
     Spark --> GoldTables[(Curated Gold Aggregations)]

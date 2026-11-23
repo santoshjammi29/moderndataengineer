@@ -51,16 +51,16 @@ The platform provides 52 architect-grade digital whiteboard schematics across 7 
 
 ```mermaid
 flowchart TD
-    Start["New Analytical Workload Specification"]
+    Start["New Analytical Workload<br/>Specification"]
 
     Start --> Vol{"Data Volume & Concurrency?"}
-    Vol -- "< 100 GB & Single User" --> InProc["Use <b>DuckDB + Polars</b><br/>(In-process, zero cluster spinup, sub-second queries)"]
-    Vol -- "> 1 TB & High Concurrency" --> Distributed{"Workload Pattern?"}
+    Vol -- "&lt; 100 GB & Single User" --> InProc["Use &lt;b>DuckDB + Polars&lt;/b><br/>(In-process, zero cluster spinup,<br/>sub-second queries)"]
+    Vol -- "&gt; 1 TB & High Concurrency" --> Distributed{"Workload Pattern?"}
 
-    Distributed -- "Batch ETL & ML Feature Prep" --> SparkEngine["Use <b>Apache Spark / Databricks</b><br/>(Catalyst, Photon, Liquid Clustering, AQE Skew Split)"]
-    Distributed -- "Interactive BI over Lakehouse" --> DirectLake["Use <b>Fabric Direct Lake / Trino</b><br/>(In-memory VertiPaq, sub-second DAX, OneLake Shortcuts)"]
-    Distributed -- "Sub-second Streaming CDC / Fraud" --> FlinkEngine["Use <b>Apache Flink / Spark Structured Streaming</b><br/>(Stateful RocksDB on NVMe, continuous event processing)"]
-    Distributed -- "Vector Retrieval & Agentic Context" --> VectorStore["Use <b>LanceDB / pgvector / Qdrant</b><br/>(HNSW indexing, OWASP LLM sandboxed execution)"]
+    Distributed -- "Batch ETL & ML Feature Prep" --> SparkEngine["Use &lt;b>Apache Spark /<br/>Databricks&lt;/b><br/>(Catalyst, Photon, Liquid<br/>Clustering, AQE Skew Split)"]
+    Distributed -- "Interactive BI over Lakehouse" --> DirectLake["Use &lt;b>Fabric Direct Lake /<br/>Trino&lt;/b><br/>(In-memory VertiPaq, sub-second<br/>DAX, OneLake Shortcuts)"]
+    Distributed -- "Sub-second Streaming CDC /<br/>Fraud" --> FlinkEngine["Use &lt;b>Apache Flink / Spark<br/>Structured Streaming&lt;/b><br/>(Stateful RocksDB on NVMe,<br/>continuous event processing)"]
+    Distributed -- "Vector Retrieval & Agentic<br/>Context" --> VectorStore["Use &lt;b>LanceDB / pgvector /<br/>Qdrant&lt;/b><br/>(HNSW indexing, OWASP LLM<br/>sandboxed execution)"]
 ```
 
 ---

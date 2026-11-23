@@ -25,9 +25,9 @@ flowchart TD
     end
 
     subgraph Formats["Open Table Formats (Metadata Management)"]
-        Delta["<b>Delta Lake</b><br/>_delta_log/ JSON commits + Checkpoint Parquet<br/>Optimistic Concurrency Control (OCC)"]
-        Iceberg["<b>Apache Iceberg</b><br/>Catalog -> Metadata File -> Manifest List -> Manifests<br/>Snapshot Tree & Hidden Partitioning"]
-        Hudi["<b>Apache Hudi</b><br/>.hoodie/ Timeline (Instants & States)<br/>Record-Level Indexing (COW & MOR)"]
+        Delta["&lt;b>Delta Lake&lt;/b><br/>_delta_log/ JSON commits +<br/>Checkpoint Parquet<br/>Optimistic Concurrency Control<br/>(OCC)"]
+        Iceberg["&lt;b>Apache Iceberg&lt;/b><br/>Catalog -> Metadata File -><br/>Manifest List -> Manifests<br/>Snapshot Tree & Hidden<br/>Partitioning"]
+        Hudi["&lt;b>Apache Hudi&lt;/b><br/>.hoodie/ Timeline (Instants &<br/>States)<br/>Record-Level Indexing (COW & MOR)"]
     end
 
     subgraph Storage["Decoupled Physical Storage (Object Store)"]
@@ -169,9 +169,9 @@ flowchart LR
     subgraph ColumnarOriented["Columnar Layout (Apache Parquet / ORC)"]
         direction TB
         CHead["File Header ('PAR1')"]
-        RG1["Row Group 1 (~128MB - 512MB)<br/>[Col A Data Pages][Col B Data Pages][Col C Data Pages]"]
-        RG2["Row Group 2 (~128MB - 512MB)<br/>[Col A Data Pages][Col B Data Pages][Col C Data Pages]"]
-        CFoot["File Footer (Schema + Column Min/Max Stats + Offsets)"]
+        RG1["Row Group 1 (~128MB - 512MB)<br/>[Col A Data Pages][Col B Data<br/>Pages][Col C Data Pages]"]
+        RG2["Row Group 2 (~128MB - 512MB)<br/>[Col A Data Pages][Col B Data<br/>Pages][Col C Data Pages]"]
+        CFoot["File Footer (Schema + Column<br/>Min/Max Stats + Offsets)"]
         CHead --> RG1 --> RG2 --> CFoot
     end
 ```
@@ -270,20 +270,20 @@ Avro stores records contiguously in a binary row-oriented format:
 
 ```mermaid
 flowchart TD
-    Start["What is the primary architectural requirement?"]
+    Start["What is the primary architectural<br/>requirement?"]
 
-    Start --> RealTimeStream{"Real-time Streaming Event Ingestion?"}
+    Start --> RealTimeStream{"Real-time Streaming Event<br/>Ingestion?"}
     RealTimeStream -- Yes --> EvtDest{"Write Target?"}
-    EvtDest -- Kafka / Message Bus --> AvroAns["Use <b>Apache Avro</b><br/>(Low write latency, Schema Registry, compact row bytes)"]
-    EvtDest -- Streaming Lakehouse Tables --> PaimonAns["Use <b>Apache Paimon / Hudi MOR</b><br/>(LSM-Tree / delta logs, fast row upserts)"]
+    EvtDest -- Kafka / Message Bus --> AvroAns["Use &lt;b>Apache Avro&lt;/b><br/>(Low write latency, Schema<br/>Registry, compact row bytes)"]
+    EvtDest -- Streaming Lakehouse Tables --> PaimonAns["Use &lt;b>Apache Paimon / Hudi<br/>MOR&lt;/b><br/>(LSM-Tree / delta logs, fast row<br/>upserts)"]
 
-    RealTimeStream -- No --> Analytics{"Analytical Batch & Interactive Querying?"}
-    Analytics -- Deep Hive / Presto Legacy --> ORCAns["Use <b>Apache ORC</b><br/>(High compression ratio, stripe Bloom filters)"]
+    RealTimeStream -- No --> Analytics{"Analytical Batch & Interactive<br/>Querying?"}
+    Analytics -- Deep Hive / Presto Legacy --> ORCAns["Use &lt;b>Apache ORC&lt;/b><br/>(High compression ratio, stripe<br/>Bloom filters)"]
     Analytics -- Modern Cloud Lakehouse --> Lakehouse{"Lakehouse Table Standard?"}
 
-    Lakehouse -- "Databricks-Centric + Multi-Cloud" --> DeltaAns["Use <b>Delta Lake</b> with UniForm<br/>(Liquid Clustering, CDF, automated Iceberg metadata)"]
-    Lakehouse -- "Multi-Engine Open Standard (Trino, Snowflake, Spark)" --> IcebergAns["Use <b>Apache Iceberg</b><br/>(Hidden partitioning, partition evolution, engine-agnostic)"]
-    Lakehouse -- "High-Frequency CDC Ingestion & Upserts" --> HudiAns["Use <b>Apache Hudi</b><br/>(Record-level indexes, incremental consumer timeline)"]
+    Lakehouse -- "Databricks-Centric +<br/>Multi-Cloud" --> DeltaAns["Use &lt;b>Delta Lake&lt;/b&gt;<br/>with UniForm<br/>(Liquid Clustering, CDF, automated<br/>Iceberg metadata)"]
+    Lakehouse -- "Multi-Engine Open Standard<br/>(Trino, Snowflake, Spark)" --> IcebergAns["Use &lt;b>Apache Iceberg&lt;/b><br/>(Hidden partitioning, partition<br/>evolution, engine-agnostic)"]
+    Lakehouse -- "High-Frequency CDC Ingestion &<br/>Upserts" --> HudiAns["Use &lt;b>Apache Hudi&lt;/b><br/>(Record-level indexes, incremental<br/>consumer timeline)"]
 ```
 
 ### Summary Recommendations

@@ -29,19 +29,19 @@ Delta Lake performance and cloud storage costs depend heavily on physical file l
 ```mermaid
 flowchart TD
     subgraph Ingestion["Ingestion Layer (Streaming & Batch)"]
-        StreamIn["Streaming Micro-batches (1-10MB files)"]
+        StreamIn["Streaming Micro-batches (1-10MB<br/>files)"]
         BatchIn["Nightly Batch Appends"]
     end
 
     subgraph WriteOptimization["Write-Time Sizing & Layout"]
-        AutoOpt["Auto Optimize<br/>• optimizeWrites (Dynamic partition sizing)<br/>• autoCompact (128MB compaction on commit)"]
+        AutoOpt["Auto Optimize<br/>• optimizeWrites (Dynamic<br/>partition sizing)<br/>• autoCompact (128MB compaction on<br/>commit)"]
         LiquidClust["Liquid Clustering (CLUSTER BY ★)<br/>Hilbert Space-Filling Curves<br/>Incremental write-time clustering"]
     end
 
     subgraph PeriodicMaintenance["Periodic Maintenance (Scheduled Workflows)"]
-        Compaction["OPTIMIZE (Bin-Packing)<br/>Coalesces small files to ~1GB targets"]
+        Compaction["OPTIMIZE (Bin-Packing)<br/>Coalesces small files to ~1GB<br/>targets"]
         ZOrder["Z-ORDER BY (Multi-Column)<br/>Clusters 1-4 high-cardinality keys"]
-        Vacuum["VACUUM (Safety Window: 7 Days)<br/>Purges tombstoned, unreferenced Parquet files"]
+        Vacuum["VACUUM (Safety Window: 7 Days)<br/>Purges tombstoned, unreferenced<br/>Parquet files"]
     end
 
     subgraph QueryLayer["Unified Multi-Engine Query Layer"]

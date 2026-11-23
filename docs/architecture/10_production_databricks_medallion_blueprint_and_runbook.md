@@ -12,33 +12,33 @@ This manual covers the complete lifecycle across the three core disciplines:
 ```mermaid
 flowchart TD
     subgraph Sources ["Raw Ingestion Sources"]
-        S3["Cloud Object Storage\n(ADLS Gen2 / S3 / GCS)"]
-        Kafka["Streaming Events\n(Kafka / Event Hubs)"]
+        S3["Cloud Object Storage<br/>(ADLS Gen2 / S3 / GCS)"]
+        Kafka["Streaming Events<br/>(Kafka / Event Hubs)"]
     end
 
     subgraph Bronze ["1. Bronze Layer (Raw & Append-Only)"]
-        AutoLoader["Auto Loader (cloudFiles)\nSchema Rescue (_rescued_data)\nRaw JSON/Parquet/CSV"]
+        AutoLoader["Auto Loader (cloudFiles)<br/>Schema Rescue (_rescued_data)<br/>Raw JSON/Parquet/CSV"]
     end
 
     subgraph Silver ["2. Silver Layer (Cleaned & Conformed)"]
-        DLT_Silver["DLT Pipelines / Liquid Clustering\nQuality Expectations (@dlt.expect)\nSCD Type 1 & Type 2\nDeletion Vectors Enabled"]
+        DLT_Silver["DLT Pipelines / Liquid Clustering<br/>Quality Expectations (@dlt.expect)<br/>SCD Type 1 & Type 2<br/>Deletion Vectors Enabled"]
     end
 
     subgraph Gold ["3. Gold Layer (Curated Business Marts)"]
-        GoldMarts["Aggregated Dimensions & Facts\nStar Schema / Feature Store\nPhoton Optimized Views"]
+        GoldMarts["Aggregated Dimensions & Facts<br/>Star Schema / Feature Store<br/>Photon Optimized Views"]
     end
 
     subgraph Governance ["Unity Catalog (Cross-Cutting Governance)"]
-        UC_Namespace["3-Tier Namespace: prod_lakehouse.schema.table"]
+        UC_Namespace["3-Tier Namespace:<br/>prod_lakehouse.schema.table"]
         RLS["Row-Level Security (Row Filters)"]
-        CLS["Column Masks (Dynamic Data Masking)"]
+        CLS["Column Masks (Dynamic Data<br/>Masking)"]
         Lineage["Automated Column-Level Lineage"]
     end
 
     S3 --> AutoLoader
     Kafka --> AutoLoader
     AutoLoader --> Bronze
-    Bronze -->|"Cleanse, Deduplicate & Validate"| DLT_Silver
+    Bronze -->|"Cleanse, Deduplicate &<br/>Validate"| DLT_Silver
     DLT_Silver -->|"Aggregate, Join & Model"| GoldMarts
 
     UC_Namespace -.-> Bronze
@@ -209,15 +209,15 @@ flowchart TD
     OpenUI --> CheckStages["Identify the Longest Stage"]
     CheckStages --> CheckMetrics{"Inspect Summary Metrics (Tasks)"}
 
-    CheckMetrics -->|"Max Duration >> 75th Percentile\nMax Shuffle Read >> Median"| SkewDiag["DIAGNOSIS: Data Skew / Hot Keys"]
-    CheckMetrics -->|"All tasks have Spill (Memory & Disk)\nTask count is very low (e.g. 200)"| SpillDiag["DIAGNOSIS: Under-Partitioning"]
-    CheckMetrics -->|"GC Time > 20% of Task Time"| GCDiag["DIAGNOSIS: JVM GC Pressure / Small Objects"]
-    CheckMetrics -->|"Container Exit Code 137"| OOMDiag["DIAGNOSIS: Executor OOM (Memory Overhead)"]
+    CheckMetrics -->|"Max Duration >&gt; 75th<br/>Percentile<br/>Max Shuffle Read >&gt; Median"| SkewDiag["DIAGNOSIS: Data Skew / Hot Keys"]
+    CheckMetrics -->|"All tasks have Spill (Memory &<br/>Disk)<br/>Task count is very low (e.g.<br/>200)"| SpillDiag["DIAGNOSIS: Under-Partitioning"]
+    CheckMetrics -->|"GC Time &gt; 20% of Task Time"| GCDiag["DIAGNOSIS: JVM GC Pressure / Small<br/>Objects"]
+    CheckMetrics -->|"Container Exit Code 137"| OOMDiag["DIAGNOSIS: Executor OOM (Memory<br/>Overhead)"]
 
-    SkewDiag --> FixSkew["REMEDY:\n1. Enable AQE Skew Join\n2. Filter NULLs before join\n3. Apply Selective Salting"]
-    SpillDiag --> FixSpill["REMEDY:\n1. Calculate: Partitions = Input Bytes / 128MB\n2. Set spark.sql.shuffle.partitions\n3. Reduce executor cores (max 4-5)"]
-    GCDiag --> FixGC["REMEDY:\n1. Switch to G1GC\n2. Avoid string concatenations\n3. Use Vectorized PyArrow UDFs"]
-    OOMDiag --> FixOOM["REMEDY:\n1. Increase spark.executor.memoryOverhead\n2. Decrease spark.executor.cores"]
+    SkewDiag --> FixSkew["REMEDY:<br/>1. Enable AQE Skew Join<br/>2. Filter NULLs before join<br/>3. Apply Selective Salting"]
+    SpillDiag --> FixSpill["REMEDY:<br/>1. Calculate: Partitions = Input<br/>Bytes / 128MB<br/>2. Set<br/>spark.sql.shuffle.partitions<br/>3. Reduce executor cores (max 4-5)"]
+    GCDiag --> FixGC["REMEDY:<br/>1. Switch to G1GC<br/>2. Avoid string concatenations<br/>3. Use Vectorized PyArrow UDFs"]
+    OOMDiag --> FixOOM["REMEDY:<br/>1. Increase<br/>spark.executor.memoryOverhead<br/>2. Decrease spark.executor.cores"]
 ```
 
 ### 3.1 How to Read the Spark UI Stages Tab

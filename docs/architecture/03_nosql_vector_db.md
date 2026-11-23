@@ -106,8 +106,8 @@ flowchart TD
     subgraph Ingestion_Pipeline["Vector Embedding Pipeline"]
         RawDocs[Enterprise PDF / Confluence / SQL Docs] --> Chunker[Semantic Document Chunker]
         Chunker --> EmbedModel[Embedding Model: OpenAI / Cohere]
-        EmbedModel --> Vectors["High-Dimensional Vectors (1536 or 3072 Dimensions)"]
-        Vectors --> VectorDB[(Vector DB: Qdrant / Milvus / pgvector)]
+        EmbedModel --> Vectors["High-Dimensional Vectors (1536 or<br/>3072 Dimensions)"]
+        Vectors --> VectorDB[("Vector DB: Qdrant / Milvus /<br/>pgvector")]
     end
 
     subgraph Query_Pipeline["User Query RAG Pipeline"]

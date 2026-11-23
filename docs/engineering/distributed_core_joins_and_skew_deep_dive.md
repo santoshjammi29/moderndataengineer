@@ -15,12 +15,12 @@ This guide provides an end-to-end technical breakdown of the 5 foundational perf
 flowchart TD
     subgraph DriverHost ["Driver Node (Orchestrator)"]
         SparkSession["SparkSession / SparkContext"] --> Parser["Catalyst Parser & Planner"]
-        Parser --> DAGSched["DAGScheduler\n(Splits into Stages via Shuffles)"]
-        DAGSched --> TaskSched["TaskScheduler\n(Assigns Tasks by Data Locality)"]
+        Parser --> DAGSched["DAGScheduler<br/>(Splits into Stages via Shuffles)"]
+        DAGSched --> TaskSched["TaskScheduler<br/>(Assigns Tasks by Data Locality)"]
         TaskSched --> BlockMgrMaster["BlockManagerMaster"]
     end
 
-    subgraph ClusterMgr ["Cluster Manager (Kubernetes / YARN / Standalone)"]
+    subgraph ClusterMgr ["Cluster Manager (Kubernetes / YARN /<br/>Standalone)"]
         ResMgr["Resource Allocator / Autoscaler"]
     end
 
@@ -72,8 +72,8 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph Stage1 ["Stage 1: Map Phase"]
-        T1["Task 1"] -->|"Partition by Hash"| Buffer1["Shuffle Memory Buffer\n(Sort & Spill if Full)"]
-        T2["Task 2"] -->|"Partition by Hash"| Buffer2["Shuffle Memory Buffer\n(Sort & Spill if Full)"]
+        T1["Task 1"] -->|"Partition by Hash"| Buffer1["Shuffle Memory Buffer<br/>(Sort & Spill if Full)"]
+        T2["Task 2"] -->|"Partition by Hash"| Buffer2["Shuffle Memory Buffer<br/>(Sort & Spill if Full)"]
         Buffer1 --> File1["Disk: .data & .index files"]
         Buffer2 --> File2["Disk: .data & .index files"]
     end
@@ -84,7 +84,7 @@ flowchart LR
     end
 
     subgraph Stage2 ["Stage 2: Reduce Phase"]
-        Netty --> ReduceTask0["Reduce Task 0\n(Consolidates Partition 0)"]
+        Netty --> ReduceTask0["Reduce Task 0<br/>(Consolidates Partition 0)"]
     end
 ```
 
@@ -127,16 +127,16 @@ When joining a partitioned fact table (e.g., partitioned by `date`) with a small
 
 ```mermaid
 flowchart TD
-    JoinReq["Join Evaluation (Table A ⋈ Table B)"] --> EquiCheck{"Is it an Equi-Join\n(= condition)?"}
+    JoinReq["Join Evaluation (Table A ⋈ Table<br/>B)"] --> EquiCheck{"Is it an Equi-Join<br/>(= condition)?"}
 
-    EquiCheck -->|No| BNLJ["Broadcast Nested Loop Join (BNLJ)\n(Slow, O(N x M), avoid in big data)"]
-    EquiCheck -->|Yes| SizeCheck{"Is Table A or B < 10MB\n(or broadcast hint)?"}
+    EquiCheck -->|No| BNLJ["Broadcast Nested Loop Join (BNLJ)<br/>(Slow, O(N x M), avoid in big<br/>data)"]
+    EquiCheck -->|Yes| SizeCheck{"Is Table A or B &lt; 10MB<br/>(or broadcast hint)?"}
 
-    SizeCheck -->|Yes| BHJ["Broadcast Hash Join (BHJ)\nZero Shuffle! Fast O(M + N)"]
-    SizeCheck -->|No| SortCheck{"Are keys sortable\nand datasets large?"}
+    SizeCheck -->|Yes| BHJ["Broadcast Hash Join (BHJ)<br/>Zero Shuffle! Fast O(M + N)"]
+    SizeCheck -->|No| SortCheck{"Are keys sortable<br/>and datasets large?"}
 
-    SortCheck -->|Default| SMJ["Sort-Merge Join (SMJ)\nFull Shuffle + Sort on Keys\nScalable, handles any data size"]
-    SortCheck -->|Small Partitions| SHJ["Shuffle Hash Join (SHJ)\nFull Shuffle, In-Memory Hash per Partition\nFaster than SMJ when fit in RAM"]
+    SortCheck -->|Default| SMJ["Sort-Merge Join (SMJ)<br/>Full Shuffle + Sort on Keys<br/>Scalable, handles any data size"]
+    SortCheck -->|Small Partitions| SHJ["Shuffle Hash Join (SHJ)<br/>Full Shuffle, In-Memory Hash per<br/>Partition<br/>Faster than SMJ when fit in RAM"]
 ```
 
 ### 4.1 Join Strategy Deep Dive
@@ -155,21 +155,21 @@ flowchart TD
 ```mermaid
 flowchart TD
     subgraph Driver ["Driver Node"]
-        DimTable["Small Dimension Table\n(e.g., 5 MB Store Table)"]
-        DimTable -->|"1. Collects & Builds\nBroadcast Block"| BroadcastMgr["Torrent Broadcast\nManager"]
+        DimTable["Small Dimension Table<br/>(e.g., 5 MB Store Table)"]
+        DimTable -->|"1. Collects & Builds<br/>Broadcast Block"| BroadcastMgr["Torrent Broadcast<br/>Manager"]
     end
 
     subgraph Exec1 ["Executor 1"]
-        BroadcastMgr -->|"2. Peer-to-Peer Copy"| HashTbl1["In-Memory Hash Table\n(Store ID -> Info)"]
-        FactP1["Big Fact Table: Partition 1\n(10 Million Rows)"]
-        FactP1 -->|"3. Stream & Probe\n(Zero Network Transfer!)"| HashTbl1
+        BroadcastMgr -->|"2. Peer-to-Peer Copy"| HashTbl1["In-Memory Hash Table<br/>(Store ID -> Info)"]
+        FactP1["Big Fact Table: Partition 1<br/>(10 Million Rows)"]
+        FactP1 -->|"3. Stream & Probe<br/>(Zero Network Transfer!)"| HashTbl1
         HashTbl1 --> Out1["Joined Output Stream 1"]
     end
 
     subgraph Exec2 ["Executor 2"]
-        BroadcastMgr -->|"2. Peer-to-Peer Copy"| HashTbl2["In-Memory Hash Table\n(Store ID -> Info)"]
-        FactP2["Big Fact Table: Partition 2\n(10 Million Rows)"]
-        FactP2 -->|"3. Stream & Probe\n(Zero Network Transfer!)"| HashTbl2
+        BroadcastMgr -->|"2. Peer-to-Peer Copy"| HashTbl2["In-Memory Hash Table<br/>(Store ID -> Info)"]
+        FactP2["Big Fact Table: Partition 2<br/>(10 Million Rows)"]
+        FactP2 -->|"3. Stream & Probe<br/>(Zero Network Transfer!)"| HashTbl2
         HashTbl2 --> Out2["Joined Output Stream 2"]
     end
 ```
@@ -178,8 +178,8 @@ flowchart TD
 ```mermaid
 flowchart TD
     subgraph InputStage ["Step 1: Input Data"]
-        TableA["Large Table A\n(Orders)"]
-        TableB["Large Table B\n(Clickstream)"]
+        TableA["Large Table A<br/>(Orders)"]
+        TableB["Large Table B<br/>(Clickstream)"]
     end
 
     subgraph ShuffleNetwork ["Step 2: Network Shuffle Barrier (Heavy I/O)"]
@@ -188,17 +188,17 @@ flowchart TD
     end
 
     subgraph Exec1 ["Executor 1 (Handles Partition 0)"]
-        Netty -->|"Fetch"| SortA1["Sort Table A\nby customer_id"]
-        Netty -->|"Fetch"| SortB1["Sort Table B\nby customer_id"]
-        SortA1 --> Merge1["Merge Phase\n(Walk two pointers down sorted lists)"]
+        Netty -->|"Fetch"| SortA1["Sort Table A<br/>by customer_id"]
+        Netty -->|"Fetch"| SortB1["Sort Table B<br/>by customer_id"]
+        SortA1 --> Merge1["Merge Phase<br/>(Walk two pointers down sorted<br/>lists)"]
         SortB1 --> Merge1
         Merge1 --> Output1["Partition 0 Result"]
     end
 
     subgraph Exec2 ["Executor 2 (Handles Partition 1)"]
-        Netty -->|"Fetch"| SortA2["Sort Table A\nby customer_id"]
-        Netty -->|"Fetch"| SortB2["Sort Table B\nby customer_id"]
-        SortA2 --> Merge2["Merge Phase\n(Walk two pointers down sorted lists)"]
+        Netty -->|"Fetch"| SortA2["Sort Table A<br/>by customer_id"]
+        Netty -->|"Fetch"| SortB2["Sort Table B<br/>by customer_id"]
+        SortA2 --> Merge2["Merge Phase<br/>(Walk two pointers down sorted<br/>lists)"]
         SortB2 --> Merge2
         Merge2 --> Output2["Partition 1 Result"]
     end
@@ -208,12 +208,12 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph ShuffleStep ["After Network Shuffle"]
-        PartA["Table A Partition Slice\n(50 MB - Fits in RAM)"]
-        PartB["Table B Partition Slice\n(200 MB Stream)"]
+        PartA["Table A Partition Slice<br/>(50 MB - Fits in RAM)"]
+        PartB["Table B Partition Slice<br/>(200 MB Stream)"]
     end
 
     subgraph InExecutor ["Inside Executor Core (No Disk Sort Needed)"]
-        PartA -->|"1. Build Phase"| LocalHash["Build In-Memory\nHash Map"]
+        PartA -->|"1. Build Phase"| LocalHash["Build In-Memory<br/>Hash Map"]
         PartB -->|"2. Probe Phase"| LocalHash
         LocalHash --> Output["Fast Joined Output"]
     end
@@ -226,14 +226,14 @@ flowchart TD
     OuterRow2["Table A: Row 2"] --> Loop
     OuterRowN["Table A: Row N"] --> Loop
 
-    subgraph InnerTable ["Table B (All Rows Re-scanned for EACH Row in Table A)"]
+    subgraph InnerTable ["Table B (All Rows Re-scanned for EACH Row in<br/>Table A)"]
         RowB1["Row 1"]
         RowB2["Row 2"]
         RowBM["Row M"]
     end
 
     InnerTable --> Loop
-    Loop -->|"Quadratic Complexity: O(N x M)\n10,000 x 10,000 = 100 Million Checks!"| Output["Slow Output / High CPU Stalls"]
+    Loop -->|"Quadratic Complexity: O(N x M)<br/>10,000 x 10,000 = 100 Million<br/>Checks!"| Output["Slow Output / High CPU Stalls"]
 ```
 
 ### 4.3 How Broadcast Hash Join (BHJ) Works Internally
@@ -254,21 +254,21 @@ For large-scale equi-joins where neither table fits in a broadcast join:
 
 ```mermaid
 flowchart TD
-    subgraph ContainerMem ["Executor Container Memory (Allocated by YARN / K8s)"]
-        Overhead["Memory Overhead (spark.executor.memoryOverhead)\n(Default: max(384MB, 10% of Heap)\nUsed for: PySpark daemon, Off-heap buffers, OS Page Cache"]
+    subgraph ContainerMem ["Executor Container Memory (Allocated by YARN<br/>/ K8s)"]
+        Overhead["Memory Overhead<br/>(spark.executor.memoryOverhead)<br/>(Default: max(384MB, 10% of Heap)<br/>Used for: PySpark daemon, Off-heap<br/>buffers, OS Page Cache"]
 
         subgraph JVMHeap ["JVM Heap Memory (spark.executor.memory)"]
-            Reserved["Reserved Memory: 300 MB (Hardcoded internal Spark engine)"]
-            UserMem["User Memory: 40% of (Heap - 300MB)\n(Custom data structures, UDF variables, internal metadata)"]
+            Reserved["Reserved Memory: 300 MB (Hardcoded<br/>internal Spark engine)"]
+            UserMem["User Memory: 40% of (Heap - 300MB)<br/>(Custom data structures, UDF<br/>variables, internal metadata)"]
 
-            subgraph SparkMem ["Unified Spark Memory Pool: 60% of (Heap - 300MB)"]
-                StorageMem["Storage Memory (~50%)\nCached DataFrames & Broadcast Vars"] <-->|"Dynamic Borrowing"| ExecMem["Execution Memory (~50%)\nShuffle buffers, Joins, Sorts, Hash Maps"]
+            subgraph SparkMem ["Unified Spark Memory Pool: 60% of (Heap -<br/>300MB)"]
+                StorageMem["Storage Memory (~50%)<br/>Cached DataFrames & Broadcast Vars"] <-->|"Dynamic Borrowing"| ExecMem["Execution Memory (~50%)<br/>Shuffle buffers, Joins, Sorts,<br/>Hash Maps"]
             end
         end
     end
 
     ExecMem -->|"Exceeds RAM"| SpillDisk["Spill to Disk (/local_disk)"]
-    Overhead -->|"Total Container > Limit"| Exit137["Container Killed: Exit Code 137"]
+    Overhead -->|"Total Container &gt; Limit"| Exit137["Container Killed: Exit Code 137"]
 ```
 
 ### 5.1 The Unified Memory Manager Explained
@@ -314,14 +314,14 @@ When Garbage Collection accounts for $> 15\%$ of total stage time:
 flowchart TD
     subgraph ProblemScenario ["The Skew Straggler Problem"]
         Dataset["Dataset: 100 Million Rows"] --> Hash{"Hash Partitioning"}
-        Hash -->|"Key = 'REGULAR_CUST'\n100 rows"| Task1["Tasks 1 to 199\nComplete in 2 Seconds"]
-        Hash -->|"Key = 'NULL' or 'HOT_CUST'\n40 Million rows"| Task200["Task 200 (Straggler)\nRuns for 45 Mins\nSpills 15GB to Disk\nOften Fails with OOM"]
+        Hash -->|"Key = 'REGULAR_CUST'<br/>100 rows"| Task1["Tasks 1 to 199<br/>Complete in 2 Seconds"]
+        Hash -->|"Key = 'NULL' or 'HOT_CUST'<br/>40 Million rows"| Task200["Task 200 (Straggler)<br/>Runs for 45 Mins<br/>Spills 15GB to Disk<br/>Often Fails with OOM"]
     end
 
     subgraph SolutionScenario ["Mitigation: AQE vs. Selective Salting"]
         Task200 --> AQECheck{"Is Spark 3.x AQE Enabled?"}
-        AQECheck -->|Yes| AutoSplit["AQE Dynamic Split\nAutomatically slices partition into sub-chunks"]
-        AQECheck -->|No or Extreme Skew| Salting["Selective Two-Phase Salting\nAdd random 0..K-1 suffix to HOT keys only\nReplicate dimension table rows by K"]
+        AQECheck -->|Yes| AutoSplit["AQE Dynamic Split<br/>Automatically slices partition<br/>into sub-chunks"]
+        AQECheck -->|No or Extreme Skew| Salting["Selective Two-Phase Salting<br/>Add random 0..K-1 suffix to HOT<br/>keys only<br/>Replicate dimension table rows by<br/>K"]
     end
 ```
 

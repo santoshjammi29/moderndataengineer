@@ -32,11 +32,11 @@ Under Delta Lake's **Optimistic Concurrency Control (OCC)**, writers verify whet
 ### The Blueprint
 ```mermaid
 flowchart TD
-    StreamWriter["Streaming Ingestion Writer (Micro-batch 5s)"] -->|"Appends New Data Parquet"| OneLake[("OneLake / ADLS Gen2 Delta Table")]
-    Compactor["Background Maintenance (OPTIMIZE / Vacuum)"] -->|"Compacts Small Parquet Files"| OneLake
-    Updater["CDC Merge / UPDATE Engine"] -->|"Writes RoaringBitmap Deletion Vector"| OneLake
-    OneLake -->|"Atomic Snapshot Reconcile"| DeltaLog["_delta_log/ (JSON Commits + Checkpoints)"]
-    DeltaLog -->|"Conflict-Free Commit Resolution"| Consumers["Power BI Direct Lake / Spark Engines"]
+    StreamWriter["Streaming Ingestion Writer<br/>(Micro-batch 5s)"] -->|"Appends New Data Parquet"| OneLake[("OneLake / ADLS Gen2 Delta Table")]
+    Compactor["Background Maintenance (OPTIMIZE /<br/>Vacuum)"] -->|"Compacts Small Parquet Files"| OneLake
+    Updater["CDC Merge / UPDATE Engine"] -->|"Writes RoaringBitmap Deletion<br/>Vector"| OneLake
+    OneLake -->|"Atomic Snapshot Reconcile"| DeltaLog["_delta_log/ (JSON Commits +<br/>Checkpoints)"]
+    DeltaLog -->|"Conflict-Free Commit<br/>Resolution"| Consumers["Power BI Direct Lake / Spark<br/>Engines"]
 ```
 
 ### The Implementation
@@ -158,13 +158,13 @@ Traditional Hive-style directory partitioning physically shards data into rigid 
 ```mermaid
 flowchart LR
     subgraph Legacy_Hive["Legacy Hive Partitioning (Rigid Folders)"]
-        D1["/year=2024/month=01/ (50,000 Small Files < 2MB)"]
-        D2["Driver OOM during metadata file listing"]
+        D1["/year=2024/month=01/ (50,000 Small<br/>Files &lt; 2MB)"]
+        D2["Driver OOM during metadata file<br/>listing"]
     end
     subgraph Liquid_Clustering["Liquid Clustering (Flexible Layout)"]
-        LC1["Flat Storage: /table_path/*.parquet"]
-        LC2["Z-Order / Hilbert Spatial Clustering on (tenant_id, event_ts)"]
-        LC3["Fast Column-Min/Max Pruning via Transaction Log"]
+        LC1["Flat Storage:<br/>/table_path/*.parquet"]
+        LC2["Z-Order / Hilbert Spatial<br/>Clustering on (tenant_id,<br/>event_ts)"]
+        LC3["Fast Column-Min/Max Pruning via<br/>Transaction Log"]
     end
     Legacy_Hive -->|"ALTER TABLE CLUSTER BY"| Liquid_Clustering
 ```
@@ -222,12 +222,12 @@ Microsoft Fabric decouples compute execution from billing by employing a **24-Ho
 ### The Blueprint
 ```mermaid
 flowchart TD
-    ETLBurst["Sudden 1000% Spark Ingestion Spike"] --> CapGuard{"Fabric Capacity Guard & Airflow Router"}
-    CapGuard -->|"Over Capacity Threshold (>85%)"| ExternalCompute["Burst to External Serverless Spark (Azure Databricks)"]
-    CapGuard -->|"Within Safe Capacity (<85%)"| FabricSpark["Fabric Spark Native Pool (Background 24h Smoothed)"]
-    ExternalCompute -->|"Direct Write via OneLake Shortcut"| OneLake[("OneLake Storage")]
+    ETLBurst["Sudden 1000% Spark Ingestion Spike"] --> CapGuard{"Fabric Capacity Guard & Airflow<br/>Router"}
+    CapGuard -->|"Over Capacity Threshold<br/>(&gt;85%)"| ExternalCompute["Burst to External Serverless Spark<br/>(Azure Databricks)"]
+    CapGuard -->|"Within Safe Capacity (&lt;85%)"| FabricSpark["Fabric Spark Native Pool<br/>(Background 24h Smoothed)"]
+    ExternalCompute -->|"Direct Write via OneLake<br/>Shortcut"| OneLake[("OneLake Storage")]
     FabricSpark -->|"Direct Native Write"| OneLake
-    OneLake -->|"Protected SLA (<2s)"| PBIReports["Power BI Direct Lake Executive Dashboard"]
+    OneLake -->|"Protected SLA (&lt;2s)"| PBIReports["Power BI Direct Lake Executive<br/>Dashboard"]
 ```
 
 ### The Implementation
@@ -350,7 +350,7 @@ flowchart TD
         ShortcutA["OneLake Shortcut (Zero Egress)"] -->|"In-Region Pointer"| GoldLakehouse
     end
     subgraph Spoke_B["EMEA Workspace (West Europe)"]
-        MirrorB["Automated Delta Mirroring / Fast Egress Route"] -->|"Controlled Cross-Region Sync"| GoldLakehouse
+        MirrorB["Automated Delta Mirroring / Fast<br/>Egress Route"] -->|"Controlled Cross-Region Sync"| GoldLakehouse
         LocalShortcutB["Local Shortcut"] --> MirrorB
     end
 ```
@@ -408,11 +408,11 @@ In DAX evaluation, **Context Transition** is the transformation of an active **R
 ```mermaid
 flowchart TD
     VisualQuery["User Slices Power BI Visual"] --> VertiPaq["DAX Evaluation Engine"]
-    VertiPaq --> SE["Storage Engine (SE) - Multi-Threaded, Blazing Fast"]
-    VertiPaq --> FE["Formula Engine (FE) - Single-Threaded, Unvectorized"]
+    VertiPaq --> SE["Storage Engine (SE) -<br/>Multi-Threaded, Blazing Fast"]
+    VertiPaq --> FE["Formula Engine (FE) -<br/>Single-Threaded, Unvectorized"]
     FE -->|"Iterative Row Context Loop"| CT["CALCULATE() Context Transition"]
-    CT -->|"Generates millions of granular sub-queries"| SE
-    SE -->|"Overwhelmed by micro-scans"| Bottleneck["FE Thread Starvation & Visual Timeout (>60s)"]
+    CT -->|"Generates millions of granular<br/>sub-queries"| SE
+    SE -->|"Overwhelmed by micro-scans"| Bottleneck["FE Thread Starvation & Visual<br/>Timeout (&gt;60s)"]
 ```
 
 ### The Implementation
@@ -532,13 +532,13 @@ In enterprise Power BI dimensional modeling, connecting tables via a **Many-to-M
 ```mermaid
 flowchart TD
     subgraph Antipattern["Anti-Pattern: Weak Many-to-Many Across Modes"]
-        DimA["DimAccount (Import Mode)"] <-->|"Many-to-Many (Weak)"| FactTrans["FactTransactions (DirectQuery Mode)"]
-        FactTrans -->|"Cartesian Join Thrash"| OOM["Memory Exhaustion & Non-Deterministic Totals"]
+        DimA["DimAccount (Import Mode)"] <-->|"Many-to-Many (Weak)"| FactTrans["FactTransactions (DirectQuery<br/>Mode)"]
+        FactTrans -->|"Cartesian Join Thrash"| OOM["Memory Exhaustion &<br/>Non-Deterministic Totals"]
     end
     subgraph BestPractice["Architectural Fix: Bridge Table & Star Schema"]
-        DimA2["DimAccount (Import)"] -->|"1-to-Many (Strong)"| Bridge["BridgeTable (Import - Distinct Keys)"]
+        DimA2["DimAccount (Import)"] -->|"1-to-Many (Strong)"| Bridge["BridgeTable (Import - Distinct<br/>Keys)"]
         Bridge -->|"1-to-Many (Strong)"| FactTrans2["FactTransactions (DirectQuery)"]
-        FactTrans2 -->|"Deterministic Semi-Additive DAX"| Fast["Sub-Second Accurate Visuals"]
+        FactTrans2 -->|"Deterministic Semi-Additive<br/>DAX"| Fast["Sub-Second Accurate Visuals"]
     end
 ```
 
@@ -681,14 +681,14 @@ Traditional hybrid enterprise ingestion required configuring site-to-site VPNs o
 flowchart LR
     subgraph Corporate_Enclave["Secure On-Premises Corporate Network"]
         LegacyDB[("Oracle / Teradata / SQL Server")]
-        SHIR["Self-Hosted Integration Runtime (SHIR Cluster)"]
-        SHIR -->|"Local Private IP (Port 1433/1521)"| LegacyDB
+        SHIR["Self-Hosted Integration Runtime<br/>(SHIR Cluster)"]
+        SHIR -->|"Local Private IP (Port<br/>1433/1521)"| LegacyDB
     end
     subgraph Cloud_VNet["Azure Data Factory / Fabric Managed VNet"]
-        PrivateEndpoint["Private Endpoint (privatelink.datafactory.azure.com)"]
-        ADF["ADF / Fabric Pipeline Control Plane"]
+        PrivateEndpoint["Private Endpoint<br/>(privatelink.datafactory.azure.com)"]
+        ADF["ADF / Fabric Pipeline Control<br/>Plane"]
     end
-    SHIR -->|"Outbound ONLY HTTPS (TLS 443) via Azure Relay"| PrivateEndpoint
+    SHIR -->|"Outbound ONLY HTTPS (TLS 443)<br/>via Azure Relay"| PrivateEndpoint
     ADF -->|"Dispatches Task Payloads"| PrivateEndpoint
 ```
 
@@ -738,11 +738,11 @@ Enterprise data platforms must continuously ingest data from hundreds of SaaS AP
 ### The Blueprint
 ```mermaid
 flowchart TD
-    Orchestrator["Airflow / Temporal Pipeline Scheduler"] -->|"Pushes Extraction Tasks"| RedisQueue["Redis Extraction Task Queue"]
-    RedisQueue --> Workers["Stateless Ingestion Worker Fleet (Kubernetes)"]
+    Orchestrator["Airflow / Temporal Pipeline<br/>Scheduler"] -->|"Pushes Extraction Tasks"| RedisQueue["Redis Extraction Task Queue"]
+    RedisQueue --> Workers["Stateless Ingestion Worker Fleet<br/>(Kubernetes)"]
     Workers -->|"Requests Token"| TokenBucket{"Distributed Redis Token Bucket"}
     TokenBucket -->|"Token Available"| API["Third-Party SaaS REST API"]
-    TokenBucket -->|"Token Exhausted"| Backoff["Exponential Backoff with Full Jitter"]
+    TokenBucket -->|"Token Exhausted"| Backoff["Exponential Backoff with Full<br/>Jitter"]
     Backoff -->|"Re-queues Task"| RedisQueue
     API -->|"HTTP 200 JSON Payload"| RawLanding[("OneLake / S3 Landing Zone")]
 ```
@@ -815,14 +815,14 @@ In Apache Spark, memory is partitioned into **Storage Memory** (caching DataFram
 ```mermaid
 flowchart TD
     SparkExecutor["Spark Executor Memory Architecture"]
-    SparkExecutor --> OnHeap["JVM On-Heap Memory (Subject to Garbage Collection)"]
-    SparkExecutor --> OffHeap["Tungsten Off-Heap Memory (Unsafe Direct C++ Allocation)"]
+    SparkExecutor --> OnHeap["JVM On-Heap Memory (Subject to<br/>Garbage Collection)"]
+    SparkExecutor --> OffHeap["Tungsten Off-Heap Memory (Unsafe<br/>Direct C++ Allocation)"]
     
-    OnHeap -->|"User UDFs / Py4J Java Objects"| HeapSpill["High Allocation Rate -> Stop-The-World GC Pause (>30s)"]
-    HeapSpill --> HeartbeatLoss["Missed Driver Heartbeat -> Executor Marked Dead"]
-    HeartbeatLoss --> Reshuffle["Driver Reschedules Tasks -> Cluster Death Spiral"]
+    OnHeap -->|"User UDFs / Py4J Java Objects"| HeapSpill["High Allocation Rate -><br/>Stop-The-World GC Pause (&gt;30s)"]
+    HeapSpill --> HeartbeatLoss["Missed Driver Heartbeat -><br/>Executor Marked Dead"]
+    HeartbeatLoss --> Reshuffle["Driver Reschedules Tasks -><br/>Cluster Death Spiral"]
 
-    OffHeap -->|"Binary Vectorized Operations"| TungstenEngine["Zero-GC High-Throughput Shuffle Engine"]
+    OffHeap -->|"Binary Vectorized Operations"| TungstenEngine["Zero-GC High-Throughput Shuffle<br/>Engine"]
     TungstenEngine --> CleanExecution["Sub-Minute 100TB Shuffle Execution"]
 ```
 
@@ -883,7 +883,7 @@ flowchart TD
         APIServer["Airflow Web / API Server"]
     end
     subgraph Connection_Pooling["PGBouncer Connection Proxy"]
-        PGBouncer["PGBouncer (Transaction Pooling Mode)"]
+        PGBouncer["PGBouncer (Transaction Pooling<br/>Mode)"]
     end
     subgraph Metadata_DB["High-Availability PostgreSQL"]
         PostgresDB[("PostgreSQL 16 Enterprise DB")]
@@ -955,17 +955,17 @@ In Apache Flink stream processing, maintaining large state (e.g., multi-day sess
 ### The Blueprint
 ```mermaid
 flowchart LR
-    UpstreamKafka["Kafka Partitions (High Throughput)"] --> TaskManager1["TaskManager 01 (RocksDB State Backend)"]
-    TaskManager1 -->|"Buffer Saturation (Backpressure)"| TaskManager2["TaskManager 02 (Complex Pattern Detection)"]
+    UpstreamKafka["Kafka Partitions (High Throughput)"] --> TaskManager1["TaskManager 01 (RocksDB State<br/>Backend)"]
+    TaskManager1 -->|"Buffer Saturation<br/>(Backpressure)"| TaskManager2["TaskManager 02 (Complex Pattern<br/>Detection)"]
     
     subgraph Checkpoint_Engine["Unaligned Checkpoint Coordination"]
         Barrier["Checkpoint Barrier Arrives"]
-        Buffer["In-Flight Channel Buffer Written to State Snapshot"]
-        RocksDB["Incremental RocksDB SST File Uploaded to ADLS Gen2 / S3"]
+        Buffer["In-Flight Channel Buffer Written<br/>to State Snapshot"]
+        RocksDB["Incremental RocksDB SST File<br/>Uploaded to ADLS Gen2 / S3"]
     end
     
     TaskManager2 --> Checkpoint_Engine
-    Checkpoint_Engine -->|"Non-Blocking Commit (<1s)"| DurableStorage[("Durable Object Storage Checkpoint Store")]
+    Checkpoint_Engine -->|"Non-Blocking Commit (&lt;1s)"| DurableStorage[("Durable Object Storage Checkpoint<br/>Store")]
 ```
 
 ### The Implementation
@@ -1026,13 +1026,13 @@ Deploying mission-critical databases across hybrid multi-region topologies requi
 flowchart TD
     subgraph DC_Primary["Primary Data Center (Subnet A)"]
         Node1["SQL-PROD-01 (Synchronous Primary)"]
-        Node2["SQL-PROD-02 (Synchronous Secondary)"]
+        Node2["SQL-PROD-02 (Synchronous<br/>Secondary)"]
     end
     subgraph DC_Secondary["DR Data Center (Subnet B)"]
         Node3["SQL-DR-01 (Asynchronous Secondary)"]
     end
     subgraph Azure_Cloud["Microsoft Azure (Neutral Region)"]
-        CloudWitness["Azure Blob Storage Cloud Witness (Tie-Breaker Vote)"]
+        CloudWitness["Azure Blob Storage Cloud Witness<br/>(Tie-Breaker Vote)"]
     end
 
     Node1 <-->|"Zero Data Loss Sync"| Node2
@@ -1096,13 +1096,13 @@ flowchart TD
     subgraph Traditional_Locking["Traditional Read Committed (Heavy Locking)"]
         Writer1["ETL Batch UPDATE / INSERT"] -->|"Acquires Exclusive Lock (X)"| TableA[("Data Pages")]
         Reader1["Reporting Visual Query"] -->|"Requests Shared Lock (S)"| TableA
-        Reader1 -.->|"BLOCKED INDEFINITELY until Writer commits"| BlockChain["Lock Queue Escalates -> 1205 Deadlocks"]
+        Reader1 -.->|"BLOCKED INDEFINITELY until<br/>Writer commits"| BlockChain["Lock Queue Escalates -> 1205<br/>Deadlocks"]
     end
     subgraph RCSI_Architecture["Read Committed Snapshot Isolation (RCSI)"]
         Writer2["ETL Batch UPDATE / INSERT"] -->|"Acquires Exclusive Lock (X)"| TableB[("Current Data Page")]
         Writer2 -->|"Copies Pre-Image to TempDB"| TempDB[("TempDB Version Store")]
-        Reader2["Reporting Visual Query"] -->|"Reads Consistent Snapshot from TempDB"| TempDB
-        Reader2 -->|"ZERO BLOCKING! Instant Sub-Second Read"| Complete["Consistent Visual Rendered"]
+        Reader2["Reporting Visual Query"] -->|"Reads Consistent Snapshot from<br/>TempDB"| TempDB
+        Reader2 -->|"ZERO BLOCKING! Instant<br/>Sub-Second Read"| Complete["Consistent Visual Rendered"]
     end
 ```
 
@@ -1157,12 +1157,12 @@ SQL Server's transaction log (`.ldf`) operates as a circular physical file divid
 ```mermaid
 flowchart LR
     subgraph BadVLF["Anti-Pattern: Fragmented VLF Architecture"]
-        LogFileBad[".LDF File (Autogrow 64MB)"] --> MiniVLFs["15,000 Micro-VLFs (< 1MB each)"]
-        MiniVLFs --> CheckpointLag["Checkpoint engine stalls scanning VLF headers -> I/O Freeze"]
+        LogFileBad[".LDF File (Autogrow 64MB)"] --> MiniVLFs["15,000 Micro-VLFs (&lt; 1MB each)"]
+        MiniVLFs --> CheckpointLag["Checkpoint engine stalls scanning<br/>VLF headers -> I/O Freeze"]
     end
     subgraph OptimizedVLF["Architectural Fix: Pre-Sized Uniform VLFs"]
-        LogFileGood[".LDF File (Pre-Sized 256GB, Autogrow 8GB)"] --> CleanVLFs["Uniform 512MB VLFs"]
-        CleanVLFs --> FastCheckpoint["Sub-Second Log Truncation & Blazing Bulk Ingestion"]
+        LogFileGood[".LDF File (Pre-Sized 256GB,<br/>Autogrow 8GB)"] --> CleanVLFs["Uniform 512MB VLFs"]
+        CleanVLFs --> FastCheckpoint["Sub-Second Log Truncation &<br/>Blazing Bulk Ingestion"]
     end
 ```
 
@@ -1225,8 +1225,8 @@ Monolithic dbt projects spanning hundreds of models collapse under their own wei
 ```mermaid
 flowchart TD
     subgraph Producer_Domain["Finance Domain Repository (Producer)"]
-        InternalFinance["Internal Stage & Intermediate Models"] --> PublicModel["Public Model: dim_finance_account"]
-        Contract{"Contract Enforced: True (Types, Nullability, Columns)"}
+        InternalFinance["Internal Stage & Intermediate<br/>Models"] --> PublicModel["Public Model: dim_finance_account"]
+        Contract{"Contract Enforced: True (Types,<br/>Nullability, Columns)"}
         PublicModel --> Contract
     end
     subgraph Consumer_Domain["Marketing Domain Repository (Consumer)"]
@@ -1234,7 +1234,7 @@ flowchart TD
     end
     subgraph CI_Pipeline["Automated GitHub Actions CI"]
         PR["Upstream Pull Request"] --> Check{"Breaking Schema Change?"}
-        Check -->|"Yes & Unversioned"| Reject["CI BLOCKED: Violates Downstream Model Contract"]
+        Check -->|"Yes & Unversioned"| Reject["CI BLOCKED: Violates Downstream<br/>Model Contract"]
         Check -->|"No or Semantic Version Bump"| Merge["CI Passed: Deploy to Production"]
     end
 ```
@@ -1295,11 +1295,11 @@ Traditional dbt snapshots (`dbt snapshot`) assume batch execution where updates 
 ### The Blueprint
 ```mermaid
 flowchart TD
-    StreamEvents["Out-of-Order CDC Stream (Arrives 14:05, 14:02, 14:08)"] --> Staging["Staging Buffer with Temporal Windowing"]
-    Staging --> Sort["Sort by (Entity_ID, Business_Timestamp ASC)"]
-    Sort --> CalcWindows["Compute: dbt_valid_from = Business_TS, dbt_valid_to = LEAD(Business_TS)"]
-    CalcWindows --> Merge["Atomic Delta MERGE into SCD2 Dimension"]
-    Merge --> Output[("Clean SCD2 Dimension: Zero Overlapping Intervals")]
+    StreamEvents["Out-of-Order CDC Stream (Arrives<br/>14:05, 14:02, 14:08)"] --> Staging["Staging Buffer with Temporal<br/>Windowing"]
+    Staging --> Sort["Sort by (Entity_ID,<br/>Business_Timestamp ASC)"]
+    Sort --> CalcWindows["Compute: dbt_valid_from =<br/>Business_TS, dbt_valid_to =<br/>LEAD(Business_TS)"]
+    CalcWindows --> Merge["Atomic Delta MERGE into SCD2<br/>Dimension"]
+    Merge --> Output[("Clean SCD2 Dimension: Zero<br/>Overlapping Intervals")]
 ```
 
 ### The Implementation
@@ -1370,10 +1370,10 @@ Modern analytics architectures suffer from metric proliferation: Finance defines
 ### The Blueprint
 ```mermaid
 flowchart TD
-    Consumer["Business Consumer / Visual Dashboard"] --> SemanticRouter{"Power BI Semantic Router"}
+    Consumer["Business Consumer / Visual<br/>Dashboard"] --> SemanticRouter{"Power BI Semantic Router"}
     
     subgraph Cache_Layer["In-Memory Acceleration Layer"]
-        AggTable["Direct Lake / Import Aggregation Cache (Grain: Month/Region)"]
+        AggTable["Direct Lake / Import Aggregation<br/>Cache (Grain: Month/Region)"]
     end
     subgraph Dynamic_Engine["dbt MetricFlow Dynamic Engine"]
         MetricFlow["dbt Semantic Layer API"]
@@ -1382,8 +1382,8 @@ flowchart TD
 
     SemanticRouter -->|"Matched Aggregation Grain"| AggTable
     SemanticRouter -->|"Unmatched Ad-Hoc Grain"| MetricFlow
-    MetricFlow -->|"Compiles Standardized Metric SQL"| Warehouse
-    AggTable -->|"Sub-Second (<200ms) Response"| Consumer
+    MetricFlow -->|"Compiles Standardized Metric<br/>SQL"| Warehouse
+    AggTable -->|"Sub-Second (&lt;200ms)<br/>Response"| Consumer
     Warehouse -->|"Dynamic Consistent Response"| Consumer
 ```
 
@@ -1449,11 +1449,11 @@ Traditional Role-Based Access Control (RBAC) requires creating hundreds of redun
 ### The Blueprint
 ```mermaid
 flowchart TD
-    UserQuery["Data Analyst Query: SELECT * FROM silver.patients"] --> CatalogPolicy["Unity Catalog / Purview Policy Engine"]
-    CatalogPolicy -->|"Evaluate User Attributes (Role, Country, Clearance)"| PlanRewriter["Catalyst Logical Plan Rewriter"]
-    PlanRewriter -->|"Inject Predicate: WHERE country = user.country"| PrunedPlan["Row-Filtered Plan"]
-    PlanRewriter -->|"Inject Masking: SHA256(ssn) AS ssn"| MaskedPlan["Column-Masked Plan"]
-    MaskedPlan -->|"Vectorized Parquet Scan (Zero-Copy)"| Storage[("OneLake / ADLS Gen2 Storage")]
+    UserQuery["Data Analyst Query: SELECT * FROM<br/>silver.patients"] --> CatalogPolicy["Unity Catalog / Purview Policy<br/>Engine"]
+    CatalogPolicy -->|"Evaluate User Attributes<br/>(Role, Country, Clearance)"| PlanRewriter["Catalyst Logical Plan Rewriter"]
+    PlanRewriter -->|"Inject Predicate: WHERE<br/>country = user.country"| PrunedPlan["Row-Filtered Plan"]
+    PlanRewriter -->|"Inject Masking: SHA256(ssn) AS<br/>ssn"| MaskedPlan["Column-Masked Plan"]
+    MaskedPlan -->|"Vectorized Parquet Scan<br/>(Zero-Copy)"| Storage[("OneLake / ADLS Gen2 Storage")]
     Storage -->|"Secure Filtered Column Vectors"| UserQuery
 ```
 
@@ -1510,14 +1510,14 @@ Microsoft Fabric's unified capacity model aggregates all workloads (Spark, Wareh
 ### The Blueprint
 ```mermaid
 flowchart TD
-    Workloads["Active Fabric Workloads (Spark, Warehouse, Direct Lake)"] --> Telemetry["Fabric Capacity Metrics / Azure Log Analytics"]
-    Telemetry --> FinOpsEngine["Autonomous FinOps Sentinel (Azure Function / Eventhouse)"]
+    Workloads["Active Fabric Workloads (Spark,<br/>Warehouse, Direct Lake)"] --> Telemetry["Fabric Capacity Metrics / Azure<br/>Log Analytics"]
+    Telemetry --> FinOpsEngine["Autonomous FinOps Sentinel (Azure<br/>Function / Eventhouse)"]
     
     FinOpsEngine --> CheckRunaway{"Query Exceeds 250 CU-Minutes?"}
-    CheckRunaway -->|"Yes"| CancelAPI["Invoke Fabric REST API: Cancel Operation"]
+    CheckRunaway -->|"Yes"| CancelAPI["Invoke Fabric REST API: Cancel<br/>Operation"]
     
-    FinOpsEngine --> CheckBurndown{"24h Burndown Rate > 90% Capacity Limit?"}
-    CheckBurndown -->|"Yes & Business Hours"| ScaleUp["ARM REST API: Scale F64 -> F128 (Immediate Auto-Scale)"]
+    FinOpsEngine --> CheckBurndown{"24h Burndown Rate &gt; 90%<br/>Capacity Limit?"}
+    CheckBurndown -->|"Yes & Business Hours"| ScaleUp["ARM REST API: Scale F64 -> F128<br/>(Immediate Auto-Scale)"]
     CheckBurndown -->|"Yes & Off-Hours"| ThrottleNonProd["Throttle / Pause Dev Workspaces"]
     CheckBurndown -->|"Normal"| Stable["Maintain Baseline Sizing"]
 ```
@@ -1582,7 +1582,7 @@ flowchart LR
         Lakehouse -->|"Direct Lake"| PBI["Power BI Executive Dashboard"]
         PBI -->|"Native Lineage Hook"| PurviewAPI
     end
-    PurviewAPI --> MasterCatalog[("Microsoft Purview Enterprise Lineage Graph")]
+    PurviewAPI --> MasterCatalog[("Microsoft Purview Enterprise<br/>Lineage Graph")]
 ```
 
 ### The Implementation

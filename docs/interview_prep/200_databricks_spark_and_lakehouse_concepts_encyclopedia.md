@@ -11,25 +11,25 @@ flowchart TD
         Exec -->|"Writes Shuffle"| Shuffle["Shuffle Exchange"]
     end
 
-    subgraph P3 & P4 ["Pillar 3 & 4: Engine & Joins"]
+    subgraph P3 & P4["Pillar 3 & 4: Engine & Joins"]
         Catalyst["Catalyst Optimizer"] --> WSCG["Whole-Stage CodeGen"]
         Catalyst --> Joins["Join Strategies (BHJ, SMJ, SHJ)"]
         AQE["Adaptive Query Execution (AQE)"] -.->|"Dynamic Optimization"| Joins
     end
 
-    subgraph P5 & P6 ["Pillar 5 & 6: Memory, Skew & Salting"]
-        UnifiedMem["Unified Memory (Execution / Storage)"] --> Spill["Disk Spill"]
+    subgraph P5 & P6["Pillar 5 & 6: Memory, Skew &<br/>Salting"]
+        UnifiedMem["Unified Memory (Execution /<br/>Storage)"] --> Spill["Disk Spill"]
         Skew["Data Skew / Hot Keys"] -->|"Triggers"| Spill
         Salting["Key Salting / AQE Skew Join"] -->|"Cures"| Skew
     end
 
-    subgraph P7 & P8 ["Pillar 7 & 8: Storage & Platform"]
+    subgraph P7 & P8["Pillar 7 & 8: Storage & Platform"]
         DeltaLog["Delta Transaction Log (_delta_log)"] --> Parquet["Parquet Data Files"]
         DVs["Deletion Vectors"] --> Parquet
         AutoLoader["Auto Loader (cloudFiles)"] --> DLT["Delta Live Tables (Medallion)"]
     end
 
-    subgraph P9 & P10 ["Pillar 9 & 10: Governance & Streaming"]
+    subgraph P9 & P10["Pillar 9 & 10: Governance &<br/>Streaming"]
         UC["Unity Catalog (3-Tier Namespace)"] --> Access["Row/Col Filters & Lineage"]
         Streaming["Structured Streaming"] --> RocksDB["RocksDB State Store"]
     end
@@ -172,14 +172,14 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph SkewProblem ["Skew Problem"]
-        HotKey["Hot Key ('NULL' or 'US')\n10 Million Rows"] --> SingleTask["Task 1 (Straggler)\nRuns for 30 Mins\nSpills to Disk"]
-        NormalKey["Normal Keys\n100 Rows each"] --> NormalTasks["Tasks 2..100\nFinish in 2 Secs"]
+        HotKey["Hot Key ('NULL' or 'US')<br/>10 Million Rows"] --> SingleTask["Task 1 (Straggler)<br/>Runs for 30 Mins<br/>Spills to Disk"]
+        NormalKey["Normal Keys<br/>100 Rows each"] --> NormalTasks["Tasks 2..100<br/>Finish in 2 Secs"]
     end
 
     subgraph SaltingSolution ["Two-Phase Salting Solution"]
-        SaltAppend["Append Random Suffix\nkey_0 .. key_K-1"] --> DistributedTasks["Distributed Across K Tasks\nBalanced Memory"]
-        DistributedTasks --> PartialAgg["Stage 1: Partial Aggregation\n(key, salt)"]
-        PartialAgg --> FinalAgg["Stage 2: Final Aggregation\n(key)"]
+        SaltAppend["Append Random Suffix<br/>key_0 .. key_K-1"] --> DistributedTasks["Distributed Across K Tasks<br/>Balanced Memory"]
+        DistributedTasks --> PartialAgg["Stage 1: Partial Aggregation<br/>(key, salt)"]
+        PartialAgg --> FinalAgg["Stage 2: Final Aggregation<br/>(key)"]
     end
 
     SkewProblem -.->|"Mitigated By"| SaltingSolution
@@ -213,15 +213,15 @@ flowchart LR
 ```mermaid
 flowchart TD
     subgraph TransactionLog ["_delta_log/ (ACID Layer)"]
-        Commit0["000000.json\n(Add part-1, part-2)"] --> Commit1["000001.json\n(Add part-3, Remove part-1)"]
-        Commit1 --> Checkpoint["000010.checkpoint.parquet\n(Consolidated Snapshot)"]
+        Commit0["000000.json<br/>(Add part-1, part-2)"] --> Commit1["000001.json<br/>(Add part-3, Remove part-1)"]
+        Commit1 --> Checkpoint["000010.checkpoint.parquet<br/>(Consolidated Snapshot)"]
     end
 
     subgraph DataFiles ["Physical Storage Layer"]
         Part1["part-1.parquet (Tombstoned)"]
         Part2["part-2.parquet (Active)"]
         Part3["part-3.parquet (Active)"]
-        DV["deletion_vector.bin\n(Soft-Delete Bitmaps)"]
+        DV["deletion_vector.bin<br/>(Soft-Delete Bitmaps)"]
     end
 
     Commit1 -.->|"References"| Part3

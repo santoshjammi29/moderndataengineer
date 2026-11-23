@@ -35,11 +35,11 @@ flowchart TD
         Redis[Redis Enterprise: Flash Inventory Cache]
     end
 
-    Flink -->|Enrich & Risk Score| Cosmos
+    Flink -->|"Enrich & Risk Score"| Cosmos
     Flink -->|Atomic Inventory Decrement| Redis
 
     subgraph Analytical_Lakehouse["Enterprise Lakehouse & BI Tier"]
-        OneLake[(Microsoft Fabric OneLake: Delta Lake Gold)]
+        OneLake[("Microsoft Fabric OneLake: Delta<br/>Lake Gold")]
         Flink -->|Micro-Batch Parquet Commit| OneLake
         DirectLake[Power BI Direct Lake Mode]
         OneLake --> DirectLake
@@ -155,8 +155,8 @@ flowchart TD
 
     subgraph Document_Processing["Preprocessing & Embedding Pipeline"]
         DocIntel[Azure AI Document Intelligence]
-        Chunker["Semantic Markdown Chunker (512 Tokens + 64 Overlap)"]
-        EmbedModel["text-embedding-3-large (3072 Dimensions)"]
+        Chunker["Semantic Markdown Chunker (512<br/>Tokens + 64 Overlap)"]
+        EmbedModel["text-embedding-3-large (3072<br/>Dimensions)"]
     end
 
     Data_Sources --> DocIntel
@@ -164,16 +164,16 @@ flowchart TD
     Chunker --> EmbedModel
 
     subgraph Vector_Storage["High-Scale Vector Database Tier"]
-        VectorDB[(Qdrant / Milvus / Azure Cosmos DB Vector)]
-        EmbedModel -->|Insert Vectors + Metadata Payloads| VectorDB
+        VectorDB[("Qdrant / Milvus / Azure Cosmos DB<br/>Vector")]
+        EmbedModel -->|"Insert Vectors + Metadata<br/>Payloads"| VectorDB
     end
 
     subgraph Query_Engine["User Query & Verification Gateway"]
         LawyerApp[Client Legal Portal] --> AuthGateway[Entra ID Tenant Validation]
         AuthGateway --> QueryEmbed[Generate Query Embedding]
-        QueryEmbed --> HybridSearch["Hybrid Search: HNSW Dense Vectors + BM25 Sparse Lexical"]
+        QueryEmbed --> HybridSearch["Hybrid Search: HNSW Dense Vectors<br/>+ BM25 Sparse Lexical"]
         VectorDB --> HybridSearch
-        HybridSearch --> Reranker["Cohere / Cross-Encoder Reranker (Top 5 Chunks)"]
+        HybridSearch --> Reranker["Cohere / Cross-Encoder Reranker<br/>(Top 5 Chunks)"]
         Reranker --> GPT4o[Azure OpenAI GPT-4o with Grounded Citations]
         GPT4o --> LawyerApp
     end
@@ -201,17 +201,17 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Start[New Enterprise Data Workload Evaluation] --> Q1{Is real-time stream latency < 500ms required?}
+    Start[New Enterprise Data Workload Evaluation] --> Q1{"Is real-time stream latency &lt;<br/>500ms required?"}
 
-    Q1 -- YES --> Q2{Complex stateful event windowing or simple point lookup?}
+    Q1 -- YES --> Q2{"Complex stateful event windowing<br/>or simple point lookup?"}
     Q2 -- Stateful Streams --> EngFlink[Apache Flink + Event Hubs / Kafka]
     Q2 -- Point Lookup / Ingestion --> EngCosmos[Azure Cosmos DB Autoscale / ScyllaDB]
 
-    Q1 -- NO --> Q3{What is the primary consumption pattern?}
+    Q1 -- NO --> Q3{"What is the primary consumption<br/>pattern?"}
     Q3 -- Executive Power BI Dashboards --> EngFabric[Microsoft Fabric OneLake + Direct Lake]
     Q3 -- Heavy Batch ETL & Large-scale ML --> EngSpark[Databricks Lakehouse / Fabric Spark]
     Q3 -- Sub-TB File Transformations --> EngDuck[In-Process DuckDB + Polars on Spot VMs]
-    Q3 -- Semantic Enterprise Document AI --> EngRAG[Qdrant / pgvector + Hybrid HNSW]
+    Q3 -- "Semantic Enterprise Document<br/>AI" --> EngRAG[Qdrant / pgvector + Hybrid HNSW]
 ```
 
 ### 4.1 Production Debugging Quick-Reference

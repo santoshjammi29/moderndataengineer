@@ -23,11 +23,11 @@ A **schema split-brain** occurs in multi-region or hybrid-cloud data lakehouses 
 ### The Blueprint
 ```mermaid
 flowchart TD
-    Client["Analytical Client (Power BI / Spark)"] -->|"Reads Outdated Schema"| Catalog["External Catalog / Metastore"]
+    Client["Analytical Client (Power BI /<br/>Spark)"] -->|"Reads Outdated Schema"| Catalog["External Catalog / Metastore"]
     Catalog -.->|"Split-Brain Desync"| Storage[("ADLS Gen2 / OneLake Object Storage")]
     Storage --> DeltaLog["_delta_log/00000000000000000125.json"]
     Reconciler["Catalog Reconciliation Daemon"] -->|"Inspects Delta Log Head"| DeltaLog
-    Reconciler -->|"Extracts Latest Protocol & Schema"| DeltaSnapshot["Latest Delta Snapshot"]
+    Reconciler -->|"Extracts Latest Protocol &<br/>Schema"| DeltaSnapshot["Latest Delta Snapshot"]
     DeltaSnapshot -->|"Synchronizes Columns & Types"| Catalog
     Catalog -->|"Consistent Schema Manifest"| Client
 ```
@@ -74,14 +74,14 @@ Designing an exabyte-scale, multi-tenant data lake security architecture require
 ### The Blueprint
 ```mermaid
 flowchart LR
-    User["Tenant User / Query Worker"] --> Engine["Query Engine (Fabric Spark / Databricks Photon)"]
-    Engine --> AuthZ{"ABAC Governance Layer (Unity Catalog / Ranger)"}
-    AuthZ -->|"Validates Tenant & Column Masking"| Policy["Security Policy Engine"]
+    User["Tenant User / Query Worker"] --> Engine["Query Engine (Fabric Spark /<br/>Databricks Photon)"]
+    Engine --> AuthZ{"ABAC Governance Layer (Unity<br/>Catalog / Ranger)"}
+    AuthZ -->|"Validates Tenant & Column<br/>Masking"| Policy["Security Policy Engine"]
     Policy -->|"Vends Ephemeral Scoped Token"| TokenBroker["Token Broker (Entra ID)"]
     TokenBroker --> Engine
-    Engine -->|"Reads Encrypted Parquet with Ephemeral Token"| OneLake[("Exabyte Lake Storage (OneLake / ADLS Gen2)")]
+    Engine -->|"Reads Encrypted Parquet with<br/>Ephemeral Token"| OneLake[("Exabyte Lake Storage (OneLake /<br/>ADLS Gen2)")]
     OneLake -->|"Decrypted Column Stream"| Engine
-    Engine -->|"Masked Projection (PII Redacted)"| User
+    Engine -->|"Masked Projection (PII<br/>Redacted)"| User
 ```
 
 ### The Implementation
@@ -130,13 +130,13 @@ A **Zero-Trust Network Architecture for Microsoft Fabric** enforces strict perim
 ### The Blueprint
 ```mermaid
 flowchart TD
-    OnPrem["On-Premises Data Center / Corporate LAN"] -->|"ExpressRoute / Private Link"| HubVNet["Hub Virtual Network (Azure)"]
+    OnPrem["On-Premises Data Center /<br/>Corporate LAN"] -->|"ExpressRoute / Private Link"| HubVNet["Hub Virtual Network (Azure)"]
     HubVNet --> PE["Private Endpoint (Fabric PaaS)"]
     PE --> FabricTenant{{"Microsoft Fabric SaaS Boundary"}}
     FabricTenant --> ManagedVNet["Managed Private Network"]
     ManagedVNet -->|"Managed Private Endpoint"| ADLS[("OneLake / ADLS Gen2 Storage")]
     ManagedVNet -->|"Managed Private Endpoint"| SQLDW[("Fabric Data Warehouse")]
-    EntraID["Microsoft Entra ID (Conditional Access / Zero-Trust)"] -.->|"Continuous Auth Validation"| FabricTenant
+    EntraID["Microsoft Entra ID (Conditional<br/>Access / Zero-Trust)"] -.->|"Continuous Auth Validation"| FabricTenant
 ```
 
 ### The Implementation
@@ -202,7 +202,7 @@ sequenceDiagram
     Note over Primary,DR: Regional Failover Triggered!
     Consumers->>DR: Query RemoteClusterUtils for Translated Offsets
     DR-->>Consumers: Returns Exact Target Offsets
-    Consumers->>DR: Resume Reading (RPO=0, RTO < 60s)
+    Consumers->>DR: Resume Reading (RPO=0, RTO &lt; 60s)
 ```
 
 ### The Implementation

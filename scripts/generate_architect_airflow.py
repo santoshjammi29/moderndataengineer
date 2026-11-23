@@ -10,12 +10,12 @@ A **multi-tenant Apache Airflow architecture** provides compute and security iso
 ### The Blueprint
 ```mermaid
 flowchart TD
-    ControlPlane["Centralized Control Plane (Shared Webserver & HA Schedulers)"] --> Router{"Tenant Workload Router"}
-    Router -->|"Namespace: finance-prod"| FinNS["Finance Namespace (Dedicated K8s Pods & ServiceAccount)"]
-    Router -->|"Namespace: marketing-prod"| MktNS["Marketing Namespace (Dedicated K8s Pods & ServiceAccount)"]
+    ControlPlane["Centralized Control Plane (Shared<br/>Webserver & HA Schedulers)"] --> Router{"Tenant Workload Router"}
+    Router -->|"Namespace: finance-prod"| FinNS["Finance Namespace (Dedicated K8s<br/>Pods & ServiceAccount)"]
+    Router -->|"Namespace: marketing-prod"| MktNS["Marketing Namespace (Dedicated K8s<br/>Pods & ServiceAccount)"]
     FinNS --> FinVault[("Finance Vault / Azure Key Vault")]
     MktNS --> MktVault[("Marketing Vault")]
-    FinNS --> LakeFin[("Finance Lakehouse Path (Restricted)")]
+    FinNS --> LakeFin[("Finance Lakehouse Path<br/>(Restricted)")]
     MktNS --> LakeMkt[("Marketing Lakehouse Path")]
 ```
 
@@ -73,13 +73,13 @@ Evaluating managed Apache Airflow solutions—**Astronomer (Astro)**, **AWS MWAA
 ### The Blueprint
 ```mermaid
 flowchart TD
-    Enterprise["Enterprise Architecture Decision Board"] --> Eval{"Deployment & Cloud Strategy"}
-    Eval -->|"Multi-Cloud / Hybrid / Fast GitOps"| Astro["Astronomer (Astro Platform)"]
+    Enterprise["Enterprise Architecture Decision<br/>Board"] --> Eval{"Deployment & Cloud Strategy"}
+    Eval -->|"Multi-Cloud / Hybrid / Fast<br/>GitOps"| Astro["Astronomer (Astro Platform)"]
     Eval -->|"AWS Single-Cloud / Strict IAM"| MWAA["AWS MWAA (Managed Airflow)"]
-    Eval -->|"Google Cloud / BigQuery Centric"| Composer["Google Cloud Composer 2 (GKE GKEAutopilot)"]
-    Astro --> AstroInfra["Containerized Control Plane + Multi-Cloud Worker Clusters"]
-    MWAA --> AWSInfra["AWS Fargate + SQS Broker + RDS Postgres"]
-    Composer --> GCPInfra["GKE Autopilot + Cloud SQL + Cloud Storage"]
+    Eval -->|"Google Cloud / BigQuery<br/>Centric"| Composer["Google Cloud Composer 2 (GKE<br/>GKEAutopilot)"]
+    Astro --> AstroInfra["Containerized Control Plane +<br/>Multi-Cloud Worker Clusters"]
+    MWAA --> AWSInfra["AWS Fargate + SQS Broker + RDS<br/>Postgres"]
+    Composer --> GCPInfra["GKE Autopilot + Cloud SQL + Cloud<br/>Storage"]
 ```
 
 ### The Implementation
@@ -196,7 +196,7 @@ flowchart TD
     test_customers --> MartGroup["TaskGroup: Core Marts (Tables)"]
     MartGroup --> fct_orders["fct_orders (Incremental)"]
     MartGroup --> test_orders["test_orders (Foreign Key)"]
-    test_orders --> ExposureTask["Trigger Power BI Semantic Model Refresh"]
+    test_orders --> ExposureTask["Trigger Power BI Semantic Model<br/>Refresh"]
 ```
 
 ### The Implementation
@@ -249,7 +249,7 @@ Architecting enterprise data platforms requires evaluating **Event-Driven Orches
 ### The Blueprint
 ```mermaid
 flowchart LR
-    Source["Upstream Microservice (Orders Created)"] -->|"CDC Stream"| Kafka["Kafka Topic / Azure Event Hubs"]
+    Source["Upstream Microservice (Orders<br/>Created)"] -->|"CDC Stream"| Kafka["Kafka Topic / Azure Event Hubs"]
     Kafka -->|"File Landed Event"| S3[("ADLS Gen2 / OneLake Storage")]
     S3 -->|"BlobCreated Webhook"| EventBridge["AWS EventBridge / Azure Event Grid"]
     EventBridge -->|"HTTP POST /api/v1/dags/trigger"| AirflowAPI["Airflow REST API"]

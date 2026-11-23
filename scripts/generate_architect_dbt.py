@@ -12,10 +12,10 @@ Evaluating **dbt Core versus dbt Cloud** at the enterprise architecture tier inv
 flowchart TD
     Architect["Enterprise Analytics Architecture"] --> Evaluation{"Hosting & Governance Strategy"}
     Evaluation -->|"Self-Hosted / K8s / Custom CI"| Core["dbt Core (Open-Source CLI)"]
-    Evaluation -->|"Managed SaaS / Turnkey Semantic Layer"| Cloud["dbt Cloud (Enterprise Tier)"]
-    Core --> CoreRunner["Airflow / KubernetesPodOperator / GitHub Actions"]
-    CoreRunner --> Warehouse[("Cloud Data Warehouse (Snowflake / Fabric / BigQuery)")]
-    Cloud --> CloudEngine["Managed Job Scheduler + Slim CI Deferral + Metadata API"]
+    Evaluation -->|"Managed SaaS / Turnkey<br/>Semantic Layer"| Cloud["dbt Cloud (Enterprise Tier)"]
+    Core --> CoreRunner["Airflow / KubernetesPodOperator /<br/>GitHub Actions"]
+    CoreRunner --> Warehouse[("Cloud Data Warehouse (Snowflake /<br/>Fabric / BigQuery)")]
+    Cloud --> CloudEngine["Managed Job Scheduler + Slim CI<br/>Deferral + Metadata API"]
     CloudEngine --> Warehouse
 ```
 
@@ -54,7 +54,7 @@ dbt Cloud licenses for a team of 40 developers can exceed $120,000 annually. Sel
 ```mermaid
 flowchart LR
     subgraph CoreDomain["Core Data Platform Domain"]
-        raw_cust["stg_crm_customers"] --> dim_cust["dim_customers (public, contract enforced)"]
+        raw_cust["stg_crm_customers"] --> dim_cust["dim_customers (public, contract<br/>enforced)"]
     end
     subgraph FinanceDomain["Finance Analytics Domain"]
         dim_cust -.->|"Cross-Project ref()"| fct_rev["fct_monthly_revenue"]
