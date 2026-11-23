@@ -16,7 +16,7 @@ This skill enforces the exact visual and architectural style for generating **cl
 
 | Element | Specification |
 | :--- | :--- |
-| **Canvas Background** | Pure solid white (`#FFFFFF`) with high contrast. Never use dark mode, textures, or isometric grids. |
+| **Canvas Background** | Deep dark blueprint (`#080808` / `#0A0E17`) with high contrast. Crisp, readable dark mode aesthetic optimized for engineering architectures and OLED displays. |
 | **Art Style** | Polished digital whiteboard sketch with friendly hand-drawn marker linework and crisp borders. |
 | **Containers / Cards** | Rounded rectangular boxes with visible 2-3px hand-drawn outlines and light pastel background fills. |
 | **Typography** | Friendly, legible marker handwriting script for titles/headers; clean sans-serif for subtexts and bullets; monospace on light grey cards for code snippets. |

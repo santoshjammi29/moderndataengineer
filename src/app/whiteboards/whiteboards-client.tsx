@@ -787,7 +787,7 @@ export function WhiteboardsClient() {
                       sizes="(max-width: 1024px) 100vw, 60vw"
                       className={cn(
                         "object-contain p-2 transition-transform duration-300 group-hover:scale-[1.02]",
-                        isDark && "whiteboard-image-dark"
+                        isDark ? "whiteboard-image-dark" : "whiteboard-image-light"
                       )}
                       priority
                     />
@@ -1036,7 +1036,7 @@ export function WhiteboardsClient() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className={cn(
                         "object-contain p-2 transition-transform duration-300 group-hover:scale-105",
-                        isDark && "whiteboard-image-dark"
+                        isDark ? "whiteboard-image-dark" : "whiteboard-image-light"
                       )}
                     />
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -1632,7 +1632,7 @@ export function WhiteboardsClient() {
                   height={900}
                   className={cn(
                     "object-contain max-h-[55vh] w-auto h-auto rounded-xl drop-shadow-md",
-                    isDark && "whiteboard-image-dark"
+                    isDark ? "whiteboard-image-dark" : "whiteboard-image-light"
                   )}
                   priority
                 />
