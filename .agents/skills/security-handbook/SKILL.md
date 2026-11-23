@@ -10,7 +10,7 @@ metadata:
 
 Use this skill for production-grade security engineering, cloud perimeter defense, keyless workload identity federation, cryptography, DevSecOps supply-chain hardening, data processing pipeline security, and incident response runbooks across cloud and lakehouse platforms.
 
-The canonical repository is mirrored at **[santoshjammi29/security-handbook](https://github.com/santoshjammi29/security-handbook)** and locally at `file:///Users/santosh/Documents/antigravity/security-handbook`.
+The canonical repository is mirrored at **[santoshjammi29/security-handbook](https://github.com/santoshjammi29/security-handbook)** and locally at [security-handbook](file:///Users/santosh/Documents/antigravity/security-handbook).
 
 ---
 

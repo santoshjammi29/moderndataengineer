@@ -2377,4 +2377,3 @@
 - [ ] Study production blueprints in `azure-databricks-project-blueprints` and `enterprise-banking-risk-alm-lakehouse`.
 - [ ] Master cloud perimeter security, OIDC federation, and FinOps in `security-handbook`.
 </details>
-

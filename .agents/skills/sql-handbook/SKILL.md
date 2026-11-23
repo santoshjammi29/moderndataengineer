@@ -10,7 +10,7 @@ metadata:
 
 Use this skill for production-grade database engineering, SQL query optimization, relational storage internals, and modern NoSQL distributed architecture. The bundled handbook provides 105 comprehensive production SQL exercises across eight mastery tiers, deep-dive architectures, connection pooling and query profiling runbooks, a complete NoSQL taxonomy, and a battle-tested Top 25 production gotchas checklist.
 
-The canonical repository is mirrored at **[santoshjammi29/sql-handbook](https://github.com/santoshjammi29/sql-handbook)** and locally at `file:///Users/santosh/Documents/antigravity/sql-handbook`.
+The canonical repository is mirrored at **[santoshjammi29/sql-handbook](https://github.com/santoshjammi29/sql-handbook)** and locally at [sql-handbook](file:///Users/santosh/Documents/antigravity/sql-handbook).
 
 ---
 

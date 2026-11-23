@@ -21,10 +21,10 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── page.tsx                       # Home / Hero Command Center, rolling ticker, recent deployments
 │   │   ├── stages/                        # Unified Stages Hub: 4-Stage Mastery, 7-Stage Lakehouse Flow, 6-Stage SDLC, 5-Stage Catalyst, 8 Production Flows
 │   │   ├── guided-learning/               # 4-tier progressive cross-section learning journey
-│   │   ├── concepts/                      # 704 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
+│   │   ├── concepts/                      # 921 concepts with 3-in-1 view switcher (Glossary, Mindmap, Flashcards)
 │   │   ├── mindmap/                       # Standalone route (cross-links to /concepts single-roof view)
-│   │   ├── qa-prep/                       # 7,084 Q&A scenarios (questions.json [3,414] + data_de.json [3,670])
-│   │   ├── architecture/                  # 3,269 architecture scenarios + 36-keyword filter bar + 52 whiteboard blueprints
+│   │   ├── qa-prep/                       # 7,135 Q&A scenarios (questions.json [3,446] + data_de.json [3,689])
+│   │   ├── architecture/                  # 3,305 architecture scenarios + 36-keyword filter bar + 52 whiteboard blueprints
 │   │   ├── code-practice/                 # Unified Code Practice Hub: 178 Drills, 148+ Databricks Operations & Triage, 15 Polyglot Matrix, 62 Python Runbooks, 20-Page Level 100-400 Technical Manual
 │   │   │   └── databricks/                # Dedicated Databricks Coding Hub (148+ operations, memory triage & 20-Page PDF manual download)
 │   │   ├── learning-paths/                # 13 structured career paths (Fabric, Databricks, Azure, AWS, GCP, Snowflake, and 16-Week Production Lakehouse Track)
