@@ -301,7 +301,7 @@ const SEED_REPOS: GitHubRepo[] = [
     full_name: 'santoshjammi29/SantoshJammiProfile',
     description: 'Official GitHub profile configuration and interactive portfolio assets.',
     html_url: 'https://github.com/santoshjammi29/SantoshJammiProfile',
-    homepage: 'https://santosh-jammi-resume.vercel.app',
+    homepage: 'https://santoshjammi29.github.io/SantoshJammiProfile',
     stargazers_count: 27,
     forks_count: 5,
     open_issues_count: 0,
