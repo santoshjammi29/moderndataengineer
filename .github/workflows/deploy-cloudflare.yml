@@ -42,7 +42,7 @@ jobs:
           npm test
 
       - name: Cache R2 sync hash
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .build-artifacts/r2/.last-synced-hash
           key: r2-sync-hash-${{ hashFiles('src/data/json/**', 'content/**') }}
