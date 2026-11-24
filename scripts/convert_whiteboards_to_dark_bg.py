@@ -94,14 +94,23 @@ def process_directory(directory: str, label: str):
     print(f"[{label}] Converted {converted} files, skipped {skipped} already dark.")
 
 def sync_to_sibling_repos():
-    source_files = sorted(glob.glob(os.path.join(PUBLIC_DIAGRAMS, "*.webp")))
-    print(f"\n[Sibling Repos] Synchronizing {len(source_files)} diagrams to {len(SIBLING_REPOS)} sibling repositories...")
+    # Enforce canonical whiteboard assets (exactly 52 blueprints, excluding web alias duplicates)
+    source_files = sorted(glob.glob(os.path.join(ASSETS_WHITEBOARDS, "*.webp")))
+    canonical_basenames = {os.path.basename(f) for f in source_files}
+    print(f"\n[Sibling Repos] Synchronizing {len(source_files)} canonical diagrams to {len(SIBLING_REPOS)} sibling repositories...")
 
     for repo_name in SIBLING_REPOS:
         target_dir = os.path.join(BASE_DIR, repo_name, "assets", "whiteboards")
         if not os.path.exists(os.path.join(BASE_DIR, repo_name)):
             continue
         os.makedirs(target_dir, exist_ok=True)
+
+        # Prune non-canonical alias files or obsolete blueprints
+        for existing in glob.glob(os.path.join(target_dir, "*.webp")):
+            if os.path.basename(existing) not in canonical_basenames:
+                os.remove(existing)
+                print(f"  🗑️ Removed non-canonical alias {os.path.basename(existing)} from {repo_name}/assets/whiteboards/")
+
         count = 0
         for src in source_files:
             fname = os.path.basename(src)

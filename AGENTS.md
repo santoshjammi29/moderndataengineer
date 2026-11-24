@@ -40,5 +40,18 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   2. `npm run build:worker` (OpenNext Cloudflare build)
   3. `npm run r2:sync:remote` (idempotent sync of 106+ R2 shards)
   4. `npm run deploy:worker` (Wrangler edge deployment)
-- **Zero Test Regressions**: All 61 test files (509 tests) and `tsc --noEmit` must pass with 100% success before any deployment or task completion.
+- **Zero Test Regressions**: All 62 test files (522 tests) and `tsc --noEmit` must pass with 100% success before any deployment or task completion.
 - **Repository Asset & PDF Invariants**: The repository maintains 11 published vector A4 PDFs (`docs/pdf/` and `public/cheatsheets/pdf/`) including the 20-page Databricks Technical Manual generated via `scripts/generate_databricks_manual_pdf.py`. All 52 whiteboard blueprints are mirrored in `assets/whiteboards/` and documented in `docs/whiteboard_diagrams/README.md`.
+
+### 5. Multi-Repository CI/CD Quality Gates & Mistake Prevention
+- **The Pre-Flight Test Invariant**: Never execute `git push` on `main` across any of the 14 repositories without running its local test gate (`python3 scripts/run_tests.py`, `python3 scripts/validate_markdown.py`, or `npm test`).
+- **52 Whiteboard Blueprint Invariant**: All 14 repositories strictly enforce `len(assets/whiteboards/*.webp) == 52`. Never sync from web presentation folders (`public/diagrams/`) to sibling repositories without explicitly pruning non-canonical aliases (`enterprise_edge_client_architecture`, `data_edge_client_architecture`, `open_file_formats_storage`, `open_table_formats_lakehouse`).
+- **Mermaid Diagram Parser Rules**:
+  - **No Unquoted Parentheses in Link Labels**: `-->|Label (text)|` fails syntax parsing. Use `-->|"Label (text)"|` or `-->|Label: text|`.
+  - **No Raw Comparison Operators**: Never use `<`, `>`, or `<=` in labels (`-->|< 100 GB|` fails). Spell out (`under 100 GB`, `above 0.85`) or escape as `&lt;` / `&gt;`.
+  - **No Semicolons in sequenceDiagram Notes**: In `sequenceDiagram`, `;` terminates the command. Use commas or colons (`Note over Sorter: Memory full, spilling to disk`).
+  - **Escape Literal Dollar Signs**: Use `\$` in prose and diagrams to prevent math-mode parsing conflicts.
+- **Markdown Relative Link Resolution**: Always verify link path relative to the document's directory depth (e.g. `docs/audits/doc.md` requires `../../CONTRIBUTING.md`, not `CONTRIBUTING.md`). For cross-repo references, use canonical GitHub URLs.
+- **Python Pip Cache Invariant**: Workflows with `cache: "pip"` MUST have a valid root `requirements.txt`.
+- **Databricks Notebook AST Validation**: All `.py` source notebooks must parse cleanly via `ast.parse()` using `python3 scripts/validate_notebooks.py`.
+- **Ecosystem Health Audit**: Run `python3 scripts/verify_ecosystem_ci.py` to audit all 14 repositories before committing cross-repo changes.
