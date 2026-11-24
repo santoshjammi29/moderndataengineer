@@ -20,7 +20,7 @@ import {
   Home,
   Sparkles,
   Workflow,
-  Github,
+  FolderGit2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isSubHrefActive } from "@/data/navigation-data";
@@ -59,7 +59,7 @@ const NAV_SECTIONS: NavSection[] = [
     id: "repositories",
     label: "Repositories",
     href: "/repositories",
-    icon: Github,
+    icon: FolderGit2,
     badge: "14 projects",
   },
   {

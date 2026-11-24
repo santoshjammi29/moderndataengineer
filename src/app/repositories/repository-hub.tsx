@@ -9,7 +9,7 @@ import {
   Code2,
   Database,
   ExternalLink,
-  Github,
+  FolderGit2,
   GraduationCap,
   Layers,
   Search,
@@ -97,7 +97,7 @@ function RepositoryCard({ repository }: { repository: ProjectRepository }) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-[var(--foreground)]">
-            <Github size={19} aria-hidden="true" />
+            <FolderGit2 size={19} aria-hidden="true" />
           </div>
           <div className="min-w-0">
             <h3 className="text-sm font-bold tracking-tight text-[var(--foreground)] sm:text-base">
@@ -255,7 +255,7 @@ export function RepositoryHub() {
             </div>
             <div className="col-span-2 rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.06] p-4">
               <div className="flex items-center gap-2 text-cyan-200">
-                <Github size={15} />
+                <FolderGit2 size={15} />
                 <span className="text-xs font-bold">GitHub remains the source of truth</span>
               </div>
               <p className="mt-1.5 text-xs leading-5 text-slate-400">

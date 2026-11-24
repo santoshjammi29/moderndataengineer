@@ -24,7 +24,7 @@ import {
   Zap,
   Cloud,
   Search,
-  Github,
+  FolderGit2,
 } from "lucide-react";
 
 export interface SubNavItem {
@@ -64,7 +64,7 @@ export const NAV_GROUPS: NavGroup[] = [
     title: "Start",
     items: [
       { label: "Home", href: "/", icon: Home },
-      { label: "Repository Library", href: "/repositories", icon: Github, matches: ["/repositories"], pill: { text: "14 projects", variant: "info" } },
+      { label: "Repository Library", href: "/repositories", icon: FolderGit2, matches: ["/repositories"], pill: { text: "14 projects", variant: "info" } },
       {
         label: "Search All Content",
         href: "/search-topics",
@@ -313,7 +313,7 @@ export const NAV_GROUPS: NavGroup[] = [
 export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "home", label: "Home Dashboard", shortLabel: "Home", href: "/", category: "Portal", categoryColor: "blue", icon: Home },
   { id: "search-topics", label: "Search All Content", shortLabel: "Search", href: "/search-topics", category: "Portal", categoryColor: "blue", icon: Search },
-  { id: "repositories", label: "Public Repository Library", shortLabel: "Repositories", href: "/repositories", category: "Portal", categoryColor: "blue", icon: Github, badge: "14 projects" },
+  { id: "repositories", label: "Public Repository Library", shortLabel: "Repositories", href: "/repositories", category: "Portal", categoryColor: "blue", icon: FolderGit2, badge: "14 projects" },
   
   // Learn
   { id: "guided-learning", label: "Guided Learning Tracks", shortLabel: "Guided Tracks", href: "/guided-learning", category: "Learn", categoryColor: "indigo", icon: Route, badge: "Path" },
