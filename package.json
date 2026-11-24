@@ -88,7 +88,8 @@
     "braces": "^3.0.3",
     "fast-glob": "^3.3.3",
     "micromatch": "^4.0.8",
-    "glob": "^11.0.0",
+    "glob": "^14.0.6",
+    "minimatch": "^11.0.9",
     "undici": "^7.30.1"
   }
 }
