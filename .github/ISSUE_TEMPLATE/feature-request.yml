@@ -1,0 +1,23 @@
+name: Feature Request or Curriculum Proposal
+description: Suggest a new architectural guide, concept scenario, or platform feature.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest a new feature or content area for the platform.
+  - type: input
+    id: title
+    attributes:
+      label: Feature / Topic Title
+      placeholder: "e.g. Interactive Spark Shuffle Spill Cost Calculator"
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Production Motivation & User Need
+      description: Why is this feature needed? What architectural domain does it address?
+    validations:
+      required: true

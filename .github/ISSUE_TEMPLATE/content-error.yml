@@ -1,0 +1,30 @@
+name: Platform Error or Content Inaccuracy Report
+description: Report an error, broken route, or technical inaccuracy in the Modern Data Engineer platform.
+title: "[Bug/Inaccuracy]: "
+labels: ["triage", "bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve **Modern Data Engineer & Lakehouse Architect Platform**!
+  - type: input
+    id: path
+    attributes:
+      label: Affected Page Route or Content ID
+      placeholder: "e.g. /concepts/spark-memory, or /whiteboards"
+    validations:
+      required: true
+  - type: textarea
+    id: error_description
+    attributes:
+      label: Description of the Issue
+      description: Explain what is incorrect or broken, with steps to reproduce if applicable.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have verified this in the latest production build.
+          required: true

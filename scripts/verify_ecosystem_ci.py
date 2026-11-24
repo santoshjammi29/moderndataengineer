@@ -87,6 +87,18 @@ def run_repo_tests(repo_name: str) -> (bool, str):
             return True, "Markdown valid"
         return False, f"Markdown validation failed"
 
+    # Databricks handbook or modern repos using pytest / uv
+    venv_pytest = repo_dir / ".venv" / "bin" / "pytest"
+    if venv_pytest.exists():
+        res = subprocess.run([str(venv_pytest), "-q"], cwd=str(repo_dir), capture_output=True, text=True)
+        if res.returncode == 0:
+            return True, "Tests passed (pytest)"
+        return False, f"Test failed: {res.stderr.strip() or res.stdout.strip()[-150:]}"
+    elif os.path.exists("/opt/homebrew/bin/uv") and (repo_dir / "pyproject.toml").exists():
+        res = subprocess.run(["/opt/homebrew/bin/uv", "run", "pytest", "-q"], cwd=str(repo_dir), capture_output=True, text=True)
+        if res.returncode == 0:
+            return True, "Tests passed (uv pytest)"
+
     # Hub repo
     if repo_name == "charming-fermi":
         return True, "Managed via npm test"

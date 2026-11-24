@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this platform, architecture diagrams, or reference datasets, please cite it as below."
+title: "Modern Data Engineer & Lakehouse Architect Platform"
+authors:
+  - family-names: "Jammi"
+    given-names: "Santosh"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+version: 3.0.0
+date-released: 2026-11-24
+url: "https://github.com/santoshjammi29/moderndataengineer"
+repository-code: "https://github.com/santoshjammi29/moderndataengineer"
+keywords:
+  - data-engineering
+  - lakehouse
+  - nextjs
+  - cloudflare-workers
+  - databricks
+  - apache-spark
+license: Apache-2.0
