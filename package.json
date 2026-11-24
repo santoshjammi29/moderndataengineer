@@ -41,11 +41,11 @@
     "@tanstack/react-virtual": "^3.14.22",
     "@types/prismjs": "^1.26.6",
     "@upstash/ratelimit": "^2.2.0",
-    "@upstash/redis": "^1.39.0",
+    "@upstash/redis": "^1.41.1",
     "clsx": "^2.1.1",
     "framer-motion": "^13.1.1",
     "idb": "^8.0.4",
-    "lucide-react": "^1.37.0",
+    "lucide-react": "^1.79.0",
     "minisearch": "^7.2.0",
     "next": "^16.4.6",
     "next-themes": "^0.4.6",
@@ -56,9 +56,9 @@
     "remark-gfm": "^4.0.1",
     "sonner": "^2.0.8",
     "swr": "^2.5.1",
-    "tailwind-merge": "^3.7.0",
+    "tailwind-merge": "^3.7.1",
     "tsx": "^4.23.15",
-    "wrangler": "^4.152.0",
+    "wrangler": "^4.167.0",
     "zod": "^4.6.7",
     "zustand": "^5.0.16"
   },
@@ -82,7 +82,7 @@
     "typescript": "^5",
     "vite": "^8.3.5",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.1"
   },
   "overrides": {
     "braces": "^3.0.3",
