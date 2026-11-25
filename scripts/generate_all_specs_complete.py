@@ -7,7 +7,6 @@ across 16 categories in data_architecture.json and outputs scripts/specs_data.py
 """
 
 import os
-import pprint
 
 OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "specs_data.py")
 SPECS = {}
@@ -331,10 +330,10 @@ add(
     "How do Delta Shallow Clones leverage metadata pointers to create zero-copy test environments in seconds, and how do Deep Clones guarantee data isolation?",
     "How do you prevent shallow clones from corrupting when the parent source table executes `VACUUM` and removes shared historical Parquet files?",
     "How do you architect disaster recovery and staging environments using scheduled Deep Clones across separate cloud storage containers?",
-    """CREATE OR REPLACE TABLE staging_customer_test 
+    """CREATE OR REPLACE TABLE staging_customer_test
 SHALLOW CLONE production_customer;
 
-CREATE OR REPLACE TABLE dr_lakehouse.fact_sales 
+CREATE OR REPLACE TABLE dr_lakehouse.fact_sales
 DEEP CLONE prod_lakehouse.fact_sales;""",
     ("Dangling Pointer via Parent VACUUM", "Running VACUUM on the parent table deletes physical files referenced by the shallow clone, causing query failures.", "Set strict retention policies on parent or use Deep Clones for persistent replicas."),
     ("Storage Cost Explosion on Deep Clones", "Deep cloning multi-petabyte tables duplicates entire storage volume, doubling monthly cloud storage costs.", "Use shallow clones for ephemeral testing and deep clones only for regulatory archives."),
@@ -375,7 +374,7 @@ add(
     'delta.dataSkippingNumIndexedCols' = '32'
 );
 
-OPTIMIZE fact_transactions 
+OPTIMIZE fact_transactions
 WHERE transaction_date >= '2026-01-01'
 ZORDER BY (customer_id, merchant_id, transaction_type);""",
     ("Column Stats Indexing Truncation", "Columns placed beyond `dataSkippingNumIndexedCols` (default 32) collect no stats, rendering Z-Order skipping useless.", "Position Z-Order columns at the beginning of the schema or raise the index limit."),
@@ -781,7 +780,7 @@ add(
     "How do you enforce differential privacy and column masking rules within SaaS data sharing clean rooms to prevent re-identification attacks?",
     "How do you design multi-tenant billing and credit allocation models that attribute compute costs accurately to consuming partner organizations?",
     '''-- Clean room query execution with strict differential privacy aggregation
-SELECT 
+SELECT
     d.campaign_id,
     COUNT(DISTINCT u.user_hash) AS reached_users,
     SUM(d.conversion_value) AS total_value
@@ -826,7 +825,7 @@ add(
     "What are the query latency and storage trade-offs of querying raw Data Vault models directly vs building downstream Information Mart star schemas?",
     '''-- Loading a Data Vault 2.0 Hub with SHA-256 hash keys
 INSERT INTO hub_customer (hub_customer_hk, customer_id, load_datetime, record_source)
-SELECT 
+SELECT
     sha2(trim(upper(customer_id)), 256) AS hub_customer_hk,
     trim(upper(customer_id)) AS customer_id,
     current_timestamp() AS load_datetime,
@@ -845,7 +844,7 @@ add(
     "How do you optimize memory consumption and join performance when broadcasting wide conformed customer dimensions across Spark executors?",
     '''-- Conformed Customer Dimension unifying CRM and ERP keys
 CREATE OR REPLACE TABLE dim_conformed_customer AS
-SELECT 
+SELECT
     coalesce(c.master_customer_id, e.erp_customer_id) AS customer_key,
     c.crm_id,
     e.erp_account_id,
@@ -865,7 +864,7 @@ add(
     "How do you enforce referential integrity and prevent Cartesian join explosions when querying fact tables through multi-level bridge tables?",
     "Under what volume constraints should you pre-aggregate bridge tables or denormalize array structures into modern lakehouse Parquet columns?",
     '''-- Querying Fact Sales through Bridge Table with allocation weighting factor
-SELECT 
+SELECT
     d.diagnostician_name,
     SUM(f.claim_amount * b.weighting_factor) AS allocated_claim_total
 FROM fact_medical_claims f
@@ -985,16 +984,16 @@ add(
     "What are the storage and compute trade-offs between physical materialized PIT tables vs dynamic SQL window-function views on multi-terabyte data vaults?",
     '''-- Materializing a Data Vault Point-in-Time (PIT) Table
 CREATE OR REPLACE TABLE pit_customer AS
-SELECT 
+SELECT
     h.hub_customer_hk,
     s_snap.snapshot_date,
     MAX(s_crm.load_datetime) AS sat_customer_crm_ldts,
     MAX(s_erp.load_datetime) AS sat_customer_erp_ldts
 FROM hub_customer h
 CROSS JOIN dim_snapshot_schedule s_snap
-LEFT JOIN sat_customer_crm s_crm 
+LEFT JOIN sat_customer_crm s_crm
     ON h.hub_customer_hk = s_crm.hub_customer_hk AND s_crm.load_datetime <= s_snap.snapshot_date
-LEFT JOIN sat_customer_erp s_erp 
+LEFT JOIN sat_customer_erp s_erp
     ON h.hub_customer_hk = s_erp.hub_customer_hk AND s_erp.load_datetime <= s_snap.snapshot_date
 GROUP BY h.hub_customer_hk, s_snap.snapshot_date;''',
     ("Quadratic Join Costs on Un-Materialized PIT Views", "Querying raw satellites with nested window functions (`LEAD/LAG`) on 500M rows crashes distributed SQL queries.", "Physically materialize PIT tables on a daily schedule to replace runtime window functions with equi-joins."),
@@ -1123,7 +1122,7 @@ add(
     "How do you enforce query cost control limits and auto-pause thresholds to prevent rogue user queries from generating massive multi-thousand-dollar cloud bills?",
     "How do you optimize serverless SQL query performance by organizing files into partition folders, Parquet row groups, and external metadata caches?",
     '''-- Azure Synapse Serverless SQL query reading partitioned Parquet with cost guardrails
-SELECT 
+SELECT
     r.filepath(1) AS transaction_year,
     r.filepath(2) AS transaction_month,
     COUNT(*) AS total_txns,
@@ -1302,14 +1301,14 @@ add(
     "How do you optimize Azure Stream Analytics Streaming Units (SUs) and partition alignment to achieve sub-second end-to-end processing latencies?",
     "How do you design temporal join topologies in Stream Analytics between high-velocity event streams and slowly updating reference datasets?",
     '''-- Azure Stream Analytics Sliding Window query detecting spike anomalies
-SELECT 
+SELECT
     System.Timestamp() AS window_end_time,
     deviceId,
     AVG(temperature) AS avg_temp,
     COUNT(*) AS event_count
 FROM SensorInput TIMESTAMP BY eventTime
-GROUP BY 
-    deviceId, 
+GROUP BY
+    deviceId,
     SlidingWindow(minute, 5)
 HAVING COUNT(*) > 100 AND AVG(temperature) > 85.0;''',
     ("Streaming Unit (SU) Throttling", "Input stream volume exceeds allocated Streaming Units, causing SU% utilization to spike to 100% and increasing backlog.", "Scale SUs or repartition input Event Hub and query using `PARTITION BY PartitionId`."),
@@ -1556,7 +1555,7 @@ add(
 ALTER INDEX ALL ON fact_enterprise_sales REBUILD;
 
 -- Check Columnstore health and open delta stores across all 60 distributions
-SELECT 
+SELECT
     state_description,
     COUNT(*) AS total_row_groups,
     SUM(total_rows) AS total_rows,
@@ -1635,7 +1634,7 @@ add(
     "How do you inspect distributed execution plans using `sys.dm_pdw_request_steps` to identify data movement bottlenecks during heavy analytical joins?",
     "How do you restructure multi-table joins to ensure that hash distributions and partition boundaries align perfectly with query join predicates?",
     '''-- Inspecting distributed execution query steps for expensive data movement
-SELECT 
+SELECT
     request_id,
     step_index,
     operation_type,
@@ -1932,7 +1931,7 @@ add(
 def reciprocal_rank_fusion(dense_ranks: dict, sparse_ranks: dict, k: int = 60) -> list:
     rrf_scores = {}
     all_doc_ids = set(dense_ranks.keys()).union(set(sparse_ranks.keys()))
-    
+
     for doc_id in all_doc_ids:
         score = 0.0
         if doc_id in dense_ranks:
@@ -1940,7 +1939,7 @@ def reciprocal_rank_fusion(dense_ranks: dict, sparse_ranks: dict, k: int = 60) -
         if doc_id in sparse_ranks:
             score += 1.0 / (k + sparse_ranks[doc_id])
         rrf_scores[doc_id] = score
-        
+
     return sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)''',
     ("Exact Identifier Misses in Pure Vector Search", "Users searching for product serial number 'XK-9021' receive irrelevant conceptual matches because vectors smooth out exact strings.", "Always employ hybrid search with BM25/keyword boosting for SKU, code, and entity searches."),
     ("Latency Doubling on Sequential Hybrid Queries", "Executing sparse keyword query then dense vector query sequentially doubles search SLA.", "Execute dense and sparse queries concurrently using asynchronous parallel tasks before RRF merging."),
@@ -2082,7 +2081,7 @@ add(
     # Security filters extracted strictly from verified cryptographically signed JWT
     tenant_id = user_jwt["tid"]
     allowed_security_groups = user_jwt["groups"]
-    
+
     # User prompt cannot alter or inject security boundaries!
     return {
         "query_text": user_prompt,
@@ -2570,7 +2569,7 @@ resource "azurerm_storage_account" "lake" {
   network_rules {
     default_action = "Deny"
     bypass         = ["AzureServices"]
-    
+
     dynamic "ip_rules" {
       for_each = var.authorized_office_ips
       content {
@@ -2972,7 +2971,7 @@ add(
     "How do you resolve broken lineage links when data passes through intermediate cloud storage buckets or external REST API transformations?",
     "How do you optimize automated catalog scanning schedules across petabyte-scale storage accounts to prevent cloud API throttling?",
     '''-- Querying Unity Catalog System Tables to trace table-level lineage
-SELECT 
+SELECT
     source_table_full_name,
     target_table_full_name,
     entity_type,
@@ -3012,8 +3011,8 @@ add(
     "How do you design automated term suggestion workflows using AI/LLM embeddings that propose glossary mappings for newly created tables?",
     "How do you govern glossary term lifecycles (Draft, In Review, Approved, Deprecated) to prevent contradictory definitions of core corporate metrics?",
     '''-- Unity Catalog statement associating an approved business glossary tag to a column
-ALTER TABLE gold_catalog.sales.fact_orders 
-ALTER COLUMN gross_revenue 
+ALTER TABLE gold_catalog.sales.fact_orders
+ALTER COLUMN gross_revenue
 SET TAGS ('business_term' = 'Net_Billed_Revenue_v2', 'steward' = 'finance_governance_board');''',
     ("Duplicate Term Sprawl", "Different departments create 10 slightly different variations of 'Gross Margin' in the business glossary.", "Establish a formal steward review board and require approval before terms move from Draft to Approved status."),
     ("Stale Asset Mappings", "Physical schema refactoring renames underlying columns, breaking links to mapped business glossary definitions.", "Automate schema drift checks that alert stewards when mapped column attributes are modified."),
@@ -3079,7 +3078,7 @@ add(
     "What governance KPIs (unowned assets, untagged PII tables, inactive users, cross-domain access spikes) provide actionable risk indicators for Chief Data Officers?",
     "How do you set up automated alerting on anomalous query patterns where an authorized user suddenly exports millions of rows of customer data?",
     '''-- Querying Unity Catalog Audit logs to detect anomalous high-volume data exports
-SELECT 
+SELECT
     user_identity.email,
     action_name,
     request_params.table_full_name,
@@ -3119,7 +3118,7 @@ add(
     "How do you write FinOps queries against `system.billing.usage` to attribute cluster and SQL warehouse DBU costs to specific user queries and departments?",
     "How do you monitor table usage and cold asset identification using `system.access.table_lineage` to identify unused tables for archival?",
     '''-- FinOps query calculating DBU cost per Databricks cluster over the past 30 days
-SELECT 
+SELECT
     usage_metadata.cluster_id,
     sku_name,
     SUM(usage_quantity) AS total_dbus,
@@ -3138,7 +3137,7 @@ add(
     "How do Microsoft Purview Self-Hosted Integration Runtimes (SHIR) bridge cloud catalog scanners with on-premises databases behind enterprise firewalls?",
     "How do you configure high-availability SHIR clusters across multiple on-premises VMs to prevent scanning downtime during server maintenance?",
     "What network ports, proxy configurations, and TLS certificates are required for SHIR nodes to communicate securely with Azure cloud endpoints?",
-    '''# PowerShell command registering a Self-Hosted Integration Runtime node
+    r'''# PowerShell command registering a Self-Hosted Integration Runtime node
 # .\RegisterIntegrationRuntime.ps1 -GatewayKey "purview-auth-key-12345"
 # Verify high availability cluster status:
 # (Get-WmiObject -Namespace root\Microsoft\DataIntegration -Class IntegrationRuntime).Nodes''',
@@ -3193,10 +3192,10 @@ add(
     "How do you configure custom regex masks (`partial()`, `email()`, `random()`) in Azure SQL and Synapse to reveal partial identifiers for customer support workflows?",
     "How can unmasked queries bypass DDM using brute-force comparison queries, and how do you protect against inference attacks?",
     '''-- Applying Dynamic Data Masking to credit card and email columns
-ALTER TABLE dbo.Customers ALTER COLUMN CreditCardNumber 
+ALTER TABLE dbo.Customers ALTER COLUMN CreditCardNumber
 ADD MASKED WITH (FUNCTION = 'partial(0, "XXXX-XXXX-XXXX-", 4)');
 
-ALTER TABLE dbo.Customers ALTER COLUMN EmailAddress 
+ALTER TABLE dbo.Customers ALTER COLUMN EmailAddress
 ADD MASKED WITH (FUNCTION = 'email()');
 
 -- Grant unmasked access only to authorized compliance officers
@@ -3234,7 +3233,7 @@ add(
     '''-- Cross-database secure view granting access without base table permissions
 -- Underlying raw database (User has NO permissions here!):
 CREATE VIEW dbo.vw_ExecutiveSalesSummary AS
-SELECT 
+SELECT
     TransactionDate,
     Region,
     SUM(SalesAmount) AS TotalRevenue -- Strips customer names and PII!

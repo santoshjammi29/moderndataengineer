@@ -11,7 +11,6 @@ Orchestrates the handbook expansion:
 import sys
 import os
 import json
-import glob
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -63,7 +62,7 @@ def main():
     all_270_pillar_questions = []
 
     # Load existing questions_14_pillars.json
-    with open(os.path.join(DATA_DIR, "questions_14_pillars.json"), "r", encoding="utf-8") as f:
+    with open(os.path.join(DATA_DIR, "questions_14_pillars.json"), encoding="utf-8") as f:
         existing_140 = json.load(f)
 
     # Group existing by pillar number (from source string or id)
@@ -72,9 +71,9 @@ def main():
     for p_num in sorted(pillar_files.keys()):
         p_filename = pillar_files[p_num]
         p_path = os.path.join(PILLARS_DIR, p_filename)
-        
+
         # Read existing file content
-        with open(p_path, "r", encoding="utf-8") as f:
+        with open(p_path, encoding="utf-8") as f:
             content = f.read()
 
         # Extract existing 10 questions for this pillar
@@ -122,10 +121,10 @@ def main():
         "20": "20_data_quality_contracts_observability.md"
     }
 
-    for p_num, p_info in new_pillars_dict.items():
+    for _p_num, p_info in new_pillars_dict.items():
         p_filename = new_pillar_files[p_num]
         p_path = os.path.join(PILLARS_DIR, p_filename)
-        
+
         md_lines = [
             f"# {p_info['title']}",
             f"**Category:** `{p_info['category']}` | **Domain:** `{p_info['domain']}`",
@@ -168,9 +167,9 @@ def main():
     for p_num in sorted(new_pillar_files.keys()):
         all_pillar_files_sorted.append((p_num, new_pillar_files[p_num]))
 
-    for p_num, p_fn in all_pillar_files_sorted:
+    for _p_num, p_fn in all_pillar_files_sorted:
         p_path = os.path.join(PILLARS_DIR, p_fn)
-        with open(p_path, "r", encoding="utf-8") as f:
+        with open(p_path, encoding="utf-8") as f:
             p_content = f.read()
         monolithic_lines.append(p_content.strip())
         monolithic_lines.append("\n\n---\n\n")
@@ -193,10 +192,10 @@ def main():
     print(f"Saved {len(all_270_pillar_questions)} questions to {p20_json_path}")
 
     # Load 125 questions and 100 spark questions
-    with open(os.path.join(DATA_DIR, "questions_125.json"), "r", encoding="utf-8") as f:
+    with open(os.path.join(DATA_DIR, "questions_125.json"), encoding="utf-8") as f:
         q125 = json.load(f)
 
-    with open(os.path.join(DATA_DIR, "100_spark_data_issues.json"), "r", encoding="utf-8") as f:
+    with open(os.path.join(DATA_DIR, "100_spark_data_issues.json"), encoding="utf-8") as f:
         spark100 = json.load(f)
 
     # Convert spark100 items to uniform schema
@@ -231,7 +230,7 @@ def update_readme(total_q, pillar_q):
     readme_path = os.path.join(HANDBOOK_DIR, "README.md")
     readme_content = f"""# Data Engineering Interview Handbook & Architectural Defense Guide
 
-A comprehensive, production-tested reference manual and interview defense playbook for Data Engineers, Lakehouse Architects, and Big Data Leads. 
+A comprehensive, production-tested reference manual and interview defense playbook for Data Engineers, Lakehouse Architects, and Big Data Leads.
 
 This repository provides original technical explanations, production code implementations (SQL, PySpark, Python), performance triage runbooks, and enterprise system designs across **{total_q} problems and interview questions**.
 

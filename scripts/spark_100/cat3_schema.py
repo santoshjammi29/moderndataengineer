@@ -244,7 +244,7 @@ from delta.tables import DeltaTable
 
 def upsert_to_delta_with_evolution(microBatchDF, batchId):
     deltaTable = DeltaTable.forName(spark, "silver_table")
-    
+
     # spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
     # allows Delta to automatically ALTER the target table to add incoming columns:
     (deltaTable.alias("t")

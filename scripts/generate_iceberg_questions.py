@@ -3,11 +3,10 @@ Bulk generation of SQL Iceberg Q&As for questions.json
 Covers key practical, interview, and production questions on all tiers of the SQL iceberg.
 """
 import json
-import os
 
 FILE = 'src/data/json/questions.json'
 
-with open(FILE, 'r') as f:
+with open(FILE) as f:
     data = json.load(f)
 
 print(f"Existing questions: {len(data)}")
@@ -22,7 +21,7 @@ iceberg_questions = [
         "difficulty": "MEDIUM",
         "question": "Explain the Object-Relational Impedance Mismatch, how it causes the N+1 query problem in enterprise applications, and how to eliminate it at the query engine level.",
         "answer": """### Phase 1: Conceptual Foundation & Mechanics
-The Object-Relational Impedance Mismatch refers to the fundamental conceptual friction between object-oriented programming (which models systems as graphs of stateful, navigating objects with identity and encapsulated behavior) and relational databases (which model systems using declarative, mathematical relations, tuple sets, and predicate calculus). 
+The Object-Relational Impedance Mismatch refers to the fundamental conceptual friction between object-oriented programming (which models systems as graphs of stateful, navigating objects with identity and encapsulated behavior) and relational databases (which model systems using declarative, mathematical relations, tuple sets, and predicate calculus).
 
 When ORMs (Hibernate, Entity Framework, Prisma) map these domains, they default to lazy-loading child associations. In a collection of N parent records (e.g. 100 Orders), accessing `order.customer` inside a loop executes 1 query to fetch the orders followed by 100 separate round-trip queries to fetch each customer (`N+1` queries total). This saturates database connection pools, floods network pipes with round-trip latency, and prevents the optimizer from generating set-based bulk joins.
 

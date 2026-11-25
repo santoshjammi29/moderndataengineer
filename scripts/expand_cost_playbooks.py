@@ -6,8 +6,8 @@ new_playbooks = [
     "savings": "40% - 60% Compute Credit Reduction on Outlier Queries",
     "summary": "Instead of permanently upsizing an entire Snowflake warehouse from Medium to 2X-Large to handle occasional outlier scans across billions of unclustered rows, enable Query Acceleration Service (QAS). QAS dynamically leases serverless compute slices exclusively for the scan portion of heavy queries, leaving standard queries running on low-cost small clusters.",
     "code": """-- Enable QAS on analytical warehouse with max scale factor cap
-ALTER WAREHOUSE analytics_wh SET 
-  ENABLE_QUERY_ACCELERATION = TRUE 
+ALTER WAREHOUSE analytics_wh SET
+  ENABLE_QUERY_ACCELERATION = TRUE
   QUERY_ACCELERATION_MAX_SCALE_FACTOR = 8;
 
 -- Identify queries that benefited from QAS acceleration
@@ -57,7 +57,7 @@ ORDER BY TimeStamp DESC;"""
   }
 ]
 
-with open('src/data/json/modern_cost_playbooks.json', 'r') as f:
+with open('src/data/json/modern_cost_playbooks.json') as f:
     existing = json.load(f)
 
 print(f"Before: {len(existing)}")

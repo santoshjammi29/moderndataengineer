@@ -11,7 +11,6 @@ Platform: moderndataengineer.uk
 """
 
 import os
-import re
 import shutil
 import json
 import subprocess
@@ -46,7 +45,7 @@ os.makedirs(DOCS_WHITEBOARDS, exist_ok=True)
 os.makedirs(DOCS_PDF, exist_ok=True)
 
 def parse_diagrams():
-    with open(DIAGRAMS_TS, "r", encoding="utf-8") as f:
+    with open(DIAGRAMS_TS, encoding="utf-8") as f:
         content = f.read()
 
     marker = 'export const architectureDiagrams: ArchitectureDiagramItem[] ='
@@ -60,7 +59,7 @@ def parse_diagrams():
     try:
         diagrams = json.loads(json_like)
         return diagrams
-    except Exception as e:
+    except Exception:
         cmd = [
             "node",
             "-e",

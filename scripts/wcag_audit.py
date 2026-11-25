@@ -76,7 +76,7 @@ def run_wcag_audit():
     print("=" * 65)
     print(" WCAG 2.1 AA PROGRAMMATIC CONTRAST AUDIT (4.5:1 NORMAL TEXT)")
     print("=" * 65)
-    
+
     all_passed = True
     results = []
 
@@ -84,14 +84,14 @@ def run_wcag_audit():
         print(f"\nAUDITING: {theme_name}")
         bg = tokens["background"]
         card = tokens["card"]
-        
+
         checks = [
             ("Foreground on Background", tokens["foreground"], bg, 4.5),
             ("Card Foreground on Card", tokens["card_foreground"], card, 4.5),
             ("Muted Text on Background", tokens["muted_foreground"], bg, 4.5),
             ("Muted Text on Card", tokens["muted_foreground"], card, 4.5),
         ]
-        
+
         for label, fg_color, bg_color, req in checks:
             ratio = contrast_ratio(fg_color, bg_color)
             passed = ratio >= req

@@ -7,7 +7,6 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 from delta.tables import DeltaTable
-from typing import List, Optional
 import logging
 
 logger = logging.getLogger(__name__)
@@ -27,7 +26,7 @@ def incremental_load_watermark(
 ) -> int:
     """
     Incremental load using a high-watermark column (e.g., updated_at).
-    
+
     Returns:
         int: Number of records written
     """
@@ -78,7 +77,7 @@ def apply_scd_type2(
     source_df: DataFrame,
     target_table: str,
     business_key: str,
-    tracked_columns: List[str],
+    tracked_columns: list[str],
     effective_date_col: str = "effective_date",
     expiry_date_col: str = "expiry_date",
     is_current_col: str = "is_current",
@@ -91,7 +90,7 @@ def apply_scd_type2(
     today = F.current_date()
 
     # Get current active records from target
-    target_df = spark.table(target_table).filter(F.col(is_current_col) == True)
+    target_df = spark.table(target_table).filter(F.col(is_current_col))
 
     # Detect changes
     joined = source_df.alias("src").join(
@@ -143,13 +142,13 @@ def apply_scd_type2(
 
 def deduplicate_by_key(
     df: DataFrame,
-    partition_keys: List[str],
+    partition_keys: list[str],
     order_by_col: str,
     order_desc: bool = True
 ) -> DataFrame:
     """
     Keep only the latest record per partition_keys combination.
-    
+
     Example: Latest record per customer_id ordered by updated_at DESC
     """
     window = Window.partitionBy(*partition_keys).orderBy(
@@ -216,7 +215,6 @@ def stream_from_kafka(
     """
     Read events from Kafka/Event Hubs, apply watermark, write to Delta.
     """
-    from pyspark.sql.types import StructType, StringType, TimestampType
 
     # Read from Kafka
     raw_stream = spark.readStream \
@@ -270,13 +268,13 @@ def validate_dataframe(
 ) -> tuple[DataFrame, DataFrame]:
     """
     Apply data quality rules and split into good/bad records.
-    
+
     rules: {
         "order_id_not_null": "order_id IS NOT NULL",
         "positive_revenue": "revenue > 0",
         "valid_status": "status IN ('PENDING', 'COMPLETED', 'CANCELLED')"
     }
-    
+
     Returns:
         (good_df, bad_df) — pass and fail records
     """
@@ -307,7 +305,7 @@ def validate_dataframe(
 def handle_skew_with_salting(
     df: DataFrame,
     skewed_key: str,
-    skewed_values: List[str],
+    skewed_values: list[str],
     salt_buckets: int = 20
 ) -> DataFrame:
     """
@@ -330,7 +328,7 @@ def handle_skew_with_salting(
 def run_delta_maintenance(
     spark: SparkSession,
     table_name: str,
-    z_order_columns: Optional[List[str]] = None,
+    z_order_columns: list[str] | None = None,
     vacuum_hours: int = 168  # 7 days
 ) -> None:
     """

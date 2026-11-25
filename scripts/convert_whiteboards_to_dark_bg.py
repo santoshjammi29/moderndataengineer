@@ -121,7 +121,7 @@ def sync_to_sibling_repos():
 
 def main():
     print("=== WHITEBOARD DIAGRAMS DARK BACKGROUND CONVERTER ===")
-    
+
     # 1. Convert public/diagrams/
     process_directory(PUBLIC_DIAGRAMS, "public/diagrams")
 

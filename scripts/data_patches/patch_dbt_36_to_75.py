@@ -514,10 +514,10 @@ Creating a custom materialization `macros/materializations/scythe_iceberg.sql`:
 ```sql
 {% set entity_types = ['customer', 'vendor', 'partner'] %}
 
-WITH 
+WITH
 {% for entity in entity_types %}
 {{ entity }}_source AS (
-    SELECT 
+    SELECT
         id AS entity_id,
         '{{ entity | upper }}' AS entity_type,
         name AS entity_name,
@@ -839,7 +839,7 @@ def model(dbt, session):
 
     # Reference upstream dbt SQL models
     orders_df = dbt.ref("fct_orders").to_pandas()
-    
+
     # Train lightweight model or apply machine learning transformation
     orders_df["lead_score"] = orders_df["order_amount"] * 0.05
 
@@ -872,7 +872,7 @@ FROM {{ ref('stg_telemetry_events') }}
 {% if is_incremental() %}
     -- Scan back 3 days prior to the max recorded timestamp to capture late arrivals
     WHERE processed_at >= (
-        SELECT DATEADD('day', -3, COALESCE(MAX(processed_at), '1970-01-01')) 
+        SELECT DATEADD('day', -3, COALESCE(MAX(processed_at), '1970-01-01'))
         FROM {{ this }}
     )
 {% endif %}
@@ -903,7 +903,7 @@ Applying policies dynamically via post-hook macro:
 {% macro apply_masking_policies() %}
     {% for col in model.columns.values() %}
         {% if col.meta.masking_policy %}
-            ALTER TABLE {{ this }} MODIFY COLUMN {{ col.name }} 
+            ALTER TABLE {{ this }} MODIFY COLUMN {{ col.name }}
             SET MASKING POLICY {{ col.meta.masking_policy }};
         {% endif %}
     {% endfor %}
@@ -986,7 +986,7 @@ repos:
 ### Production Hardening & Gotchas
 - **Automated Enforcement**: Run `pre-commit run --all-files` in CI to ensure that commits bypassing local hooks via `--no-verify` are caught before merging.""",
 
-        "dbt-q-075": """### Conceptual Foundation & Core Architecture
+        "dbt-q-075": r"""### Conceptual Foundation & Core Architecture
 **SQLFluff** is the industry-standard modular SQL linter and auto-formatter designed specifically for Jinja-templated dbt SQL codebases. It enforces consistent styling rules (casing, indentation, trailing commas, alias conventions) across all models.
 
 ### Low-Level Mechanics & Implementation

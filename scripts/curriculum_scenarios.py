@@ -46,7 +46,7 @@ CREATE OR REPLACE MATERIALIZED VIEW prod_lakehouse.gold.mv_executive_sales_summa
   SCHEDULE REFRESH CRON '0 0 8 * * ?' -- Pre-warmed at 8:00 AM before 9:00 AM rush
   COMMENT 'Pre-aggregated executive metrics for high-concurrency morning dashboards'
 AS
-SELECT 
+SELECT
   date_trunc('day', order_timestamp) AS order_day,
   region,
   product_category,
@@ -242,7 +242,7 @@ def reconcile_table_parity(hive_table_name: str, delta_table_name: str, date_par
     # 2. Cryptographic Checksum Parity on Key Columns
     hive_checksum = df_hive.select(sha2(concat_ws("||", *df_hive.columns), 256).alias("h")).groupBy().agg(_sum("h")).collect()[0][0]
     delta_checksum = df_delta.select(sha2(concat_ws("||", *df_delta.columns), 256).alias("h")).groupBy().agg(_sum("h")).collect()[0][0]
-    
+
     print(f"Partition {date_partition} Reconciled: 100% Parity Confirmed.")
 
 reconcile_table_parity("hive_metastore.sales.fact_orders", "prod_lakehouse.legacy_migration.fact_sales", "2026-10-14")
@@ -304,7 +304,7 @@ jobs:
     environment: production # Requires manual change approval in GitHub Settings!
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Azure Login via OIDC (No Static Secrets!)
         uses: azure/login@v2
         with:
@@ -333,7 +333,7 @@ jobs:
 
 ```sql
 -- Continuous Compliance Audit: Alerting on Manual Out-of-Band Grants
-SELECT 
+SELECT
   event_time,
   user_identity.email AS offending_user,
   action_name,
@@ -387,7 +387,7 @@ Below is how an automated Error Budget tracker is implemented on Databricks Syst
 ```sql
 -- 1. Automated SLI & Error Budget Tracker for Core Lakehouse Pipelines
 WITH daily_job_runs AS (
-  SELECT 
+  SELECT
     usage_date,
     usage_metadata.job_id,
     count(distinct usage_metadata.job_run_id) AS total_runs
@@ -398,7 +398,7 @@ WITH daily_job_runs AS (
 ),
 failed_runs AS (
   -- Capture failed runs from Databricks system job run history
-  SELECT 
+  SELECT
     date(run_time) AS run_date,
     count(*) AS failures
   FROM system.lakeflow.jobs -- Unity Catalog Job Run History
@@ -407,13 +407,13 @@ failed_runs AS (
     AND run_time >= current_date() - INTERVAL 30 DAYS
   GROUP BY 1
 )
-SELECT 
+SELECT
   d.usage_date,
   coalesce(f.failures, 0) AS daily_failures,
   d.total_runs,
   round((1.0 - (coalesce(f.failures, 0) * 1.0 / d.total_runs)) * 100, 2) AS daily_success_rate_sli,
   -- Target SLO is 99.0%
-  CASE 
+  CASE
     WHEN (1.0 - (coalesce(f.failures, 0) * 1.0 / d.total_runs)) < 0.99 THEN 'ERROR BUDGET DEPLETED'
     ELSE 'HEALTHY'
   END AS error_budget_status

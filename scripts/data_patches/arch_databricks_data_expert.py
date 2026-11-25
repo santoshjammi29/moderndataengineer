@@ -8,7 +8,7 @@ def get_expert_databricks_scenarios():
     scenarios_hard = [
         ("arch-databricks-021", "Unity Catalog multi-workspace federation", "How do you architect and manage Unity Catalog across multi-workspace enterprise environments?",
 """### Phase 1: Conceptual Foundation & Core Architecture
-Unity Catalog (UC) is an account-level metastore designed to federate data governance across multiple Databricks workspaces. Rather than maintaining isolated Hive metastores per workspace, a single UC metastore binds to a cloud region and attaches to all regional workspaces (e.g., `dev`, `stage`, `prod`). 
+Unity Catalog (UC) is an account-level metastore designed to federate data governance across multiple Databricks workspaces. Rather than maintaining isolated Hive metastores per workspace, a single UC metastore binds to a cloud region and attaches to all regional workspaces (e.g., `dev`, `stage`, `prod`).
 
 Under UC multi-workspace federation:
 - **Centralized Identity**: Users, groups, and service principals are synchronized at the Databricks account level.
@@ -199,7 +199,7 @@ def orders_silver():
 
         ("arch-databricks-025", "Databricks Asset Bundles CI/CD", "How do you implement an enterprise CI/CD deployment pipeline using Databricks Asset Bundles (DABs)?",
 """### Phase 1: Conceptual Foundation & Core Architecture
-Databricks Asset Bundles (DABs) is an Infrastructure-as-Code (IaC) framework that standardizes the authoring, testing, and deployment of complex Databricks projects (Jobs, DLT pipelines, ML models, notebooks, and libraries). 
+Databricks Asset Bundles (DABs) is an Infrastructure-as-Code (IaC) framework that standardizes the authoring, testing, and deployment of complex Databricks projects (Jobs, DLT pipelines, ML models, notebooks, and libraries).
 
 Core architecture:
 - **Declarative YAML Configuration**: Projects declare environments (`dev`, `staging`, `prod`), resource configurations, permissions, and variables in `databricks.yml`.
@@ -338,7 +338,7 @@ ALTER CATALOG enterprise_prod ENABLE PREDICTIVE OPTIMIZATION;
 ALTER SCHEMA enterprise_prod.telemetry ENABLE PREDICTIVE OPTIMIZATION;
 
 -- Inspect optimization history and serverless operations
-SELECT 
+SELECT
     start_time,
     end_time,
     table_name,
@@ -353,7 +353,7 @@ LIMIT 50;
 3. **Cost Monitoring Query**:
 ```sql
 -- Track DBUs consumed by Predictive Optimization in system billing table
-SELECT 
+SELECT
     usage_date,
     sku_name,
     sum(usage_quantity) as total_dbus,
@@ -396,21 +396,21 @@ from pyspark.sql.types import StructType, StructField, StringType, LongType, Tim
 def sessionize_events(key, pdf_iter, state):
     session_id, device_id = key
     events = []
-    
+
     # Process incoming rows for this device
     for pdf in pdf_iter:
         for _, row in pdf.iterrows():
             events.append(row)
-            
+
     # Update persistent off-heap state
     if state.exists:
         prev_count = state.get()[0]
     else:
         prev_count = 0
-        
+
     new_count = prev_count + len(events)
     state.update((new_count,))
-    
+
     # Yield summarized output
     import pandas as pd
     yield pd.DataFrame({
@@ -516,7 +516,7 @@ def test_calculate_net_revenue(spark):
     test_data = [(100.0, 10.0), (250.0, 25.0)]
     schema = ["gross_amount", "tax_amount"]
     df = spark.createDataFrame(test_data, schema)
-    
+
     result = calculate_net_revenue(df).collect()
     assert result[0]["net_amount"] == 90.0
     assert result[1]["net_amount"] == 225.0
@@ -590,7 +590,7 @@ CATALOG = 'databricks_uc_iceberg_catalog';
 
         ("arch-databricks-032", "Multi-cloud Databricks deployment (Azure + AWS)", "How do you architect an enterprise multi-cloud Databricks deployment spanning Azure and AWS?",
 """### Phase 1: Conceptual Foundation & Core Architecture
-Enterprises adopt multi-cloud Databricks architectures to prevent single-cloud vendor lock-in, satisfy regional compliance mandates, and support business acquisitions. 
+Enterprises adopt multi-cloud Databricks architectures to prevent single-cloud vendor lock-in, satisfy regional compliance mandates, and support business acquisitions.
 
 Architectural pillars for multi-cloud parity:
 - **Centralized Infrastructure-as-Code**: Provision workspaces, network subnets, PrivateLink/Private Endpoints, and storage using unified Terraform modules (`databricks/databricks` provider).
@@ -627,7 +627,7 @@ resource "databricks_recipient" "azure_reciprocal" {
 CREATE CATALOG aws_telemetry_shared
   USING SHARE aws_account.telemetry_share;
 
-SELECT 
+SELECT
     date_trunc('day', event_time) as day,
     count(*) as total_events
 FROM aws_telemetry_shared.iot.sensor_telemetry
@@ -641,7 +641,7 @@ GROUP BY 1;
 
         ("arch-databricks-033", "Unity Catalog enterprise governance topology", "How do you design and enforce an enterprise data governance topology using Databricks Unity Catalog?",
 """### Phase 1: Conceptual Foundation & Core Architecture
-An enterprise Unity Catalog topology must balance business agility (domain autonomy) with strict regulatory compliance (GDPR, HIPAA, SOX). 
+An enterprise Unity Catalog topology must balance business agility (domain autonomy) with strict regulatory compliance (GDPR, HIPAA, SOX).
 
 **Recommended Top-Level Architecture**:
 - **3-Level Hierarchy**: `Catalog` (Business Domain or Environment) -> `Schema` (Data Layer / Subject Area) -> `Table/View/Volume`.
@@ -659,25 +659,25 @@ CREATE FUNCTION enterprise_prod.governance.mask_ssn(ssn STRING)
 RETURN IF(IS_ACCOUNT_GROUP_MEMBER('hr_executives'), ssn, CONCAT('***-**-', RIGHT(ssn, 4)));
 
 CREATE FUNCTION enterprise_prod.governance.region_row_filter(record_region STRING)
-RETURN IS_ACCOUNT_GROUP_MEMBER('global_executives') OR 
+RETURN IS_ACCOUNT_GROUP_MEMBER('global_executives') OR
        IS_ACCOUNT_GROUP_MEMBER(CONCAT('analysts_', LOWER(record_region)));
 
 -- Apply dynamic column mask to sensitive PII
-ALTER TABLE enterprise_prod.hr.employees 
+ALTER TABLE enterprise_prod.hr.employees
   ALTER COLUMN ssn SET MASK enterprise_prod.governance.mask_ssn;
 
 -- Apply row-level security policy
-ALTER TABLE enterprise_prod.sales.orders 
+ALTER TABLE enterprise_prod.sales.orders
   SET ROW FILTER enterprise_prod.governance.region_row_filter ON (region);
 ```
 2. **Tagging and System Audit Reporting**:
 ```sql
 -- Tag sensitive columns for automated compliance auditing
-ALTER TABLE enterprise_prod.hr.employees 
+ALTER TABLE enterprise_prod.hr.employees
   ALTER COLUMN ssn SET TAGS ('compliance' = 'gdpr_pii', 'sensitivity' = 'critical');
 
 -- Query lineage to identify all downstream tables consuming sensitive PII
-SELECT 
+SELECT
     source_table_full_name,
     target_table_full_name,
     target_column_name
@@ -730,7 +730,7 @@ Core optimization levers:
 2. **FinOps Analytics Query on Databricks System Tables**:
 ```sql
 -- Analyze top DBU consumers by workspace, SKU, and tag
-SELECT 
+SELECT
     usage_date,
     workspace_id,
     sku_name,
@@ -842,7 +842,7 @@ WITH source_transactions AS (
     {% endif %}
 )
 
-SELECT 
+SELECT
     transaction_id,
     customer_id,
     transaction_date,
@@ -954,13 +954,13 @@ with mlflow.start_run(run_name="churn_prediction_v2") as run:
     # Train scikit-learn model
     clf = RandomForestClassifier(n_estimators=100, max_depth=6)
     clf.fit(X_train, y_train)
-    
+
     predictions = clf.predict(X_test)
     signature = infer_signature(X_train, predictions)
-    
+
     # Log metrics
     mlflow.log_metric("accuracy", 0.934)
-    
+
     # Register model directly into Unity Catalog 3-level namespace
     model_name = "enterprise_prod.ml_models.customer_churn_classifier"
     mlflow.sklearn.log_model(
@@ -1027,10 +1027,10 @@ def trigger_dr_failover():
     print("Initiating failover to secondary DR workspace: West US...")
     # 1. Update Databricks Asset Bundles target
     subprocess.run(["databricks", "bundle", "deploy", "-t", "dr_west"], check=True)
-    
+
     # 2. Unpause scheduled jobs in DR workspace
     subprocess.run(["databricks", "jobs", "unpause", "--all"], check=True)
-    
+
     print("Failover completed. Production workloads active in West US.")
 ```
 
@@ -1058,7 +1058,7 @@ CREATE SCHEMA IF NOT EXISTS enterprise_prod.self_service
 -- Certified view with business annotations and column documentation
 CREATE OR REPLACE VIEW enterprise_prod.self_service.certified_customer_sales
   COMMENT 'Authoritative gold metric view for departmental sales reporting'
-AS SELECT 
+AS SELECT
     c.customer_id,
     c.customer_name,
     c.segment,
@@ -1070,7 +1070,7 @@ FROM enterprise_prod.crm.dim_customers c
 JOIN enterprise_prod.sales.fact_orders s ON c.customer_id = s.customer_id;
 
 -- Tag as verified data product
-ALTER VIEW enterprise_prod.self_service.certified_customer_sales 
+ALTER VIEW enterprise_prod.self_service.certified_customer_sales
   SET TAGS ('tier' = 'certified', 'certification_date' = '2024-03-01');
 
 -- Grant broad analyst usage

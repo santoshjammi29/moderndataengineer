@@ -71,9 +71,9 @@ def process_repository(repo_name: str, dry_run: bool = False):
                 total_md += 1
                 file_path = os.path.join(root, f)
                 try:
-                    with open(file_path, "r", encoding="utf-8") as fp:
+                    with open(file_path, encoding="utf-8") as fp:
                         content = fp.read()
-                    
+
                     new_content = compact_markdown(content)
                     if new_content != content:
                         modified_md += 1

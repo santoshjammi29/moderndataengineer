@@ -27,7 +27,7 @@ WITH source_orders AS (
     {% if is_incremental() %}
         -- Lookback 3 days to capture late-arriving and updated records
         WHERE updated_at >= (
-            SELECT dateadd(day, -3, coalesce(max(updated_at), '1970-01-01')) 
+            SELECT dateadd(day, -3, coalesce(max(updated_at), '1970-01-01'))
             FROM {{ this }}
         )
     {% endif %}
@@ -106,7 +106,7 @@ By default, dbt concatenates the target schema with any custom schema defined on
 {% macro generate_schema_name(custom_schema_name, node) -%}
 
     {%- set default_schema = target.schema -%}
-    
+
     {%- if target.name == 'prod' -%}
         {# In production, use the clean custom schema directly without prefixing #}
         {%- if custom_schema_name is none -%}
@@ -160,7 +160,7 @@ Repeatedly writing complex date logic (calculating rolling 90-day windows, fisca
 ```
 ```sql
 -- Usage in a dbt model
-SELECT 
+SELECT
     order_id,
     {{ get_fiscal_quarter('ordered_at') }} as fiscal_quarter,
     order_amount_usd
@@ -197,7 +197,7 @@ SELECT
     order_id,
     -- Generates MD5/SHA256 surrogate key compatible with any warehouse
     {{ dbt_utils.generate_surrogate_key(['order_id', 'payment_id']) }} as payment_hash_key,
-    
+
     -- Dynamic column pivoting without manual CASE statements
     {{ dbt_utils.pivot(
         column='payment_method',
@@ -371,7 +371,7 @@ While generic schema tests (`unique`, `not_null`) assert column-level integrity,
 -- tests/assert_order_total_matches_payments.sql
 -- Fails if an order's recorded total amount does not equal the sum of completed payments
 WITH order_totals AS (
-    SELECT 
+    SELECT
         order_id,
         order_amount_usd
     FROM {{ ref('fct_orders') }}

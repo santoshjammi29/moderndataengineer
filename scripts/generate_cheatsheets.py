@@ -9,7 +9,6 @@ Author: Santosh Jammi | Principal Data Architect
 """
 
 import os
-import sys
 import subprocess
 import fitz  # PyMuPDF
 from PIL import Image
@@ -2100,10 +2099,10 @@ resources:
 <span class="kw">def</span> test_filter_active(spark):
     input_data = [(<span class="num">1</span>, <span class="str">"ACTIVE"</span>), (<span class="num">2</span>, <span class="str">"CANCELLED"</span>)]
     input_df = spark.createDataFrame(input_data, [<span class="str">"id"</span>, <span class="str">"status"</span>])
-    
+
     expected_data = [(<span class="num">1</span>, <span class="str">"ACTIVE"</span>)]
     expected_df = spark.createDataFrame(expected_data, [<span class="str">"id"</span>, <span class="str">"status"</span>])
-    
+
     result_df = input_df.filter(<span class="str">"status = 'ACTIVE'"</span>)
     <span class="cm"># Spark 3.5+ built-in test assertion</span>
     assertDataFrameEqual(result_df, expected_df)</pre>
@@ -2169,7 +2168,7 @@ def render_images(pdf_path, prefix, dpi=250):
     print(f"Rendering high-res images from {os.path.basename(pdf_path)} at {dpi} DPI...")
     doc = fitz.open(pdf_path)
     page_images = []
-    
+
     for i, page in enumerate(doc):
         pix = page.get_pixmap(dpi=dpi)
         img_name = f"{prefix}_page_{i+1}.png"
@@ -2177,19 +2176,19 @@ def render_images(pdf_path, prefix, dpi=250):
         pix.save(img_path)
         page_images.append(img_path)
         print(f"  ✓ Rendered Page {i+1}: {img_name} ({pix.width}x{pix.height})")
-    
+
     # If 2 pages, create side-by-side poster
     if len(page_images) == 2:
         poster_name = f"{prefix}_poster.png"
         poster_path = os.path.join(IMG_DIR, poster_name)
         img1 = Image.open(page_images[0])
         img2 = Image.open(page_images[1])
-        
+
         # side-by-side stitch with gap
         gap = 30
         total_width = img1.width + img2.width + gap
         max_height = max(img1.height, img2.height)
-        
+
         poster = Image.new("RGB", (total_width, max_height), color=(8, 12, 21))
         poster.paste(img1, (0, 0))
         poster.paste(img2, (img1.width + gap, 0))
@@ -2230,7 +2229,7 @@ def generate_index_html():
   .badges { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
   .badge { background: #1e293b; color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid #334155; }
   .badge-orange { background: rgba(255, 54, 33, 0.15); color: #ff3621; border-color: rgba(255, 54, 33, 0.3); }
-  
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -2452,7 +2451,7 @@ def main():
     for sheet in sheets:
         html_file = os.path.join(HTML_DIR, f"{sheet['name']}.html")
         pdf_file = os.path.join(PDF_DIR, sheet['pdf_name'])
-        
+
         full_html = generate_full_html(
             title=sheet["title"],
             theme_color=sheet["theme"],
@@ -2462,7 +2461,7 @@ def main():
         with open(html_file, "w", encoding="utf-8") as f:
             f.write(full_html)
         print(f"\n[1/3] Wrote HTML: {os.path.basename(html_file)}")
-        
+
         compile_pdf(html_file, pdf_file)
         render_images(pdf_file, sheet["prefix"], dpi=250)
 

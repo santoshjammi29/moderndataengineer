@@ -2,11 +2,10 @@
 Bulk generation of SQL Iceberg Architecture Scenarios (Part 2) for data_architecture.json
 """
 import json
-import os
 
 FILE = 'src/data/json/data_architecture.json'
 
-with open(FILE, 'r') as f:
+with open(FILE) as f:
     data = json.load(f)
 
 print(f"Existing architecture items: {len(data)}")
@@ -26,7 +25,7 @@ In multi-terabyte exploratory data analytics, database administrators face an im
 2. **Zero Indexing (Full Table Scans)**: Every exploratory ad-hoc query must scan billions of raw rows from storage, resulting in sluggish minutes-long latency.
 
 **The Architectural Blueprint: Database Cracking (Idreos et al.)**:
-Database Cracking is an adaptive physical indexing paradigm where the database storage engine physically reorganizes data **as an automatic side-effect of processing normal SELECT queries**. 
+Database Cracking is an adaptive physical indexing paradigm where the database storage engine physically reorganizes data **as an automatic side-effect of processing normal SELECT queries**.
 
 Data is loaded initially as a contiguous, unsorted array (a 'Cracked Column'). When a query arrives with a filter predicate (e.g. `WHERE salary BETWEEN 50000 AND 80000`), the query execution operator partitions the physical column array into pieces called **Cracks**:
 - Crack 1: Values $< 50000$
@@ -113,7 +112,7 @@ In the ingestion service (Go / Java / Rust):
 bucketID := int16(crc32.ChecksumIEEE([]byte(accountID.String())) % 64)
 
 // Insert with pre-computed bucket_id
-_, err := db.Exec(ctx, 
+_, err := db.Exec(ctx,
     "INSERT INTO transaction_ledger (bucket_id, account_id, amount, created_at) VALUES ($1, $2, $3, $4)",
     bucketID, accountID, amount, time.Now())
 ```
@@ -147,7 +146,7 @@ The optimizer executes 64 parallel index seeks across the 64 partition tables an
         "difficulty": "ARCHITECT",
         "question": "Architect an end-to-end distributed transaction recovery and deduplication architecture that resolves the Two-Generals Problem during ambiguous database network errors (socket timeouts during COMMIT), guaranteeing zero duplicate financial charges.",
         "answer": """### Phase 1: Conceptual Foundation & Core Architecture
-In distributed financial platforms, an application service sends a `COMMIT` statement to the database over a TCP connection. 
+In distributed financial platforms, an application service sends a `COMMIT` statement to the database over a TCP connection.
 
 If a transient network partition, load balancer timeout, or switch failure drops the TCP socket during the commit call, the application receives an **Ambiguous Network Error**:
 `ConnectionResetByPeer` or `SocketTimeoutException`.
@@ -184,7 +183,7 @@ def process_payment(idempotency_key, user_id, amount):
             INSERT INTO idempotency_records (idempotency_key, status, created_at, locked_until)
             VALUES (%s, 'PROCESSING', NOW(), NOW() + INTERVAL '30 seconds')
             ON CONFLICT (idempotency_key) DO UPDATE
-            SET locked_until = CASE 
+            SET locked_until = CASE
                 WHEN idempotency_records.status = 'PROCESSING' AND idempotency_records.locked_until < NOW()
                 THEN NOW() + INTERVAL '30 seconds'
                 ELSE idempotency_records.locked_until
@@ -199,7 +198,7 @@ def process_payment(idempotency_key, user_id, amount):
         if record['status'] == 'COMMITTED':
             # Previous attempt SUCCEEDED! Return cached response immediately!
             return json.loads(record['response_payload'])
-        
+
         # Step 3: Execute genuine business logic
         deduct_user_balance(user_id, amount)
         order_id = create_order(user_id, amount)
@@ -217,8 +216,8 @@ def process_payment(idempotency_key, user_id, amount):
         response = {'order_id': order_id, 'status': 'SUCCESS'}
         cursor.execute(
             \"\"\"
-            UPDATE idempotency_records 
-            SET status = 'COMMITTED', response_payload = %s 
+            UPDATE idempotency_records
+            SET status = 'COMMITTED', response_payload = %s
             WHERE idempotency_key = %s;
             \"\"\",
             (json.dumps(response), idempotency_key)

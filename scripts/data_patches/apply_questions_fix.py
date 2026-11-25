@@ -10,7 +10,7 @@ import fix_questions_databricks_2
 
 def apply_all_question_fixes():
     questions_file = "src/data/json/questions.json"
-    with open(questions_file, "r", encoding="utf-8") as f:
+    with open(questions_file, encoding="utf-8") as f:
         questions = json.load(f)
 
     print(f"Loaded {len(questions)} existing questions.")
@@ -88,7 +88,7 @@ def apply_all_question_fixes():
 
     dup_groups = {k: v for k, v in ans_map.items() if len(v) > 1}
     print(f"Total duplicate answer groups in entire questions database: {len(dup_groups)}")
-    for ans_text, qids in dup_groups.items():
+    for _ans_text, qids in dup_groups.items():
         print(f"  Duplicate answer group ({len(qids)}): {qids}")
 
     # Check unique Databricks question texts

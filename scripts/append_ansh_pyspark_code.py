@@ -163,12 +163,12 @@ from typing import List, Dict
 class DynamicPipelineTransformer:
     def __init__(self, df: DataFrame):
         self.df = df
-        
+
     def add_audit_columns(self) -> 'DynamicPipelineTransformer':
         self.df = self.df.withColumn("ingested_at", F.current_timestamp()) \\
                          .withColumn("source_system", F.lit("ADLS_RAW"))
         return self
-        
+
     def dynamic_aggregate(self, group_by_cols: List[str], agg_mapping: Dict[str, str]) -> DataFrame:
         \"\"\"
         Dynamically builds aggregation expressions from a dictionary.
@@ -178,7 +178,7 @@ class DynamicPipelineTransformer:
         for col_name, func_name in agg_mapping.items():
             spark_func = getattr(F, func_name.lower())
             expressions.append(spark_func(F.col(col_name)).alias(f"{func_name}_{col_name}"))
-            
+
         return self.df.groupBy(*group_by_cols).agg(*expressions)
 
 # Pipeline usage:
@@ -200,7 +200,7 @@ df_gold.show()""",
 
 def main():
     print(f"Reading {FILE_PATH}...")
-    with open(FILE_PATH, 'r') as f:
+    with open(FILE_PATH) as f:
         data = json.load(f)
     print(f"Initial count: {len(data)}")
 

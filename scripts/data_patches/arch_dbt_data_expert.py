@@ -30,7 +30,7 @@ models:
 ```
 ```sql
 -- In Downstream Project (marketing_analytics) models/marts/fct_campaign_conversions.sql
-SELECT 
+SELECT
     c.customer_id,
     c.email,
     camp.campaign_name
@@ -327,7 +327,7 @@ Building reusable internal macro packages or maintaining a dbt codebase that ope
 
         ("arch-dbt-029", "dbt for data vault modeling", "How do you architect a scalable Data Vault 2.0 architecture in dbt utilizing Hubs, Links, and Satellites with automated hash keys?",
 """### Phase 1: Conceptual Foundation & Core Architecture
-Data Vault 2.0 is an agile, audit-compliant data modeling methodology designed for large-scale enterprise data integration. It splits business entities into three core physical primitives: 
+Data Vault 2.0 is an agile, audit-compliant data modeling methodology designed for large-scale enterprise data integration. It splits business entities into three core physical primitives:
 1. **Hubs**: Unique business keys and immutable SHA256 hash keys.
 2. **Links**: Unique association relationships representing transactions or joins between Hubs.
 3. **Satellites**: Mutable descriptive attributes with load timestamps, hash diffs, and source tracking.
@@ -391,7 +391,7 @@ validation_errors AS (
         test_value,
         'Value must be between 0.0 and 100.0 inclusive' as failure_reason
     FROM validation
-    WHERE 
+    WHERE
         {% if not allow_null %}
             test_value is null or
         {% endif %}
@@ -628,7 +628,7 @@ def push_dbt_metadata_to_catalog(manifest_path, run_results_path):
             model_name = node['name']
             columns = node['columns']
             upstream_deps = node['depends_on']['nodes']
-            
+
             payload = {
                 "urn": f"urn:li:dataset:(urn:li:dataPlatform:snowflake,{model_name},PROD)",
                 "description": node.get('description', ''),

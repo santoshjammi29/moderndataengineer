@@ -3,11 +3,10 @@ Bulk generation of SQL Iceberg Q&As (Part 2) for questions.json
 Covers remaining deep topics from the SQL iceberg.
 """
 import json
-import os
 
 FILE = 'src/data/json/questions.json'
 
-with open(FILE, 'r') as f:
+with open(FILE) as f:
     data = json.load(f)
 
 print(f"Existing questions: {len(data)}")
@@ -90,10 +89,10 @@ To prevent infinite loops, implement **Path-Array Cycle Detection**:
 ```sql
 WITH RECURSIVE graph_search AS (
     -- Anchor member
-    SELECT 
-        id, 
-        parent_id, 
-        1 AS depth, 
+    SELECT
+        id,
+        parent_id,
+        1 AS depth,
         ARRAY[id] AS path,
         false AS is_cycle
     FROM nodes
@@ -102,9 +101,9 @@ WITH RECURSIVE graph_search AS (
     UNION ALL
 
     -- Recursive member
-    SELECT 
-        n.id, 
-        n.parent_id, 
+    SELECT
+        n.id,
+        n.parent_id,
         gs.depth + 1,
         gs.path || n.id,
         n.id = ANY(gs.path) -- Cycle detection predicate!
@@ -134,7 +133,7 @@ Execution mechanics:
         "difficulty": "HARD",
         "question": "Why is the statement 'There are no non-nullable types in SQL' a fundamental relational reality despite column-level NOT NULL DDL?",
         "answer": """### Phase 1: Conceptual Foundation & Mechanics
-In statically typed programming languages (like Rust, TypeScript, or Kotlin), a `non-nullable` type (e.g. `String` vs `String?`) is enforced by the compiler across all expressions, assignments, and function calls. 
+In statically typed programming languages (like Rust, TypeScript, or Kotlin), a `non-nullable` type (e.g. `String` vs `String?`) is enforced by the compiler across all expressions, assignments, and function calls.
 
 In SQL, developers often believe that declaring a column `NOT NULL` in a `CREATE TABLE` statement creates an immutable non-nullable type. This is a myth. In relational database engines, `NOT NULL` is merely a storage integrity constraint enforced during INSERT and UPDATE operations on physical base tables. The SQL type system itself does NOT support non-nullable types for derived expressions, joins, or aggregations.
 
@@ -145,8 +144,8 @@ The relational algebra generates NULLs in expressions regardless of physical col
    CREATE TABLE users (id INT PRIMARY KEY, email VARCHAR(255) NOT NULL);
    CREATE TABLE logins (id INT PRIMARY KEY, user_id INT);
 
-   SELECT u.email 
-   FROM logins l 
+   SELECT u.email
+   FROM logins l
    LEFT JOIN users u ON l.user_id = u.id;
    ```
    If a login record has an unmapped `user_id`, the engine synthesizes a `NULL` for `u.email`. Even though `users.email` is declared `NOT NULL`, the query returns `NULL`!
@@ -173,7 +172,7 @@ The relational algebra generates NULLs in expressions regardless of physical col
         "difficulty": "HARD",
         "question": "What is Parameter Sniffing in stored procedures and parameterized SQL, why does it trigger severe query plan regressions, and how do you remediate it?",
         "answer": """### Phase 1: Conceptual Foundation & Mechanics
-When a parameterized query or stored procedure executes for the first time, the query engine compiles the query and places the physical execution plan in the plan cache. 
+When a parameterized query or stored procedure executes for the first time, the query engine compiles the query and places the physical execution plan in the plan cache.
 
 During compilation, the optimizer inspects the specific parameter values passed in that first execution—a process called **Parameter Sniffing**. The optimizer reads histogram statistics for those specific parameter values and tailors the physical execution plan (join types, index seeks vs scans, memory grants) specifically for that initial workload.
 
@@ -342,8 +341,8 @@ Common Non-Sargable Anti-Patterns and Their High-Performance Rewrites:
 SELECT * FROM transactions WHERE YEAR(transaction_date) = 2026;
 
 -- SARGABLE REWRITE: Direct B-Tree Index Seek
-SELECT * FROM transactions 
-WHERE transaction_date >= '2026-01-01' 
+SELECT * FROM transactions
+WHERE transaction_date >= '2026-01-01'
   AND transaction_date < '2027-01-01';
 ```
 
@@ -444,7 +443,7 @@ The Transformation Pipeline of TIMESTAMPTZ:
         "difficulty": "HARD",
         "question": "What was the MySQL 3-byte 'utf8' encoding bug, how does it differ from 'utf8mb4', and what happens if an application inserts an emoji into a legacy utf8 column?",
         "answer": """### Phase 1: Conceptual Foundation & Mechanics
-The official Unicode standard defines UTF-8 as a variable-width encoding that uses between 1 and 4 bytes per character. 
+The official Unicode standard defines UTF-8 as a variable-width encoding that uses between 1 and 4 bytes per character.
 - Basic Latin characters use 1 byte.
 - Accented characters, Cyrillic, and Greek use 2 bytes.
 - Standard CJK ideographs use 3 bytes.
@@ -564,9 +563,9 @@ CREATE TABLE employees (
     name VARCHAR(100)
 );
 
-ALTER TABLE companies 
-ADD CONSTRAINT fk_company_ceo 
-FOREIGN KEY (ceo_id) REFERENCES employees(id) 
+ALTER TABLE companies
+ADD CONSTRAINT fk_company_ceo
+FOREIGN KEY (ceo_id) REFERENCES employees(id)
 DEFERRABLE INITIALLY DEFERRED;
 ```
 Now consider the transactional insertion:

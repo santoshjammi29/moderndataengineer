@@ -78,14 +78,14 @@ def run_repo_tests(repo_name: str) -> (bool, str):
         res = subprocess.run([sys.executable, str(validate_nb)], cwd=str(repo_dir), capture_output=True, text=True)
         if res.returncode == 0:
             return True, "Notebooks valid"
-        return False, f"Notebook validation failed"
+        return False, "Notebook validation failed"
 
     validate_md = repo_dir / "scripts" / "validate_markdown.py"
     if validate_md.exists():
         res = subprocess.run([sys.executable, str(validate_md)], cwd=str(repo_dir), capture_output=True, text=True)
         if res.returncode == 0:
             return True, "Markdown valid"
-        return False, f"Markdown validation failed"
+        return False, "Markdown validation failed"
 
     # Databricks handbook or modern repos using pytest / uv
     venv_pytest = repo_dir / ".venv" / "bin" / "pytest"

@@ -3,7 +3,7 @@ import os
 
 # 1. Update data_mssql.json
 MSSQL_FILE = 'src/data/json/data_mssql.json'
-with open(MSSQL_FILE, 'r', encoding='utf-8') as f:
+with open(MSSQL_FILE, encoding='utf-8') as f:
     mssql_data = json.load(f)
 
 existing_mssql_ids = {item['id'] for item in mssql_data}
@@ -92,7 +92,7 @@ print(f"Updated {MSSQL_FILE}: now has {len(mssql_data)} items.")
 
 # 2. Update data_sparksql.json
 SPARKSQL_FILE = 'src/data/json/data_sparksql.json'
-with open(SPARKSQL_FILE, 'r', encoding='utf-8') as f:
+with open(SPARKSQL_FILE, encoding='utf-8') as f:
     sparksql_data = json.load(f)
 
 existing_sparksql_ids = {item['id'] for item in sparksql_data}

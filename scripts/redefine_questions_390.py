@@ -4,8 +4,6 @@ Redefine all 390 Phased Questions in questions.json with question-specific
 Phase 2 (executable code + step mechanics) and Phase 3 (production gotchas + remediations).
 """
 import json
-import os
-import re
 
 QUESTIONS_PATH = '/Users/santosh/Documents/antigravity/adventurous-raman/src/data/json/questions.json'
 
@@ -1152,7 +1150,7 @@ def get_answer_for_question(q):
 
 def main():
     print(f"Loading {QUESTIONS_PATH}...")
-    with open(QUESTIONS_PATH, 'r', encoding='utf-8') as f:
+    with open(QUESTIONS_PATH, encoding='utf-8') as f:
         data = json.load(f)
 
     updated_count = 0

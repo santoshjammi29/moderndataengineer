@@ -18,7 +18,7 @@ def parse_readme():
     text = open(README_PATH).read()
     sections = re.findall(r'##\s+(\d+)\.\s+([^\n]+)\n+(.*?)(?=\n##\s+\d+|\Z)', text, re.DOTALL)
     concepts = []
-    
+
     for sec_num, sec_title, sec_content in sections:
         sec_num = int(sec_num)
         sec_title = sec_title.strip()
@@ -222,7 +222,7 @@ CONCEPT_DETAILS = {
 def generate_db100():
     raw_concepts = parse_readme()
     print(f"Parsed {len(raw_concepts)} concepts from README")
-    
+
     enriched_100 = []
     for c in raw_concepts:
         num = c["num"]
@@ -234,7 +234,7 @@ def generate_db100():
             c["whatYouShouldKnow"],
             "Essential architectural pattern for enterprise lakehouse systems."
         ])
-        
+
         enriched_100.append({
             "id": f"db100-{num:03d}-{re.sub(r'[^a-z0-9]+', '-', c['concept'].lower()).strip('-')}",
             "num": num,
@@ -249,19 +249,19 @@ def generate_db100():
             "codeSnippet": code,
             "certificationMapping": cert
         })
-    
+
     with open(TARGET_100_JSON, "w", encoding="utf-8") as f:
         json.dump(enriched_100, f, indent=2)
     print(f"Saved {len(enriched_100)} concepts to {TARGET_100_JSON}")
     return enriched_100
 
 def update_data_concepts(db100_items):
-    with open(TARGET_CONCEPTS_JSON, "r", encoding="utf-8") as f:
+    with open(TARGET_CONCEPTS_JSON, encoding="utf-8") as f:
         existing_concepts = json.load(f)
-    
+
     existing_terms = {c["term"].lower().strip() for c in existing_concepts}
     existing_ids = {c["id"] for c in existing_concepts}
-    
+
     added_count = 0
     for item in db100_items:
         term_clean = item["concept"].lower().strip()
@@ -271,7 +271,7 @@ def update_data_concepts(db100_items):
             if term_clean == ex or (len(term_clean) > 5 and term_clean in ex) or (len(ex) > 5 and ex in term_clean):
                 matched = True
                 break
-        
+
         if not matched:
             # Map category
             cat_id = item["categoryId"]
@@ -279,13 +279,13 @@ def update_data_concepts(db100_items):
                 category = "SPARK & DATABRICKS"
             else:
                 category = "DATABRICKS"
-                
+
             concept_id = f"databricks-{re.sub(r'[^a-z0-9]+', '-', item['concept'].lower()).strip('-')}"
             suffix = 1
             while concept_id in existing_ids:
                 concept_id = f"databricks-{re.sub(r'[^a-z0-9]+', '-', item['concept'].lower()).strip('-')}-{suffix}"
                 suffix += 1
-                
+
             new_entry = {
                 "id": concept_id,
                 "term": item["concept"],
@@ -299,10 +299,10 @@ def update_data_concepts(db100_items):
             existing_ids.add(concept_id)
             existing_terms.add(term_clean)
             added_count += 1
-            
+
     with open(TARGET_CONCEPTS_JSON, "w", encoding="utf-8") as f:
         json.dump(existing_concepts, f, indent=2)
-        
+
     print(f"Added {added_count} new concepts to {TARGET_CONCEPTS_JSON}. Total concepts now: {len(existing_concepts)}")
 
 if __name__ == "__main__":

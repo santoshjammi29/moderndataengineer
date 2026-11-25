@@ -74,7 +74,7 @@ The platform maintains 42 hand-drawn digital blueprints across 7 architectural d
 ### 1. The 52 Architecture Whiteboard Blueprints Catalog
 
 The platform contains **52 high-resolution digital whiteboard blueprints** across 7 architectural domains. The complete repository documentation with Markdown image embeds, multi-persona breakdowns, and primary docLinks is available at:
-👉 **[`docs/whiteboard_diagrams/README.md`](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/whiteboard_diagrams/README.md)**
+👉 **[`docs/whiteboard_diagrams/README.md`](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/whiteboard_diagrams/README.md)**
 
 All 52 image files are directly stored in:
 - `assets/whiteboards/` (Direct repository asset mirror)

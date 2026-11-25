@@ -11,7 +11,6 @@ with authentic, domain-specific, production-ready incident response procedures.
 """
 
 import os
-import sys
 
 BASE_DIR = "/Users/santosh/Documents/antigravity"
 
@@ -19,9 +18,9 @@ RUNBOOKS = {
     "streaming-handbook": {
         "01_consumer_group_rebalance_storm_triage.md": '''# 🚨 Production Runbook 01: Consumer Group Rebalance Storm & Lag Surge Triage
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Apache Kafka & Real-Time Event Streaming  
-> **Target Systems**: Kafka Brokers (KRaft / ZooKeeper), Consumer Clients (Java / Python / Go), Prometheus / Grafana  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Apache Kafka & Real-Time Event Streaming
+> **Target Systems**: Kafka Brokers (KRaft / ZooKeeper), Consumer Clients (Java / Python / Go), Prometheus / Grafana
 > **Objective**: Stop cascading stop-the-world partition rebalances, eliminate lag spikes, and restore consumer group stability.
 
 ---
@@ -32,15 +31,15 @@ RUNBOOKS = {
 flowchart TD
     Alert["SEV-1 Alert: Consumer Group<br/>Rebalance Storm & Extreme Lag"] --> InspectLag["Step 1: Check Group State via<br/>kafka-consumer-groups.sh"]
     InspectLag --> StateCheck{"Group State?"}
-    
+
     StateCheck -->|"PreparingRebalance /<br/>CompletingRebalance"| StormDetect["Rebalance Storm Active"]
     StateCheck -->|"Dead / Empty"| DeadGroup["Consumers Disconnected or Crashed"]
     StateCheck -->|"Stable with Growing Lag"| SlowConsumers["Consumer Processing Bottleneck"]
-    
+
     StormDetect --> PollCheck{"Poll Interval Exceeded?<br/>(max.poll.interval.ms)"}
     PollCheck -->|Yes| FixPoll["Reduce max.poll.records & Increase<br/>max.poll.interval.ms"]
     PollCheck -->|No| StickyCheck["Upgrade to<br/>CooperativeStickyAssignor"]
-    
+
     SlowConsumers --> DownstreamCheck{"Downstream Sink Throttling<br/>(Delta/DB)?"}
     DownstreamCheck -->|Yes| SinkOptimize["Scale Sink Partitions & Batch<br/>Flush Size"]
     DownstreamCheck -->|No| ScaleConsumers["Scale Consumer Pod Replicas up to<br/>Partition Count"]
@@ -119,7 +118,7 @@ try:
                 continue
             else:
                 raise Exception(msg.error())
-        
+
         # Process transaction within bounded SLA (< 50ms)
         process_payment_event(msg.value())
         consumer.commit(asynchronous=True)
@@ -137,11 +136,11 @@ finally:
 - [ ] Set alert on Prometheus metric `kafka_consumergroup_lag > 50000` with 5-minute sustained threshold.
 ''',
 
-        "02_flink_backpressure_and_checkpoint_timeout_triage.md": '''# 🚨 Production Runbook 02: Flink Backpressure & Checkpoint Timeout Triage
+        "02_flink_backpressure_and_checkpoint_timeout_triage.md": r'''# 🚨 Production Runbook 02: Flink Backpressure & Checkpoint Timeout Triage
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Apache Flink Stream Processing  
-> **Target Systems**: Flink JobManager, TaskManagers, RocksDB StateBackend, ADLS/S3 Checkpoint Storage  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Apache Flink Stream Processing
+> **Target Systems**: Flink JobManager, TaskManagers, RocksDB StateBackend, ADLS/S3 Checkpoint Storage
 > **Objective**: Eliminate downstream backpressure bottlenecks and resolve failing Flink checkpoints before state corruption.
 
 ---
@@ -152,11 +151,11 @@ finally:
 flowchart TD
     Alert["SEV-1 Alert: Flink Checkpoint<br/>Expired / Backpressure &gt; 0.8"] --> InspectBackpressure["Step 1: Query Flink REST API for<br/>Operator Backpressure"]
     InspectBackpressure --> IdentifyBottleneck{"Locate Bottleneck Operator"}
-    
+
     IdentifyBottleneck -->|"Sink Operator"| SinkIssue["Downstream Delta/Kafka Storage<br/>Throttling"]
     IdentifyBottleneck -->|"Stateful Window / Join<br/>Operator"| StateIssue["RocksDB GC Pauses or State Bloat"]
     IdentifyBottleneck -->|"Deserialization / CPU Operator"| CpuIssue["Compute Resource Starvation"]
-    
+
     SinkIssue --> EnableUnaligned["Enable Unaligned Checkpoints &<br/>Buffer Debloating"]
     StateIssue --> TuneRocksDB["Tune RocksDB Block Cache & Write<br/>Buffers"]
     CpuIssue --> ScaleTaskManagers["Scale TaskManager Slots & Heap<br/>Memory"]
@@ -233,9 +232,9 @@ env.set_state_backend(state_backend)
 
         "03_cdc_schema_drift_and_wal_exhaustion.md": '''# 🚨 Production Runbook 03: CDC Schema Drift & WAL Disk Exhaustion
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Change Data Capture (Debezium) & Database Replication  
-> **Target Systems**: PostgreSQL Primary, Debezium Connect Cluster, Kafka Connect, Schema Registry  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Change Data Capture (Debezium) & Database Replication
+> **Target Systems**: PostgreSQL Primary, Debezium Connect Cluster, Kafka Connect, Schema Registry
 > **Objective**: Drain PostgreSQL WAL bloat before disk fills to 100%, realign Debezium schema history, and restore replication.
 
 ---
@@ -246,10 +245,10 @@ env.set_state_backend(state_backend)
 flowchart TD
     Alert["SEV-1 Alert: PostgreSQL WAL Disk<br/>&gt; 85% & Debezium Lagging"] --> CheckDisk["Step 1: Check Replication Slot<br/>Disk Retained in Postgres"]
     CheckDisk --> SlotState{"Replication Slot Active?"}
-    
+
     SlotState -->|"Active: Lagging"| ThrottleCheck["Debezium is Throttled or Blocked<br/>on Kafka"]
     SlotState -->|"Inactive: Abandoned"| DropSlot["Drop Abandoned Slot Immediately to<br/>Reclaim WAL Disk"]
-    
+
     ThrottleCheck --> SchemaCheck{"Schema Registry Rejection?"}
     SchemaCheck -->|Yes| FixSchema["Update Schema Registry<br/>Compatibility Mode"]
     SchemaCheck -->|No| ScaleConnect["Scale Kafka Connect Worker Tasks &<br/>Memory"]
@@ -336,9 +335,9 @@ curl -X PUT -H "Content-Type: application/json" \
 
         "04_poison_pill_deserialization_dead_letter_queue.md": '''# 🚨 Production Runbook 04: Corrupt Event Deserialization & Dead-Letter Queue (DLQ) Routing
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Event Streaming & Real-Time Processing  
-> **Target Systems**: Spark Structured Streaming, Kafka Brokers, Delta Lake Lakehouse  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Event Streaming & Real-Time Processing
+> **Target Systems**: Spark Structured Streaming, Kafka Brokers, Delta Lake Lakehouse
 > **Objective**: Isolate poison pill payloads, prevent streaming query crashes, and route unparseable events into a transactional DLQ.
 
 ---
@@ -349,10 +348,10 @@ curl -X PUT -H "Content-Type: application/json" \
 flowchart TD
     Alert["SEV-2 Alert: Structured Streaming<br/>Query Crashed with Malformed JSON"] --> ParseError["Step 1: Check Driver Exception for<br/>Parse Mode"]
     ParseError --> ModeCheck{"Parse Mode?"}
-    
+
     ModeCheck -->|"FAILFAST"| CrashDetected["FAILFAST crashed micro-batch"]
     ModeCheck -->|"PERMISSIVE"| PermissiveCheck["Check _corrupt_record column<br/>handling"]
-    
+
     CrashDetected --> ApplyPermissive["Configure PERMISSIVE mode with<br/>columnNameOfCorruptRecord"]
     ApplyPermissive --> BranchStream["Split Stream into Valid Delta Sink<br/>and DLQ Kafka Sink"]
     BranchStream --> ResumeQuery["Restart Streaming Query from<br/>Checkpoint"]
@@ -423,11 +422,11 @@ parsed_stream = raw_stream.select(
 # 4. Route valid vs corrupt records via foreachBatch sink
 def process_micro_batch(batch_df, batch_id):
     batch_df.cache()
-    
+
     # Valid records: _corrupt_record is NULL and transaction_id is populated
     valid_df = batch_df.filter(col("data._corrupt_record").isNull() & col("data.transaction_id").isNotNull()) \\
         .select("kafka_key", "data.*", "kafka_timestamp")
-    
+
     # Poison pill corrupt records: _corrupt_record is NOT NULL
     corrupt_df = batch_df.filter(col("data._corrupt_record").isNotNull()) \\
         .select(
@@ -441,13 +440,13 @@ def process_micro_batch(batch_df, batch_id):
                 current_timestamp().alias("quarantine_timestamp")
             )).alias("value")
         )
-    
+
     # Write valid records to Delta Lake Silver table
     valid_df.write \\
         .format("delta") \\
         .mode("append") \\
         .saveAsTable("lakehouse.silver_transactions")
-        
+
     # Write corrupt records to Dead-Letter Queue topic
     if corrupt_df.count() > 0:
         corrupt_df.write \\
@@ -455,7 +454,7 @@ def process_micro_batch(batch_df, batch_id):
             .option("kafka.bootstrap.servers", "kafka-1:9092,kafka-2:9092") \\
             .option("topic", "events.dlq") \\
             .save()
-            
+
     batch_df.unpersist()
 
 # 5. Start streaming query
@@ -477,9 +476,9 @@ query.awaitTermination()
 
         "05_rocksdb_offheap_memory_leak_triage.md": '''# 🚨 Production Runbook 05: RocksDB State Store Off-Heap Memory Leak Triage
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Spark Structured Streaming & Stateful Processing  
-> **Target Systems**: Spark Driver & Executors (Databricks / Kubernetes), RocksDB Native Engine  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Spark Structured Streaming & Stateful Processing
+> **Target Systems**: Spark Driver & Executors (Databricks / Kubernetes), RocksDB Native Engine
 > **Objective**: Diagnose native C++ memory leaks in RocksDB state store, prevent Executor OOM (Exit code 137), and tune memory bounds.
 
 ---
@@ -490,10 +489,10 @@ query.awaitTermination()
 flowchart TD
     Alert["SEV-1 Alert: Spark Executor Killed<br/>(Exit Code 137 / OOMKilled)"] --> CheckLogs["Step 1: Inspect Executor Memory<br/>Logs (Off-Heap vs On-Heap)"]
     CheckLogs --> MemoryCategory{"Where is Memory Growing?"}
-    
+
     MemoryCategory -->|"JVM Heap<br/>(java.lang.OutOfMemoryError)"| HeapLeak["Tune Spark Heap & State<br/>Watermarking"]
     MemoryCategory -->|"Native RSS Memory (Container<br/>Eviction)"| NativeLeak["RocksDB Native Block Cache &<br/>MemTable Unbounded"]
-    
+
     NativeLeak --> SetBoundedMemory["Configure RocksDB Memory Bounds in<br/>spark.sql.streaming"]
     SetBoundedMemory --> TuneCompaction["Tune Block Cache Size & MemTable<br/>Count"]
     TuneCompaction --> RestartExecutors["Restart Stream with Memory Caps"]
@@ -565,9 +564,9 @@ stream_df = raw_df \
 
         "06_kafka_under_replicated_partitions_disaster_recovery.md": '''# 🚨 Production Runbook 06: Kafka Under-Replicated Partitions (URP) Disaster Recovery
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Apache Kafka Cluster Infrastructure  
-> **Target Systems**: Kafka Brokers (KRaft / ZooKeeper), OS Disk Subsystems, Network Fabric  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Apache Kafka Cluster Infrastructure
+> **Target Systems**: Kafka Brokers (KRaft / ZooKeeper), OS Disk Subsystems, Network Fabric
 > **Objective**: Recover degraded brokers, rebalance under-replicated partitions safely without saturating inter-broker network bandwidth.
 
 ---
@@ -578,10 +577,10 @@ stream_df = raw_df \
 flowchart TD
     Alert["SEV-1 Alert: Kafka<br/>Under-Replicated Partitions &gt; 0"] --> IdentifyBrokers["Step 1: Identify Offline or<br/>Degraded Brokers"]
     IdentifyBrokers --> BrokerState{"Broker Health Status?"}
-    
+
     BrokerState -->|"Broker Down / Hardware Failure"| RestartBroker["Restart Broker or Provision<br/>Replacement Node"]
     BrokerState -->|"Broker Online / Disk I/O<br/>Bottleneck"| DiskBottleneck["Disk Saturation / Slow Follower"]
-    
+
     RestartBroker --> PartitionRebalance["Generate Throttled Partition<br/>Reassignment Plan"]
     DiskBottleneck --> ThrottleReplication["Apply Bandwidth Throttle on<br/>Inter-Broker Replication"]
     PartitionRebalance --> ExecuteRebalance["Execute<br/>kafka-reassign-partitions.sh"]
@@ -678,9 +677,9 @@ if __name__ == "__main__":
 RUNBOOKS["dbt-handbook"] = {
     "01_incremental_schema_drift_and_merge_failures.md": '''# 🚨 Production Runbook 01: Incremental Schema Drift & MERGE Failure Triage
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Analytics Engineering & dbt Core / Cloud  
-> **Target Systems**: Snowflake, Databricks, BigQuery, dbt Core/Cloud  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Analytics Engineering & dbt Core / Cloud
+> **Target Systems**: Snowflake, Databricks, BigQuery, dbt Core/Cloud
 > **Objective**: Resolve upstream schema drift breaking incremental `MERGE` models without triggering expensive full refreshes.
 
 ---
@@ -691,11 +690,11 @@ RUNBOOKS["dbt-handbook"] = {
 flowchart TD
     Alert["SEV-1 Alert: dbt Incremental MERGE<br/>Failed (Column Count / Type<br/>Mismatch)"] --> InspectError["Step 1: Inspect dbt Log for<br/>Missing / Added Column"]
     InspectError --> DriftType{"Schema Drift Type?"}
-    
+
     DriftType -->|"New Column Added Upstream"| OnSchemaChange["Configure on_schema_change:<br/>append_new_columns"]
     DriftType -->|"Column Data Type Mutated"| TypeDrift["Apply Explicit CAST in Model SQL"]
     DriftType -->|"Column Renamed or Dropped"| ColumnDrop["Configure on_schema_change:<br/>sync_all_columns"]
-    
+
     OnSchemaChange --> RunModel["Run Targeted dbt Model with<br/>--select"]
     TypeDrift --> RunModel
     ColumnDrop --> RunModel
@@ -715,12 +714,12 @@ grep -E "Database Error in model|Number of columns does not match|schema drift" 
 ### Step 2: Compare Staging View vs Target Incremental Table Schema
 ```sql
 -- Snowflake / Databricks: Check column differences
-SELECT column_name, data_type 
-FROM information_schema.columns 
+SELECT column_name, data_type
+FROM information_schema.columns
 WHERE table_name = 'stg_orders'
 EXCEPT
-SELECT column_name, data_type 
-FROM information_schema.columns 
+SELECT column_name, data_type
+FROM information_schema.columns
 WHERE table_name = 'fct_orders';
 ```
 
@@ -795,9 +794,9 @@ models:
 
     "02_snapshot_scd2_timestamp_collision_triage.md": '''# 🚨 Production Runbook 02: dbt Snapshot SCD2 Timestamp Collision Triage
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Analytics Engineering & dbt Snapshots  
-> **Target Systems**: Snowflake, Databricks, PostgreSQL, dbt Core/Cloud  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Analytics Engineering & dbt Snapshots
+> **Target Systems**: Snowflake, Databricks, PostgreSQL, dbt Core/Cloud
 > **Objective**: Detect and repair overlapping `dbt_valid_to` records and duplicate active dimension rows.
 
 ---
@@ -808,10 +807,10 @@ models:
 flowchart TD
     Alert["SEV-2 Alert: Duplicate Active Rows<br/>in SCD2 Snapshot (dbt_valid_to IS<br/>NULL &gt; 1)"] --> FindDuplicates["Step 1: Identify Duplicate Primary<br/>Keys in Snapshot Table"]
     FindDuplicates --> CauseCheck{"Collision Cause?"}
-    
+
     CauseCheck -->|"Same updated_at Timestamp"| TimestampCollision["High-Frequency Updates within<br/>Single Microsecond"]
     CauseCheck -->|"Snapshot Interrupted Mid-Run"| PartialCommit["Uncommitted Snapshot Run"]
-    
+
     TimestampCollision --> SwitchStrategy["Switch Snapshot Strategy to<br/>check_cols: 'all'"]
     PartialCommit --> RepairActive["Execute Atomic SQL Deduplication &<br/>Re-open Current State"]
     SwitchStrategy --> ReSnapshot["Execute dbt snapshot --select<br/>&lt;model>"]
@@ -912,9 +911,9 @@ WHERE dbt_scd_id IN (
 
     "03_circular_dependency_and_dag_deadlock_triage.md": '''# 🚨 Production Runbook 03: Circular Dependency & dbt DAG Deadlock Triage
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Analytics Engineering & Lineage Graphs  
-> **Target Systems**: dbt Core / Cloud Compilation Engine  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Analytics Engineering & Lineage Graphs
+> **Target Systems**: dbt Core / Cloud Compilation Engine
 > **Objective**: Identify cycle paths in dbt ref graphs and refactor intermediate models to restore compilation.
 
 ---
@@ -925,10 +924,10 @@ WHERE dbt_scd_id IN (
 flowchart TD
     Alert["SEV-2 Alert: dbt Compilation<br/>Failed with Cycle in Model Graph"] --> ParseCycle["Step 1: Extract Cycle Path from<br/>dbt compile Error"]
     ParseCycle --> AnalyzeModels{"Where is the Cycle?"}
-    
+
     AnalyzeModels -->|"Two Marts referencing each<br/>other"| CrossRef["Direct Cross-Reference between<br/>Marts"]
     AnalyzeModels -->|"Staging referencing Mart via<br/>View"| LayerViolation["Layer Boundary Violation (Staging<br/>-> Mart)"]
-    
+
     CrossRef --> ExtractIntermediate["Create Common Intermediate Model<br/>(int_)"]
     LayerViolation --> EnforceStagingRule["Refactor Staging to depend<br/>strictly on source()"]
     ExtractIntermediate --> CompileCheck["Run dbt compile --select<br/>state:modified+"]
@@ -990,9 +989,9 @@ GROUP BY customer_id
 
     "04_warehouse_credit_exhaustion_from_full_refresh.md": '''# 🚨 Production Runbook 04: Warehouse Credit Exhaustion from Accidental Full Refresh
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: FinOps & Data Warehouse Cost Governance  
-> **Target Systems**: Snowflake, Databricks SQL, BigQuery, dbt Cloud  
+> **Incident Severity**: `SEV-1`
+> **Domain**: FinOps & Data Warehouse Cost Governance
+> **Target Systems**: Snowflake, Databricks SQL, BigQuery, dbt Cloud
 > **Objective**: Terminate runaway multi-terabyte full refresh queries, isolate cost impact, and install CI/CD guardrails.
 
 ---
@@ -1003,11 +1002,11 @@ GROUP BY customer_id
 flowchart TD
     Alert["SEV-1 Alert: Warehouse Spend Spike<br/>/ Accidental --full-refresh in<br/>Prod"] --> KillQuery["Step 1: Immediately Kill Active<br/>Full-Refresh Query"]
     KillQuery --> CheckTableSize["Step 2: Inspect Target Table Size<br/>& Scan Volume"]
-    
+
     CheckTableSize --> TableStatus{"Table Corrupted / Dropped?"}
     TableStatus -->|"Table Dropped (dbt DROP TABLE)"| RestoreTimeTravel["Restore Table via Delta/Snowflake<br/>Time Travel"]
     TableStatus -->|"Query Killed Mid-Write"| RebuildIncremental["Rebuild Incremental Watermark"]
-    
+
     RestoreTimeTravel --> InstallGuardrail["Deploy prevent_prod_full_refresh<br/>Macro"]
     RebuildIncremental --> InstallGuardrail
 ```
@@ -1064,14 +1063,14 @@ on-run-start:
 ## 4. Verification & Prevention
 - [ ] Test `dbt run --full-refresh --target prod` locally and confirm compilation error blocks execution.
 - [ ] Verify `dbt run --full-refresh --target prod --vars '{"allow_full_refresh": true}'` permits authorized bypass.
-- [ ] Configure auto-suspension timeout on Snowflake warehouse to $\le 60\text{ seconds}$.
+- [ ] Configure auto-suspension timeout on Snowflake warehouse to $\\le 60\text{ seconds}$.
 ''',
 
     "05_data_contract_breaking_change_quarantine.md": '''# 🚨 Production Runbook 05: Data Contract Breaking Change & Schema Quarantine
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Data Contracts & Quality Observability  
-> **Target Systems**: dbt Core 1.5+, Open Data Contract Standard (ODCS), Delta Lake, Snowflake  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Data Contracts & Quality Observability
+> **Target Systems**: dbt Core 1.5+, Open Data Contract Standard (ODCS), Delta Lake, Snowflake
 > **Objective**: Block downstream model corruption when an upstream contract breaks, routing raw data into quarantine.
 
 ---
@@ -1082,11 +1081,11 @@ on-run-start:
 flowchart TD
     Alert["SEV-2 Alert: dbt Model Contract<br/>Violation Detected"] --> CheckContract["Step 1: Check Contract Diff in dbt<br/>test Output"]
     CheckContract --> ViolationType{"Violation Type?"}
-    
+
     ViolationType -->|"Column Type Mismatch"| CastError["Upstream Changed Type (e.g.<br/>Integer -> String)"]
     ViolationType -->|"Missing Guaranteed Column"| DropError["Upstream Dropped Required Column"]
     ViolationType -->|"Constraint Check Failed"| NotNullError["NULL values violating NOT NULL<br/>constraint"]
-    
+
     CastError --> QuarantineRoute["Route Batch to Quarantine Staging<br/>Table"]
     DropError --> AlertProducer["Trigger PagerDuty to Upstream<br/>Service Team"]
     NotNullError --> QuarantineRoute
@@ -1130,14 +1129,14 @@ FROM {{ source('billing', 'raw_payments') }}
 
 ## 4. Verification & Prevention
 - [ ] Ensure contract tests execute in pre-merge CI/CD pipeline.
-- [ ] Verify producer team publishes contract change notices $\ge 14\text{ days}$ prior to deployment.
+- [ ] Verify producer team publishes contract change notices $\\ge 14\text{ days}$ prior to deployment.
 ''',
 
     "06_slim_ci_state_deferred_deferral_failures.md": '''# 🚨 Production Runbook 06: Slim CI State Deferral & Missing Object Triage
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: DataOps CI/CD & dbt Cloud / GitHub Actions  
-> **Target Systems**: dbt Core, GitHub Actions, AWS S3 / Azure Blob Storage  
+> **Incident Severity**: `SEV-2`
+> **Domain**: DataOps CI/CD & dbt Cloud / GitHub Actions
+> **Target Systems**: dbt Core, GitHub Actions, AWS S3 / Azure Blob Storage
 > **Objective**: Resolve `dbt --defer --state` failures caused by stale production `manifest.json` artifacts.
 
 ---
@@ -1148,10 +1147,10 @@ FROM {{ source('billing', 'raw_payments') }}
 flowchart TD
     Alert["SEV-2 Alert: PR CI Failed with<br/>Model Not Found in Deferred State"] --> DownloadManifest["Step 1: Check Production<br/>manifest.json Freshness"]
     DownloadManifest --> ManifestAge{"Manifest Age?"}
-    
+
     ManifestAge -->|"&gt; 24 Hours Old"| StaleManifest["Manifest is Stale / Missing Newly<br/>Merged Models"]
     ManifestAge -->|"&lt; 24 Hours Old"| MissingObject["Deferred Object Does Not Exist in<br/>Production Database"]
-    
+
     StaleManifest --> FetchLatestArtifact["Download Latest manifest.json from<br/>Production Deployment"]
     MissingObject --> FallbackBuild["Build Missing Dependencies in PR<br/>Schema"]
     FetchLatestArtifact --> RerunCI["Rerun CI: dbt build --select<br/>state:modified+ --defer"]
@@ -1216,9 +1215,9 @@ jobs:
 RUNBOOKS["dataops-cicd-handbook"] = {
     "01_iac_state_lock_and_drift_disaster_recovery.md": '''# 🚨 Production Runbook 01: Terraform State Lock Deadlock & Drift Disaster Recovery
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Infrastructure as Code & Cloud Platform Engineering  
-> **Target Systems**: Terraform / OpenTofu, AWS S3 / DynamoDB, Azure Blob Storage  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Infrastructure as Code & Cloud Platform Engineering
+> **Target Systems**: Terraform / OpenTofu, AWS S3 / DynamoDB, Azure Blob Storage
 > **Objective**: Safely release deadlocked Terraform state locks, detect out-of-band resource drift, and restore CI/CD deployments.
 
 ---
@@ -1229,10 +1228,10 @@ RUNBOOKS["dataops-cicd-handbook"] = {
 flowchart TD
     Alert["SEV-1 Alert: Terraform Apply<br/>Blocked by Error acquiring the<br/>state lock"] --> VerifyRunner["Step 1: Verify Active CI Runner<br/>Pipelines"]
     VerifyRunner --> IsRunnerDead{"Is Locking CI Pipeline Still<br/>Running?"}
-    
+
     IsRunnerDead -->|"Yes: Legitimate Deployment"| WaitPipeline["Wait for Active Runner to Complete"]
     IsRunnerDead -->|"No: Crashed / Aborted Runner"| ForceUnlock["Step 2: Force Unlock Lock ID via<br/>CLI"]
-    
+
     ForceUnlock --> RefreshState["Step 3: Run terraform refresh to<br/>Reconcile Drift"]
     RefreshState --> PlanReview["Review terraform plan<br/>-detailed-exitcode"]
 ```
@@ -1275,14 +1274,14 @@ terraform plan -out=tfplan.binary -detailed-exitcode
 
 ## 4. Verification & Prevention
 - [ ] Confirm `terraform plan` executes without state lock contention.
-- [ ] Ensure CI runners configure job timeouts ($\le 60\text{ minutes}$) to prevent orphaned leases.
+- [ ] Ensure CI runners configure job timeouts ($\\le 60\text{ minutes}$) to prevent orphaned leases.
 ''',
 
     "02_production_schema_migration_rollback_triage.md": '''# 🚨 Production Runbook 02: Database Schema Migration Rollback & Lock Triage
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: DataOps & Relational Schema Migrations  
-> **Target Systems**: PostgreSQL, MySQL, Flyway, Liquibase, Alembic  
+> **Incident Severity**: `SEV-1`
+> **Domain**: DataOps & Relational Schema Migrations
+> **Target Systems**: PostgreSQL, MySQL, Flyway, Liquibase, Alembic
 > **Objective**: Clear failed migration locks, revert non-breaking DDL, and apply forward-only recovery.
 
 ---
@@ -1293,10 +1292,10 @@ terraform plan -out=tfplan.binary -detailed-exitcode
 flowchart TD
     Alert["SEV-1 Alert: Migration Stalled or<br/>Failed on Production Database"] --> CheckLock["Step 1: Check Migration Lock Table<br/>(flyway_schema_history)"]
     CheckLock --> IsLocked{"Is Migration Locked?"}
-    
+
     IsLocked -->|"Yes: Stalled Lock"| UnlockMigration["Release Migration Lock & Terminate<br/>Hanging DDL"]
     IsLocked -->|"No: Failed Execution"| EvaluateDDL["Evaluate Transactional vs<br/>Non-Transactional DDL"]
-    
+
     UnlockMigration --> ForwardOnlyFix["Apply Forward-Only Non-Destructive<br/>Expand/Contract Migration"]
     EvaluateDDL --> ForwardOnlyFix
 ```
@@ -1340,9 +1339,9 @@ UPDATE customers SET phone_e164 = phone WHERE phone_e164 IS NULL;
 
     "03_data_quality_assertion_pipeline_blocker_triage.md": '''# 🚨 Production Runbook 03: Data Quality Assertion Pipeline Blocker & Circuit Breaker
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Data Quality Observability & Pipeline Orchestration  
-> **Target Systems**: Apache Airflow 2/3, Great Expectations, Soda Core, Delta Live Tables  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Data Quality Observability & Pipeline Orchestration
+> **Target Systems**: Apache Airflow 2/3, Great Expectations, Soda Core, Delta Live Tables
 > **Objective**: Triage failed data quality assertion gates without allowing corrupted data to pollute Gold marts.
 
 ---
@@ -1353,10 +1352,10 @@ UPDATE customers SET phone_e164 = phone WHERE phone_e164 IS NULL;
 flowchart TD
     Alert["SEV-2 Alert: Pipeline Stalled by<br/>Quality Assertion Gate Failure"] --> InspectAssertion["Step 1: Inspect Assertion Failure<br/>Details"]
     InspectAssertion --> SeverityCheck{"Assertion Criticality?"}
-    
+
     SeverityCheck -->|"Critical Primary Key / NULL<br/>Violation"| QuarantineBatch["Trigger Circuit Breaker & Route<br/>Batch to Quarantine"]
     SeverityCheck -->|"Non-Critical Volume Variance"| WarnAndProceed["Emit Warning Alert & Allow<br/>Pipeline to Proceed"]
-    
+
     QuarantineBatch --> NotifyDataProductOwner["Dispatch Slack / PagerDuty Alert<br/>with Assertion Diagnostics"]
 ```
 
@@ -1384,13 +1383,13 @@ import requests
 def validate_silver_dataset(df):
     null_count = df.filter(df["order_id"].isNull()).count()
     total_count = df.count()
-    
+
     if null_count > 0:
         error_msg = f"❌ Quality Assertion Failed: Found {null_count} NULL order_ids out of {total_count} records."
         # Trigger Slack alert
         requests.post("https://hooks.slack.com/services/T00/B00/X00", json={"text": error_msg})
         raise AirflowFailException(error_msg)
-        
+
     return df
 ```
 
@@ -1403,9 +1402,9 @@ def validate_silver_dataset(df):
 
     "04_kubernetes_node_memory_eviction_and_oom_triage.md": '''# 🚨 Production Runbook 04: Kubernetes Worker OOMKilled & Pod Eviction Triage
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Kubernetes & Distributed Data Infrastructure  
-> **Target Systems**: Kubernetes Cluster (EKS / AKS / GKE), Airflow Celery/K8s Workers, Spark on K8s  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Kubernetes & Distributed Data Infrastructure
+> **Target Systems**: Kubernetes Cluster (EKS / AKS / GKE), Airflow Celery/K8s Workers, Spark on K8s
 > **Objective**: Diagnose Exit Code 137 (OOMKilled) pod crashes and configure JVM cgroup memory caps.
 
 ---
@@ -1416,10 +1415,10 @@ def validate_silver_dataset(df):
 flowchart TD
     Alert["SEV-1 Alert: Kubernetes Worker Pod<br/>Terminated with ExitCode 137"] --> InspectPod["Step 1: Run kubectl describe pod"]
     InspectPod --> ReasonCheck{"Termination Reason?"}
-    
+
     ReasonCheck -->|"OOMKilled (Exit Code 137)"| MemoryEviction["Pod Exceeded<br/>spec.resources.limits.memory"]
     ReasonCheck -->|"Node Eviction (DiskPressure)"| DiskEviction["Node Ephemeral Storage Full"]
-    
+
     MemoryEviction --> TuneJVM["Set -XX:MaxRAMPercentage=75.0 &<br/>Increase Memory Limit"]
     DiskEviction --> CleanLogs["Prune Docker Container Images &<br/>Spark Local Scratch Dirs"]
 ```
@@ -1468,9 +1467,9 @@ spec:
 
     "05_ci_runner_credential_compromise_and_token_rotation.md": '''# 🚨 Production Runbook 05: CI Runner Credential Compromise & Keyless OIDC Migration
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: DevSecOps & Supply Chain Security  
-> **Target Systems**: GitHub Actions, AWS IAM, Azure Entra ID, HashiCorp Vault  
+> **Incident Severity**: `SEV-1`
+> **Domain**: DevSecOps & Supply Chain Security
+> **Target Systems**: GitHub Actions, AWS IAM, Azure Entra ID, HashiCorp Vault
 > **Objective**: Invalidate compromised long-lived CI service account keys and enforce keyless OIDC workload identity.
 
 ---
@@ -1528,11 +1527,11 @@ jobs:
 - [ ] Verify Azure federated credential trust is bound strictly to `repo:<org>/<repo>:ref:refs/heads/main`.
 ''',
 
-    "06_data_observability_alert_fatigue_and_threshold_tuning.md": '''# 🚨 Production Runbook 06: Data Observability Alert Fatigue & Dynamic Threshold Tuning
+    "06_data_observability_alert_fatigue_and_threshold_tuning.md": r'''# 🚨 Production Runbook 06: Data Observability Alert Fatigue & Dynamic Threshold Tuning
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Data Observability & Monitoring  
-> **Target Systems**: Datadog, Prometheus, Monte Carlo, Elementary  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Data Observability & Monitoring
+> **Target Systems**: Datadog, Prometheus, Monte Carlo, Elementary
 > **Objective**: Replace brittle static threshold monitors with dynamic statistical anomaly detection.
 
 ---
@@ -1543,10 +1542,10 @@ jobs:
 flowchart TD
     Alert["SEV-2 Alert: On-Call Engineer<br/>Alert Fatigue (&gt; 20 False<br/>Alarms/Day)"] --> AnalyzeAlerts["Step 1: Categorize High-Volume<br/>False Positive Monitors"]
     AnalyzeAlerts --> MonitorType{"Monitor Type?"}
-    
+
     MonitorType -->|"Static Row Count Threshold"| StaticVolume["Static Count Fails on Weekends /<br/>Holidays"]
     MonitorType -->|"Static Freshness Threshold"| StaticFreshness["Freshness Threshold Misses Batch<br/>Cadence"]
-    
+
     StaticVolume --> DynamicIQR["Switch to 14-Day Moving Average &<br/>Interquartile Range (IQR)"]
     StaticFreshness --> DynamicFreshness["Configure Schedule-Aware SLA<br/>Windows"]
 ```
@@ -1575,10 +1574,10 @@ def detect_volume_anomaly(historical_counts: list[int], current_count: int) -> b
     """
     q75, q25 = np.percentile(historical_counts, [75, 25])
     iqr = q75 - q25
-    
+
     lower_bound = max(0, q25 - (1.5 * iqr))
     upper_bound = q75 + (1.5 * iqr)
-    
+
     is_anomaly = current_count < lower_bound or current_count > upper_bound
     return is_anomaly, lower_bound, upper_bound
 ```
@@ -1594,9 +1593,9 @@ def detect_volume_anomaly(historical_counts: list[int], current_count: int) -> b
 RUNBOOKS["data-system-design-handbook"] = {
     "01_cross_region_split_brain_conflict_resolution.md": '''# 🚨 Production Runbook 01: Cross-Region Split-Brain & Lakehouse Conflict Resolution
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Distributed Lakehouse Architecture & Disaster Recovery  
-> **Target Systems**: Azure Databricks, ADLS Gen2 (Primary: East US, Secondary: West Europe), Delta Lake 3.x  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Distributed Lakehouse Architecture & Disaster Recovery
+> **Target Systems**: Azure Databricks, ADLS Gen2 (Primary: East US, Secondary: West Europe), Delta Lake 3.x
 > **Objective**: Reconcile divergent Delta Lake transaction logs following cross-region network partitioning.
 
 ---
@@ -1607,10 +1606,10 @@ RUNBOOKS["data-system-design-handbook"] = {
 flowchart TD
     Alert["SEV-1 Alert: Active-Active<br/>Lakehouse Split-Brain Detected"] --> IsolateSecondary["Step 1: Quench Secondary Region<br/>Writes (Set Read-Only)"]
     IsolateSecondary --> CompareCommitLogs["Step 2: Compare Delta Log Versions<br/>across Primary & Secondary"]
-    
+
     CompareCommitLogs --> DivergenceCheck{"Commit Log Diverged?"}
     DivergenceCheck -->|"Secondary has uncommitted<br/>transactions"| ExtractDiff["Step 3: Extract Delta Time Travel<br/>Delta Diff from Secondary"]
-    
+
     ExtractDiff --> ReconcilePrimary["Step 4: Execute Deterministic<br/>MERGE into Primary Region"]
     ReconcilePrimary --> ResyncSecondary["Step 5: Overwrite Secondary<br/>Storage via Deep Clone"]
 ```
@@ -1689,9 +1688,9 @@ spark.sql(f"CREATE OR REPLACE TABLE delta.`{secondary_path}` DEEP CLONE delta.`{
 
     "02_table_format_metadata_explosion_triage.md": '''# 🚨 Production Runbook 02: Table Format Metadata Explosion & Planning Lag Triage
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Open Table Formats & Storage Internals  
-> **Target Systems**: Delta Lake 3.x, Apache Iceberg, Databricks Catalyst Optimizer  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Open Table Formats & Storage Internals
+> **Target Systems**: Delta Lake 3.x, Apache Iceberg, Databricks Catalyst Optimizer
 > **Objective**: Compact millions of small JSON commit files, prune obsolete snapshots, and eliminate query planning delays.
 
 ---
@@ -1702,10 +1701,10 @@ spark.sql(f"CREATE OR REPLACE TABLE delta.`{secondary_path}` DEEP CLONE delta.`{
 flowchart TD
     Alert["SEV-2 Alert: Spark Query Planning<br/>Exceeds 60s (Metadata Bloat)"] --> CountMetadata["Step 1: Count Commit Files in<br/>_delta_log or metadata/"]
     CountMetadata --> ThresholdCheck{"Commit File Count &gt; 10,000?"}
-    
+
     ThresholdCheck -->|Yes| CompactionNeeded["Metadata File Explosion Detected"]
     ThresholdCheck -->|No| CheckDriverMemory["Check Driver Heap & GC Pauses"]
-    
+
     CompactionNeeded --> ForceCheckpoint["Force Multi-Part Checkpoint<br/>Generation"]
     ForceCheckpoint --> RunVacuum["Execute VACUUM RETAIN 168 HOURS"]
     RunVacuum --> OptimizeBinPack["Execute OPTIMIZE ZORDER BY"]
@@ -1740,7 +1739,7 @@ SET spark.databricks.delta.vacuum.parallelDelete.enabled = true;
 VACUUM gold.orders RETAIN 168 HOURS;
 
 -- 3. Configure automated checkpointing every 10 commits
-ALTER TABLE gold.orders 
+ALTER TABLE gold.orders
 SET TBLPROPERTIES (
     'delta.checkpointInterval' = '10',
     'delta.deletedFileRetentionDuration' = 'interval 7 days'
@@ -1756,9 +1755,9 @@ SET TBLPROPERTIES (
 
     "03_data_lineage_and_audit_compliance_failure.md": '''# 🚨 Production Runbook 03: OpenLineage Telemetry Failure & Audit Gap Triage
 
-> **Incident Severity**: `SEV-2`  
-> **Domain**: Governance, Lineage & Regulatory Compliance (BCBS 239 / GDPR)  
-> **Target Systems**: OpenLineage, Marquez, Microsoft Purview, Databricks Unity Catalog  
+> **Incident Severity**: `SEV-2`
+> **Domain**: Governance, Lineage & Regulatory Compliance (BCBS 239 / GDPR)
+> **Target Systems**: OpenLineage, Marquez, Microsoft Purview, Databricks Unity Catalog
 > **Objective**: Restore missing data lineage run facets and repair audit trail compliance gaps.
 
 ---
@@ -1769,10 +1768,10 @@ SET TBLPROPERTIES (
 flowchart TD
     Alert["SEV-2 Alert: Broken OpenLineage<br/>Telemetry / Audit Lineage Gap"] --> TestEndpoint["Step 1: Test OpenLineage Backend<br/>Endpoint Reachability"]
     TestEndpoint --> Reachable{"HTTP 200 OK?"}
-    
+
     Reachable -->|"No: Connection Refused"| RestoreBackend["Restart Marquez / Purview<br/>Ingestion Service"]
     Reachable -->|"Yes: Dropping Facets"| CheckSparkListener["Inspect Spark OpenLineage<br/>SparkListener Config"]
-    
+
     RestoreBackend --> ResendRunEvents["Replay Missed RunEvents from<br/>Pipeline Run Logs"]
     CheckSparkListener --> PatchListener["Update openlineage-spark Jar & URL"]
 ```
@@ -1810,9 +1809,9 @@ spark.openlineage.namespace=production-lakehouse
 
     "04_multitenant_noisy_neighbor_starvation.md": '''# 🚨 Production Runbook 04: Multi-Tenant Compute Starvation & Noisy Neighbor Triage
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Cloud MPP, Databricks SQL & Concurrency Management  
-> **Target Systems**: Databricks SQL Warehouses, Snowflake Virtual Warehouses, Spark Clusters  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Cloud MPP, Databricks SQL & Concurrency Management
+> **Target Systems**: Databricks SQL Warehouses, Snowflake Virtual Warehouses, Spark Clusters
 > **Objective**: Terminate rogue analytical Cartesian queries starving SLA-critical production pipelines.
 
 ---
@@ -1852,7 +1851,7 @@ LIMIT 5;
 ### Configure Query Watchdog and Auto-Termination Rules
 ```sql
 -- Enforce hard runtime limits on ad-hoc analytical warehouses (max 20 minutes)
-ALTER WAREHOUSE adhoc_analytics_wh 
+ALTER WAREHOUSE adhoc_analytics_wh
 SET AUTO_TERMINATION_MINUTES = 10,
     MAX_CONCURRENT_QUERIES = 8;
 ```
@@ -1866,9 +1865,9 @@ SET AUTO_TERMINATION_MINUTES = 10,
 
     "05_lakehouse_catalog_lockout_and_disaster_recovery.md": '''# 🚨 Production Runbook 05: Lakehouse Catalog Outage & Emergency Bypass
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Metadata Catalogs & High Availability  
-> **Target Systems**: Databricks Unity Catalog, AWS Glue Catalog, Apache Iceberg REST Catalog  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Metadata Catalogs & High Availability
+> **Target Systems**: Databricks Unity Catalog, AWS Glue Catalog, Apache Iceberg REST Catalog
 > **Objective**: Restore query access during a central catalog outage using direct object storage fallback mounts.
 
 ---
@@ -1879,7 +1878,7 @@ SET AUTO_TERMINATION_MINUTES = 10,
 flowchart TD
     Alert["SEV-1 Alert: Unity Catalog / Glue<br/>Unavailable (Metadata Resolution<br/>Failed)"] --> FailoverCatalog["Step 1: Switch to Read-Only<br/>Catalog Replica"]
     FailoverCatalog --> SuccessCheck{"Replica Responding?"}
-    
+
     SuccessCheck -->|Yes| DirectTraffic["Route Query Engines to Secondary<br/>Catalog Endpoint"]
     SuccessCheck -->|No| DirectPathFallback["Bypass Catalog via Direct Object<br/>Storage Paths<br/>(delta.`abfss://...`)"]
 ```
@@ -1917,9 +1916,9 @@ df_orders.join(df_customers, "customer_id").createOrReplaceTempView("emergency_o
 
     "06_zero_trust_credential_leak_quarantine.md": '''# 🚨 Production Runbook 06: Storage Master Key Leak & Immediate Quarantine
 
-> **Incident Severity**: `SEV-1`  
-> **Domain**: Cloud Storage Security & Access Revocation  
-> **Target Systems**: Azure ADLS Gen2, AWS S3, Azure Key Vault, AWS Secrets Manager  
+> **Incident Severity**: `SEV-1`
+> **Domain**: Cloud Storage Security & Access Revocation
+> **Target Systems**: Azure ADLS Gen2, AWS S3, Azure Key Vault, AWS Secrets Manager
 > **Objective**: Immediately rotate compromised cloud storage keys, invalidate active SAS tokens, and lock down network perimeters.
 
 ---

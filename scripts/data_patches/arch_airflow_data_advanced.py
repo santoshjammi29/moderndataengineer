@@ -434,7 +434,7 @@ import json
 def on_kafka_batch_ready(batch_metadata):
     dag_id = "process_streaming_batch"
     airflow_api_url = f"https://airflow.internal/api/v1/dags/{dag_id}/dagRuns"
-    
+
     payload = {
         "conf": {
             "batch_id": batch_metadata["id"],
@@ -442,7 +442,7 @@ def on_kafka_batch_ready(batch_metadata):
             "record_count": batch_metadata["count"]
         }
     }
-    
+
     response = requests.post(
         airflow_api_url,
         auth=("api_service_user", "ServiceUserToken"),
@@ -678,9 +678,9 @@ def self_healing_failure_handler(context):
     exception = context.get('exception')
     task_instance = context['task_instance']
     error_str = str(exception).lower()
-    
+
     print(f"Self-Healing Agent analyzing failure in task: {task_instance.task_id}")
-    
+
     if "out of memory" in error_str or "oomkilled" in error_str:
         print("DIAGNOSIS: Memory exhaustion detected. Increasing executor memory allocation for next retry...")
         # Programmatically bump task allocation or scale memory via API

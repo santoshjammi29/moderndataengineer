@@ -15,7 +15,6 @@ Author: Santosh Jammi | Principal Data Architect
 """
 
 import os
-import sys
 import shutil
 import subprocess
 import fitz  # PyMuPDF
@@ -710,7 +709,7 @@ joined_df = skewed_df.join(replicated_dim, on=<span class="str">"salt"</span>, h
           <div class="explain-head">🔍 OOM Exit Code 137 Defense</div>
           <ul class="explain-list">
             <li><strong>Container Killed:</strong> YARN/K8s kills container when off-heap memory + JVM exceeds container limit.</li>
-            <li><strong>Remedy:</strong> Always size <code>memoryOverhead</code> to $\ge 15\%$ when using PyArrow, MLlib, or heavy Python UDFs.</li>
+            <li><strong>Remedy:</strong> Always size <code>memoryOverhead</code> to $\\ge 15\\%$ when using PyArrow, MLlib, or heavy Python UDFs.</li>
           </ul>
         </div>
       </div>
@@ -1591,7 +1590,7 @@ def render_images(pdf_path, prefix, dpi=250):
     print(f"Rendering high-res images from {os.path.basename(pdf_path)} at {dpi} DPI...")
     doc = fitz.open(pdf_path)
     page_images = []
-    
+
     for i, page in enumerate(doc):
         pix = page.get_pixmap(dpi=dpi)
         img_name = f"{prefix}_page_{i+1}.png"
@@ -1599,18 +1598,18 @@ def render_images(pdf_path, prefix, dpi=250):
         pix.save(img_path)
         page_images.append(img_path)
         print(f"  ✓ Rendered Page {i+1}: {img_name} ({pix.width}x{pix.height})")
-    
+
     # If 2 pages, create side-by-side poster
     if len(page_images) == 2:
         poster_name = f"{prefix}_poster.png"
         poster_path = os.path.join(IMG_DIR, poster_name)
         img1 = Image.open(page_images[0])
         img2 = Image.open(page_images[1])
-        
+
         gap = 30
         total_width = img1.width + img2.width + gap
         max_height = max(img1.height, img2.height)
-        
+
         poster = Image.new("RGB", (total_width, max_height), color=(8, 12, 21))
         poster.paste(img1, (0, 0))
         poster.paste(img2, (img1.width + gap, 0))
@@ -1622,13 +1621,13 @@ def inject_bookmarks_and_metadata(pdf_path, toc_entries, metadata):
     doc = fitz.open(pdf_path)
     doc.set_toc(toc_entries)
     doc.set_metadata(metadata)
-    
+
     # Save to temp and replace atomically
     temp_path = pdf_path + ".tmp"
     doc.save(temp_path)
     doc.close()
     os.replace(temp_path, pdf_path)
-    
+
     # Verification read
     verify_doc = fitz.open(pdf_path)
     print(f"  ✓ Verified: {len(verify_doc.get_toc())} TOC entries, Title: '{verify_doc.metadata.get('title')}'")
@@ -1730,7 +1729,7 @@ def main():
     for guide in guides:
         html_file = os.path.join(HTML_DIR, f"{guide['name']}.html")
         pdf_file = os.path.join(PDF_DIR, guide['pdf_name'])
-        
+
         full_html = generate_full_html(
             title=guide["title"],
             theme_color=guide["theme"],
@@ -1740,10 +1739,10 @@ def main():
         with open(html_file, "w", encoding="utf-8") as f:
             f.write(full_html)
         print(f"\n[1/3] Wrote HTML: {os.path.basename(html_file)}")
-        
+
         compile_pdf(html_file, pdf_file)
         render_images(pdf_file, guide["prefix"], dpi=250)
-        
+
         metadata = {
             "title": guide["title"],
             "author": "Santosh Jammi | Principal Data Architect",

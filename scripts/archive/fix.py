@@ -1,6 +1,5 @@
-import re
 
-with open('src/app/guided-learning/page.tsx', 'r') as f:
+with open('src/app/guided-learning/page.tsx') as f:
     content = f.read()
 
 # 1. Topic Selector Grid
@@ -29,12 +28,12 @@ content = content.replace(
               <div className="text-[var(--muted-foreground)]">
                 {totalItemsCount} items · {getTopicCounts(selectedTopic).concepts} concepts · {getTopicCounts(selectedTopic).qa} Q&As · {getTopicCounts(selectedTopic).arch} architecture · Est. {Math.round(estTimeMins/60)}h {estTimeMins%60}m
               </div>
-              
+
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                   <span className="text-purple-400 font-semibold">{pctComplete}%</span>
                   <div className="h-1 w-24 bg-[var(--surface-3)] rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-purple-500 transition-all duration-150 ease-out"
                       style={{ width: `${pctComplete}%` }}
                     />
@@ -46,11 +45,11 @@ content = content.replace(
               <div>
                 {totalItemsCount} items · {getTopicCounts(selectedTopic).concepts} concepts · {getTopicCounts(selectedTopic).qa} Q&As · {getTopicCounts(selectedTopic).arch} architecture · Est. {Math.round(estTimeMins/60)}h {estTimeMins%60}m
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <span className="text-purple-400 font-semibold">{pctComplete}%</span>
                 <div className="h-1 w-24 bg-[var(--surface-3)] rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-purple-500 transition-all duration-150 ease-out"
                     style={{ width: `${pctComplete}%` }}
                   />

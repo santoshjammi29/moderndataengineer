@@ -6,7 +6,6 @@ Supports Delta Lake 3.2+ and Adaptive Query Execution.
 """
 
 import sys
-import os
 
 def get_or_create_spark(app_name: str = "PySpark_Lakehouse_Session", local_cores: str = "*"):
     """

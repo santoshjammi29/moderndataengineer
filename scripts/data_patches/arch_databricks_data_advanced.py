@@ -81,11 +81,11 @@ Downstream systems (reverse-ETL to Salesforce, cache invalidation in Redis, or s
 2. **Implementation Snippet**:
 ```sql
 -- 1. Enable Change Data Feed on Silver Customer table
-ALTER TABLE prod_catalog.silver_crm.dim_customers 
+ALTER TABLE prod_catalog.silver_crm.dim_customers
 SET TBLPROPERTIES (delta.enableChangeDataFeed = true);
 
 -- 2. Query row-level CDC mutations between versions as batch
-SELECT 
+SELECT
     customer_id,
     email,
     plan_tier,
@@ -127,7 +127,7 @@ CREATE OR REPLACE TABLE dev_catalog.sandbox_john.fct_orders_test
 SHALLOW CLONE prod_catalog.gold_sales.fct_orders;
 
 -- Developer can mutate, update, or drop records without affecting production
-UPDATE dev_catalog.sandbox_john.fct_orders_test 
+UPDATE dev_catalog.sandbox_john.fct_orders_test
 SET order_amount_usd = 0.0 WHERE order_id = 'test_123';
 
 -- 2. Disaster Recovery: Decoupled physical copy to separate storage location
@@ -152,23 +152,23 @@ In regulated enterprise environments (HIPAA, GDPR, SOC2), different organization
 ```sql
 -- 1. Define Column Masking Function (Masks emails for non-admin users)
 CREATE OR REPLACE FUNCTION prod_catalog.governance.mask_email(email STRING)
-RETURN CASE 
+RETURN CASE
     WHEN is_account_group_member('data_privacy_officers') THEN email
     ELSE concat('***@', split_part(email, '@', 2))
 END;
 
 -- 2. Define Row Filter Function (Restricts rows to user's assigned country)
 CREATE OR REPLACE FUNCTION prod_catalog.governance.filter_by_region(country_code STRING)
-RETURN 
-    is_account_group_member('global_executives') OR 
+RETURN
+    is_account_group_member('global_executives') OR
     (is_account_group_member('eu_analysts') AND country_code IN ('DE', 'FR', 'UK')) OR
     (is_account_group_member('us_analysts') AND country_code = 'US');
 
 -- 3. Apply Column Mask and Row Filter to production table
-ALTER TABLE prod_catalog.core.dim_customers 
+ALTER TABLE prod_catalog.core.dim_customers
 ALTER COLUMN email SET MASK prod_catalog.governance.mask_email;
 
-ALTER TABLE prod_catalog.core.dim_customers 
+ALTER TABLE prod_catalog.core.dim_customers
 SET ROW FILTER prod_catalog.governance.filter_by_region ON (country_code);
 ```
 3. **Audit**: Verify dynamic masking across user sessions with different group memberships.
@@ -312,7 +312,7 @@ Traditional Apache Spark execution operates inside the Java Virtual Machine (JVM
 SET spark.databricks.photon.enabled = true;
 
 -- 2. Heavy aggregation workload accelerated by Photon vectorized C++ SIMD
-SELECT 
+SELECT
     store_id,
     date_trunc('month', sale_timestamp) as sale_month,
     count(distinct customer_id) as unique_shoppers,

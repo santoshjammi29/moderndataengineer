@@ -20,7 +20,6 @@ Integrates into:
 
 import json
 import os
-import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON_DIR = os.path.join(BASE_DIR, 'src', 'data', 'json')
@@ -895,7 +894,7 @@ def update_json_file(filename, new_entries, key_identifier='id'):
         print(f"ERROR: {filepath} does not exist!")
         return 0
 
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding='utf-8') as f:
         data = json.load(f)
 
     existing_keys = {item.get(key_identifier) for item in data if key_identifier in item}

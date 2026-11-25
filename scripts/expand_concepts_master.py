@@ -709,7 +709,7 @@ def main():
         print(f"Target file {TARGET_FILE} not found.", file=sys.stderr)
         sys.exit(1)
 
-    with open(TARGET_FILE, "r", encoding="utf-8") as f:
+    with open(TARGET_FILE, encoding="utf-8") as f:
         existing_data = json.load(f)
 
     before_count = len(existing_data)
@@ -718,26 +718,10 @@ def main():
 
     # Generate additional concepts programmatically to surpass 1,000 total items
     # We will expand across the 14 categories with full architectural fidelity
-    categories_to_seed = [
-        ("MODERN LAKEHOUSE", "Delta Lake, Iceberg, and Lakehouse Storage"),
-        ("SPARK & DATABRICKS", "Distributed Compute, AQE, and Catalyst Optimization"),
-        ("DATABRICKS", "Unity Catalog, DABs, and Platform Governance"),
-        ("SYSTEM DESIGN", "Distributed Systems, Microservices, and Reliability"),
-        ("DATALAKE ARCHITECTURE", "Data Contracts, Medallion Modeling, and Governance"),
-        ("FABRIC", "Microsoft Fabric, OneLake, and Direct Lake Serving"),
-        ("DBT", "dbt Core, dbt Mesh, and Semantic Transformations"),
-        ("APACHE AIRFLOW", "Orchestration, Dynamic Tasks, and Astronomer Cosmos"),
-        ("DATABASE ARCHITECTURE", "Relational Storage Engines, Indexes, and ACID"),
-        ("SQL SERVER", "T-SQL, Columnstore, and Enterprise HA/DR"),
-        ("ADF", "Azure Data Factory Control Flow and Resilient Ingestion"),
-        ("POWER BI", "DAX, Semantic Models, and Enterprise BI Serving"),
-        ("PYTHON", "Arrow, Polars, Vectorization, and Data Engineering"),
-        ("GENERAL DE", "Streaming, Messaging, Kafka, and Production Operations")
-    ]
 
     # Additional systematic generated concepts
     systematic_concepts = []
-    
+
     # 1. Add explicitly authored concepts
     for c in NEW_CONCEPTS:
         if c["id"] not in existing_ids:
@@ -873,7 +857,7 @@ def main():
 
     os.replace(temp_file, TARGET_FILE)
 
-    with open(TARGET_FILE, "r", encoding="utf-8") as f:
+    with open(TARGET_FILE, encoding="utf-8") as f:
         verified = json.load(f)
 
     print(f"Successfully updated {TARGET_FILE}! New total concepts: {len(verified)} (+{len(systematic_concepts)})")

@@ -1041,11 +1041,11 @@ from typing import List, Dict
 class DynamicTransformer:
     def __init__(self, df: DataFrame):
         self.df = df
-        
+
     def add_audit_metadata(self) -> 'DynamicTransformer':
         self.df = self.df.withColumn("ingested_at", F.current_timestamp())
         return self
-        
+
     def dynamic_aggregate(self, group_cols: List[str], agg_spec: Dict[str, str]) -> DataFrame:
         \"\"\"
         Dynamically applies aggregations.
@@ -1055,7 +1055,7 @@ class DynamicTransformer:
         for col_name, func_name in agg_spec.items():
             func = getattr(F, func_name.lower())
             agg_exprs.append(func(F.col(col_name)).alias(f"{func_name}_{col_name}"))
-            
+
         return self.df.groupBy(*group_cols).agg(*agg_exprs)
 
 # Usage in Pipeline:
@@ -1079,7 +1079,7 @@ df_result.show()
 
 def main():
     print(f"Reading {FILE_PATH}...")
-    with open(FILE_PATH, 'r') as f:
+    with open(FILE_PATH) as f:
         data = json.load(f)
     print(f"Initial count: {len(data)}")
 

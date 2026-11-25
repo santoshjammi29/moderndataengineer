@@ -88,7 +88,7 @@ df_cleaned.coalesce(4).write.format("delta").mode("append").save(target_path)
 #### B. Post-Write Mitigation (Maintenance & Compaction):
 - **OPTIMIZE with Z-ORDER**: Group and bin-pack files into uniform ~1GB files while colocating multi-dimensional filter columns:
 ```sql
-OPTIMIZE delta_sales_bronze 
+OPTIMIZE delta_sales_bronze
 ZORDER BY (customer_id, transaction_date);
 ```
 - **Automated Workflow Maintenance**: Schedule an automated off-peak Databricks workflow to run `OPTIMIZE` followed by `VACUUM`:
@@ -232,7 +232,7 @@ A production data platform must incorporate automated business observability to 
 -- Step 1: Create an Alert View in Databricks SQL
 CREATE OR REPLACE VIEW gold_daily_revenue_kpi_alert AS
 WITH daily_revenue AS (
-  SELECT 
+  SELECT
     transaction_date,
     SUM(sale_amount) AS current_revenue,
     LAG(SUM(sale_amount), 1) OVER (ORDER BY transaction_date) AS prev_revenue
@@ -240,14 +240,14 @@ WITH daily_revenue AS (
   WHERE transaction_date >= current_date() - INTERVAL 2 DAYS
   GROUP BY transaction_date
 )
-SELECT 
+SELECT
   transaction_date,
   current_revenue,
   prev_revenue,
   ROUND(((current_revenue - prev_revenue) / prev_revenue) * 100, 2) AS revenue_pct_change,
-  CASE 
-    WHEN ((current_revenue - prev_revenue) / prev_revenue) * 100 < -10.0 THEN 1 
-    ELSE 0 
+  CASE
+    WHEN ((current_revenue - prev_revenue) / prev_revenue) * 100 < -10.0 THEN 1
+    ELSE 0
   END AS is_alert_triggered
 FROM daily_revenue
 WHERE transaction_date = current_date() - INTERVAL 1 DAY;
@@ -279,7 +279,7 @@ The architectural solution leverages **Databricks SQL Query Parameters & Dropdow
 ### Phase 2: Low-Level Mechanics & Implementation
 ```sql
 -- Parameterized Databricks SQL Query
-SELECT 
+SELECT
     f.country_code,
     c.customer_name,
     p.product_category,
@@ -322,7 +322,7 @@ The modern Unity Catalog architecture centralizes governance at the account leve
 ### Phase 2: Low-Level Mechanics & Implementation
 ```sql
 -- Step 1: Define Catalog & Schema
-CREATE CATALOG IF NOT EXISTS prod_enterprise 
+CREATE CATALOG IF NOT EXISTS prod_enterprise
 MANAGED LOCATION 'abfss://managed@datalakeprod.dfs.core.windows.net/unity_managed/';
 
 USE CATALOG prod_enterprise;
@@ -330,19 +330,19 @@ CREATE SCHEMA IF NOT EXISTS silver_hr;
 
 -- Step 2: Implement Column-Level Dynamic Masking
 CREATE OR REPLACE FUNCTION mask_email(email STRING)
-RETURN CASE 
+RETURN CASE
   WHEN IS_ACCOUNT_GROUP_MEMBER('hr_executives') THEN email
   ELSE CONCAT(LEFT(email, 2), '****@domain.com')
 END;
 
-ALTER TABLE silver_hr.employees 
+ALTER TABLE silver_hr.employees
 ALTER COLUMN email_address SET MASK mask_email;
 
 -- Step 3: Implement Row-Level Security Filter
 CREATE OR REPLACE FUNCTION filter_by_country(country STRING)
 RETURN IS_ACCOUNT_GROUP_MEMBER('global_admins') OR country = current_user_country();
 
-ALTER TABLE silver_hr.employees 
+ALTER TABLE silver_hr.employees
 SET ROW FILTER filter_by_country ON (country_code);
 ```
 
@@ -398,7 +398,7 @@ The modern architectural approach leverages **Databricks Genie Spaces (built on 
 ALTER TABLE gold_sales SET TBLPROPERTIES (
   'comment' = 'Consolidated gold transaction facts containing gross revenue, product SKU, and country ISO codes.'
 );
-ALTER TABLE gold_sales ALTER COLUMN sale_amount 
+ALTER TABLE gold_sales ALTER COLUMN sale_amount
 COMMENT 'Gross transaction amount in USD before taxes and rebates.';
 ```
 2. **Configure Genie Space**:
@@ -434,7 +434,7 @@ ALTER TABLE gold_customer_360 SET TBLPROPERTIES (
 );
 
 -- Step 2: Execute High-Frequency Privacy Deletes (sub-second execution)
-DELETE FROM gold_customer_360 
+DELETE FROM gold_customer_360
 WHERE customer_id IN ('CUST_99120', 'CUST_44219', 'CUST_88211');
 
 -- Step 3: Periodic Background Compaction (Merges DVs into base Parquet)
@@ -747,7 +747,7 @@ df_nulls = df.filter(F.col("key").isNull())
 
 def main():
     print(f"Reading {FILE_PATH}...")
-    with open(FILE_PATH, 'r') as f:
+    with open(FILE_PATH) as f:
         data = json.load(f)
     print(f"Initial count: {len(data)}")
 

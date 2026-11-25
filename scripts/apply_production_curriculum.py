@@ -1,7 +1,6 @@
 # scripts/apply_production_curriculum.py
 import json
 import os
-import sys
 
 from curriculum_production_de_1 import CURRICULUM_PART_1
 from curriculum_production_de_2 import CURRICULUM_PART_2
@@ -178,7 +177,7 @@ def main():
     print(f"Total curriculum items defined: {len(all_curriculum)}")
 
     # 1. Update data_de.json
-    with open(DE_FILE, 'r', encoding='utf-8') as f:
+    with open(DE_FILE, encoding='utf-8') as f:
         de_data = json.load(f)
     print(f"data_de.json before: {len(de_data)}")
     existing_de_ids = {d['id'] for d in de_data}
@@ -214,7 +213,7 @@ def main():
     print(f"data_de.json after: {len(de_data)} (Added: {de_added}, Skipped: {de_skipped})")
 
     # 2. Update data_architecture.json
-    with open(ARCH_FILE, 'r', encoding='utf-8') as f:
+    with open(ARCH_FILE, encoding='utf-8') as f:
         arch_data = json.load(f)
     print(f"data_architecture.json before: {len(arch_data)}")
     existing_arch_ids = {d['id'] for d in arch_data}
@@ -248,7 +247,7 @@ def main():
     print(f"data_architecture.json after: {len(arch_data)} (Added: {arch_added}, Skipped: {arch_skipped})")
 
     # 3. Update data_cheatsheet.json
-    with open(CHEATSHEET_FILE, 'r', encoding='utf-8') as f:
+    with open(CHEATSHEET_FILE, encoding='utf-8') as f:
         cs_data = json.load(f)
     print(f"data_cheatsheet.json before: {len(cs_data)}")
     existing_cs_ids = {c['id'] for c in cs_data}

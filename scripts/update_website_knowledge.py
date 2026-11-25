@@ -1,11 +1,10 @@
 import json
-import os
 
 print("--- Starting Website Knowledge Base Synchronization ---")
 
 # 1. Update modern_blueprints.json
 BLUEPRINTS_FILE = 'src/data/json/modern_blueprints.json'
-with open(BLUEPRINTS_FILE, 'r') as f:
+with open(BLUEPRINTS_FILE) as f:
     bp_data = json.load(f)
 
 existing_bp_ids = {item['id'] for item in bp_data}
@@ -76,7 +75,7 @@ print(f"Blueprints: {len(bp_data)} total")
 
 # 2. Update modern_cost_playbooks.json
 COST_FILE = 'src/data/json/modern_cost_playbooks.json'
-with open(COST_FILE, 'r') as f:
+with open(COST_FILE) as f:
     cost_data = json.load(f)
 
 existing_cost_titles = {item['title'] for item in cost_data}
@@ -129,7 +128,7 @@ print(f"Cost Playbooks: {len(cost_data)} total")
 
 # 3. Update modern_concepts.json
 CONCEPTS_FILE = 'src/data/json/modern_concepts.json'
-with open(CONCEPTS_FILE, 'r') as f:
+with open(CONCEPTS_FILE) as f:
     concepts_data = json.load(f)
 
 existing_concept_ids = {item['id'] for item in concepts_data}
@@ -210,7 +209,7 @@ print(f"Modern Concepts: {len(concepts_data)} total")
 
 # 4. Update data_cheatsheet.json
 CHEATSHEET_FILE = 'src/data/json/data_cheatsheet.json'
-with open(CHEATSHEET_FILE, 'r') as f:
+with open(CHEATSHEET_FILE) as f:
     cs_data = json.load(f)
 
 existing_cs_ids = {item['id'] for item in cs_data}
@@ -291,7 +290,7 @@ print(f"Cheatsheet: {len(cs_data)} total")
 
 # 5. Update questions.json
 QUESTIONS_FILE = 'src/data/json/questions.json'
-with open(QUESTIONS_FILE, 'r') as f:
+with open(QUESTIONS_FILE) as f:
     q_data = json.load(f)
 
 existing_q_ids = {item['id'] for item in q_data}

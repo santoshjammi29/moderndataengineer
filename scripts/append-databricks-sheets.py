@@ -1,10 +1,8 @@
 import json
-import os
-import sys
 
 def append_pyspark_entries():
     file_path = 'src/data/json/data_pyspark.json'
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         data = json.load(f)
 
     existing_ids = {item['id'] for item in data}
@@ -146,7 +144,7 @@ def append_pyspark_entries():
 
 def append_sparksql_entries():
     file_path = 'src/data/json/data_sparksql.json'
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         data = json.load(f)
 
     existing_ids = {item['id'] for item in data}
@@ -258,7 +256,7 @@ def append_sparksql_entries():
 
 def append_cheatsheet_entries():
     file_path = 'src/data/json/data_cheatsheet.json'
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         data = json.load(f)
 
     existing_ids = {item['id'] for item in data}

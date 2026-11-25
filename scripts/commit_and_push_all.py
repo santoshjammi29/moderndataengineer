@@ -42,10 +42,10 @@ def main():
     print("=" * 80)
     print("🚀 ECOSYSTEM-WIDE GIT COMMIT & PUSH TO GITHUB (ALL 14 REPOSITORIES)")
     print("=" * 80)
-    
+
     results = []
 
-    for slug, gh_repo, name in REPOSITORIES:
+    for slug, gh_repo, _name in REPOSITORIES:
         repo_path = BASE_DIR / slug
         if not repo_path.exists():
             print(f"❌ [NOT FOUND] {slug}")
@@ -92,7 +92,7 @@ def main():
             print(f"❌ Push failed in {slug}: {push_res.stderr}")
             results.append((slug, len(changed_files), commit_hash, f"Push Failed: {push_res.stderr.strip()}"))
         else:
-            print(f"    ✅ Pushed successfully to origin/main!")
+            print("    ✅ Pushed successfully to origin/main!")
             results.append((slug, len(changed_files), commit_hash, "Pushed Successfully"))
 
     print("\n" + "=" * 80)

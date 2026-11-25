@@ -1,7 +1,7 @@
 import os
 
 def replace_in_file(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
 
     new_content = content
@@ -9,7 +9,7 @@ def replace_in_file(file_path):
         new_content = new_content.replace('motion.', 'm.')
         new_content = new_content.replace('import { motion,', 'import { m,')
         new_content = new_content.replace('import { motion }', 'import { m }')
-        
+
     if new_content != content:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)

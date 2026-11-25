@@ -125,7 +125,7 @@ import gc
 def clean_transaction_batch(**context):
     logical_date = context['ds']
     source_path = f"/mnt/lake/landing/{logical_date}/*.parquet"
-    
+
     for chunk in pd.read_parquet(source_path, chunksize=50000):
         cleaned = chunk.dropna(subset=['customer_id'])
         cleaned.to_parquet(f"/mnt/lake/silver/{logical_date}/cleaned.parquet", index=False)
@@ -190,7 +190,7 @@ def notify_on_failure(context):
     dag_id = context['task_instance'].dag_id
     log_url = context['task_instance'].log_url
     error_msg = str(context.get('exception'))
-    
+
     alert = EmailOperator(
         task_id='send_failure_email',
         to='data-incidents@enterprise.com',
@@ -305,16 +305,16 @@ from datetime import datetime
     tags=['taskflow', 'modern'],
 )
 def taskflow_etl_pipeline():
-    
+
     @task
     def extract() -> dict:
         return {"batch_id": "b-9821", "record_count": 14200}
-    
+
     @task
     def transform(raw_metadata: dict) -> dict:
         batch_id = raw_metadata['batch_id']
         return {"batch_id": batch_id, "status": "CLEANED", "score": 99.4}
-    
+
     @task
     def load(transformed_data: dict):
         print(f"Loaded batch {transformed_data['batch_id']} with score {transformed_data['score']}")
@@ -460,7 +460,7 @@ from airflow.operators.empty import EmptyOperator
 
 with DAG('enterprise_lakehouse_pipeline', schedule='@daily', start_date=datetime(2026, 1, 1)) as dag:
     start = EmptyOperator(task_id='start')
-    
+
     with TaskGroup(group_id='ingest_raw_sources') as ingest_group:
         ingest_crm = EmptyOperator(task_id='ingest_crm')
         ingest_erp = EmptyOperator(task_id='ingest_erp')

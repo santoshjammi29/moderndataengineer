@@ -775,7 +775,7 @@ Below is the ADF Web Activity configuration dispatching a Microsoft Teams Adapti
 ```
 
 ### Phase 3: Production Pitfalls, Anti-Patterns & Failure Modes
-- **Payload String Escaping in Error Messages**: Upstream database error messages often contain raw unescaped double quotes (`"`), newlines (`\n`), or backslashes (`\`). Directly interpolating `@activity('...').error.message` into a JSON body without escaping can generate invalid JSON syntax, causing the Web Activity itself to crash with HTTP 400 Bad Request and swallowing the alert! Use string sanitization: `@replace(replace(activity('...').error.message, '"', '\\"'), '\n', ' ')`.
+- **Payload String Escaping in Error Messages**: Upstream database error messages often contain raw unescaped double quotes (`"`), newlines (`\n`), or backslashes (`\\`). Directly interpolating `@activity('...').error.message` into a JSON body without escaping can generate invalid JSON syntax, causing the Web Activity itself to crash with HTTP 400 Bad Request and swallowing the alert! Use string sanitization: `@replace(replace(activity('...').error.message, '"', '\\"'), '\n', ' ')`.
 - **Exposing Webhook Keys in Plaintext**: Hardcoding incoming webhook URLs inside pipeline definitions exposes the channel security token. Always retrieve the webhook URL securely via Azure Key Vault using a **Web Activity + Key Vault REST API** or pass it through an AKV-linked service.
 
 ### Phase 4: High-Pressure Interview Talking Points
@@ -901,7 +901,7 @@ Below is the pagination query pattern used in an upstream Lookup activity to fee
 DECLARE @BatchNumber INT = 1;
 DECLARE @PageSize INT = 2500;
 
-SELECT 
+SELECT
     EntityId,
     SourcePath,
     TargetPath
@@ -1055,11 +1055,11 @@ param (
 if ($Stage -eq "PreDeployment") {
     Write-Host "--- STAGE 1: Pre-Deployment - Stopping Triggers in $DataFactoryName ---"
     $triggers = Get-AzDataFactoryV2Trigger -ResourceGroupName $ResourceGroupName -DataFactoryName $DataFactoryName
-    
+
     # Save active trigger list to disk for post-deployment restart
     $activeTriggers = $triggers | Where-Object { $_.RuntimeState -eq "Started" }
     $activeTriggers | Select-Object -ExpandProperty Name | Out-File -FilePath "./active_triggers.txt"
-    
+
     foreach ($trig in $activeTriggers) {
         Write-Host "Stopping trigger: $($trig.Name)"
         Stop-AzDataFactoryV2Trigger -ResourceGroupName $ResourceGroupName -DataFactoryName $DataFactoryName -Name $trig.Name -Force
@@ -1242,7 +1242,7 @@ def load_pipeline_config() -> PipelineConfig:
         "staging": "lakehouse_staging",
         "prod": "lakehouse_prod"
     }
-    
+
     if raw_env not in catalog_map:
         raise ValueError(f"Invalid environment '{raw_env}'. Must be one of: {list(catalog_map.keys())}")
 
@@ -1307,7 +1307,7 @@ databricks secrets create-scope \
 # Notebook Consumption: Secure JDBC Connection
 def get_secure_oracle_dataframe(table_name: str):
     scope = "kv-lakehouse-prod"
-    
+
     # Retrieve secrets directly into memory
     db_user = dbutils.secrets.get(scope=scope, key="oracle-service-user")
     db_pass = dbutils.secrets.get(scope=scope, key="oracle-service-password")
@@ -1402,16 +1402,16 @@ def with_exponential_backoff(
                     if not isinstance(e, retryable_exceptions) and not any(kw in str(e).lower() for kw in ["503", "429", "timeout", "busy"]):
                         logger.error(f"Fatal non-retryable exception encountered in {func.__name__}: {str(e)}")
                         raise e
-                    
+
                     attempt += 1
                     if attempt > max_retries:
                         logger.error(f"Exhausted all {max_retries} retries for {func.__name__}. Raising exception.")
                         raise e
-                    
+
                     # Calculate sleep time: min(max_delay, base * 2^attempt) with full jitter
                     calculated_delay = min(max_delay_sec, base_delay_sec * (2 ** (attempt - 1)))
                     jittered_delay = random.uniform(0, calculated_delay)
-                    
+
                     logger.warning(
                         f"Transient failure in {func.__name__} (Attempt {attempt}/{max_retries}): {str(e)}. "
                         f"Backing off for {jittered_delay:.2f}s..."
@@ -1509,7 +1509,7 @@ def log_pipeline_audit_event(
         StructField("error_message", StringType(), True),
         StructField("event_time", TimestampType(), False)
     ])
-    
+
     run_id = spark.conf.get("spark.databricks.job.runId", "interactive-session")
     pipeline_name = spark.conf.get("spark.databricks.job.name", "adhoc_notebook")
 
@@ -1522,10 +1522,10 @@ def log_pipeline_audit_event(
         error_message,
         datetime.utcnow()
     )]
-    
+
     audit_df = spark.createDataFrame(record, audit_schema)
     audit_df.write.format("delta").mode("append").saveAsTable("audit.pipeline_execution_log")
-    
+
     # Emit matching structured stdout log
     extra = {"pipeline_name": pipeline_name, "run_id": run_id}
     logger.info(f"Stage '{stage}' finished with status '{status}'. Rows: {rows_affected}", extra=extra)
@@ -1826,14 +1826,14 @@ def upsert_to_delta(micro_batch_df, batch_id: int):
         .filter(col("rk") == 1)
         .drop("rk")
     )
-    
+
     # Cache batch DataFrame to avoid re-evaluating source DAG during multi-pass merge
     deduped_batch_df.cache()
 
     try:
         # Step 2: Execute Delta MERGE
         delta_target = DeltaTable.forName(spark, target_delta_table)
-        
+
         (
             delta_target.alias("target")
             .merge(
@@ -1889,7 +1889,7 @@ Copy-pasting helper functions between notebooks or relying on `%run` across repo
    - Pipeline logic is developed in local IDEs (VS Code, PyCharm) inside a standard Python package structure (`src/my_pipeline/`).
    - Standard unit tests are executed locally using `pytest` and `chispa` (for DataFrame equality assertions).
    - A CI/CD build runner compiles the package into a distributable binary wheel: `dist/corp_lakehouse_core-1.2.0-py3-none-any.whl`.
-   
+
 2. **Distribution via Unity Catalog Volumes**:
    - Unity Catalog **Volumes** provide governed, secure cloud storage for unstructured files, including Python libraries.
    - The compiled wheel is uploaded to a shared catalog volume: `/Volumes/prod_lakehouse/core_libs/wheels/`.
@@ -2079,7 +2079,7 @@ def test_standardize_currency(spark):
         StructField("txn_id", StringType(), False),
         StructField("amount", DoubleType(), False)
     ])
-    
+
     # Input synthetic test data
     input_data = [
         ("T1", 100.0),
@@ -2087,7 +2087,7 @@ def test_standardize_currency(spark):
         ("T3", 250.0)
     ]
     input_df = spark.createDataFrame(input_data, schema)
-    
+
     # Expected output data
     expected_schema = StructType([
         StructField("txn_id", StringType(), False),
@@ -2099,10 +2099,10 @@ def test_standardize_currency(spark):
         ("T3", 250.0, 230.0)
     ]
     expected_df = spark.createDataFrame(expected_data, expected_schema)
-    
+
     # Execute transformation
     actual_df = standardize_currency(input_df)
-    
+
     # Assert exact schema and row equality (introduced in PySpark 3.5+)
     assertDataFrameEqual(actual_df, expected_df)
 ```

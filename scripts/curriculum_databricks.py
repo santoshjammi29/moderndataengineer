@@ -22,7 +22,7 @@ DATABRICKS_ITEMS = [
         "subdomain": "Databricks Compute & Governance",
         "question": "How does Unity Catalog's 3-level namespace (catalog.schema.table_or_volume) work, how do metastores bind across workspaces, and how do you design environment isolation (dev/stage/prod) and data virtualization?",
         "answer": """### Phase 1: Conceptual Foundation & Core Architecture
-Unity Catalog (UC) centralizes data and AI governance across multiple Databricks workspaces by replacing legacy workspace-scoped Hive metastores with an account-level **Unity Catalog Metastore**. 
+Unity Catalog (UC) centralizes data and AI governance across multiple Databricks workspaces by replacing legacy workspace-scoped Hive metastores with an account-level **Unity Catalog Metastore**.
 
 1. **Hierarchy & 3-Level Namespace**:
    - `Metastore`: Account-level top-tier container physically bound to a specific cloud region and backed by a root cloud storage bucket (ADLS Gen2 / AWS S3 / GCS).
@@ -78,7 +78,7 @@ TBLPROPERTIES (
 
 -- 4. Cross-catalog virtualization: Dev querying sanitized Prod view without physical replication
 CREATE OR REPLACE VIEW dev_lakehouse.customer_domain.vw_sanitized_customer AS
-SELECT 
+SELECT
   customer_id,
   sha2(email, 256) AS masked_email,
   country_code,
@@ -221,15 +221,15 @@ CREATE EXTERNAL LOCATION ext_loc_telemetry_raw
 
 -- 3. Enforce Strict Zero-Privilege Access Controls
 -- Data Engineers can read and write files directly
-GRANT READ FILES, WRITE FILES ON EXTERNAL LOCATION ext_loc_telemetry_raw 
+GRANT READ FILES, WRITE FILES ON EXTERNAL LOCATION ext_loc_telemetry_raw
   TO `data_engineers_group`;
 
 -- Data Scientists can only read files
-GRANT READ FILES ON EXTERNAL LOCATION ext_loc_telemetry_raw 
+GRANT READ FILES ON EXTERNAL LOCATION ext_loc_telemetry_raw
   TO `data_scientists_group`;
 
 -- Only Platform Admins can create tables referencing this external location
-GRANT CREATE EXTERNAL TABLE ON EXTERNAL LOCATION ext_loc_telemetry_raw 
+GRANT CREATE EXTERNAL TABLE ON EXTERNAL LOCATION ext_loc_telemetry_raw
   TO `platform_admins_group`;
 ```
 
@@ -272,7 +272,7 @@ The following DDL creates reusable security UDFs and attaches row filters and co
 -- 1. Create Security UDF for Dynamic Column Masking (SSN)
 CREATE OR REPLACE FUNCTION prod_lakehouse.governance.mask_ssn(ssn STRING)
 RETURNS STRING
-RETURN CASE 
+RETURN CASE
   WHEN is_account_group_member('hr_payroll_admins') THEN ssn
   WHEN is_account_group_member('data_analysts') THEN concat('XXX-XX-', right(ssn, 4))
   ELSE 'REDACTED'
@@ -291,17 +291,17 @@ RETURN CASE
 END;
 
 -- 3. Apply Column Mask and Row Filter to Physical Table
-ALTER TABLE prod_lakehouse.hr.dim_employee 
-  ALTER COLUMN ssn_tax_id 
+ALTER TABLE prod_lakehouse.hr.dim_employee
+  ALTER COLUMN ssn_tax_id
   SET MASK prod_lakehouse.governance.mask_ssn;
 
-ALTER TABLE prod_lakehouse.hr.dim_employee 
-  SET ROW FILTER prod_lakehouse.governance.filter_emp_region 
+ALTER TABLE prod_lakehouse.hr.dim_employee
+  SET ROW FILTER prod_lakehouse.governance.filter_emp_region
   ON (country_code);
 
 -- 4. Verification: Test execution under different roles
 -- When an EU manager runs this query, Catalyst prunes US rows and masks SSNs:
-SELECT employee_id, ssn_tax_id, country_code, salary 
+SELECT employee_id, ssn_tax_id, country_code, salary
 FROM prod_lakehouse.hr.dim_employee;
 ```
 
@@ -663,7 +663,7 @@ Below are SQL configurations to tune file sizing, enable auto-compaction, and sc
 
 ```sql
 -- 1. Configure Target Compaction File Size (e.g., 512MB for BI queries)
-ALTER TABLE prod_lakehouse.telemetry.iot_events 
+ALTER TABLE prod_lakehouse.telemetry.iot_events
 SET TBLPROPERTIES (
   'delta.targetFileSize' = '536870912', -- 512 MB
   'delta.autoOptimize.optimizeWrite' = 'true',
@@ -672,7 +672,7 @@ SET TBLPROPERTIES (
 
 -- 2. Run Selective Compaction on Recent Partitions Only
 -- Avoids expensive rescanning of historical unchanging partitions!
-OPTIMIZE prod_lakehouse.telemetry.iot_events 
+OPTIMIZE prod_lakehouse.telemetry.iot_events
 WHERE event_date >= current_date() - INTERVAL 7 DAYS;
 ```
 
@@ -733,11 +733,11 @@ Below is how CDF is enabled, queried via batch SQL, and consumed in a streaming 
 
 ```sql
 -- 1. Enable Change Data Feed on Silver Orders table
-ALTER TABLE prod_lakehouse.silver.orders 
+ALTER TABLE prod_lakehouse.silver.orders
 SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
 
 -- 2. Inspect row mutations between commit version 10 and 15
-SELECT 
+SELECT
   order_id,
   customer_id,
   order_status,
@@ -826,7 +826,7 @@ df_new.write.format("delta") \\
 
 ```sql
 -- 3. Enable Column Mapping to allow instant RENAME and DROP COLUMN
-ALTER TABLE prod_lakehouse.bronze.users 
+ALTER TABLE prod_lakehouse.bronze.users
 SET TBLPROPERTIES (
   'delta.minReaderVersion' = '2',
   'delta.minWriterVersion' = '5',
@@ -834,11 +834,11 @@ SET TBLPROPERTIES (
 );
 
 -- 4. Instant Metadata-Only Column Rename (0 bytes rewritten!)
-ALTER TABLE prod_lakehouse.bronze.users 
+ALTER TABLE prod_lakehouse.bronze.users
 RENAME COLUMN loyalty_tier TO customer_rewards_tier;
 
 -- 5. Instant Metadata-Only Column Drop
-ALTER TABLE prod_lakehouse.bronze.users 
+ALTER TABLE prod_lakehouse.bronze.users
 DROP COLUMN temporary_flags;
 ```
 
@@ -888,7 +888,7 @@ USING (
   SELECT customer_id, balance_date, updated_balance
   FROM stage_updates
 ) AS src
-ON tgt.customer_id = src.customer_id 
+ON tgt.customer_id = src.customer_id
    AND tgt.balance_date = src.balance_date -- Partition Key Pruning!
    AND tgt.balance_date >= current_date() - INTERVAL 30 DAYS
 WHEN MATCHED AND tgt.updated_balance != src.updated_balance THEN
@@ -1181,13 +1181,13 @@ print("Metadata successfully published to taskValues.")
 # Task 2: "load_and_notify" downstream notebook
 # Retrieve metadata published by the upstream task "extract_and_validate"
 upstream_count = dbutils.jobs.taskValues.get(
-    taskKey="extract_and_validate", 
-    key="record_count", 
+    taskKey="extract_and_validate",
+    key="record_count",
     default=0
 )
 anomaly_flag = dbutils.jobs.taskValues.get(
-    taskKey="extract_and_validate", 
-    key="anomaly_detected", 
+    taskKey="extract_and_validate",
+    key="anomaly_detected",
     default=False
 )
 
@@ -1322,7 +1322,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: databricks/setup-cli@v0.2
-      
+
       - name: Validate Bundle
         run: databricks bundle validate -t prod
         env:
@@ -1474,7 +1474,7 @@ Below is an enterprise FinOps SQL query analyzing DBU consumption by department,
 
 ```sql
 -- FinOps Cost Allocation Query on Unity Catalog System Tables
-SELECT 
+SELECT
   usage_date,
   coalesce(custom_tags['Department'], 'Unallocated') AS department,
   coalesce(custom_tags['Project'], 'General') AS project,
@@ -1485,7 +1485,7 @@ SELECT
   round(sum(usage_quantity) * 0.30, 2) AS estimated_dbu_cost_usd
 FROM system.billing.usage
 WHERE usage_date >= current_date() - INTERVAL 30 DAYS
-GROUP BY 
+GROUP BY
   usage_date,
   coalesce(custom_tags['Department'], 'Unallocated'),
   coalesce(custom_tags['Project'], 'General'),
@@ -1495,7 +1495,7 @@ ORDER BY total_dbus_consumed DESC;
 
 ```sql
 -- Top 5 Most Expensive Databricks Automated Jobs Last Month
-SELECT 
+SELECT
   usage_metadata.job_id,
   custom_tags['JobName'] AS job_name,
   round(sum(usage_quantity), 2) AS total_dbus,

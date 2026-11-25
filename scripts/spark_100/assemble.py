@@ -5,7 +5,6 @@ Combines 10 categories (100 problems) with executive taxonomy, cross-reference m
 reproducible code snippets, and production triage playbooks.
 """
 
-import sys
 import os
 import json
 
@@ -16,16 +15,16 @@ def make_slug(item_id, title):
     clean = re.sub(r'[\s/]+', '-', clean).strip('-')
     return f"problem-{item_id:02d}-{clean}"
 
-from cat1_skew import CAT1_PROBLEMS
-from cat2_nulls import CAT2_PROBLEMS
-from cat3_schema import CAT3_PROBLEMS
-from cat4_corrupt import CAT4_PROBLEMS
-from cat5_duplicates import CAT5_PROBLEMS
-from cat6_nested import CAT6_PROBLEMS
-from cat7_timestamps import CAT7_PROBLEMS
-from cat8_memory import CAT8_PROBLEMS
-from cat9_joins import CAT9_PROBLEMS
-from cat10_types import CAT10_PROBLEMS
+from cat1_skew import CAT1_PROBLEMS  # noqa: E402
+from cat2_nulls import CAT2_PROBLEMS  # noqa: E402
+from cat3_schema import CAT3_PROBLEMS  # noqa: E402
+from cat4_corrupt import CAT4_PROBLEMS  # noqa: E402
+from cat5_duplicates import CAT5_PROBLEMS  # noqa: E402
+from cat6_nested import CAT6_PROBLEMS  # noqa: E402
+from cat7_timestamps import CAT7_PROBLEMS  # noqa: E402
+from cat8_memory import CAT8_PROBLEMS  # noqa: E402
+from cat9_joins import CAT9_PROBLEMS  # noqa: E402
+from cat10_types import CAT10_PROBLEMS  # noqa: E402
 
 ALL_CATEGORIES = [
     ("Category 1: Extreme Data Skew & Key Imbalance", CAT1_PROBLEMS),

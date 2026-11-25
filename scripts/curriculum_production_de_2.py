@@ -131,7 +131,7 @@ resources:
       tags:
         cost_center: "operations_de"
         env: "${var.env}"
-      
+
       job_clusters:
         - job_cluster_key: shared_etl_cluster
           new_cluster:
@@ -141,7 +141,7 @@ resources:
               min_workers: 2
               max_workers: 8
             policy_id: "${var.job_policy}"
-      
+
       tasks:
         - task_key: ingest_bronze
           job_cluster_key: shared_etl_cluster
@@ -465,13 +465,13 @@ tables_to_replicate = [
 
 for source_table, target_dr_table in tables_to_replicate:
     print(f"Starting Incremental Deep Clone: {source_table} -> {target_dr_table}")
-    
+
     # Deep Clone copies Parquet files and metadata incrementally (only syncs new commits)
     spark.sql(f'''
         CREATE OR REPLACE TABLE {target_dr_table}
         DEEP CLONE {source_table}
     ''')
-    
+
     print(f"Successfully synchronized {target_dr_table}!")
 ```
 
@@ -544,7 +544,7 @@ def submit_ephemeral_job(notebook_path: str, parameters: dict) -> int:
             }
         ]
     }
-    
+
     response = requests.post(f"{DATABRICKS_HOST}/api/2.1/jobs/runs/submit", headers=headers, json=payload, timeout=30)
     response.raise_for_status()
     run_id = response.json()["run_id"]
@@ -558,16 +558,16 @@ def wait_for_completion(run_id: int, poll_interval_sec: int = 30) -> str:
         resp.raise_for_status()
         state = resp.json()["state"]
         life_cycle = state["life_cycle_state"]
-        
+
         print(f"Run {run_id} status: {life_cycle}...")
-        
+
         if life_cycle in ["TERMINATED", "SKIPPED", "INTERNAL_ERROR"]:
             result = state.get("result_state", "UNKNOWN")
             if result != "SUCCESS":
                 raise RuntimeError(f"Databricks Run {run_id} FAILED with result state: {result}")
             print(f"Run {run_id} SUCCEEDED!")
             return result
-            
+
         time.sleep(poll_interval_sec)
 
 # Execution
@@ -857,11 +857,11 @@ When data skew is so extreme that AQE partition splitting reaches its limits (e.
    - **Salt Factor ($K$)**: An integer representing the number of buckets to split the skewed key into (e.g., $K = 20$).
    - **Large Table Transformation**:
      - Append a random integer between $0$ and $K-1$ to the join key:
-       $$\text{salted\_key} = \text{concat}(\text{original\_key}, \text{"\_"}, \text{floor}(\text{rand}() \times K))$$
+       $$\text{salted\\_key} = \text{concat}(\text{original\\_key}, \text{"\\_"}, \text{floor}(\text{rand}() \times K))$$
      - This breaks the single monolithic partition into $K$ distinct, evenly distributed hash buckets.
    - **Small / Dimension Table Transformation**:
      - To ensure matches succeed, every record in the dimension table must be replicated $K$ times using `explode(array(0, 1, ..., K-1))`:
-       $$\text{salted\_key} = \text{concat}(\text{original\_key}, \text{"\_"}, \text{exploded\_index})$$
+       $$\text{salted\\_key} = \text{concat}(\text{original\\_key}, \text{"\\_"}, \text{exploded\\_index})$$
    - **The Join**: The tables are joined on `salted_key`. Because the keys are salted, Spark distributes the work evenly across $K$ executors.
    - **Cleanup**: Drop the temporary `salted_key` column from the final output.
 
@@ -972,11 +972,11 @@ def safe_broadcast_join(large_df, small_df, join_key: str, max_allowed_mb: float
     # Obtain Catalyst plan statistics (in bytes)
     plan_stats = small_df._jdf.queryExecution().optimizedPlan().stats().sizeInBytes()
     estimated_mb = plan_stats / (1024 * 1024)
-    
+
     if estimated_mb > max_allowed_mb:
         print(f"WARNING: Small table estimated at {estimated_mb:.2f} MB > {max_allowed_mb} MB limit. Falling back to Shuffle Join.")
         return large_df.join(small_df, on=join_key, how="inner")
-    
+
     print(f"Table verified at {estimated_mb:.2f} MB. Executing BroadcastHashJoin.")
     return large_df.join(broadcast(small_df), on=join_key, how="inner")
 ```
@@ -1141,19 +1141,19 @@ def process_and_publish_reports(raw_df):
     '''Demonstrates correct caching lifecycle with explicit cleanup.'''
     # Filter and clean
     cleaned_df = raw_df.filter("is_valid = true").select("customer_id", "order_amount", "region")
-    
+
     # Persist with serialization to protect JVM heap
     cleaned_df.persist(StorageLevel.MEMORY_AND_DISK_SER)
-    
+
     try:
         # Action 1: Compute regional aggregations (triggers materialization into cache)
         regional_summary = cleaned_df.groupBy("region").sum("order_amount")
         regional_summary.write.format("delta").mode("overwrite").saveAsTable("gold.regional_sales")
-        
+
         # Action 2: Compute top customers (reads directly from cache without re-reading raw_df!)
         top_customers = cleaned_df.groupBy("customer_id").sum("order_amount").orderBy(F.col("sum(order_amount)").desc()).limit(100)
         top_customers.write.format("delta").mode("overwrite").saveAsTable("gold.top_customers")
-        
+
     finally:
         # Crucial Production Step: Free executor memory immediately
         cleaned_df.unpersist()
@@ -1199,7 +1199,7 @@ Below is the operator eligibility matrix and diagnostic method to detect Photon 
 ```python
 # Diagnostic Script: Verify Photon Execution in Physical Plan
 query = spark.sql('''
-    SELECT 
+    SELECT
         customer_id,
         DATE_TRUNC('month', order_date) as order_month,
         SUM(total_amount) as monthly_spend,
@@ -1272,7 +1272,7 @@ USING (
 ON target.order_date = source.order_date  -- CRUCIAL: Partition Pruning Key!
 AND target.order_id = source.order_id     -- Primary Key
 WHEN MATCHED AND target.updated_at < source.updated_at THEN
-    UPDATE SET 
+    UPDATE SET
         target.order_status = source.order_status,
         target.total_amount = source.total_amount,
         target.updated_at = source.updated_at
@@ -1334,7 +1334,7 @@ def write_daily_partition_idempotent(
     '''Atomically overwrites exactly one date partition; safe to retry indefinitely.'''
     # Step 1: Enforce data contract - filter out any records not belonging to target date
     filtered_df = df.filter(col("load_date") == lit(target_date))
-    
+
     # Step 2: Atomic Delta Overwrite scoped strictly to target_date
     (
         filtered_df.write
@@ -1344,7 +1344,7 @@ def write_daily_partition_idempotent(
         .option("mergeSchema", "false")  # Prevent accidental schema drift during overwrites
         .saveAsTable(target_table)
     )
-    
+
     print(f"✅ Idempotent write completed for partition: load_date = '{target_date}'")
 
 # Execution: Can be run 10 times consecutively with identical, safe results
@@ -1403,7 +1403,7 @@ FROM lakehouse_prod.silver.fact_orders VERSION AS OF 41;
 RESTORE TABLE lakehouse_prod.silver.fact_orders TO VERSION AS OF 41;
 
 -- Alternative: Restore to a specific timestamp
-RESTORE TABLE lakehouse_prod.silver.fact_orders 
+RESTORE TABLE lakehouse_prod.silver.fact_orders
 TO TIMESTAMP AS OF '2026-03-01 02:00:00';
 ```
 
@@ -1457,21 +1457,21 @@ def execute_backfill_range(
     '''Processes historical date partitions sequentially with idempotency tracking.'''
     current_date = start_date
     failed_dates = []
-    
+
     print(f"--- Starting Backfill: {start_date} -> {end_date} ---")
-    
+
     while current_date <= end_date:
         date_str = current_date.strftime("%Y-%m-%d")
-        
+
         # Check audit log to see if partition was already backfilled successfully
         is_already_done = spark.sql(f'''
-            SELECT COUNT(1) as cnt 
-            FROM audit.backfill_log 
-            WHERE target_table = '{target_table}' 
-              AND partition_date = '{date_str}' 
+            SELECT COUNT(1) as cnt
+            FROM audit.backfill_log
+            WHERE target_table = '{target_table}'
+              AND partition_date = '{date_str}'
               AND status = 'SUCCESS'
         ''').collect()[0]["cnt"] > 0
-        
+
         if is_already_done:
             print(f"⏭️ Skipping {date_str} - already processed successfully.")
         else:
@@ -1481,26 +1481,26 @@ def execute_backfill_range(
                 # Execute user-provided idempotent pipeline function
                 rows_written = pipeline_func(date_str)
                 duration = time.time() - start_time
-                
+
                 # Log success to audit table
                 spark.sql(f'''
-                    INSERT INTO audit.backfill_log 
+                    INSERT INTO audit.backfill_log
                     VALUES ('{target_table}', '{date_str}', 'SUCCESS', {rows_written}, {duration}, CURRENT_TIMESTAMP())
                 ''')
                 print(f"✅ Finished {date_str} in {duration:.1f}s. Rows: {rows_written}")
-                
+
             except Exception as e:
                 print(f"❌ FAILED {date_str}: {str(e)}")
                 failed_dates.append(date_str)
                 # Log failure to audit table
                 spark.sql(f'''
-                    INSERT INTO audit.backfill_log 
+                    INSERT INTO audit.backfill_log
                     VALUES ('{target_table}', '{date_str}', 'FAILED', 0, 0, CURRENT_TIMESTAMP())
                 ''')
                 # Optional: break if you want strict sequential fail-stop
-                
+
         current_date += timedelta(days=1)
-        
+
     if failed_dates:
         raise RuntimeError(f"Backfill finished with errors on dates: {failed_dates}")
     print("🎉 All dates backfilled successfully!")
@@ -1553,7 +1553,7 @@ ALTER TABLE lakehouse_prod.silver.dim_customer
 SET TBLPROPERTIES (delta.enableChangeDataFeed = true);
 
 -- Batch Query: Inspect exact row changes between version 10 and 15
-SELECT 
+SELECT
     customer_id,
     customer_name,
     email,
@@ -1633,7 +1633,7 @@ from pyspark.sql.types import ArrayType, StringType
 
 def apply_quality_rules_and_quarantine(bronze_df, silver_table: str, quarantine_table: str):
     '''Evaluates business rules, routing valid records to Silver and rejected records to Quarantine.'''
-    
+
     # Define validation rules (Rule Name, Boolean Expression where TRUE = VALID)
     validation_rules = {
         "NULL_ORDER_ID": F.col("order_id").isNotNull(),
@@ -1641,14 +1641,14 @@ def apply_quality_rules_and_quarantine(bronze_df, silver_table: str, quarantine_
         "FUTURE_DATE": F.col("order_date") <= F.current_date(),
         "NULL_CUSTOMER": F.col("customer_id").isNotNull()
     }
-    
+
     # Construct an array of failure reason strings
     failure_conditions = []
     for rule_name, condition in validation_rules.items():
         failure_conditions.append(
             F.when(~condition, F.lit(rule_name)).otherwise(F.lit(None))
         )
-    
+
     # Tag DataFrame with failure array
     tagged_df = bronze_df.withColumn(
         "_validation_errors",
@@ -1657,15 +1657,15 @@ def apply_quality_rules_and_quarantine(bronze_df, silver_table: str, quarantine_
         "_is_valid",
         F.size(F.col("_validation_errors")) == 0
     )
-    
+
     # Cache tagged DataFrame to prevent double-reading source
     tagged_df.cache()
-    
+
     try:
         # Stream 1: Valid records proceed to Silver
         valid_df = tagged_df.filter(F.col("_is_valid")).drop("_validation_errors", "_is_valid")
         valid_df.write.format("delta").mode("append").saveAsTable(silver_table)
-        
+
         # Stream 2: Invalid records routed to Quarantine with rejection metadata
         quarantine_df = (
             tagged_df.filter(~F.col("_is_valid"))
@@ -1673,12 +1673,12 @@ def apply_quality_rules_and_quarantine(bronze_df, silver_table: str, quarantine_
             .withColumn("_rejection_reasons", F.concat_ws(", ", F.col("_validation_errors")))
             .drop("_validation_errors", "_is_valid")
         )
-        
+
         quarantine_count = quarantine_df.count()
         if quarantine_count > 0:
             quarantine_df.write.format("delta").mode("append").saveAsTable(quarantine_table)
             print(f"⚠️ QUARANTINE ALERT: {quarantine_count} bad records routed to {quarantine_table}")
-            
+
     finally:
         tagged_df.unpersist()
 ```
@@ -1786,7 +1786,7 @@ Historically, tracking Databricks costs required downloading CSV invoices from A
      - `custom_tags`: Map of all key-value tags assigned to the cluster or job (e.g., `CostCenter`, `Environment`, `Owner`).
 
 2. **FinOps Cost Attribution Mathematics**:
-   $$\text{Dollar Cost} = \text{usage\_quantity (DBUs)} \times \text{Contractual DBU Price} + \text{Underlying VM Cost}$$
+   $$\text{Dollar Cost} = \text{usage\\_quantity (DBUs)} \times \text{Contractual DBU Price} + \text{Underlying VM Cost}$$
    - Allows finance and platform engineering to construct real-time chargeback dashboards attributed directly to business departments.
 
 ### Phase 2: Implementation & Production Code Artifacts
@@ -1794,7 +1794,7 @@ Below are production FinOps queries for chargeback attribution and rogue compute
 
 ```sql
 -- Query 1: Top 10 Most Expensive Jobs in the Last 30 Days
-SELECT 
+SELECT
     usage_metadata.job_id AS JobId,
     custom_tags.JobName AS JobName,
     custom_tags.CostCenter AS CostCenter,
@@ -1809,7 +1809,7 @@ ORDER BY TotalDBU DESC
 LIMIT 10;
 
 -- Query 2: Daily Cost Breakdown by Environment (Dev vs Staging vs Prod)
-SELECT 
+SELECT
     DATE(usage_start_time) AS UsageDate,
     COALESCE(custom_tags.Environment, 'Untagged') AS Environment,
     ROUND(SUM(usage_quantity), 2) AS DBUConsumed,
@@ -1820,7 +1820,7 @@ GROUP BY 1, 2
 ORDER BY UsageDate DESC, CostUSD DESC;
 
 -- Query 3: Detect All-Purpose Interactive Compute Waste by User
-SELECT 
+SELECT
     identity_metadata.run_as AS UserEmail,
     ROUND(SUM(usage_quantity), 2) AS TotalAllPurposeDBUs,
     ROUND(SUM(usage_quantity * 0.40), 2) AS CostUSD  -- All-purpose rate
@@ -1948,10 +1948,10 @@ class ProductionStreamingListener(StreamingQueryListener):
         input_rate = progress.inputRowsPerSecond
         proc_rate = progress.processedRowsPerSecond
         batch_duration_ms = progress.durationMs.get("triggerExecution", 0)
-        
+
         # Log structured metrics to stdout
         print(f"[STREAM METRICS] Batch {batch_id}: Input Rate={input_rate:.1f} r/s | Process Rate={proc_rate:.1f} r/s | Duration={batch_duration_ms}ms")
-        
+
         # SLA Alert Condition: Processing throughput degraded below input arrival rate
         if input_rate > 500 and proc_rate < (input_rate * 0.7):
             alert_payload = {
@@ -2025,11 +2025,11 @@ class LakehouseCircuitBreaker:
         if total_rows == 0:
             print(f"⚠️ Circuit Warning: Empty batch received from {source_stage}.")
             return True
-            
+
         # Check 1: Null Primary Keys
         null_keys = df.filter(F.col(primary_key).isNull()).count()
         null_pct = (null_keys / total_rows) * 100
-        
+
         # Check 2: Volume Anomaly (Batch size < 10% of historical average)
         if null_pct > self.failure_threshold_pct:
             # TRIP THE CIRCUIT
@@ -2040,7 +2040,7 @@ class LakehouseCircuitBreaker:
             )
             self._trip_circuit(error_msg)
             raise RuntimeError(error_msg)
-            
+
         print(f"✅ Circuit CLOSED. Batch health verified: {total_rows} rows, {null_pct:.2f}% nulls.")
         return True
 

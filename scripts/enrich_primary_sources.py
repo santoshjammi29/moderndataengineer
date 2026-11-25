@@ -119,7 +119,7 @@ CANONICAL_SOURCES = {
 def determine_sources(text: str):
     lower = text.lower()
     sources = []
-    
+
     # Check Delta Lake Liquid Clustering
     if "liquid cluster" in lower or "cluster by" in lower:
         sources.append(CANONICAL_SOURCES["delta_clustering"])
@@ -190,7 +190,7 @@ def enrich_file(path: str, is_concept=False):
         print(f"Skipping {path}: not found")
         return 0
 
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         items = json.load(f)
 
     updated_count = 0

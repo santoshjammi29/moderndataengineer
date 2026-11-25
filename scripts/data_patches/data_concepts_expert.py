@@ -1,5 +1,4 @@
 # data_concepts_expert.py
-import json
 
 dbt_data = {
     # EASY (12)

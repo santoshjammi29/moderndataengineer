@@ -3,7 +3,7 @@ import os
 
 # 1. Update modern_code_matrix.json
 MATRIX_FILE = 'src/data/json/modern_code_matrix.json'
-with open(MATRIX_FILE, 'r', encoding='utf-8') as f:
+with open(MATRIX_FILE, encoding='utf-8') as f:
     matrix_data = json.load(f)
 
 existing_topics = {item['topic'] for item in matrix_data}
@@ -66,7 +66,7 @@ print(f"Updated {MATRIX_FILE}: now has {len(matrix_data)} topics.")
 
 # 2. Update data_cheatsheet.json
 CHEATSHEET_FILE = 'src/data/json/data_cheatsheet.json'
-with open(CHEATSHEET_FILE, 'r', encoding='utf-8') as f:
+with open(CHEATSHEET_FILE, encoding='utf-8') as f:
     cheatsheet_data = json.load(f)
 
 existing_cs_ids = {item['id'] for item in cheatsheet_data}

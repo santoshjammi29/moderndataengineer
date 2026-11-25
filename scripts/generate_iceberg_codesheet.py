@@ -5,7 +5,7 @@ import json
 
 FILE = 'src/data/json/data_mssql.json'
 
-with open(FILE, 'r') as f:
+with open(FILE) as f:
     data = json.load(f)
 
 print(f"Before: {len(data)}")
@@ -33,11 +33,11 @@ SELECT TOP (@page_size)
     o.order_date,
     o.total_amount
 FROM dbo.orders o
-WHERE 
+WHERE
     (o.order_date < @last_seen_date)
     OR (o.order_date = @last_seen_date AND o.order_id < @last_seen_id)
-ORDER BY 
-    o.order_date DESC, 
+ORDER BY
+    o.order_date DESC,
     o.order_id DESC;
 
 -- Note: Bypasses scanning preceding 500,000 rows, executing in <2ms!""",
@@ -57,7 +57,7 @@ ORDER BY
         "code": """-- Top-3 Recent Transactions per Customer
 -- Supporting Index: CREATE INDEX idx_cust_txn ON dbo.transactions (customer_id, transaction_date DESC) INCLUDE (amount, status);
 
-SELECT 
+SELECT
     c.customer_id,
     c.customer_name,
     t.transaction_id,
@@ -106,11 +106,11 @@ WITH NextJob AS (
     ORDER BY priority DESC, job_id ASC
 )
 UPDATE NextJob
-SET 
+SET
     status = 'PROCESSING',
     locked_by = HOST_NAME(),
     locked_at = SYSUTCDATETIME()
-OUTPUT 
+OUTPUT
     inserted.job_id,
     inserted.payload;
 
@@ -132,17 +132,17 @@ COMMIT TRANSACTION;""",
 -- Hierarchy: Year -> Quarter -> Region -> Channel -> Total
 
 SELECT
-    CASE 
-        WHEN GROUPING(r.region_name) = 1 THEN 'All Regions' 
-        ELSE r.region_name 
+    CASE
+        WHEN GROUPING(r.region_name) = 1 THEN 'All Regions'
+        ELSE r.region_name
     END AS region,
-    CASE 
-        WHEN GROUPING(d.fiscal_year) = 1 THEN 'All Years' 
-        ELSE CAST(d.fiscal_year AS VARCHAR(10)) 
+    CASE
+        WHEN GROUPING(d.fiscal_year) = 1 THEN 'All Years'
+        ELSE CAST(d.fiscal_year AS VARCHAR(10))
     END AS fiscal_year,
-    CASE 
-        WHEN GROUPING(c.channel_name) = 1 THEN 'All Channels' 
-        ELSE c.channel_name 
+    CASE
+        WHEN GROUPING(c.channel_name) = 1 THEN 'All Channels'
+        ELSE c.channel_name
     END AS sales_channel,
     SUM(f.gross_revenue) AS total_gross_revenue,
     SUM(f.net_revenue) AS total_net_revenue,
@@ -156,9 +156,9 @@ GROUP BY ROLLUP (
     d.fiscal_year,
     c.channel_name
 )
-ORDER BY 
-    r.region_name, 
-    d.fiscal_year, 
+ORDER BY
+    r.region_name,
+    d.fiscal_year,
     c.channel_name;""",
         "notes": [
             "ROLLUP generates hierarchical sub-totals in a single physical pass over source fact tables",

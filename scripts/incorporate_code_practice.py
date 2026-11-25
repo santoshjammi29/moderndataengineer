@@ -39,15 +39,15 @@ df_raw.write.format("delta") \\
 
 # 3. Multi-dimensional Z-Ordering on high-cardinality keys
 spark.sql(f\"\"\"
-    CREATE TABLE {CATALOG}.{SCHEMA}.sales_zorder AS 
+    CREATE TABLE {CATALOG}.{SCHEMA}.sales_zorder AS
     SELECT * FROM {CATALOG}.{SCHEMA}.sales_raw;
 \"\"\")
 spark.sql(f"OPTIMIZE {CATALOG}.{SCHEMA}.sales_zorder ZORDER BY (customer_id, product_id)")
 
 # 4. Liquid Clustering (modern recommended standard - Hilbert curve)
 spark.sql(f\"\"\"
-    CREATE TABLE {CATALOG}.{SCHEMA}.sales_liquid 
-    USING DELTA 
+    CREATE TABLE {CATALOG}.{SCHEMA}.sales_liquid
+    USING DELTA
     CLUSTER BY (sale_date, customer_id)
     AS SELECT * FROM {CATALOG}.{SCHEMA}.sales_raw;
 \"\"\")
@@ -163,7 +163,7 @@ def process_micro_batch(micro_batch_df, batch_id):
         .withColumn("row_num", row_number().over(window_spec)) \\
         .filter(col("row_num") == 1) \\
         .drop("row_num")
-        
+
     # 2. Idempotent MERGE into Target Silver Delta Table
     target_delta.alias("tgt").merge(
         deduped_batch.alias("src"),
@@ -270,7 +270,7 @@ def gold_daily_apparel_revenue():
         "code": """# Databricks Genie Space Semantic Configuration Pattern
 # 1. Ensure Star Schema tables have rich column comments and PRIMARY/FOREIGN keys in Unity Catalog:
 spark.sql(\"\"\"
-    ALTER TABLE gold.fct_sales 
+    ALTER TABLE gold.fct_sales
     ALTER COLUMN customer_id COMMENT 'Unique foreign key referencing dim_customer.customer_id';
 \"\"\")
 
@@ -452,7 +452,7 @@ ALTER TABLE silver.products SET TBLPROPERTIES (delta.enableChangeDataFeed = true
 DESCRIBE HISTORY silver.products;
 
 -- 3. Query all changes between version 10 and 15
-SELECT 
+SELECT
     product_id,
     product_name,
     unit_price,
@@ -463,7 +463,7 @@ FROM table_changes('silver.products', 10, 15)
 ORDER BY _commit_version, _commit_timestamp;
 
 -- 4. Filter only price updates (comparing pre-image vs post-image)
-SELECT 
+SELECT
     product_id,
     unit_price,
     _change_type,
@@ -493,7 +493,7 @@ ORDER BY product_id, _commit_timestamp;
         "description": "Transforming complex nested data types (ARRAY, STRUCT, MAP) using Spark SQL higher-order functions (TRANSFORM, FILTER, AGGREGATE, EXISTS) without exploding and re-aggregating rows.",
         "code": """-- Sample nested order data with line items array
 WITH raw_orders AS (
-    SELECT 
+    SELECT
         101 AS order_id,
         'Santosh' AS customer,
         ARRAY(
@@ -505,16 +505,16 @@ WITH raw_orders AS (
 SELECT
     order_id,
     customer,
-    
+
     -- 1. TRANSFORM: Apply function to each element in array (10% discount on items)
     TRANSFORM(items, x -> NAMED_STRUCT('item', x.item, 'discounted_price', ROUND(x.price * 0.9, 2))) AS discounted_items,
-    
+
     -- 2. FILTER: Extract only taxable line items
     FILTER(items, x -> x.taxable = true) AS taxable_items,
-    
+
     -- 3. EXISTS: Check if order contains a high-value item (> $500)
     EXISTS(items, x -> x.price > 500.0) AS has_expensive_item,
-    
+
     -- 4. AGGREGATE: Calculate order gross total directly without explode()
     AGGREGATE(items, 0.0, (total, x) -> total + (x.qty * x.price)) AS order_total_amount
 FROM raw_orders;""",
@@ -530,7 +530,7 @@ FROM raw_orders;""",
 
 def append_exercises():
     # 1. Update PySpark
-    with open(PYSPARK_PATH, "r", encoding="utf-8") as f:
+    with open(PYSPARK_PATH, encoding="utf-8") as f:
         pyspark_data = json.load(f)
     existing_py_ids = {x["id"] for x in pyspark_data}
     added_py = 0
@@ -539,13 +539,13 @@ def append_exercises():
             pyspark_data.append(item)
             existing_py_ids.add(item["id"])
             added_py += 1
-            
+
     with open(PYSPARK_PATH, "w", encoding="utf-8") as f:
         json.dump(pyspark_data, f, indent=2)
     print(f"Added {added_py} exercises to {PYSPARK_PATH}. Total now: {len(pyspark_data)}")
-    
+
     # 2. Update Spark SQL
-    with open(SPARKSQL_PATH, "r", encoding="utf-8") as f:
+    with open(SPARKSQL_PATH, encoding="utf-8") as f:
         sparksql_data = json.load(f)
     existing_sql_ids = {x["id"] for x in sparksql_data}
     added_sql = 0
@@ -554,7 +554,7 @@ def append_exercises():
             sparksql_data.append(item)
             existing_sql_ids.add(item["id"])
             added_sql += 1
-            
+
     with open(SPARKSQL_PATH, "w", encoding="utf-8") as f:
         json.dump(sparksql_data, f, indent=2)
     print(f"Added {added_sql} exercises to {SPARKSQL_PATH}. Total now: {len(sparksql_data)}")

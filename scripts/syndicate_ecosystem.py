@@ -10,14 +10,10 @@ Author: Principal Lakehouse & Distributed Data Systems Architect
 Platform: moderndataengineer.uk
 """
 
-import ast
 import json
-import os
-import re
-import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any
 
 # Root Paths
 HUB_DIR = Path(__file__).resolve().parent.parent
@@ -125,7 +121,7 @@ REPOSITORIES = {
     },
 }
 
-def generate_handbook_manifest(repo_key: str, repo_info: Dict[str, Any]) -> Dict[str, Any]:
+def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict[str, Any]:
     """Inspects all code, notebook, exercise, and documentation paths in a repo."""
     repo_dir = BASE_DIR / repo_info["slug"]
     entries = []
@@ -144,7 +140,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: Dict[str, Any]) -> Dict
                 file_stem = nb_file.stem
                 title_parts = file_stem.split("_", 1)
                 raw_title = title_parts[1].replace("_", " ").title() if len(title_parts) > 1 else file_stem.replace("_", " ").title()
-                
+
                 entries.append({
                     "id": f"{repo_info['slug']}-{file_stem}",
                     "type": "notebook_recipe" if nb_file.suffix == ".py" else "empirical_notebook",
@@ -375,7 +371,7 @@ def main():
         "pyspark_code": len(json.load(open(pyspark_path))) if pyspark_path.exists() else 0,
     }
 
-    print(f"  📊 Hub Dataset Statistics:")
+    print("  📊 Hub Dataset Statistics:")
     print(f"     - QA Items (Questions Bank) : {stats['qa_items']:>6}")
     print(f"     - Architecture Scenarios    : {stats['scenarios']:>6}")
     print(f"     - Concepts                  : {stats['concepts']:>6}")

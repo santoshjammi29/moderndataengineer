@@ -64,7 +64,7 @@ spark.conf.set("spark.sql.ansi.enabled", "true")
         "root_cause": "Spark SQL enforces a maximum decimal precision of 38 digits. When multiplying `DECIMAL(p1, s1)` and `DECIMAL(p2, s2)`, result precision is $p1 + p2 + 1$. Because precision cannot exceed 38, Spark caps precision at 38 and trims the scale ($s$), sacrificing fractional digits.",
         "failing_code": """-- Failing Spark SQL:
 -- Decimal multiplication capping at 38 precision:
-SELECT CAST(1.000000000000000001 AS DECIMAL(38, 18)) * 
+SELECT CAST(1.000000000000000001 AS DECIMAL(38, 18)) *
        CAST(0.000000000000000001 AS DECIMAL(38, 18)) AS result;
 -- Truncates scale, returning 0.000000!""",
         "solution_code": """-- Production-Grade Solution: Right-Size Precision or Use Double for Scientific Chains
@@ -95,7 +95,7 @@ WHERE date_key = 20241031; -- Integer literal! Forces full table scan of 50TB!""
 -- Always match the exact datatype of the partition column:
 SELECT *
 FROM fact_sales
-WHERE date_key = '20241031'; -- String literal! 
+WHERE date_key = '20241031'; -- String literal!
 
 -- Catalyst immediately matches partition path 'date_key=20241031' and reads only 500MB!
 
@@ -171,7 +171,7 @@ print(joined.count()) # Returns 1 match! Perfect equality!""",
         "failing_code": """# Failing Spark 3.x Parquet Read:
 # Reading legacy INT96 Parquet table:
 df = spark.read.parquet("s3://legacy/hive_int96_table/")
-# Fails with SparkUpgradeException: You may see a different result from Spark 2.4 because 
+# Fails with SparkUpgradeException: You may see a different result from Spark 2.4 because
 # Spark 3.0 uses the Proleptic Gregorian calendar...""",
         "solution_code": """# Production-Grade Solution: Configure Parquet Rebase Mode & Modern Output Types
 # Step 1: For reading legacy INT96 files safely in Spark 3.x:

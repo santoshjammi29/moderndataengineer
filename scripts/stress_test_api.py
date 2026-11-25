@@ -12,17 +12,17 @@ import statistics
 # Directly simulate the DAL / in-memory cache layer under 10,000 concurrent requests
 async def simulate_dal_request(req_id: int, dal_data: list):
     start = time.perf_counter()
-    
+
     # Simulate query parsing & filtering
     query_term = "delta" if req_id % 3 == 0 else ("spark" if req_id % 3 == 1 else "fabric")
     limit = 25
-    
+
     # In-memory fast filter emulation
     matches = [item for item in dal_data if query_term in item.get("question", "").lower() or query_term in item.get("category", "").lower()][:limit]
-    
+
     # Small micro-yield to simulate event-loop concurrency
     await asyncio.sleep(0.0001)
-    
+
     elapsed_ms = (time.perf_counter() - start) * 1000.0
     return elapsed_ms, len(matches)
 
@@ -34,7 +34,7 @@ async def run_stress_test(total_requests=10000, concurrency_limit=500):
 
     # Load questions dataset for realistic payload
     try:
-        with open("src/data/json/questions.json", "r") as f:
+        with open("src/data/json/questions.json") as f:
             data = json.load(f)
     except Exception:
         data = [{"id": f"q_{i}", "question": f"Question {i} about spark delta", "category": "SPARK"} for i in range(1000)]
@@ -57,7 +57,7 @@ async def run_stress_test(total_requests=10000, concurrency_limit=500):
     p99 = statistics.quantiles(latencies, n=100)[98]
     rps = total_requests / total_time_sec
 
-    print(f"\nRESULTS:")
+    print("\nRESULTS:")
     print(f"  Total Requests:      {total_requests:,}")
     print(f"  Total Wall Clock:    {total_time_sec:.2f} seconds")
     print(f"  Throughput:          {rps:,.0f} req/sec")

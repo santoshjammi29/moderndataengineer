@@ -86,7 +86,7 @@ Databricks Notebooks combine polyglot execution (%python, %sql, %scala, %r), int
 # Databricks Notebook cell
 # 1. Inspect table using Unity Catalog 3-level namespace
 %sql
-SELECT 
+SELECT
     customer_segment,
     count(*) as total_customers,
     round(avg(lifetime_value_usd), 2) as avg_ltv
@@ -283,7 +283,7 @@ AS SELECT * FROM staging_feed;
 -- Silver: Merge cleansed records, enforcing unique customer keys
 MERGE INTO enterprise_catalog.silver.transactions AS target
 USING (
-    SELECT 
+    SELECT
         txn_id,
         upper(trim(customer_id)) as customer_id,
         cast(amount as numeric(18,2)) as amount_usd,
@@ -299,7 +299,7 @@ WHEN NOT MATCHED THEN INSERT *;
 CREATE OR REPLACE TABLE enterprise_catalog.gold.fct_daily_sales
 CLUSTER BY (sale_date)
 AS
-SELECT 
+SELECT
     cast(txn_timestamp as date) as sale_date,
     count(distinct txn_id) as total_transactions,
     sum(amount_usd) as total_revenue_usd
@@ -333,17 +333,17 @@ with mlflow.start_run(run_name="rf_hyperopt_trial_42") as run:
     # 1. Log training hyperparameters
     params = {"n_estimators": 200, "max_depth": 8, "random_state": 42}
     mlflow.log_params(params)
-    
+
     # 2. Train model
     clf = RandomForestClassifier(**params)
     clf.fit(X_train, y_train)
-    
+
     # 3. Log evaluation metrics
     preds = clf.predict(X_test)
     probs = clf.predict_proba(X_test)[:, 1]
     mlflow.log_metric("accuracy", accuracy_score(y_test, preds))
     mlflow.log_metric("roc_auc", roc_auc_score(y_test, probs))
-    
+
     # 4. Log model artifact with input signature
     signature = mlflow.models.infer_signature(X_train, preds)
     mlflow.sklearn.log_model(
@@ -376,7 +376,7 @@ SELECT * FROM prod_catalog.finance.fct_general_ledger
 TIMESTAMP AS OF '2026-08-31 23:59:59';
 
 -- 3. Compare difference between current table and version 42
-SELECT 
+SELECT
     current.account_id,
     current.balance - historical.balance as balance_delta
 FROM prod_catalog.finance.fct_general_ledger current

@@ -5,7 +5,6 @@ Generates scripts/specs_data.py containing comprehensive specifications for all 
 across 16 categories in data_architecture.json.
 """
 
-import json
 import os
 
 OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "specs_data.py")

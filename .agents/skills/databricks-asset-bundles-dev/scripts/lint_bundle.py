@@ -13,12 +13,12 @@ def parse_yaml_fallback(text: str):
     data = {}
     lines = text.splitlines()
     current_section = None
-    
+
     for line in lines:
         stripped = line.strip()
         if not stripped or stripped.startswith("#"):
             continue
-            
+
         if not line.startswith(" ") and ":" in line:
             key, val = line.split(":", 1)
             current_section = key.strip()
@@ -36,16 +36,16 @@ def parse_yaml_fallback(text: str):
             k, v = line.strip().split(":", 1)
             if "targets" in data and current_target in data["targets"]:
                 data["targets"][current_target][k.strip()] = v.strip().strip("\"'")
-                
+
     return data
 
 def lint_bundle(bundle_path: Path):
     if not bundle_path.exists():
         print(f"ERROR: {bundle_path} does not exist.", file=sys.stderr)
         return False
-        
+
     text = bundle_path.read_text(encoding="utf-8")
-    
+
     try:
         import yaml
         data = yaml.safe_load(text)

@@ -153,8 +153,8 @@ df_final = df_joined_valid.unionByName(df_orders_null, allowMissingColumns=True)
 
 ## 6. Reference Manuals, Guides & Diagnostic Tools
 
-- 📘 **[Databricks Data Intelligence Platform 20-Page Manual (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum covering compute, Delta Lake, Photon, and incident resolution.
-- 📄 **[Catalyst Optimizer & Execution Plan Triage Guide (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/spark_execution_plan_and_catalyst_triage_guide.pdf)**: 12 high-impact cards on plan reading, physical operators, and bottleneck elimination.
+- 📘 **[Databricks Data Intelligence Platform 20-Page Manual (PDF)](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum covering compute, Delta Lake, Photon, and incident resolution.
+- 📄 **[Catalyst Optimizer & Execution Plan Triage Guide (PDF)](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/pdf/spark_execution_plan_and_catalyst_triage_guide.pdf)**: 12 high-impact cards on plan reading, physical operators, and bottleneck elimination.
 - 🚨 **[Production Triage Decision Matrix](./references/production_triage_decision_matrix.md)**: Fast symptom-to-fix lookup table.
 - 📊 **[Spark UI & EventLog Analysis Guide](./references/spark_ui_eventlog_analysis.md)**: Reading stage timelines, executor metrics, and query plans.
 - ⚙️ **[AQE Configuration & Tuning Reference](./references/aqe_configuration_reference.md)**: Dynamic coalescing, join switching, and skew join configs.

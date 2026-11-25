@@ -3,7 +3,7 @@ import os
 
 FILE = 'src/data/json/data_architecture.json'
 
-with open(FILE, 'r', encoding='utf-8') as f:
+with open(FILE, encoding='utf-8') as f:
     data = json.load(f)
 
 before_count = len(data)

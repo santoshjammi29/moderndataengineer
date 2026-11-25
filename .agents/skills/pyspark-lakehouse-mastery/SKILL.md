@@ -109,8 +109,8 @@ Click to inspect the master index: 📖 **[105 Use Cases Catalog](./references/p
 
 ## 4. Helper Tools, References & Technical Manual
 
-- 📘 **[Databricks Data Intelligence Platform: 20-Page Technical Manual (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 100 (Architecture), Level 200 (Delta Lake), Level 300 (Unity Catalog & Photon), and Level 400 (Stateful Streaming, Metadata Frameworks, DABs, FinOps & AI).
-- 📖 **[Authoritative Technical Manual Markdown](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/architecture/09_databricks_intelligence_platform_manual.md)**: Repository documentation of all 8 manual modules and 14 production code blueprints.
+- 📘 **[Databricks Data Intelligence Platform: 20-Page Technical Manual (PDF)](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 100 (Architecture), Level 200 (Delta Lake), Level 300 (Unity Catalog & Photon), and Level 400 (Stateful Streaming, Metadata Frameworks, DABs, FinOps & AI).
+- 📖 **[Authoritative Technical Manual Markdown](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/architecture/09_databricks_intelligence_platform_manual.md)**: Repository documentation of all 8 manual modules and 14 production code blueprints.
 - 🚀 **[SparkSession Bootstrap Script](./scripts/spark_bootstrap.py)**: Auto-detects Databricks vs local environment and configures Delta Lake 3.2.
 - 🧪 **[Notebook AST & Format Validator](./scripts/validate_notebooks.py)**: Validates Databricks cell format and syntax across notebooks.
 - 📝 **[Databricks Notebook Template](./resources/notebook_template.py)**: Clean starter template for new production use cases.

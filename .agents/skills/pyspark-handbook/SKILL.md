@@ -27,9 +27,9 @@ Treat notebooks as worked examples to adapt, not as proof that code ran in the u
 
 ## Reference Manuals & Technical Documentation
 
-- 📘 **[Databricks Data Intelligence Platform 20-Page Technical Manual (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 100 (Architecture), Level 200 (Delta Lake), Level 300 (Unity Catalog & Photon), and Level 400 (DevOps, Streaming, FinOps & AI).
-- 📖 **[Authoritative Technical Manual Markdown](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/architecture/09_databricks_intelligence_platform_manual.md)**: Repository markdown reference of all 8 modules and 14 production blueprints.
-- 📐 **[52 Architecture Whiteboard Blueprints Catalog](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/whiteboard_diagrams/README.md)**: Visual whiteboard schematics with multi-persona breakdowns.
+- 📘 **[Databricks Data Intelligence Platform 20-Page Technical Manual (PDF)](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 100 (Architecture), Level 200 (Delta Lake), Level 300 (Unity Catalog & Photon), and Level 400 (DevOps, Streaming, FinOps & AI).
+- 📖 **[Authoritative Technical Manual Markdown](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/architecture/09_databricks_intelligence_platform_manual.md)**: Repository markdown reference of all 8 modules and 14 production blueprints.
+- 📐 **[52 Architecture Whiteboard Blueprints Catalog](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/whiteboard_diagrams/README.md)**: Visual whiteboard schematics with multi-persona breakdowns.
 
 ## Source and license
 
