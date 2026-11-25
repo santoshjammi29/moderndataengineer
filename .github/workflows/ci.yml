@@ -90,3 +90,12 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # JOB 4: Centralized Handbook Guardrails
+  # ──────────────────────────────────────────────────────────────────────────
+  handbook-ci:
+    uses: santoshjammi29/.github/.github/workflows/handbook-ci.yml@v1
+    with:
+      # moderndataengineer is the Next.js/Cloudflare web hub using ecosystem-manifest.json instead of manifest.json.
+      require_manifest: false
