@@ -10,7 +10,6 @@ Extracts relevant concepts from src/data/json/data_concepts.json and maps them t
 
 import json
 import os
-import sys
 
 BASE_DIR = "/Users/santosh/Documents/antigravity"
 CONCEPTS_PATH = os.path.join(BASE_DIR, "charming-fermi/src/data/json/data_concepts.json")
@@ -23,7 +22,7 @@ DIFF_ORDER = {
 }
 
 def load_concepts():
-    with open(CONCEPTS_PATH, "r", encoding="utf-8") as f:
+    with open(CONCEPTS_PATH, encoding="utf-8") as f:
         return json.load(f)
 
 def format_level_badge(diff):
@@ -45,23 +44,23 @@ def escape_cell(text):
 
 def build_repo_topics_readme(repo_name, title, intro, pillars_config, concepts, local_mappings=None):
     term_map = {c["term"]: c for c in concepts}
-    
+
     # Collect items per pillar
     pillar_data = []
     total_count = 0
-    
+
     for item in pillars_config:
         pillar_title = item["title"]
         icon = item["icon"]
         desc = item.get("description", "")
-        
+
         if "category" in item:
             matching = [c for c in concepts if c["category"] == item["category"]]
         elif "terms" in item:
             matching = [term_map[t] for t in item["terms"] if t in term_map]
         else:
             matching = []
-            
+
         # Sort by difficulty, then term
         sorted_matching = sorted(
             matching,
@@ -79,7 +78,7 @@ def build_repo_topics_readme(repo_name, title, intro, pillars_config, concepts, 
     lines.append(f"# 🧠 {title} — Curriculum Topics Directory")
     lines.append("")
     lines.append(f"> **Curriculum Scope**: **{total_count} Production Topics** verified against real-world lakehouse internals, query engines, and distributed architectures.")
-    lines.append(f"> **Live Web Hub**: Explore interactive search and full visual graph at [moderndataengineer.uk/concepts](https://moderndataengineer.uk/concepts).")
+    lines.append("> **Live Web Hub**: Explore interactive search and full visual graph at [moderndataengineer.uk/concepts](https://moderndataengineer.uk/concepts).")
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -99,13 +98,13 @@ def build_repo_topics_readme(repo_name, title, intro, pillars_config, concepts, 
     lines.append("")
     lines.append("| Module / Pillar | Topics | Key Primitives Covered | Reference Links |")
     lines.append("|:---|:---:|:---|:---|")
-    
+
     for p in pillar_data:
         items = p["items"]
         sample = ", ".join([c["term"] for c in items[:3]]) + (f", and {len(items)-3} more" if len(items) > 3 else "")
         slug = p["title"].lower().replace(" ", "-").replace("&", "").replace(",", "").replace(":", "")
         lines.append(f"| {p['icon']} **[{p['title']}](#{slug})** | **{len(items)}** | {sample} | [Jump to Section](#{slug}) |")
-    
+
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -154,13 +153,13 @@ def build_repo_topics_readme(repo_name, title, intro, pillars_config, concepts, 
     lines.append("- [Azure Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet) — Fabric, OneLake, and ADF enterprise blueprints")
     lines.append("- [Data Engineering Interview Handbook](https://github.com/santoshjammi29/data-engineering-interview-handbook) — 20 Knowledge Pillars & architectural defense")
     lines.append("")
-    
+
     return "\n".join(lines)
 
 def main():
     concepts = load_concepts()
     print(f"Loaded {len(concepts)} concepts.")
-    
+
     repos_config = {
         "pyspark-handbook": {
             "title": "Apache Spark & Python Data Engineering",
@@ -437,17 +436,17 @@ def main():
             ]
         }
     }
-    
+
     for repo_name, config in repos_config.items():
         repo_dir = os.path.join(BASE_DIR, repo_name)
         if not os.path.exists(repo_dir):
             print(f"Skipping missing repo {repo_name}")
             continue
-            
+
         topics_dir = os.path.join(repo_dir, "topics")
         os.makedirs(topics_dir, exist_ok=True)
         readme_path = os.path.join(topics_dir, "README.md")
-        
+
         md_content = build_repo_topics_readme(
             repo_name=repo_name,
             title=config["title"],
@@ -455,7 +454,7 @@ def main():
             pillars_config=config["pillars"],
             concepts=concepts
         )
-        
+
         with open(readme_path, "w", encoding="utf-8") as f:
             f.write(md_content)
         print(f"Generated {readme_path}")

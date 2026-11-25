@@ -180,7 +180,7 @@ CLUSTER BY (tenant_id, event_timestamp);
 OPTIMIZE lakehouse_gold.fact_clickstream;
 
 -- Step 3: Configure continuous automated clustering in pipeline
-ALTER TABLE lakehouse_gold.fact_clickstream 
+ALTER TABLE lakehouse_gold.fact_clickstream
 SET TBLPROPERTIES ('delta.autoOptimize.optimizeWrite' = 'true');
 ```
 
@@ -240,7 +240,7 @@ def check_capacity_burn(subscription_id, resource_group, capacity_name, token):
     url = f"https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group}/providers/Microsoft.Fabric/capacities/{capacity_name}?api-version=2023-11-01"
     headers = {"Authorization": f"Bearer {token}"}
     res = requests.get(url, headers=headers).json()
-    
+
     # Auto-scale SKU or route burst to external pool if utilization threshold breached
     state = res.get("properties", {}).get("state")
     return state
@@ -419,14 +419,14 @@ flowchart TD
 Reference Code Sheet: `sql-b-02` (Aggregation) & `sql-b-04` (CASE & Expressions).
 ```dax
 -- UNOPTIMIZED: Context Transition inside an iterator over 10M rows (Causes FE Starvation)
-BadMeasure = 
+BadMeasure =
 SUMX(
     FactSales,
     CALCULATE(SUM(FactSales[Quantity])) * FactSales[UnitPrice] -- CALCULATE forces row-by-row context transition!
 )
 
 -- OPTIMIZED: Vectorized Storage Engine execution (Runs in SE at sub-second speed)
-OptimizedMeasure = 
+OptimizedMeasure =
 SUMX(
     FactSales,
     FactSales[Quantity] * FactSales[UnitPrice]
@@ -546,7 +546,7 @@ flowchart TD
 Reference Code Sheet: `sql-b-03` (JOINs: INNER, LEFT, RIGHT) & `beg_003` (SELECT / WHERE in Spark SQL).
 ```dax
 -- Defend against non-deterministic Cartesian evaluation in many-to-many calculations
-AccurateCustomerMetric = 
+AccurateCustomerMetric =
 CALCULATE(
     SUM(FactTransactions[TransactionAmount]),
     KEEPFILTERS(
@@ -618,7 +618,7 @@ Reference Code Sheet: `py-b-02` (Reading/Writing Delta) & `beg_005` (INSERT / OV
 # Idempotent Delta Lake sink function guaranteeing exactly-once ingestion
 def upsert_to_delta(micro_batch_df, batch_id):
     micro_batch_df.createOrReplaceTempView("cdc_updates")
-    
+
     # Deduplicate within micro-batch before merging
     deduped_df = spark.sql(\"\"\"
         SELECT * FROM (
@@ -626,11 +626,11 @@ def upsert_to_delta(micro_batch_df, batch_id):
             FROM cdc_updates
         ) WHERE rn = 1
     \"\"\")
-    
+
     deduped_df.write.format("delta") \\
         .mode("append") \\
         .saveAsTable("lakehouse_silver.customers_staging")
-        
+
     spark.sql(\"\"\"
         MERGE INTO lakehouse_silver.customers AS target
         USING cdc_updates AS source
@@ -770,7 +770,7 @@ class DistributedTokenBucket:
         pipeline.zadd(self.key, {str(current_time): current_time})
         pipeline.expire(self.key, self.window)
         _, current_count, _, _ = pipeline.execute()
-        
+
         if current_count >= self.rate_limit:
             # Full Jitter Sleep backoff
             sleep_duration = (self.window / self.rate_limit) * (1 + random.random())
@@ -817,7 +817,7 @@ flowchart TD
     SparkExecutor["Spark Executor Memory Architecture"]
     SparkExecutor --> OnHeap["JVM On-Heap Memory (Subject to<br/>Garbage Collection)"]
     SparkExecutor --> OffHeap["Tungsten Off-Heap Memory (Unsafe<br/>Direct C++ Allocation)"]
-    
+
     OnHeap -->|"User UDFs / Py4J Java Objects"| HeapSpill["High Allocation Rate -><br/>Stop-The-World GC Pause (&gt;30s)"]
     HeapSpill --> HeartbeatLoss["Missed Driver Heartbeat -><br/>Executor Marked Dead"]
     HeartbeatLoss --> Reshuffle["Driver Reschedules Tasks -><br/>Cluster Death Spiral"]
@@ -957,13 +957,13 @@ In Apache Flink stream processing, maintaining large state (e.g., multi-day sess
 flowchart LR
     UpstreamKafka["Kafka Partitions (High Throughput)"] --> TaskManager1["TaskManager 01 (RocksDB State<br/>Backend)"]
     TaskManager1 -->|"Buffer Saturation<br/>(Backpressure)"| TaskManager2["TaskManager 02 (Complex Pattern<br/>Detection)"]
-    
+
     subgraph Checkpoint_Engine["Unaligned Checkpoint Coordination"]
         Barrier["Checkpoint Barrier Arrives"]
         Buffer["In-Flight Channel Buffer Written<br/>to State Snapshot"]
         RocksDB["Incremental RocksDB SST File<br/>Uploaded to ADLS Gen2 / S3"]
     end
-    
+
     TaskManager2 --> Checkpoint_Engine
     Checkpoint_Engine -->|"Non-Blocking Commit (&lt;1s)"| DurableStorage[("Durable Object Storage Checkpoint<br/>Store")]
 ```
@@ -1110,18 +1110,18 @@ flowchart TD
 Reference Code Sheet: `sql-b-05` (Transactions & Isolation) & `sql-b-01` (Query Basics).
 ```sql
 -- Step 1: Enable Read Committed Snapshot Isolation on Database
-ALTER DATABASE EnterpriseWarehouse 
-SET READ_COMMITTED_SNAPSHOT ON 
+ALTER DATABASE EnterpriseWarehouse
+SET READ_COMMITTED_SNAPSHOT ON
 WITH ROLLBACK IMMEDIATE;
 
 -- Step 2: Prevent aggressive lock escalation on high-concurrency transactional tables
-ALTER TABLE Sales.FactOrders 
+ALTER TABLE Sales.FactOrders
 SET (LOCK_ESCALATION = AUTO); -- Uses partition-level escalation instead of table-level!
 
 -- Step 3: Verify active lock hierarchies and detect potential escalations
-SELECT 
+SELECT
     resource_type, resource_description, request_mode, request_status, session_id
-FROM sys.dm_tran_locks 
+FROM sys.dm_tran_locks
 WHERE resource_database_id = DB_ID('EnterpriseWarehouse');
 ```
 
@@ -1170,7 +1170,7 @@ flowchart LR
 Reference Code Sheet: `sql-b-05` (Transactions & DML) & `beg_005` (INSERT/OVERWRITE).
 ```sql
 -- Step 1: Detect VLF fragmentation count across databases
-SELECT 
+SELECT
     [name] AS DatabaseName,
     COUNT(vlf_sequence_number) AS TotalVLFs,
     SUM(vlf_size_mb) AS LogSizeMB
@@ -1185,7 +1185,7 @@ CHECKPOINT;
 DBCC SHRINKFILE (N'EnterpriseWarehouse_Log', 1);
 
 -- Step 3: Pre-grow to target capacity in uniform chunks (Enforces exactly 16 VLFs per 8GB)
-ALTER DATABASE EnterpriseWarehouse 
+ALTER DATABASE EnterpriseWarehouse
 MODIFY FILE (NAME = N'EnterpriseWarehouse_Log', SIZE = 64GB, FILEGROWTH = 8GB);
 ```
 
@@ -1289,7 +1289,7 @@ Monolithic CI/CD runs rebuild and test thousands of unaffected models on each co
             "niche": "Real-Time Dimensional Modeling & SCD2",
             "linked_concept_id": "de-scd-2",
             "question": "How do you design a real-time Slowly Changing Dimension Type 2 (SCD2) pipeline in dbt and Delta Lake that handles out-of-order event arrivals and micro-batch race conditions without creating overlapping validity timestamp ranges?",
-            "answer": """### The Theory
+            "answer": r"""### The Theory
 Traditional dbt snapshots (`dbt snapshot`) assume batch execution where updates arrive sequentially ordered by system time (`updated_at`). In high-velocity streaming architectures, late-arriving events and network retries deliver CDC records **out-of-order** (e.g., an event with business timestamp `14:02` arrives after an event with `14:05`). Standard snapshotting creates **overlapping validity timestamp windows** (`dbt_valid_from` to `dbt_valid_to`), causing cartesian row multiplication when joined with fact tables. An architecturally sound solution uses **Windowed Event-Time Bi-Temporal Sequencing** inside a customized incremental merge.
 
 ### The Blueprint
@@ -1315,13 +1315,13 @@ Reference Code Sheet: `beg_005` (INSERT/OVERWRITE) & `py-b-04` (DataFrame Transf
 }}
 
 WITH ranked_events AS (
-    SELECT 
+    SELECT
         customer_id,
         customer_tier,
         email_address,
         event_timestamp AS valid_from,
         LEAD(event_timestamp) OVER (
-            PARTITION BY customer_id 
+            PARTITION BY customer_id
             ORDER BY event_timestamp ASC
         ) AS valid_to
     FROM {{ ref('stg_customer_events') }}
@@ -1329,7 +1329,7 @@ WITH ranked_events AS (
         WHERE event_timestamp >= (SELECT MAX(valid_from) - INTERVAL 24 HOUR FROM {{ this }})
     {% endif %}
 )
-SELECT 
+SELECT
     customer_id,
     customer_tier,
     email_address,
@@ -1371,7 +1371,7 @@ Modern analytics architectures suffer from metric proliferation: Finance defines
 ```mermaid
 flowchart TD
     Consumer["Business Consumer / Visual<br/>Dashboard"] --> SemanticRouter{"Power BI Semantic Router"}
-    
+
     subgraph Cache_Layer["In-Memory Acceleration Layer"]
         AggTable["Direct Lake / Import Aggregation<br/>Cache (Grain: Month/Region)"]
     end
@@ -1462,20 +1462,20 @@ Reference Code Sheet: `py-b-04` (Transformations) & `sql-b-04` (CASE Expressions
 ```sql
 -- Unity Catalog / Fabric ABAC Dynamic Column Masking Function
 CREATE OR REPLACE FUNCTION mask_ssn(ssn STRING)
-RETURN CASE 
+RETURN CASE
     WHEN IS_ACCOUNT_GROUP_MEMBER('Compliance_Officers') THEN ssn
     ELSE CONCAT('XXX-XX-', RIGHT(ssn, 4))
 END;
 
 -- Apply Masking Function to Column
-ALTER TABLE silver_healthcare.patients 
+ALTER TABLE silver_healthcare.patients
 ALTER COLUMN ssn SET MASK mask_ssn;
 
 -- Apply Row-Level Security Filter Function based on User Department
 CREATE OR REPLACE FUNCTION filter_patient_region(region STRING)
 RETURN IS_ACCOUNT_GROUP_MEMBER('Global_Admins') OR region = current_user_region();
 
-ALTER TABLE silver_healthcare.patients 
+ALTER TABLE silver_healthcare.patients
 SET ROW FILTER filter_patient_region ON (region);
 ```
 
@@ -1512,10 +1512,10 @@ Microsoft Fabric's unified capacity model aggregates all workloads (Spark, Wareh
 flowchart TD
     Workloads["Active Fabric Workloads (Spark,<br/>Warehouse, Direct Lake)"] --> Telemetry["Fabric Capacity Metrics / Azure<br/>Log Analytics"]
     Telemetry --> FinOpsEngine["Autonomous FinOps Sentinel (Azure<br/>Function / Eventhouse)"]
-    
+
     FinOpsEngine --> CheckRunaway{"Query Exceeds 250 CU-Minutes?"}
     CheckRunaway -->|"Yes"| CancelAPI["Invoke Fabric REST API: Cancel<br/>Operation"]
-    
+
     FinOpsEngine --> CheckBurndown{"24h Burndown Rate &gt; 90%<br/>Capacity Limit?"}
     CheckBurndown -->|"Yes & Business Hours"| ScaleUp["ARM REST API: Scale F64 -> F128<br/>(Immediate Auto-Scale)"]
     CheckBurndown -->|"Yes & Off-Hours"| ThrottleNonProd["Throttle / Pause Dev Workspaces"]
@@ -1563,7 +1563,7 @@ Auto-canceling queries that exceed 250 CU-minutes eliminates 95% of wasted compu
             "niche": "End-to-End Lineage & Purview Architecture",
             "linked_concept_id": "fabric-onelake",
             "question": "Architect an automated multi-cloud metadata lineage and compliance framework connecting Microsoft Fabric, Azure Purview, and external dbt/Snowflake pipelines using OpenLineage standards.",
-            "answer": """### The Theory
+            "answer": r"""### The Theory
 Modern data estates are rarely confined to a single cloud; data traverses Kafka on AWS, dbt transformations on Snowflake, and final aggregation and reporting in Microsoft Fabric. Regulatory mandates (BCBS 239, GDPR, HIPAA) require **End-to-End Automated Data Lineage**: tracing a specific metric on a Power BI executive visual back through every intermediate transformation down to the original operational database table and column. Integrating disparate systems requires an **OpenLineage-compliant metadata mesh** that feeds real-time lineage events directly into **Microsoft Purview Data Map**.
 
 ### The Blueprint

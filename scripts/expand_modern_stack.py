@@ -175,7 +175,7 @@ result = con.execute(query).df()""",
     "sql_code": """-- DuckDB native SQL command directly from CLI
 INSTALL httpfs; LOAD httpfs;
 SET s3_region = 'us-east-1';
-SELECT customer_id, SUM(order_total) 
+SELECT customer_id, SUM(order_total)
 FROM read_parquet('s3://prod-lake/orders/year=2026/*.parquet')
 GROUP BY customer_id ORDER BY 2 DESC LIMIT 10;""",
     "pyspark_code": """# PySpark equivalent requiring Hadoop S3A connector
@@ -203,7 +203,7 @@ def query_curated_metric(metric_name: str, dimension: str, year: int) -> dict:
     allowed_metrics = {'net_revenue', 'active_users', 'churn_rate'}
     if metric_name not in allowed_metrics:
         return {"error": f"Metric '{metric_name}' not approved in semantic catalog."}
-    
+
     sql = f"SELECT {dimension}, SUM({metric_name}) as value FROM gold_metrics WHERE year = ? GROUP BY {dimension}"
     records = con.execute(sql, [year]).fetchall()
     return {"metric": metric_name, "data": [{dimension: r[0], "value": r[1]} for r in records]}""",
@@ -229,13 +229,13 @@ from collections import defaultdict
 def reciprocal_rank_fusion(dense_results: list[str], sparse_results: list[str], k: int = 60) -> list[tuple[str, float]]:
     \"\"\"Combines ranked document ID lists from vector and BM25 searches.\"\"\"
     rrf_scores = defaultdict(float)
-    
+
     for rank, doc_id in enumerate(dense_results, start=1):
         rrf_scores[doc_id] += 1.0 / (k + rank)
-        
+
     for rank, doc_id in enumerate(sparse_results, start=1):
         rrf_scores[doc_id] += 1.0 / (k + rank)
-        
+
     return sorted(rrf_scores.items(), key=lambda item: item[1], reverse=True)""",
     "sql_code": """-- Databricks DBSQL: Hybrid Vector + BM25 Query with RRF
 WITH dense AS (
@@ -309,7 +309,7 @@ def create_order_with_outbox(session: Session, customer_id: str, total: float):
         order_id = str(uuid.uuid4())
         session.execute("INSERT INTO orders (id, customer_id, total) VALUES (:id, :cid, :tot)",
                         {"id": order_id, "cid": customer_id, "tot": total})
-        
+
         # 2. Insert outbox event in the EXACT SAME local transaction
         event_payload = json.dumps({"order_id": order_id, "customer_id": customer_id, "total": total})
         session.execute("INSERT INTO outbox_events (id, aggregate_type, aggregate_id, payload) VALUES (:id, 'Order', :aid, :payload)",
@@ -414,11 +414,11 @@ for wh in cs.fetchall():
     if auto_suspend > 300:
         print(f"WARNING: Warehouse {name} has {auto_suspend}s timeout. Recommending reduction to 60s.")""",
     "sql_code": """-- Snowflake FinOps: Set 60s auto-suspend and budget monitor
-ALTER WAREHOUSE analytics_wh SET 
-  AUTO_SUSPEND = 60 
-  AUTO_RESUME = TRUE 
-  MIN_CLUSTER_COUNT = 1 
-  MAX_CLUSTER_COUNT = 3 
+ALTER WAREHOUSE analytics_wh SET
+  AUTO_SUSPEND = 60
+  AUTO_RESUME = TRUE
+  MIN_CLUSTER_COUNT = 1
+  MAX_CLUSTER_COUNT = 3
   SCALING_POLICY = 'ECONOMY';
 
 CREATE OR REPLACE RESOURCE MONITOR monthly_analytics_cap
@@ -437,7 +437,7 @@ spark.conf.set("spark.sql.broadcastTimeout", "600")"""
   }
 ]
 
-with open('src/data/json/modern_stack.json', 'r') as f:
+with open('src/data/json/modern_stack.json') as f:
     existing = json.load(f)
 
 print(f"Before: {len(existing)}")

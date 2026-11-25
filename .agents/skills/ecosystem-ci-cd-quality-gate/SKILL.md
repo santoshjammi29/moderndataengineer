@@ -57,8 +57,8 @@ for existing in glob.glob(f"{sibling_repo}/assets/whiteboards/*.webp"):
 - **Failure Symptom**: `scripts/validate_markdown.py` fails in CI with `Broken relative link in docs/... -> '...'`.
 - **Root Cause**: Authoring links relative to repository root instead of relative to the file's current directory depth.
   - Inside `docs/audits/remediation_plan.md`:
-    - `[Guide](docs/README.md)` resolves to `docs/audits/docs/README.md` (404 / Missing!).
-    - `[Contributing](CONTRIBUTING.md)` resolves to `docs/audits/CONTRIBUTING.md` (404 / Missing!).
+    - `[Guide](../../../docs/README.md)` resolves to `docs/audits/docs/README.md` (404 / Missing!).
+    - `[Contributing](../../../CONTRIBUTING.md)` resolves to `docs/audits/CONTRIBUTING.md` (404 / Missing!).
 - **Defensive Protocol**:
   - For intra-repo references from nested directories, calculate the correct relative climb (e.g. `../../docs/README.md` or `../../CONTRIBUTING.md`).
   - For cross-repository or root canonical documents, use full HTTPS GitHub URLs:

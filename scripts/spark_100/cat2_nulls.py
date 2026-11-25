@@ -132,8 +132,8 @@ WHERE po.order_status = 'ACTIVE'; -- Kills the LEFT JOIN!""",
         "solution_code": """-- Production-Grade Solution: Move Filter Predicate into ON Join Condition
 SELECT s.supplier_id, s.supplier_name, po.order_id, po.amount
 FROM suppliers s
-LEFT JOIN purchase_orders po 
-    ON s.supplier_id = po.supplier_id 
+LEFT JOIN purchase_orders po
+    ON s.supplier_id = po.supplier_id
     AND po.order_status = 'ACTIVE'; -- Filters right table BEFORE the join!
 
 -- In PySpark:
@@ -246,7 +246,7 @@ repartitioned_df.write.format("parquet").save("s3://lake/partitioned_tx/")""",
         "root_cause": "If no `WHEN` clause evaluates to TRUE and no `ELSE` clause is specified, SQL `CASE WHEN` defaults to `NULL`. With three-valued logic, `NULL < 120` is UNKNOWN and `NULL >= 120` is UNKNOWN, falling through to the omitted ELSE.",
         "failing_code": """-- Failing Spark SQL:
 SELECT patient_id,
-       CASE 
+       CASE
            WHEN systolic < 120 THEN 'NORMAL'
            WHEN systolic >= 120 AND systolic < 140 THEN 'ELEVATED'
            WHEN systolic >= 140 THEN 'HIGH'
@@ -254,7 +254,7 @@ SELECT patient_id,
 FROM vitals_stream;""",
         "solution_code": """-- Production-Grade Solution: Explicit Null Check and Fallback ELSE Clause
 SELECT patient_id,
-       CASE 
+       CASE
            WHEN systolic IS NULL THEN 'UNKNOWN_MISSING'
            WHEN systolic < 120 THEN 'NORMAL'
            WHEN systolic < 140 THEN 'ELEVATED'

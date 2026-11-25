@@ -10,8 +10,6 @@ Keeps all <details> minimized by default.
 import json
 import os
 import re
-import subprocess
-import sys
 
 BASE_DIR = "/Users/santosh/Documents/antigravity"
 CONCEPTS_PATH = os.path.join(BASE_DIR, "charming-fermi/src/data/json/data_concepts.json")
@@ -24,7 +22,7 @@ DIFF_ORDER = {
 }
 
 def load_concepts():
-    with open(CONCEPTS_PATH, "r", encoding="utf-8") as f:
+    with open(CONCEPTS_PATH, encoding="utf-8") as f:
         return json.load(f)
 
 def format_level(diff):
@@ -71,7 +69,7 @@ def build_category_table(items, title, icon="📚"):
     return "\n".join(lines)
 
 def build_handbook_section(repo_name, pillars, total_topics, concepts, anchor=None):
-    intro_desc = {
+    {
         "pyspark-handbook": "Apache Spark & Python Data Engineering topics",
         "databricks-handbook": "Databricks Data Intelligence Platform & Lakehouse topics",
         "sql-handbook": "Relational SQL, Query Optimization & Database Architecture topics",
@@ -111,7 +109,7 @@ def build_handbook_section(repo_name, pillars, total_topics, concepts, anchor=No
     return "\n".join(lines)
 
 def replace_or_insert_section(readme_path, new_section_md, target_fallback=None):
-    with open(readme_path, "r", encoding="utf-8") as f:
+    with open(readme_path, encoding="utf-8") as f:
         content = f.read()
 
     section_pattern = re.compile(r'(?:<a id="[^"]+"></a>\s*)?## 🧠 Core Curriculum Concepts & Topics.*?\n---\n', re.DOTALL)
@@ -186,7 +184,7 @@ def update_blueprints_readme(concepts):
     lines = []
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Architectural Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Production architectural topics and lakehouse engine primitives implemented across the 3 project blueprints, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
+    lines.append("> 💡 **Enterprise Knowledge Base Integration**: Production architectural topics and lakehouse engine primitives implemented across the 3 project blueprints, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
     lines.append("")
     lines.append("### 📑 Project Topics Directory at a Glance")
     lines.append("")
@@ -258,7 +256,7 @@ def update_banking_readme(concepts):
     lines = []
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Regulatory & Lakehouse Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Production regulatory engineering and lakehouse primitives implemented across the 3 European banking analytics engines, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
+    lines.append("> 💡 **Enterprise Knowledge Base Integration**: Production regulatory engineering and lakehouse primitives implemented across the 3 European banking analytics engines, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
     lines.append("")
     lines.append("### 📑 Regulatory & Engine Topics Directory at a Glance")
     lines.append("")
@@ -328,7 +326,7 @@ def update_spark_experiments_readme(concepts):
     lines = []
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Spark Tuning Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Advanced Apache Spark optimization and execution engine concepts covered throughout the visual experiments, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
+    lines.append("> 💡 **Enterprise Knowledge Base Integration**: Advanced Apache Spark optimization and execution engine concepts covered throughout the visual experiments, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
     lines.append("")
     lines.append("### 📑 Spark Experiments Topics Directory at a Glance")
     lines.append("")
@@ -385,7 +383,7 @@ def update_security_handbook_readme(concepts):
     lines = []
     lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total} Security & Governance Topics Covered)")
     lines.append("")
-    lines.append(f"> 💡 **Enterprise Knowledge Base Integration**: Core zero-trust, identity, encryption, and governance primitives implemented throughout the security handbook, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
+    lines.append("> 💡 **Enterprise Knowledge Base Integration**: Core zero-trust, identity, encryption, and governance primitives implemented throughout the security handbook, cross-linked with the [Modern Data Engineering Systems Encyclopedia (921 Topics)](https://moderndataengineer.uk/concepts), arranged in increasing order of difficulty. Browse the full curriculum in [`topics/README.md`](topics/README.md).")
     lines.append("")
     lines.append("### 📑 Security & Governance Topics Directory at a Glance")
     lines.append("")

@@ -17,7 +17,6 @@ Key Remediation Invariants:
 import json
 import os
 import re
-import sys
 import textwrap
 
 REPOSITORIES = [
@@ -237,7 +236,7 @@ def process_text_content(content: str) -> str:
 
 def process_markdown_file(file_path: str) -> bool:
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
         print(f"Error reading {file_path}: {e}")
@@ -254,7 +253,7 @@ def process_markdown_file(file_path: str) -> bool:
 
 def process_python_file(file_path: str) -> bool:
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
         print(f"Error reading {file_path}: {e}")
@@ -271,7 +270,7 @@ def process_python_file(file_path: str) -> bool:
 
 def process_json_file(file_path: str) -> bool:
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             raw_content = f.read()
     except Exception as e:
         print(f"Error reading {file_path}: {e}")
@@ -340,7 +339,7 @@ def revert_br_gt_in_all_files(base_dir: str):
                 if ext in [".md", ".json", ".py", ".ts", ".tsx", ".sql", ".yaml", ".yml"]:
                     full_path = os.path.join(root, file)
                     try:
-                        with open(full_path, "r", encoding="utf-8") as f:
+                        with open(full_path, encoding="utf-8") as f:
                             content = f.read()
                         if target_bad_1 in content or target_bad_2 in content:
                             tags = content.count(target_bad_1) + content.count(target_bad_2)

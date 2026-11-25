@@ -10,7 +10,7 @@ metadata:
 
 Use this skill for production-grade security engineering, cloud perimeter defense, keyless workload identity federation, cryptography, DevSecOps supply-chain hardening, data processing pipeline security, and incident response runbooks across cloud and lakehouse platforms.
 
-The canonical repository is mirrored at **[santoshjammi29/security-handbook](https://github.com/santoshjammi29/security-handbook)** and locally at [security-handbook](file:///Users/santosh/Documents/antigravity/security-handbook).
+The canonical repository is mirrored at **[santoshjammi29/security-handbook](https://github.com/santoshjammi29/security-handbook)** and locally at [security-handbook](https://github.com/santoshjammi29/security-handbook).
 
 ---
 
@@ -96,5 +96,5 @@ The canonical repository is mirrored at **[santoshjammi29/security-handbook](htt
 ## 4. Reference Repositories & Local Assets
 
 - 📦 **[Security Handbook Repository](https://github.com/santoshjammi29/security-handbook)**: Master security engineering repository with 10 modules, 4 architectures, 6 incident runbooks, and 50 flashcards.
-- 📖 **[Local Repository Path](file:///Users/santosh/Documents/antigravity/security-handbook)**: Local directory with verification test suite `python3 scripts/run_tests.py`.
-- 📐 **[Whiteboard Blueprints](file:///Users/santosh/Documents/antigravity/security-handbook/docs/whiteboard_diagrams/README.md)**: 52 architecture blueprints mirrored in `assets/whiteboards/`.
+- 📖 **[Local Repository Path](https://github.com/santoshjammi29/security-handbook)**: Local directory with verification test suite `python3 scripts/run_tests.py`.
+- 📐 **[Whiteboard Blueprints](https://github.com/santoshjammi29/security-handbook/blob/main/docs/whiteboard_diagrams/README.md)**: 52 architecture blueprints mirrored in `assets/whiteboards/`.

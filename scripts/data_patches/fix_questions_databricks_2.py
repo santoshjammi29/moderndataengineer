@@ -17,18 +17,18 @@ CREATE OR REPLACE FUNCTION enterprise_prod.governance.mask_ssn(ssn STRING)
 RETURN IF(is_account_group_member('hr_admins'), ssn, CONCAT('***-**-', RIGHT(ssn, 4)));
 
 -- 2. Apply dynamic mask to sensitive table column
-ALTER TABLE enterprise_prod.hr.employees 
+ALTER TABLE enterprise_prod.hr.employees
   ALTER COLUMN ssn SET MASK enterprise_prod.governance.mask_ssn;
 ```
 ### Dynamic Row Filtering:
 ```sql
 -- Define row filter returning boolean
 CREATE OR REPLACE FUNCTION enterprise_prod.governance.region_filter(region STRING)
-RETURN is_account_group_member('global_executives') OR 
+RETURN is_account_group_member('global_executives') OR
        is_account_group_member(CONCAT('sales_', LOWER(region)));
 
 -- Apply row filter
-ALTER TABLE enterprise_prod.sales.orders 
+ALTER TABLE enterprise_prod.sales.orders
   SET ROW FILTER enterprise_prod.governance.region_filter ON (sales_region);
 ```
 ### Production Hardening:
@@ -182,7 +182,7 @@ ALTER CATALOG enterprise_prod ENABLE PREDICTIVE OPTIMIZATION;
 ```
 ### Monitoring Operations in System Tables:
 ```sql
-SELECT 
+SELECT
     start_time,
     table_name,
     operation_type,
@@ -251,7 +251,7 @@ def test_revenue_calculation(spark):
 
 ### Spend Attribution Query:
 ```sql
-SELECT 
+SELECT
     usage_date,
     workspace_id,
     sku_name,
@@ -265,7 +265,7 @@ ORDER BY total_dbus DESC;
 ```
 ### Security Audit Query:
 ```sql
-SELECT 
+SELECT
     event_time,
     user_identity.email,
     action_name,

@@ -196,7 +196,7 @@ def calculate_compound_interest(principal: pd.Series, rate: pd.Series, years: pd
 
 df_investments = spark.table("prod_lakehouse.finance.portfolios")
 df_result = df_investments.withColumn(
-    "future_value", 
+    "future_value",
     calculate_compound_interest(col("principal"), col("interest_rate"), col("tenure_years"))
 )
 ```
@@ -218,7 +218,7 @@ def train_store_arima_model(key_tuple, group_df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame([{"store_id": store_id, "forecast_metric": predicted_val}])
 
 df_forecasts = df_sales.groupBy("store_id").applyInPandas(
-    train_store_arima_model, 
+    train_store_arima_model,
     schema=output_schema
 )
 ```
@@ -386,16 +386,16 @@ Below is how Semi and Anti Joins are executed cleanly in PySpark and SQL, avoidi
 # 1. PySpark LEFT SEMI JOIN: Customers who have made a purchase
 # Zero row duplication even if a customer has 10,000 orders!
 df_active_customers = df_customers.join(
-    df_orders, 
-    on="customer_id", 
+    df_orders,
+    on="customer_id",
     how="left_semi"
 )
 
 # 2. PySpark LEFT ANTI JOIN: Customers who have NEVER made a purchase
 # NULL-safe, short-circuiting execution
 df_churned_customers = df_customers.join(
-    df_orders, 
-    on="customer_id", 
+    df_orders,
+    on="customer_id",
     how="left_anti"
 )
 ```
@@ -682,10 +682,10 @@ def profile_stage_execution(df):
     '''
     # Trigger action with cached metric collection
     spark.sparkContext.setJobDescription("Profiling Heavy Lakehouse Transformation")
-    
+
     # Explain formatted physical plan
     df.explain(mode="formatted")
-    
+
     # Execute query
     result_count = df.count()
     print(f"Query completed successfully. Processed rows: {result_count}")
@@ -752,7 +752,7 @@ from datetime import datetime
     tags=["lakehouse", "enterprise_etl"]
 )
 def orchestrate_databricks_pipeline():
-    
+
     # 1. Trigger pre-existing Databricks Workflow Job via Job ID
     trigger_databricks_job = DatabricksRunNowOperator(
         task_id="trigger_customer_gold_job",

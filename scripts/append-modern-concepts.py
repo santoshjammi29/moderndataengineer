@@ -281,7 +281,7 @@ def main():
         print(f"Error: {CONCEPTS_FILE} does not exist.")
         sys.exit(1)
 
-    with open(CONCEPTS_FILE, "r", encoding="utf-8") as f:
+    with open(CONCEPTS_FILE, encoding="utf-8") as f:
         existing = json.load(f)
 
     # Index by ID

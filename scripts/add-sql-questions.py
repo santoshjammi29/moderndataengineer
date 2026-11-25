@@ -4,7 +4,7 @@ import os
 FILE = 'src/data/json/questions.json'
 FILE_CLEANED = 'src/data/json/questions_unified_cleaned.json'
 
-with open(FILE, 'r', encoding='utf-8') as f:
+with open(FILE, encoding='utf-8') as f:
     data = json.load(f)
 
 before_count = len(data)
@@ -304,7 +304,7 @@ os.replace(temp_file, FILE)
 
 # Also sync to questions_unified_cleaned.json if it exists
 if os.path.exists(FILE_CLEANED):
-    with open(FILE_CLEANED, 'r', encoding='utf-8') as f:
+    with open(FILE_CLEANED, encoding='utf-8') as f:
         data_cleaned = json.load(f)
     existing_cleaned_ids = {item['id'] for item in data_cleaned}
     for item in new_questions:

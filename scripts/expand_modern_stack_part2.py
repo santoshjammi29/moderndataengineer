@@ -27,7 +27,7 @@ print("All cross-project public models verified with strict contracts!")""",
     contract = {'enforced': true}
 ) }}
 
-SELECT 
+SELECT
     subscription_id,
     customer_id,
     amount as monthly_recurring_revenue,
@@ -51,7 +51,7 @@ from pyspark.sql import SparkSession
 spark = (SparkSession.builder
     .appName("StatefulStreamingRocksDB")
     # 1. Enable RocksDB state provider
-    .config("spark.sql.streaming.stateStore.providerClass", 
+    .config("spark.sql.streaming.stateStore.providerClass",
             "org.apache.spark.sql.execution.streaming.state.RocksDBStateStoreProvider")
     # 2. Allocate 512MB native block cache per executor
     .config("spark.sql.streaming.stateStore.rocksdb.blockCacheSizeMB", "512")
@@ -120,7 +120,7 @@ embed_model = SentenceTransformer('all-MiniLM-L6-v2')
 def get_or_set_semantic_cache(prompt: str, cache_db: dict, threshold: float = 0.92) -> tuple[str, bool]:
     \"\"\"Checks in-memory vector cache for semantically identical queries.\"\"\"
     prompt_vec = embed_model.encode(prompt, normalize_embeddings=True)
-    
+
     best_score = -1.0
     best_answer = None
     for cached_prompt, (cached_vec, answer) in cache_db.items():
@@ -128,10 +128,10 @@ def get_or_set_semantic_cache(prompt: str, cache_db: dict, threshold: float = 0.
         if similarity > best_score:
             best_score = similarity
             best_answer = answer
-            
+
     if best_score >= threshold:
         return best_answer, True  # Cache Hit! 0 LLM Tokens used
-    
+
     # Cache Miss: Call LLM, then save to cache
     llm_response = f"Simulated LLM Answer for: '{prompt}'"
     cache_db[prompt] = (prompt_vec, llm_response)
@@ -155,7 +155,7 @@ CLUSTER BY (created_at);""",
   }
 ]
 
-with open('src/data/json/modern_stack.json', 'r') as f:
+with open('src/data/json/modern_stack.json') as f:
     existing = json.load(f)
 
 print(f"Before: {len(existing)}")

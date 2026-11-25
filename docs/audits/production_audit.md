@@ -136,7 +136,7 @@ npm run deploy:cf
 
 ## 6. The Architecture Flow: Data $\rightarrow$ Edge $\rightarrow$ Client
 
-![Data to Edge to Client Architecture](/diagrams/data_edge_client_architecture.webp)
+![Data to Edge to Client Architecture](../../public/diagrams/data_edge_client_architecture.webp)
 
 ### End-to-End Execution Flow:
 1. **Source / Database Tier**:

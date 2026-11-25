@@ -324,16 +324,16 @@ def update_session_bounded(key, values, state):
     if state.hasTimedOut:
         state.remove()
         return []
-    
+
     current_count = state.getOption() or 0
     new_events = list(values)
-    
+
     # Cap maximum accumulated state to prevent bot poison pills
     if current_count > 10000:
         # Flag alert and evict or drop
         state.setTimeoutDuration("1 hour")
         return [Row(device_id=key, status="ABUSE_THROTTLED")]
-        
+
     state.update(current_count + len(new_events))
     state.setTimeoutDuration("30 minutes")
     return [Row(device_id=key, status="OK")]""",

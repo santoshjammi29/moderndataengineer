@@ -35,22 +35,22 @@ with DAG(
     tags=['orders', 'core_etl'],
 ) as dag:
     start = EmptyOperator(task_id='start')
-    
+
     extract_orders = PythonOperator(
         task_id='extract_orders_source',
         python_callable=lambda **ctx: print(f"Extracting for date: {ctx['ds']}"),
     )
-    
+
     transform_orders = PythonOperator(
         task_id='transform_orders_stage',
         python_callable=lambda **ctx: print("Cleaning records and deduplicating customer keys"),
     )
-    
+
     load_gold_marts = PythonOperator(
         task_id='load_gold_orders',
         python_callable=lambda **ctx: print("Atomically swapping Gold Delta partitions"),
     )
-    
+
     end = EmptyOperator(task_id='end')
 
     start >> extract_orders >> transform_orders >> load_gold_marts >> end
@@ -146,7 +146,7 @@ import gc
 def clean_transaction_batch(**context):
     logical_date = context['ds']
     source_path = f"/mnt/lake/landing/{logical_date}/*.parquet"
-    
+
     # Process in bounded chunks to manage memory footprint
     for chunk in pd.read_parquet(source_path, chunksize=50000):
         cleaned = chunk.dropna(subset=['customer_id'])
@@ -218,7 +218,7 @@ def notify_on_failure(context):
     dag_id = context['task_instance'].dag_id
     log_url = context['task_instance'].log_url
     error_msg = str(context.get('exception'))
-    
+
     alert = EmailOperator(
         task_id='send_failure_email',
         to='data-incidents@enterprise.com',
@@ -344,16 +344,16 @@ from datetime import datetime
     tags=['taskflow', 'modern'],
 )
 def taskflow_etl_pipeline():
-    
+
     @task
     def extract() -> dict:
         return {"batch_id": "b-9821", "record_count": 14200}
-    
+
     @task
     def transform(raw_metadata: dict) -> dict:
         batch_id = raw_metadata['batch_id']
         return {"batch_id": batch_id, "status": "CLEANED", "score": 99.4}
-    
+
     @task
     def load(transformed_data: dict):
         print(f"Loaded batch {transformed_data['batch_id']} with score {transformed_data['score']}")

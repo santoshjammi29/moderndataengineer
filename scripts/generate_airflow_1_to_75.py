@@ -1,5 +1,4 @@
 # scripts/generate_airflow_1_to_75.py
-import json
 
 airflow_answers = {
     "airflow-q-001": """### Conceptual Foundation & Core Architecture

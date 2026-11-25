@@ -10,7 +10,7 @@ metadata:
 
 Use this skill for production-grade database engineering, SQL query optimization, relational storage internals, and modern NoSQL distributed architecture. The bundled handbook provides 105 comprehensive production SQL exercises across eight mastery tiers, deep-dive architectures, connection pooling and query profiling runbooks, a complete NoSQL taxonomy, and a battle-tested Top 25 production gotchas checklist.
 
-The canonical repository is mirrored at **[santoshjammi29/sql-handbook](https://github.com/santoshjammi29/sql-handbook)** and locally at [sql-handbook](file:///Users/santosh/Documents/antigravity/sql-handbook).
+The canonical repository is mirrored at **[santoshjammi29/sql-handbook](https://github.com/santoshjammi29/sql-handbook)** and locally at [sql-handbook](https://github.com/santoshjammi29/sql-handbook).
 
 ---
 
@@ -105,5 +105,5 @@ The canonical repository is mirrored at **[santoshjammi29/sql-handbook](https://
 ## 5. Reference Repositories & Local Assets
 
 - 📦 **[SQL Handbook Repository](https://github.com/santoshjammi29/sql-handbook)**: Pinned production repository containing 105 SQL exercises, NoSQL architectures, profiling runbooks, and test suite.
-- 📖 **[Local Repository Path](file:///Users/santosh/Documents/antigravity/sql-handbook)**: Master local directory with automated test runner `python3 scripts/run_tests.py`.
-- 📐 **[Whiteboard Blueprints](file:///Users/santosh/Documents/antigravity/sql-handbook/docs/whiteboard_diagrams/README.md)**: 52 system architecture schematics mirrored in `assets/whiteboards/`.
+- 📖 **[Local Repository Path](https://github.com/santoshjammi29/sql-handbook)**: Master local directory with automated test runner `python3 scripts/run_tests.py`.
+- 📐 **[Whiteboard Blueprints](https://github.com/santoshjammi29/sql-handbook/blob/main/docs/whiteboard_diagrams/README.md)**: 52 system architecture schematics mirrored in `assets/whiteboards/`.

@@ -24,7 +24,7 @@
 
 Delta Lake performance and cloud storage costs depend heavily on physical file layouts on object storage. The platform provides six distinct optimization levers:
 
-![6 Delta Lake Optimization Techniques](/diagrams/databricks_optimization_techniques_architecture.webp)
+![6 Delta Lake Optimization Techniques](../../public/diagrams/databricks_optimization_techniques_architecture.webp)
 
 ```mermaid
 flowchart TD

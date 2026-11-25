@@ -3,11 +3,10 @@ Bulk generation of SQL Iceberg concepts for data_concepts.json
 Covers all 8 tiers of the SQL Iceberg meme with rigorous database engine depth.
 """
 import json
-import os
 
 FILE = 'src/data/json/data_concepts.json'
 
-with open(FILE, 'r') as f:
+with open(FILE) as f:
     data = json.load(f)
 
 print(f"Existing concepts: {len(data)}")

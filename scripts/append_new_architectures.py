@@ -2,7 +2,7 @@ import json
 
 FILE = 'src/data/json/data_architecture.json'
 
-with open(FILE, 'r') as f:
+with open(FILE) as f:
     data = json.load(f)
 print(f"Before: {len(data)}")
 

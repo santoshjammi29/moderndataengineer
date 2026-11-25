@@ -297,17 +297,17 @@ parsed_df = payload_df.withColumn(
 # Step 3: Branching in foreachBatch
 def process_micro_batch(microBatchDF, batchId):
     microBatchDF.persist()
-    
+
     # Clean records
     clean_records = microBatchDF.filter(F.col("parsed_data.payment_id").isNotNull()) \\
         .select("parsed_data.*")
     clean_records.write.format("delta").mode("append").saveAsTable("silver.payments")
-    
+
     # Poison pill / Corrupt records -> Egress to Dead-Letter Topic or Quarantine Delta Table
     dead_letters = microBatchDF.filter(F.col("parsed_data.payment_id").isNull())
     if not dead_letters.isEmpty():
         dead_letters.write.format("delta").mode("append").saveAsTable("quarantine.kafka_dead_letters")
-        
+
     microBatchDF.unpersist()
 
 parsed_df.writeStream.foreachBatch(process_micro_batch).start()""",
@@ -331,14 +331,14 @@ quarantine_df.write.format("delta").save("s3://storage/corrupt/") # Duplicates s
 
 -- Step 2: Create Zero-Copy Secured Views for Downstream Consumers:
 CREATE OR REPLACE VIEW silver.clean_transactions AS
-SELECT 
+SELECT
     from_json(raw_payload, 'schema_definition') AS data,
     ingestion_time
 FROM bronze.raw_transactions
 WHERE is_valid = TRUE;
 
 CREATE OR REPLACE VIEW audit.quarantined_transactions AS
-SELECT 
+SELECT
     raw_payload,
     validation_errors,
     ingestion_time

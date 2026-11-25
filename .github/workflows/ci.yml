@@ -99,3 +99,5 @@ jobs:
     with:
       # moderndataengineer is the Next.js/Cloudflare web hub using ecosystem-manifest.json instead of manifest.json.
       require_manifest: false
+      # Core JSON banks (up to 5.8 MB) and 11 published A4 PDFs exceed 500 KB.
+      max_file_kb: 12000

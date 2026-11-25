@@ -32,11 +32,11 @@ def clean_tokens(text):
 
 def main():
     print("=== Step 1: Loading Data ===")
-    with open("src/data/json/questions.json", "r", encoding="utf-8") as f:
+    with open("src/data/json/questions.json", encoding="utf-8") as f:
         questions = json.load(f)
     print(f"Loaded {len(questions)} existing questions.")
 
-    with open("src/data/json/data_concepts.json", "r", encoding="utf-8") as f:
+    with open("src/data/json/data_concepts.json", encoding="utf-8") as f:
         concepts = json.load(f)
     print(f"Loaded {len(concepts)} concepts.")
     concept_map = {c["id"]: c for c in concepts}
@@ -205,7 +205,7 @@ def main():
     ]
     arch_qs = [q for q in updated_questions if q.get("difficulty") == "ARCHITECT"]
     print(f"Total ARCHITECT questions: {len(arch_qs)}")
-    
+
     missing_sections_count = 0
     for q in arch_qs:
         ans = q["answer"]
@@ -213,7 +213,7 @@ def main():
         if missing:
             print(f"ARCHITECT {q['id']} missing sections: {missing}")
             missing_sections_count += 1
-    
+
     print(f"ARCHITECT questions missing required sections: {missing_sections_count}")
     assert missing_sections_count == 0, "Some ARCHITECT questions are missing required sections!"
 

@@ -12,7 +12,7 @@ This guide provides deep-dive architectural blueprints and technical mechanics f
 
 Open table formats abstract object storage (S3, ADLS Gen2, GCS) into reliable SQL tables supporting ACID transactions, time travel, schema evolution, and fine-grained data skipping across heterogeneous compute engines (Spark, Trino, Flink, DuckDB, Snowflake).
 
-![Open Table Formats Whiteboard Blueprint](/diagrams/open_table_formats_lakehouse_architecture.webp)
+![Open Table Formats Whiteboard Blueprint](../../public/diagrams/open_table_formats_lakehouse_architecture.webp)
 
 ```mermaid
 flowchart TD
@@ -152,7 +152,7 @@ Hudi employs pluggable record-level indices that map `record_key` to physical `f
 
 Open file formats define the internal layout of bytes, serialization protocols, compression encodings, and index structures within individual files stored on disk.
 
-![Open File Formats Whiteboard Blueprint](/diagrams/open_file_formats_storage_architecture.webp)
+![Open File Formats Whiteboard Blueprint](../../public/diagrams/open_file_formats_storage_architecture.webp)
 
 ```mermaid
 flowchart LR

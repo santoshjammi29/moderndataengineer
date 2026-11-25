@@ -3,7 +3,7 @@ import json
 
 concepts_file = "src/data/json/data_concepts.json"
 
-with open(concepts_file, "r") as f:
+with open(concepts_file) as f:
     concepts = json.load(f)
 
 # Retain original first 140 concepts

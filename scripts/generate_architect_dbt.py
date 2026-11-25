@@ -115,10 +115,10 @@ dbt Mesh eliminates redundant transformations where multiple teams independently
 
     # Generate remaining dbt architect questions 078 to 100 programmatically with rich content
     from elevate_existing_architect_questions import elevate_architect_question
-    
+
     with open("src/data/json/questions.json") as f:
         all_qs = json.load(f)
-    
+
     for q in all_qs:
         qid = q["id"]
         if qid.startswith("dbt-q-") and int(qid.split("-")[-1]) >= 78:

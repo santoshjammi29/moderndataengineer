@@ -22,7 +22,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
 
-from scripts.specs_data import SPECS
+from scripts.specs_data import SPECS  # noqa: E402
 
 DATA_ARCH_FILE = os.path.join(BASE_DIR, "src", "data", "json", "data_architecture.json")
 QUESTIONS_FILE = os.path.join(BASE_DIR, "src", "data", "json", "questions.json")
@@ -33,7 +33,7 @@ def clean_question_title(category: str, topic: str, role: str, old_q: str) -> st
     spec = SPECS.get((category, clean_topic))
     if spec:
         return spec.get(role, old_q)
-    
+
     # Try searching for topic without case or minor differences
     for (c, t), s in SPECS.items():
         if c == category and (t.lower() == clean_topic.lower() or t.lower() in clean_topic.lower() or clean_topic.lower() in t.lower()):
@@ -46,7 +46,7 @@ def build_refined_answer(category: str, topic: str, role: str, old_ans: str) -> 
     """If old_ans has dummy class ConfiguredArchitecture, replace with rich answer."""
     if "class ConfiguredArchitecture" not in old_ans and "topic_name: str =" not in old_ans:
         return old_ans
-    
+
     clean_topic = topic.replace(" Advanced Architecture", "").strip()
     spec = SPECS.get((category, clean_topic))
     if not spec:
@@ -59,7 +59,7 @@ def build_refined_answer(category: str, topic: str, role: str, old_ans: str) -> 
     if spec and "code" in spec:
         code_snip = spec["code"]
         f1, f2, f3 = spec["failures"]
-        
+
         return f"""### Phase 1: Conceptual Foundation & Core Architecture
 In enterprise data architecture, designing **{clean_topic}** within the **{category}** domain requires balancing throughput, isolation, and distributed resource coordination. Under high-scale production workloads, data platforms must enforce deterministic execution boundaries to prevent cross-node contention and cascading failovers.
 
@@ -88,7 +88,7 @@ In high-throughput enterprise pipelines, several critical failure states must be
 
 def process_data_architecture():
     print(f"Reading {DATA_ARCH_FILE}...")
-    with open(DATA_ARCH_FILE, "r", encoding="utf-8") as f:
+    with open(DATA_ARCH_FILE, encoding="utf-8") as f:
         data = json.load(f)
 
     arch_spec_count = 0
@@ -104,28 +104,28 @@ def process_data_architecture():
         arch_spec_count += 1
         q = item.get("question", "")
         cat = item.get("category", "")
-        
+
         # Detect role and topic
         role = None
         topic = None
-        
+
         m1 = re.search(r"core distributed principles of (.*?) in enterprise", q)
         if m1:
             role = "principles"
             topic = m1.group(1).strip()
-            
+
         m2 = re.search(r"implement, configure, and harden (.*?) for high-throughput", q)
         if m2:
             role = "hardening"
             topic = m2.group(1).strip()
-            
+
         m3 = re.search(r"architect and optimize (.*?) Advanced Architecture in enterprise", q)
         if not m3:
             m3 = re.search(r"architect and optimize (.*?) in enterprise", q)
         if m3:
             role = "optimization"
             topic = m3.group(1).strip()
-            
+
         if not topic or not role:
             print(f"Warning: Could not parse {qid}: {q}")
             continue
@@ -157,7 +157,7 @@ def process_data_architecture():
 
 def process_questions_json():
     print(f"Reading {QUESTIONS_FILE}...")
-    with open(QUESTIONS_FILE, "r", encoding="utf-8") as f:
+    with open(QUESTIONS_FILE, encoding="utf-8") as f:
         data = json.load(f)
 
     updated_count = 0
@@ -167,7 +167,7 @@ def process_questions_json():
             raw = q.replace("Explain the concepts and production implementations of ", "").rstrip(".")
             cat = item.get("category", "")
             diff = item.get("difficulty", "MEDIUM")
-            
+
             # Format natural question based on raw topic
             if diff == "ARCHITECT":
                 new_q = f"How do you architect and govern {raw} in enterprise {cat} platforms?"
@@ -179,7 +179,7 @@ def process_questions_json():
                 new_q = f"{raw} in production {cat} systems?"
             else:
                 new_q = f"What are the core design principles and production best practices for {raw} in {cat}?"
-                
+
             item["question"] = new_q
             updated_count += 1
 

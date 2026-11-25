@@ -12,11 +12,9 @@ Author: Santosh Jammi | Principal Data Architect
 """
 
 import os
-import sys
 import shutil
 import subprocess
 import fitz  # PyMuPDF
-from PIL import Image
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 WORKSPACE_DIR = os.path.dirname(SCRIPT_DIR)
@@ -1342,7 +1340,7 @@ def print_pdf_with_chrome(html_path, pdf_path):
         f"--print-to-pdf={pdf_path}",
         html_path
     ]
-    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    res = subprocess.run(cmd, capture_output=True, text=True)
     if res.returncode != 0:
         raise RuntimeError(f"Chrome failed to render PDF: {res.stderr}")
 

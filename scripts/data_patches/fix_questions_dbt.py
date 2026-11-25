@@ -74,7 +74,7 @@ payments AS (
     SELECT * FROM {{ ref('stg_stripe__payments') }}
 )
 
-SELECT 
+SELECT
     orders.order_id,
     orders.customer_id,
     orders.order_date,
@@ -156,7 +156,7 @@ WITH source AS (
     SELECT * FROM {{ source('raw_shopify', 'orders') }}
 )
 
-SELECT 
+SELECT
     id AS order_id,
     customer_id,
     created_at AS order_created_at,
@@ -318,7 +318,7 @@ enterprise_dw:
     {% set query %}
         select distinct {{ column_to_pivot }} as val from {{ source_table }} where {{ column_to_pivot }} is not null order by 1
     {% endset %}
-    
+
     {% set results = run_query(query) %}
     {% if execute %}
         {% set values = results.columns[0].values() %}
@@ -334,7 +334,7 @@ enterprise_dw:
 ```
 3. **Usage in SQL Model (`models/marts/fct_revenue.sql`)**:
 ```sql
-SELECT 
+SELECT
     customer_id,
     {{ cents_to_dollars('raw_amount_cents') }} AS revenue_usd,
     {{ pivot_column(ref('stg_sales'), 'channel', 'amount') }}
@@ -508,20 +508,20 @@ dbt_airflow_dag = DbtDag(
 {% test line_item_sum_matches_order(model, order_id_column, expected_total_column, line_item_model, line_amount_column) %}
 
 WITH order_totals AS (
-    SELECT 
+    SELECT
         {{ order_id_column }} AS order_id,
         {{ expected_total_column }} AS header_amount
     FROM {{ model }}
 ),
 calculated_sums AS (
-    SELECT 
+    SELECT
         {{ order_id_column }} AS order_id,
         round(sum({{ line_amount_column }}), 2) AS calculated_amount
     FROM {{ line_item_model }}
     GROUP BY 1
 )
 
-SELECT 
+SELECT
     o.order_id,
     o.header_amount,
     c.calculated_amount,
@@ -699,7 +699,7 @@ SELECT * FROM {{ ref('stg_events') }}
 ```sql
 {{ config(materialized='materialized_view') }}
 
-SELECT 
+SELECT
     window_start,
     customer_id,
     count(*) as purchase_count,
@@ -738,7 +738,7 @@ SELECT * FROM {{ source('streaming_sink', 'live_today_sales') }}
 ```python
 # Impact Check Script
 impacted_reports = query_lineage_graph(
-    model="fct_orders", 
+    model="fct_orders",
     deleted_columns=["customer_discount_code"]
 )
 if impacted_reports:
@@ -761,7 +761,7 @@ if impacted_reports:
 2. **Identify High-Cost Models (The Top 5% Spenders)**:
    - Identify models consuming disproportionate compute:
 ```sql
-SELECT 
+SELECT
     query_tag_json:dbt_model AS model_name,
     count(*) AS execution_count,
     round(sum(total_elapsed_time)/1000/60, 2) AS total_runtime_mins,

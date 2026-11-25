@@ -17,9 +17,9 @@ QUESTIONS_RAW = os.path.join(ROOT, "src/data/raw/questions.js")
 
 # Topic Configurations for data_architecture.json (160 topics across 16 categories)
 # Each topic defines: code, lang, step1_desc, step3_desc, and 3 distinct gotchas with remediations
-from typing import Dict, Any
+from typing import Any  # noqa: E402
 
-def get_topic_definitions() -> Dict[str, Any]:
+def get_topic_definitions() -> dict[str, Any]:
     return {
         # --- Advanced PySpark & Spark Core Optimization ---
         "Broadcast Hash Joins": {
@@ -279,7 +279,7 @@ def get_topic_definitions() -> Dict[str, Any]:
 def get_default_topic_answer(topic_name, scenario, goal):
     """Generates high quality, customized code and gotchas for any of the 160 topics."""
     t_clean = topic_name.strip()
-    
+
     # Check if we have an explicit custom mapping
     configs = get_topic_definitions()
     if t_clean in configs:
@@ -324,7 +324,7 @@ def get_default_topic_answer(topic_name, scenario, goal):
                 f"    --template-file ./infrastructure/main.bicep \\\n"
                 f"    --parameters environment=prod scenario='{scenario[:30]}'\n"
             )
-            step1 = f"Verify deployment environment variables and authenticate target cloud service principals."
+            step1 = "Verify deployment environment variables and authenticate target cloud service principals."
             step3 = f"Configure validation checks and rollback triggers ensuring: {goal}."
         elif "kafka" in tl or "stream" in tl or "event" in tl:
             lang = "python"
@@ -344,7 +344,7 @@ def get_default_topic_answer(topic_name, scenario, goal):
                 f"}}\n"
                 f"producer = Producer(conf)\n"
             )
-            step1 = f"Initialize streaming connection buffers and register consumer group offsets."
+            step1 = "Initialize streaming connection buffers and register consumer group offsets."
             step3 = f"Set broker delivery thresholds and consumer polling timeouts to achieve: {goal}."
         else:
             lang = "python"
@@ -370,9 +370,9 @@ def get_default_topic_answer(topic_name, scenario, goal):
             step3 = f"Tune operational parameters and buffer memory quotas to satisfy: {goal}."
 
         gotchas = [
-            f"- **Resource Saturation during Peak Load**: Operating under high concurrent spikes without backpressure throttles memory limits. *Remediation*: Implement dynamic rate limiters and pre-allocated buffer queues to stabilize throughput.",
-            f"- **Silent Failure on Edge Exception**: Unhandled boundary errors cause processing pipelines to hang without emitting telemetry. *Remediation*: Wrap critical execution paths in structured try-except blocks and export metrics to Prometheus/Datadog.",
-            f"- **State Desynchronization across Replicas**: Network partitions cause state inconsistencies between distributed processing nodes. *Remediation*: Enforce distributed locking and idempotent state checkpointing."
+            "- **Resource Saturation during Peak Load**: Operating under high concurrent spikes without backpressure throttles memory limits. *Remediation*: Implement dynamic rate limiters and pre-allocated buffer queues to stabilize throughput.",
+            "- **Silent Failure on Edge Exception**: Unhandled boundary errors cause processing pipelines to hang without emitting telemetry. *Remediation*: Wrap critical execution paths in structured try-except blocks and export metrics to Prometheus/Datadog.",
+            "- **State Desynchronization across Replicas**: Network partitions cause state inconsistencies between distributed processing nodes. *Remediation*: Enforce distributed locking and idempotent state checkpointing."
         ]
 
     # Assemble Phase 1, Phase 2, Phase 3
@@ -383,7 +383,7 @@ def get_default_topic_answer(topic_name, scenario, goal):
         f"data structures to isolate workloads and prevent performance degradation. In the context of {scenario}, this architectural "
         f"setup isolates failure domains, prevents resource contention, and guarantees predictable execution latencies."
     )
-    
+
     phase2 = (
         f"### Phase 2: Low-Level Mechanics & Implementation\n"
         f"Implementing this pattern requires the following setup steps and configuration files:\n\n"
@@ -404,7 +404,7 @@ def get_default_topic_answer(topic_name, scenario, goal):
 
 def process_data_architecture():
     print(f"Loading {DATA_ARCH_JSON}...")
-    with open(DATA_ARCH_JSON, "r", encoding="utf-8") as f:
+    with open(DATA_ARCH_JSON, encoding="utf-8") as f:
         data = json.load(f)
 
     print(f"Processing {len(data)} questions in data_architecture.json...")
@@ -436,14 +436,14 @@ def process_data_architecture():
 
 def process_questions():
     print(f"Loading {QUESTIONS_JSON}...")
-    with open(QUESTIONS_JSON, "r", encoding="utf-8") as f:
+    with open(QUESTIONS_JSON, encoding="utf-8") as f:
         data = json.load(f)
 
     # Run the question-specific logic from redefine_questions_390
     import sys
     sys.path.append(os.path.join(ROOT, "scripts"))
     import redefine_questions_390
-    
+
     updated = 0
     for q in data:
         if q.get("answer") and "Phase 1:" in q["answer"]:

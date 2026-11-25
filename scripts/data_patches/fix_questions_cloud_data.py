@@ -6,7 +6,7 @@ def get_cloud_data_fixes() -> dict[str, dict]:
     return {
         "cloud_data-easy-1": {
             "question": "How do you design an architecture that separates compute resources from storage resources?",
-            "answer": """Designing an architecture that separates compute from storage is the foundational paradigm of modern cloud data platforms (Snowflake, Databricks, Google BigQuery):
+            "answer": r"""Designing an architecture that separates compute from storage is the foundational paradigm of modern cloud data platforms (Snowflake, Databricks, Google BigQuery):
 
 1. **Centralized Immutable Storage Tier**:
    - Persist all analytical data in durable, cost-effective cloud object storage (AWS S3, Azure ADLS Gen2, Google Cloud Storage) formatted in open columnar formats (Parquet, ORC) or table formats (Delta Lake, Apache Iceberg).
@@ -152,13 +152,13 @@ CREATE WAREHOUSE ETL_DAILY_WH WITH
             "answer": """The cost implications of table partitioning directly reflect the underlying billing model of the cloud data platform:
 
 ### 1. On-Demand Scan Billing (Google BigQuery / AWS Athena):
-- **Pricing Model**: Direct billing based on bytes scanned from storage (typically **\$6.25 per TB scanned**).
+- **Pricing Model**: Direct billing based on bytes scanned from storage (typically **\\$6.25 per TB scanned**).
 - **Unpartitioned Table**:
   - A query filtering for a single day (`WHERE transaction_date = '2024-05-01'`) against an unpartitioned 100 TB table forces a **Full Table Scan**.
-  - **Cost**: 100 TB scanned $\\times$ \$6.25 = **\$625.00 for a single query**.
+  - **Cost**: 100 TB scanned $\\times$ \\$6.25 = **\\$625.00 for a single query**.
 - **Partitioned Table (by Date)**:
   - BigQuery metadata prunes non-matching partitions, reading only the target day's partition (e.g., 200 GB).
-  - **Cost**: 0.2 TB scanned $\\times$ \$6.25 = **\$1.25** (a 99.8% cost reduction).
+  - **Cost**: 0.2 TB scanned $\\times$ \\$6.25 = **\\$1.25** (a 99.8% cost reduction).
 
 ### 2. Compute-Time Credit Billing (Snowflake / Databricks SQL):
 - **Pricing Model**: Billed per node-second of running compute instances.
@@ -212,7 +212,7 @@ Leverage native cloud platform data sharing protocols (Snowflake Secure Data Sha
 ```sql
 -- Step 1: Create a Secure View to enforce column filtering and row-level masking
 CREATE OR REPLACE SECURE VIEW share_db.vendor_schema.partner_orders_v AS
-SELECT 
+SELECT
     order_id,
     order_date,
     product_sku,
@@ -253,11 +253,11 @@ If the vendor does not use the same platform, deploy **Delta Sharing** (an open 
 ### 2. Implementation:
 ```sql
 -- Snowflake Zero-Copy Clone
-CREATE OR REPLACE TABLE dev_db.testing.orders_test 
+CREATE OR REPLACE TABLE dev_db.testing.orders_test
 CLONE prod_db.sales.orders;
 
 -- Databricks Delta Lake Shallow Clone
-CREATE TABLE dev_db.testing.orders_test 
+CREATE TABLE dev_db.testing.orders_test
 SHALLOW CLONE prod_db.sales.orders;
 ```
 
@@ -280,7 +280,7 @@ Always drop test clone tables (`DROP TABLE dev_db.testing.orders_test`) after te
    - Track compute consumption per virtual warehouse grouped by department tags:
 ```sql
 -- Snowflake Warehouse Metering Analysis
-SELECT 
+SELECT
     warehouse_name,
     DATE(start_time) AS usage_date,
     ROUND(SUM(credits_used), 2) AS total_credits_consumed,
@@ -494,7 +494,7 @@ Data remains stored in plain text (or encrypted at rest via storage keys). Queri
 CREATE OR REPLACE MASKING POLICY email_mask AS (val STRING) RETURNS STRING ->
   CASE
     WHEN CURRENT_ROLE() IN ('COMPLIANCE_OFFICER', 'PII_SECURITY_ADMIN') THEN val
-    WHEN CURRENT_ROLE() IN ('CUSTOMER_SUPPORT') THEN 
+    WHEN CURRENT_ROLE() IN ('CUSTOMER_SUPPORT') THEN
       REGEXP_REPLACE(val, '(^[^@]{2})(.*)(@[^@]+$)', '\\1****\\3')
     ELSE '***MASKED_PII***'
   END;
@@ -516,7 +516,7 @@ ALTER TABLE prod_customers MODIFY COLUMN email SET TAG security_level = 'PII_CON
 For hyper-sensitive fields (SSNs, credit cards), encrypt values before writing to disk using KMS-managed envelope keys:
 ```sql
 -- Encrypt during ingestion using AES-256
-UPDATE customers SET 
+UPDATE customers SET
   ssn_encrypted = ENCRYPT(raw_ssn, 'kms_managed_passphrase', 'AES-GCM');
 ```
 
@@ -629,7 +629,7 @@ OPTIONS (
 - Query operational relational databases (Cloud SQL PostgreSQL/MySQL) in-place without data replication pipelines:
 ```sql
 -- Federated Join combining GCS Data Lake and Cloud SQL
-SELECT 
+SELECT
     e.event_id,
     e.event_type,
     c.customer_name,
@@ -753,7 +753,7 @@ CREATE OR REPLACE HYBRID TABLE operational.active_user_sessions (
 Changes written to the Hybrid Table row store are asynchronously mirrored to columnar format in near real-time, allowing analytical OLAP queries to join live operational state directly with petabyte-scale historical dimensions without batch ETL pipelines:
 ```sql
 -- Zero-ETL join of live operational data with historical analytics
-SELECT 
+SELECT
     s.current_state,
     h.lifetime_value_tier,
     COUNT(s.session_id) AS active_session_count
@@ -808,7 +808,7 @@ resource "databricks_mws_workspaces" "client_workspace" {
   account_id     = var.databricks_account_id
   aws_region     = var.aws_region
   workspace_name = "client-${var.client_id}-workspace"
-  
+
   credentials_id           = databricks_mws_credentials.cross_account.credentials_id
   storage_configuration_id = databricks_mws_storage_configurations.root_bucket.storage_configuration_id
   network_id               = databricks_mws_networks.client_vpc.network_id
@@ -835,7 +835,7 @@ resource "databricks_sql_endpoint" "client_sql_warehouse" {
   cluster_size = "Small"
   auto_stop_mins = 20
   enable_serverless_compute = true
-  
+
   tags {
     custom_tags {
       key   = "ClientId"
@@ -866,12 +866,12 @@ Wrap this module in a Terraform Cloud or GitHub Actions pipeline triggered by cl
 - Analysts are prohibited from executing arbitrary SQL. Queries are restricted to **pre-approved parameterized templates** (e.g., Audience Overlap, Attribution Analysis):
 ```sql
 -- Clean Room Secure View with Aggregate Threshold Enforcement
-SELECT 
+SELECT
     b.campaign_id,
     COUNT(DISTINCT a.customer_token) AS overlapping_customers,
     SUM(a.total_spend) AS attributed_sales
 FROM retailer_db.secure_share.customer_sales a
-JOIN publisher_db.secure_share.ad_impressions b 
+JOIN publisher_db.secure_share.ad_impressions b
   ON a.customer_token = b.customer_token
 GROUP BY 1
 HAVING COUNT(DISTINCT a.customer_token) >= 100; -- Min Aggregation Threshold
@@ -891,7 +891,7 @@ Enforce **Differential Privacy noise injection** and strict threshold checks (`M
 - Deploy continuous database replication (Snowflake Cross-Region Database Replication or Delta Lake cross-region bidirectional mirroring):
 ```sql
 -- Primary Region: Enable automatic scheduled continuous replication
-ALTER DATABASE enterprise_data_platform 
+ALTER DATABASE enterprise_data_platform
 ENABLE REPLICATION TO ACCOUNTS aws_uswest2.corp_account;
 
 -- Replication schedule executing every 60 seconds (ensures RPO < 60 seconds)
@@ -930,7 +930,7 @@ class VectorizedCryptoHasher:
     def __init__(self):
         # Initialize cryptographic engine and state ONCE per worker process
         self.salt = b"EnterpriseHmacSecretSalt2024"
-        
+
     def end_partition(self):
         pass
 
@@ -941,8 +941,8 @@ class VectorizedCryptoHasher:
             if val is None or pd.isna(val):
                 return None
             return hashlib.blake2b(
-                val.encode("utf-8"), 
-                key=self.salt, 
+                val.encode("utf-8"),
+                key=self.salt,
                 digest_size=32
             ).hexdigest()
 
@@ -995,7 +995,7 @@ TABLE(operational.vectorized_hash(t.email)) h;
 # Automated Actuator Script executed via Airflow / Lambda
 if predicted_spill_reduction > 0.80 and cost_delta < budget_threshold:
     snowflake_conn.execute(f"ALTER TABLE {table_name} CLUSTER BY ({recommended_keys})")
-    
+
 if remote_spill_detected and pipeline_sla_critical:
     snowflake_conn.execute(f"ALTER WAREHOUSE {wh_name} SET WAREHOUSE_SIZE = '{next_size}'")
 ```

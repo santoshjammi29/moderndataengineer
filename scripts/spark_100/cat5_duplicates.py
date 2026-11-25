@@ -107,8 +107,8 @@ WHEN NOT MATCHED THEN INSERT *;""",
 MERGE INTO silver.driver_status target
 USING incoming_stream source
 ON target.driver_id = source.driver_id
-WHEN MATCHED AND source.event_timestamp > target.event_timestamp THEN 
-    UPDATE SET 
+WHEN MATCHED AND source.event_timestamp > target.event_timestamp THEN
+    UPDATE SET
         target.latitude = source.latitude,
         target.longitude = source.longitude,
         target.event_timestamp = source.event_timestamp,
@@ -288,7 +288,7 @@ OPTIMIZE gold.orders; -- Compacts Deletion Vectors into clean Parquet files""",
 def write_dual_sinks(batch_df, batch_id):
     # Delta sink is transactional and idempotent:
     batch_df.write.format("delta").mode("append").saveAsTable("silver.ledger")
-    
+
     # Non-idempotent relational write! If this fails or crashes later, retrying batch_id writes duplicates!
     batch_df.write.format("jdbc") \\
         .option("url", "jdbc:postgresql://db:5432/bank") \\
@@ -299,15 +299,15 @@ def write_dual_sinks(batch_df, batch_id):
 def write_dual_sinks_idempotent(batch_df, batch_id):
     # 1. Delta Sink (ACID Idempotent)
     batch_df.write.format("delta").mode("append").saveAsTable("silver.ledger")
-    
+
     # 2. Relational Sink: Use Upsert / ON CONFLICT or Staging Table with Batch ID Transaction
     # In PostgreSQL, write to staging table and commit atomically:
     properties = {"user": "admin", "password": "secret", "driver": "org.postgresql.Driver"}
-    
+
     # Write to a temporary batch-specific staging table:
     staging_table = f"staging_ledger_{batch_id}"
     batch_df.write.jdbc(url="jdbc:postgresql://db:5432/bank", table=staging_table, mode="overwrite", properties=properties)
-    
+
     # Atomically upsert from staging to target table using single SQL transaction:
     upsert_sql = f\"\"\"
         INSERT INTO ledger (tx_id, user_id, amount, tx_time)

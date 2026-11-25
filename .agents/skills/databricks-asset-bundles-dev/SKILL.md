@@ -100,7 +100,7 @@ databricks bundle run -t dev my_job_key
 - 🚀 **[GitHub Actions CI/CD Template](./references/dabs_cicd_github_actions.md)**: Production workflow with OIDC and Service Principal authentication.
 - 🔍 **[Bundle Linter Script](./scripts/lint_bundle.py)**: Fast offline YAML and bundle structure validator.
 - 📦 **Sample Templates**: See `resources/databricks.yml`, `resources/resources/jobs.yml`, `resources/resources/dlt_pipelines.yml`, and `resources/resources/unity_catalog.yml`.
-- 📘 **[Databricks Data Intelligence Platform 20-Page Manual (PDF)](file:///Users/santosh/Documents/antigravity/charming-fermi/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum including Level 400 DABs architecture, Lakeflow Jobs, and Chispa unit testing.
+- 📘 **[Databricks Data Intelligence Platform 20-Page Manual (PDF)](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum including Level 400 DABs architecture, Lakeflow Jobs, and Chispa unit testing.
 
 ---
 

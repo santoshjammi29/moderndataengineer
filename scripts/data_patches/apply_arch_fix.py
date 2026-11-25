@@ -6,7 +6,7 @@ import arch_databricks_data
 
 def apply_architecture_updates():
     arch_file = "src/data/json/data_architecture.json"
-    with open(arch_file, "r", encoding="utf-8") as f:
+    with open(arch_file, encoding="utf-8") as f:
         existing = json.load(f)
 
     print(f"Loaded {len(existing)} existing architecture scenarios.")

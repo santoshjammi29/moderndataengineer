@@ -166,7 +166,7 @@ def get_semantic_duplicate_fixes():
 3. **Activating via DAX (`USERELATIONSHIP`)**:
    - Inactive relationships are activated dynamically inside specific measure calculations using the `USERELATIONSHIP()` modifier inside `CALCULATE()`:
 ```dax
-Shipped Sales = 
+Shipped Sales =
 CALCULATE(
     SUM(FactSales[SalesAmount]),
     USERELATIONSHIP(FactSales[ShipDateKey], DimDate[DateKey])
@@ -304,7 +304,7 @@ In Power BI, there are two primary architectural patterns to resolve role-playin
 - Connect `DimDate[DateKey]` to `FactOrders[ShipDateKey]` and `FactOrders[DueDateKey]` as **Inactive** relationships (dashed lines).
 - Write dedicated DAX measures leveraging `USERELATIONSHIP()` inside `CALCULATE()`:
 ```dax
-Shipped Sales = 
+Shipped Sales =
 CALCULATE(
     [Total Sales],
     USERELATIONSHIP(FactOrders[ShipDateKey], DimDate[DateKey])
@@ -899,10 +899,10 @@ SELECT * FROM iceberg_catalog.db.sales FOR SYSTEM_VERSION AS OF 847291847192;
             "item": {
                 "id": "medium-sql-2",
                 "question": "Compare ROW_NUMBER(), RANK(), and DENSE_RANK() in SQL, and explain how each handles tie values and sequence gaps.",
-                "answer": """In SQL, `ROW_NUMBER()`, `RANK()`, and `DENSE_RANK()` are analytical window ranking functions evaluated across a `PARTITION BY` and ordered by an `ORDER BY` clause. They differ strictly in how they handle tie (duplicate) values:
+                "answer": r"""In SQL, `ROW_NUMBER()`, `RANK()`, and `DENSE_RANK()` are analytical window ranking functions evaluated across a `PARTITION BY` and ordered by an `ORDER BY` clause. They differ strictly in how they handle tie (duplicate) values:
 
 ```sql
-SELECT 
+SELECT
     EmployeeID, DepartmentID, Salary,
     ROW_NUMBER() OVER(PARTITION BY DepartmentID ORDER BY Salary DESC) AS [Row_Number],
     RANK()       OVER(PARTITION BY DepartmentID ORDER BY Salary DESC) AS [Rank],

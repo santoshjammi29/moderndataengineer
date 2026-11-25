@@ -209,7 +209,7 @@ new_concepts = [
 
 def main():
     print(f"Reading {FILE_PATH}...")
-    with open(FILE_PATH, 'r') as f:
+    with open(FILE_PATH) as f:
         data = json.load(f)
     print(f"Initial count: {len(data)}")
 

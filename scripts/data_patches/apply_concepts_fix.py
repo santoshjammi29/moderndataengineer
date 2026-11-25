@@ -7,7 +7,7 @@ from data_concepts_databricks import databricks_data
 
 concepts_file = "src/data/json/data_concepts.json"
 
-with open(concepts_file, "r") as f:
+with open(concepts_file) as f:
     concepts = json.load(f)
 
 print(f"Total existing concepts: {len(concepts)}")

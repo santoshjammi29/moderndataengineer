@@ -3,11 +3,10 @@ Bulk generation of SQL Iceberg Architecture Scenarios for data_architecture.json
 Focuses on deep systems architecture, distributed database internals, and concurrency engineering.
 """
 import json
-import os
 
 FILE = 'src/data/json/data_architecture.json'
 
-with open(FILE, 'r') as f:
+with open(FILE) as f:
     data = json.load(f)
 
 print(f"Existing architecture items: {len(data)}")
@@ -62,7 +61,7 @@ Setting `fillfactor = 85` allows Heap-Only Tuple (HOT) updates: modifications th
 - **Proactive Grafana / Prometheus Alerting**:
   Monitor transaction age continuously:
   ```sql
-  SELECT datname, age(datfrozenxid) AS xid_age, 
+  SELECT datname, age(datfrozenxid) AS xid_age,
          (2147483647 - age(datfrozenxid)) AS xids_until_catastrophe
   FROM pg_database ORDER BY 2 DESC;
   ```
@@ -167,7 +166,7 @@ To eliminate thread-blocking synchronous I/O while using `O_DIRECT`, integrate m
         "difficulty": "ARCHITECT",
         "question": "Architect a next-generation vectorized query execution engine (incorporating block vectorization, L1/L2 cache locality, and auto-vectorized SIMD registers) capable of processing 1 billion records per second on a single 32-core server, contrasting it with traditional Volcano iterators.",
         "answer": """### Phase 1: Conceptual Foundation & Core Architecture
-Classical query execution follows the **Volcano Model** (Iterator Model), where operators communicate via `open()`, `next()`, and `close()`. Each `next()` call returns a single tuple. While modular, pulling 1 billion tuples one-by-one requires 1 billion virtual function dispatches per operator. 
+Classical query execution follows the **Volcano Model** (Iterator Model), where operators communicate via `open()`, `next()`, and `close()`. Each `next()` call returns a single tuple. While modular, pulling 1 billion tuples one-by-one requires 1 billion virtual function dispatches per operator.
 
 At the hardware level, this incurs:
 1. **Instruction Cache (I-Cache) Thrashing**: Dynamic virtual function pointers prevent the CPU branch predictor from prefetching instructions, causing constant CPU pipeline stalls.
@@ -193,8 +192,8 @@ struct Vector {
 When evaluating `WHERE age > 30`, a naive engine copies matching tuples into a new buffer. A high-performance vectorized engine uses a **Selection Vector**:
 ```cpp
 // Branchless SIMD-friendly vector filter
-int FilterGreaterThan(const int64_t* __restrict__ src, 
-                      sel_t* __restrict__ result_sel, 
+int FilterGreaterThan(const int64_t* __restrict__ src,
+                      sel_t* __restrict__ result_sel,
                       int64_t threshold, int count) {
     int matched = 0;
     #pragma clang loop vectorize(enable)
@@ -246,9 +245,9 @@ To avoid abort storms under high demand (e.g. holiday ticket sales), force all s
 BEGIN TRANSACTION;
 
 -- Step 1: Lock the flight inventory record exclusively
-SELECT booked_seats, max_seats 
-FROM flight_inventory 
-WHERE flight_id = @flight_id 
+SELECT booked_seats, max_seats
+FROM flight_inventory
+WHERE flight_id = @flight_id
 FOR UPDATE; -- Blocks concurrent seat bookers for this flight!
 
 -- Step 2: Validate global invariant
@@ -262,8 +261,8 @@ INSERT INTO seat_reservations (flight_id, seat_number, passenger_id)
 VALUES (@flight_id, @seat_number, @passenger_id);
 
 -- Step 4: Increment coordinator counter
-UPDATE flight_inventory 
-SET booked_seats = booked_seats + 1 
+UPDATE flight_inventory
+SET booked_seats = booked_seats + 1
 WHERE flight_id = @flight_id;
 
 COMMIT;

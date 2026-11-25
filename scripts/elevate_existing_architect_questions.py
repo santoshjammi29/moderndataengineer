@@ -11,20 +11,18 @@ Enforces multi-modality and deep architectural rigor:
 """
 
 import json
-import re
 
 def elevate_architect_question(q: dict) -> dict:
     qid = q["id"]
-    cat = q.get("category", "")
+    q.get("category", "")
     qtext = q.get("question", "")
     ans = q.get("answer", "")
-    
+
     # If the answer already contains all 6 required sections, keep it
     if all(sec in ans for sec in ["The Theory", "The Blueprint", "The Implementation", "Trade-off Analysis", "Failure Scenario", "Cost Impact"]):
         return q
 
     # Determine code sheet reference and snippet based on topic
-    code_ref = "py-b-01"
     code_snippet = "# Production implementation\n"
     table_snippet = ""
     mermaid_diag = ""
@@ -34,14 +32,13 @@ def elevate_architect_question(q: dict) -> dict:
 
     # 1. Specialized Databricks Architect Questions
     if qid.startswith("databricks-q-"):
-        code_ref = "py-b-02"
         topic = qtext.replace("How do you architect ", "").replace("How do you ", "").rstrip("?")
-        
+
         theory_text = f"Architecting {topic} requires decoupling the control plane from distributed execution, enforcing strict ACID isolation boundaries, and designing for elastic cloud compute. In enterprise Databricks topologies, Unity Catalog acts as the centralized semantic and governance coordinator across multi-workspace clusters, translating high-level data contracts into physical storage paths on ADLS Gen2 or S3."
-        
-        mermaid_diag = f"""```mermaid
+
+        mermaid_diag = """```mermaid
 flowchart TD
-    Client["Client / User Workloads"] --> Router{{"Unity Catalog Governance Layer"}}
+    Client["Client / User Workloads"] --> Router{"Unity Catalog Governance Layer"}
     Router --> WS_Dev["Workspace Dev (Isolated)"]
     Router --> WS_Prod["Workspace Prod (Locked)"]
     WS_Dev & WS_Prod --> Storage[("Delta Lake Object Storage (ADLS Gen2 / S3)")]
@@ -74,12 +71,11 @@ spark.sql(\"\"\"
 
     # 2. Specialized Airflow Architect Questions
     elif qid.startswith("airflow-q-"):
-        code_ref = "py-b-01"
         topic = qtext.replace("Explain the concepts and production implementations of ", "").rstrip(".")
-        
+
         theory_text = f"Implementing {topic} in enterprise Apache Airflow centers on isolating task scheduling from task execution while maintaining immutable state transitions in the metadata database. The Airflow scheduler evaluates Directed Acyclic Graph (DAG) state machines deterministically, delegating physical container execution to distributed worker executors (Celery or Kubernetes) while tracking execution intervals and dataset event triggers."
-        
-        mermaid_diag = f"""```mermaid
+
+        mermaid_diag = """```mermaid
 flowchart LR
     Scheduler["Airflow Scheduler (Parsing Loop)"] -->|"Resolves Task Dependencies"| MetaDB[("PostgreSQL Metadata DB")]
     Scheduler -->|"Dispatches Task Instance"| Queue["Task Queue / K8s API"]
@@ -104,7 +100,7 @@ def production_orchestration_pipeline():
     def execute_critical_workload():
         # Isolated idempotent task execution
         return "SUCCESS"
-        
+
     execute_critical_workload()
 
 pipeline_obj = production_orchestration_pipeline()"""
@@ -122,16 +118,15 @@ pipeline_obj = production_orchestration_pipeline()"""
 
     # 3. Specialized dbt Architect Questions
     elif qid.startswith("dbt-q-"):
-        code_ref = "beg_002"
         topic = qtext.replace("Explain the concepts and production implementations of ", "").rstrip(".")
-        
+
         theory_text = f"Implementing {topic} in analytics engineering shifts transformation from procedural pipeline orchestration to declarative, version-controlled DAG modeling. dbt compiles modular Jinja-SQL select expressions into physical database DDL/DML, pushing compute execution directly into the data warehouse (Snowflake, BigQuery, Databricks, Fabric Warehouse) while validating schema contracts and data freshness."
-        
-        mermaid_diag = f"""```mermaid
+
+        mermaid_diag = """```mermaid
 flowchart TD
     RawStage["stg_source_data (Ephemeral View)"] --> Intermediate["int_business_logic (Incremental Table)"]
     Intermediate --> Mart["fct_core_enterprise (Contract Enforced)"]
-    Mart --> Tests{{"dbt Test Suite (Unique, Not Null, Custom)"}}
+    Mart --> Tests{"dbt Test Suite (Unique, Not Null, Custom)"}
     Tests -->|"Pass"| ProdReady[("Verified Gold Data Mart")]
     Tests -->|"Fail"| Quarantine["Alert Slack & Quarantine Pipeline"]
 ```"""
@@ -147,7 +142,7 @@ flowchart TD
     )
 }}}}
 
-SELECT 
+SELECT
     MD5(CONCAT(tenant_id, '-', transaction_id)) AS surrogate_key,
     tenant_id,
     transaction_id,
@@ -171,9 +166,8 @@ FROM {{{{ ref('stg_raw_transactions') }}}}
 
     # 4. Specialized Data Lake / Security / Kafka Architect Questions
     else:
-        code_ref = "sql-b-05"
         theory_text = f"Architecting {qtext[:60]} requires enforcing end-to-end Zero-Trust security and high-availability quorum semantics across distributed storage boundaries. Compute nodes must never access raw storage directly; instead, credential broker tokens and network private links decouple physical object storage from tenant workloads."
-        
+
         mermaid_diag = """```mermaid
 flowchart LR
     Client["Client / Application Workload"] --> Gateway["API Gateway / Private Link Endpoint"]
@@ -221,7 +215,7 @@ spark.conf.set("fs.azure.account.oauth.provider.type", "org.apache.hadoop.fs.azu
 
 def elevate_all_questions_in_db():
     questions_file = "src/data/json/questions.json"
-    with open(questions_file, "r", encoding="utf-8") as f:
+    with open(questions_file, encoding="utf-8") as f:
         questions = json.load(f)
 
     print(f"Loaded {len(questions)} questions.")
@@ -237,7 +231,7 @@ def elevate_all_questions_in_db():
             new_questions.append(q)
 
     print(f"Elevated {elevated_count} ARCHITECT questions with complete multi-modal depth.")
-    
+
     with open(questions_file, "w", encoding="utf-8") as f:
         json.dump(new_questions, f, indent=2, ensure_ascii=False)
     print("Saved elevated questions to src/data/json/questions.json")

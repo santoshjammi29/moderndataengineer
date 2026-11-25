@@ -20,21 +20,17 @@ def get_architect_core_fixes():
         "dl-catalog-6": """### The Theory
 A **schema split-brain** occurs in multi-region or hybrid-cloud data lakehouses when the centralized metastore (Unity Catalog, AWS Glue, Hive Metastore) becomes desynchronized from the true underlying **Delta Lake transaction log (`_delta_log/`)**. Because Delta Lake is strictly ACID-compliant and relies on monotonic JSON commit files and checkpoint Parquet files in object storage as the single source of truth, an external metastore catalog caching outdated schema snapshots will reject queries or cause silent column omission. Programmatic resolution requires reconciling metastore catalog pointers directly from the latest Delta snapshot checkpoint.
 
-### The Blueprint
-```mermaid
-flowchart TD
+### The Blueprint\n```mermaid\nflowchart TD
     Client["Analytical Client (Power BI /<br/>Spark)"] -->|"Reads Outdated Schema"| Catalog["External Catalog / Metastore"]
     Catalog -.->|"Split-Brain Desync"| Storage[("ADLS Gen2 / OneLake Object Storage")]
     Storage --> DeltaLog["_delta_log/00000000000000000125.json"]
     Reconciler["Catalog Reconciliation Daemon"] -->|"Inspects Delta Log Head"| DeltaLog
     Reconciler -->|"Extracts Latest Protocol &<br/>Schema"| DeltaSnapshot["Latest Delta Snapshot"]
     DeltaSnapshot -->|"Synchronizes Columns & Types"| Catalog
-    Catalog -->|"Consistent Schema Manifest"| Client
-```
+    Catalog -->|"Consistent Schema Manifest"| Client\n```
 
 ### The Implementation
-Reference Code Sheet: `py-b-02` (Reading and Writing Delta Tables) & `beg_004` (CREATE TABLE USING DELTA).
-```python
+Reference Code Sheet: `py-b-02` (Reading and Writing Delta Tables) & `beg_004` (CREATE TABLE USING DELTA).\n```python
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 
@@ -42,17 +38,16 @@ def reconcile_delta_catalog_split_brain(spark: SparkSession, table_name: str, st
     # 1. Bypass cached metastore metadata and load physical Delta Table from storage
     delta_table = DeltaTable.forPath(spark, storage_path)
     latest_version = delta_table.history(1).select("version").collect()[0]["version"]
-    
+
     # 2. Extract authoritative schema directly from storage snapshot
     authoritative_schema = spark.read.format("delta").load(storage_path).schema
-    
+
     # 3. Force catalog refresh and synchronise metastore schema definition
     spark.catalog.refreshTable(table_name)
     spark.sql(f"MSCK REPAIR TABLE {table_name}")
-    
+
     print(f"Successfully reconciled {table_name} to Delta transaction log commit v{latest_version}.")
-    return latest_version
-```
+    return latest_version\n```
 
 ### Trade-off Analysis
 | Architecture Dimension | Metastore-Centric Cataloging | Storage-Log Direct Resolution (Uniform) |
@@ -71,9 +66,7 @@ Metastore synchronization retries and recursive directory scans consume heavy dr
         "dl-security-1": """### The Theory
 Designing an exabyte-scale, multi-tenant data lake security architecture requires decoupling **identity authentication** from **physical object storage access**. Direct POSIX ACLs on object storage (ADLS Gen2 / S3) degrade performance when millions of files require recursive permission inheritance scans. The modern architecture utilizes **Centralized Attribute-Based Access Control (ABAC)** with **Credential Vending Brokers** and **Dynamic Column Masking / Cryptographic Shredding**. When a client initiates a query, the compute engine queries an identity governance broker (Microsoft Entra ID / Unity Catalog / Apache Ranger) to obtain short-lived scoped tokens and column-level projection filters, preventing direct access to physical storage keys.
 
-### The Blueprint
-```mermaid
-flowchart LR
+### The Blueprint\n```mermaid\nflowchart LR
     User["Tenant User / Query Worker"] --> Engine["Query Engine (Fabric Spark /<br/>Databricks Photon)"]
     Engine --> AuthZ{"ABAC Governance Layer (Unity<br/>Catalog / Ranger)"}
     AuthZ -->|"Validates Tenant & Column<br/>Masking"| Policy["Security Policy Engine"]
@@ -81,30 +74,27 @@ flowchart LR
     TokenBroker --> Engine
     Engine -->|"Reads Encrypted Parquet with<br/>Ephemeral Token"| OneLake[("Exabyte Lake Storage (OneLake /<br/>ADLS Gen2)")]
     OneLake -->|"Decrypted Column Stream"| Engine
-    Engine -->|"Masked Projection (PII<br/>Redacted)"| User
-```
+    Engine -->|"Masked Projection (PII<br/>Redacted)"| User\n```
 
 ### The Implementation
-Reference Code Sheet: `sql-b-05` (Transactions & Security) & `py-b-02` (Delta Storage).
-```python
+Reference Code Sheet: `sql-b-05` (Transactions & Security) & `py-b-02` (Delta Storage).\n```python
 # Configure dynamic row-level security and column masking in Unity Catalog / Fabric
 spark.sql(\"\"\"
     CREATE OR REPLACE FUNCTION security.mask_credit_card(cc_number STRING)
-    RETURN CASE 
+    RETURN CASE
         WHEN IS_ACCOUNT_GROUP_MEMBER('compliance_auditors') THEN cc_number
         ELSE CONCAT('XXXX-XXXX-XXXX-', RIGHT(cc_number, 4))
     END;
 \"\"\")
 
 spark.sql(\"\"\"
-    ALTER TABLE lakehouse_gold.dim_customer 
-    ALTER COLUMN credit_card_number 
+    ALTER TABLE lakehouse_gold.dim_customer
+    ALTER COLUMN credit_card_number
     SET MASK security.mask_credit_card;
 \"\"\")
 
 # Cryptographic Shredding: Rotate tenant-specific KMS envelope keys
-# Revoking tenant_key_042 renders all tenant data cryptographically unrecoverable
-```
+# Revoking tenant_key_042 renders all tenant data cryptographically unrecoverable\n```
 
 ### Trade-off Analysis
 | Security Paradigm | Physical POSIX Storage ACLs | Centralized ABAC Credential Vending |
@@ -127,21 +117,17 @@ A **Zero-Trust Network Architecture for Microsoft Fabric** enforces strict perim
 3. Compute engines utilize **Managed Private Endpoints** to connect securely to underlying data sources.
 4. Access is strictly mediated via **Microsoft Entra ID Conditional Access Policies** with Multi-Factor Authentication (MFA) and Device Compliance verification.
 
-### The Blueprint
-```mermaid
-flowchart TD
+### The Blueprint\n```mermaid\nflowchart TD
     OnPrem["On-Premises Data Center /<br/>Corporate LAN"] -->|"ExpressRoute / Private Link"| HubVNet["Hub Virtual Network (Azure)"]
     HubVNet --> PE["Private Endpoint (Fabric PaaS)"]
     PE --> FabricTenant{{"Microsoft Fabric SaaS Boundary"}}
     FabricTenant --> ManagedVNet["Managed Private Network"]
     ManagedVNet -->|"Managed Private Endpoint"| ADLS[("OneLake / ADLS Gen2 Storage")]
     ManagedVNet -->|"Managed Private Endpoint"| SQLDW[("Fabric Data Warehouse")]
-    EntraID["Microsoft Entra ID (Conditional<br/>Access / Zero-Trust)"] -.->|"Continuous Auth Validation"| FabricTenant
-```
+    EntraID["Microsoft Entra ID (Conditional<br/>Access / Zero-Trust)"] -.->|"Continuous Auth Validation"| FabricTenant\n```
 
 ### The Implementation
-Reference Code Sheet: `sql-b-05` (Transactions & Security) & `py-b-01` (Spark Config).
-```json
+Reference Code Sheet: `sql-b-05` (Transactions & Security) & `py-b-01` (Spark Config).\n```json
 // ARM Template snippet provisioning Azure Private Endpoint for Fabric Workspace
 {
   "type": "Microsoft.Network/privateEndpoints",
@@ -162,8 +148,7 @@ Reference Code Sheet: `sql-b-05` (Transactions & Security) & `py-b-01` (Spark Co
       }
     ]
   }
-}
-```
+}\n```
 
 ### Trade-off Analysis
 | Architectural Dimension | Public Ingress + IP Whitelisting | Zero-Trust Private Link Architecture |
@@ -184,9 +169,7 @@ Architecting an **active-passive Kafka disaster recovery (DR)** topology across 
 1. **Asynchronous Cross-Region Replication**: Handled by **MirrorMaker 2 (MM2)** using the Kafka Connect framework to replicate topic data, partition states, and message metadata.
 2. **Deterministic Consumer Offset Translation**: Because primary and secondary Kafka clusters assign partition offsets independently, raw offset values cannot be directly transferred. MM2 continuously emits offset translation mapping checkpoints (`__consumer_offsets` to `heartbeats` and `checkpoints` topics), enabling downstream consumer groups to seek to the precise corresponding offset upon failover.
 
-### The Blueprint
-```mermaid
-sequenceDiagram
+### The Blueprint\n```mermaid\nsequenceDiagram
     autonumber
     participant Producers as Ingestion Producers
     participant Primary as Primary Kafka Cluster (Region A)
@@ -202,12 +185,10 @@ sequenceDiagram
     Note over Primary,DR: Regional Failover Triggered!
     Consumers->>DR: Query RemoteClusterUtils for Translated Offsets
     DR-->>Consumers: Returns Exact Target Offsets
-    Consumers->>DR: Resume Reading (RPO=0, RTO &lt; 60s)
-```
+    Consumers->>DR: Resume Reading (RPO=0, RTO &lt; 60s)\n```
 
 ### The Implementation
-Reference Code Sheet: `py-b-01` (Python/Spark Ingestion) & `sql-b-05` (Transactions).
-```properties
+Reference Code Sheet: `py-b-01` (Python/Spark Ingestion) & `sql-b-05` (Transactions).\n```properties
 # MirrorMaker 2 Production Configuration (mm2.properties)
 clusters = primary, secondary
 primary.bootstrap.servers = kafka-primary-region-a.internal:9092
@@ -224,8 +205,7 @@ primary->secondary.sync.group.offsets.enabled = true
 primary->secondary.sync.group.offsets.interval.seconds = 5
 
 replication.factor = 3
-checkpoints.topic.replication.factor = 3
-```
+checkpoints.topic.replication.factor = 3\n```
 
 ### Trade-off Analysis
 | Architectural Dimension | Synchronous Multi-Region Cluster (Stretched) | Active-Passive with MirrorMaker 2 |

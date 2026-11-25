@@ -109,10 +109,10 @@ Databricks Photon serverless compute paired with spot instances cuts batch ETL p
 
     # Generate remaining databricks architect questions 078 to 100 programmatically with rich content
     from elevate_existing_architect_questions import elevate_architect_question
-    
+
     with open("src/data/json/questions.json") as f:
         all_qs = json.load(f)
-    
+
     for q in all_qs:
         qid = q["id"]
         if qid.startswith("databricks-q-") and int(qid.split("-")[-1]) >= 78:

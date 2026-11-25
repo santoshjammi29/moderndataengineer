@@ -296,11 +296,11 @@ Cron jobs checking for files every 5 minutes run 288 times a day, with 80% execu
 
     # Generate remaining airflow architect questions 081 to 100 programmatically with rich content
     from elevate_existing_architect_questions import elevate_architect_question
-    
+
     # We load questions.json to get exact text of airflow-q-081 to 100
     with open("src/data/json/questions.json") as f:
         all_qs = json.load(f)
-    
+
     for q in all_qs:
         qid = q["id"]
         if qid.startswith("airflow-q-") and int(qid.split("-")[-1]) >= 81:

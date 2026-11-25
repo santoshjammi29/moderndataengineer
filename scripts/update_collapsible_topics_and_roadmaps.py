@@ -20,10 +20,8 @@ Author: Principal Lakehouse & Distributed Data Systems Architect
 Platform: moderndataengineer.uk
 """
 
-import os
 import re
 import json
-import shutil
 from pathlib import Path
 from collections import defaultdict
 
@@ -219,13 +217,13 @@ def escape_cell(text):
     return text.replace("|", "\\|").replace("\n", " ").strip()
 
 def load_concepts():
-    with open(CONCEPTS_PATH, 'r', encoding='utf-8') as f:
+    with open(CONCEPTS_PATH, encoding='utf-8') as f:
         return json.load(f)
 
 def assign_section(concept, category):
     sections = CATEGORY_SECTIONS.get(category, [("General Primitives", [])])
     text = (concept['term'] + ' ' + concept['definition']).lower()
-    
+
     for sname, kws in sections[:-1]:
         if any(re.search(r'\b' + re.escape(kw) + r'\b', text) for kw in kws):
             return sname
@@ -238,19 +236,19 @@ def build_collapsible_topics_markdown(repo_slug, pillars_list, concepts):
     for cat_name, pillar_title, icon in pillars_list:
         cat_concepts = [c for c in concepts if c.get('category') == cat_name]
         total_repo_topics += len(cat_concepts)
-        
+
         # Group by relevant functional sections
         section_groups = defaultdict(list)
         for c in cat_concepts:
             sec_name = assign_section(c, cat_name)
             section_groups[sec_name].append(c)
-            
+
         # Order sections according to CATEGORY_SECTIONS definition
         ordered_sections = []
         for sname, _ in CATEGORY_SECTIONS.get(cat_name, []):
             if sname in section_groups and section_groups[sname]:
                 ordered_sections.append((sname, section_groups[sname]))
-                
+
         pillar_sections_data.append({
             "cat": cat_name,
             "title": pillar_title,
@@ -263,9 +261,9 @@ def build_collapsible_topics_markdown(repo_slug, pillars_list, concepts):
     lines.append(f"# 🧠 Curriculum Topics Directory — {total_repo_topics} Topics Covered")
     lines.append("")
     lines.append(f"> **Curriculum Scope**: **{total_repo_topics} Production Topics** verified against real-world lakehouse internals, query engines, and distributed architectures.")
-    lines.append(f"> **Organization**: Grouped by **Relevant Functional Sections** and then by **Difficulty Level**.")
-    lines.append(f"> **Navigation**: All sections are **collapsible and collapsed by default** for rapid scanning.")
-    lines.append(f"> **Live Web Hub**: Explore interactive search and mindmaps at [moderndataengineer.uk/concepts](https://moderndataengineer.uk/concepts).")
+    lines.append("> **Organization**: Grouped by **Relevant Functional Sections** and then by **Difficulty Level**.")
+    lines.append("> **Navigation**: All sections are **collapsible and collapsed by default** for rapid scanning.")
+    lines.append("> **Live Web Hub**: Explore interactive search and mindmaps at [moderndataengineer.uk/concepts](https://moderndataengineer.uk/concepts).")
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -304,7 +302,7 @@ def build_collapsible_topics_markdown(repo_slug, pillars_list, concepts):
                 if diff_groups[diff_key]:
                     diff_items = sorted(diff_groups[diff_key], key=lambda x: x['term'].lower())
                     full_label, short_label = DIFF_DISPLAY[diff_key]
-                    
+
                     lines.append("<details>")
                     lines.append(f"<summary>&nbsp;&nbsp;&nbsp;&nbsp;{short_label}: <b>{full_label} ({len(diff_items)} Topics)</b></summary>")
                     lines.append("")
@@ -347,10 +345,10 @@ def build_collapsible_topics_markdown(repo_slug, pillars_list, concepts):
 def build_collapsible_roadmap_markdown(repo_slug, meta, manifest_entries):
     name = meta['name']
     github = meta['github']
-    role = meta['role']
+    meta['role']
     pillar = meta['primary_pillar']
     total_count = len(manifest_entries)
-    
+
     # Group manifest entries by functional directory/section
     section_map = defaultdict(list)
     for e in manifest_entries:
@@ -368,10 +366,10 @@ def build_collapsible_roadmap_markdown(repo_slug, meta, manifest_entries):
     lines = []
     lines.append(f"# 🗺️ {name} — Interactive Curriculum Roadmap")
     lines.append("")
-    lines.append(f"> **Interactive Checkbox Study Tracker & Mastery Progression**  ")
+    lines.append("> **Interactive Checkbox Study Tracker & Mastery Progression**  ")
     lines.append(f"> **Canonical Repository**: [{github}](https://github.com/{github}) | **Ecosystem**: [moderndataengineer.uk](https://moderndataengineer.uk)  ")
     lines.append(f"> **Total Tracked Drills**: `{total_count}` | **Primary Authority**: `{pillar}`  ")
-    lines.append(f"> **Structure**: Grouped by **Relevant Functional Sections**, then by **Difficulty Level**. All sections are **collapsible and collapsed by default**.")
+    lines.append("> **Structure**: Grouped by **Relevant Functional Sections**, then by **Difficulty Level**. All sections are **collapsible and collapsed by default**.")
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -431,9 +429,9 @@ def build_collapsible_roadmap_markdown(repo_slug, meta, manifest_entries):
     lines.append("")
     lines.append("| Schedule | Pace | Target Audience | Focus |")
     lines.append("|---|---|---|---|")
-    lines.append(f"| **4-Week Sprint** | 5-6 drills / day | Interview Prep / Fast Track | Focus on Tier 2 & Tier 3 core drills |")
+    lines.append("| **4-Week Sprint** | 5-6 drills / day | Interview Prep / Fast Track | Focus on Tier 2 & Tier 3 core drills |")
     lines.append(f"| **8-Week Deep-Dive** | 2-3 drills / day | Full Technical Mastery | Complete all {total_count} exercises + tests |")
-    lines.append(f"| **12-Week Staff Track** | 1-2 drills / day | Architect & Tech Lead | Deep dive into Tier 3 & Tier 4 blueprints |")
+    lines.append("| **12-Week Staff Track** | 1-2 drills / day | Architect & Tech Lead | Deep dive into Tier 3 & Tier 4 blueprints |")
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -468,7 +466,7 @@ def build_collapsible_hub_roadmap_markdown(concepts):
 
     for cat_name, pillar_title, icon in REPO_PILLARS["charming-fermi"]:
         cat_concepts = [c for c in concepts if c.get('category') == cat_name]
-        
+
         lines.append("<details>")
         lines.append(f"<summary><b>{icon} {pillar_title} ({len(cat_concepts)} Topics)</b> — <i>Click to expand pillar</i></summary>")
         lines.append("")
@@ -548,13 +546,13 @@ def update_readme_topics_collapsible(repo_path, repo_slug, pillars_list, concept
     readme_path = repo_path / 'README.md'
     if not readme_path.exists():
         return
-        
-    with open(readme_path, 'r', encoding='utf-8') as f:
+
+    with open(readme_path, encoding='utf-8') as f:
         content = f.read()
 
     # Build collapsible topic section
     total_topics = sum(len([c for c in concepts if c.get('category') == cat]) for cat, _, _ in pillars_list)
-    
+
     new_lines = []
     new_lines.append(f"## 🧠 Core Curriculum Concepts & Topics ({total_topics} Topics Covered)")
     new_lines.append("")
@@ -567,7 +565,7 @@ def update_readme_topics_collapsible(repo_path, repo_slug, pillars_list, concept
 
     for cat_name, pillar_title, icon in pillars_list:
         matching = [c for c in concepts if c.get('category') == cat_name]
-        
+
         # Sections
         sec_map = defaultdict(list)
         for c in matching:
@@ -664,14 +662,14 @@ def main():
         topics_content = build_collapsible_topics_markdown(repo_slug, pillars, concepts)
         with open(topics_readme, 'w', encoding='utf-8') as f:
             f.write(topics_content)
-        print(f"    ✓ Updated topics/README.md with collapsible section + difficulty hierarchy")
+        print("    ✓ Updated topics/README.md with collapsible section + difficulty hierarchy")
 
         # 2. Update ROADMAP.md
         roadmap_path = repo_path / 'ROADMAP.md'
         manifest_path = repo_path / 'manifest.json'
         manifest_entries = []
         if manifest_path.exists():
-            with open(manifest_path, 'r', encoding='utf-8') as f:
+            with open(manifest_path, encoding='utf-8') as f:
                 manifest_entries = json.load(f).get('entries', [])
 
         if repo_slug == 'charming-fermi':
@@ -687,7 +685,7 @@ def main():
 
         with open(roadmap_path, 'w', encoding='utf-8') as f:
             f.write(roadmap_content)
-        print(f"    ✓ Updated ROADMAP.md with collapsible section + difficulty hierarchy")
+        print("    ✓ Updated ROADMAP.md with collapsible section + difficulty hierarchy")
 
         # 3. Update README.md with collapsible topic sections
         update_readme_topics_collapsible(repo_path, repo_slug, pillars, concepts)

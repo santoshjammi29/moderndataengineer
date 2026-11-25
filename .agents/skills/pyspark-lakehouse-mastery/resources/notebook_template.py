@@ -23,12 +23,9 @@
 
 # COMMAND ----------
 
-import os
-import sys
-from pathlib import Path
 
 try:
-    spark
+    _ = spark
 except NameError:
     from pyspark.sql import SparkSession
     spark = (
@@ -42,9 +39,6 @@ except NameError:
         .getOrCreate()
     )
 
-from pyspark.sql import functions as F
-from pyspark.sql import types as T
-from pyspark.sql.window import Window
 
 spark.sparkContext.setLogLevel("WARN")
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Builder script to generate ultra-comprehensive, architect-level diagrams.ts
 Grounding all 42 whiteboard architecture blueprints with:
@@ -2092,7 +2091,7 @@ def generate_typescript_file():
     ts_code.append('}')
     ts_code.append('')
     ts_code.append('export const architectureDiagrams: ArchitectureDiagramItem[] = ')
-    
+
     # Dump JSON formatted cleanly as TS array
     json_str = json.dumps(DIAGRAMS, indent=2, ensure_ascii=False)
     ts_code.append(json_str + ';')

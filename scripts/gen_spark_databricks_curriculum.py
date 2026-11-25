@@ -1,6 +1,5 @@
 # scripts/gen_spark_databricks_curriculum.py
 import json
-import sys
 from curriculum_databricks import DATABRICKS_ITEMS
 from curriculum_spark import SPARK_ITEMS
 from curriculum_scenarios import SCENARIO_ITEMS
@@ -13,7 +12,7 @@ def main():
     print(f"Total curriculum items defined: {len(all_curriculum)}")
 
     # 1. Update data_de.json
-    with open(DE_FILE, 'r') as f:
+    with open(DE_FILE) as f:
         de_data = json.load(f)
     print(f"data_de.json before: {len(de_data)}")
     existing_de_ids = {d['id'] for d in de_data}
@@ -26,7 +25,7 @@ def main():
             print(f"[data_de] SKIP duplicate: {de_id}")
             de_skipped += 1
             continue
-        
+
         de_entry = {
             "id": de_id,
             "source": "Modern Stack Mastery",
@@ -47,7 +46,7 @@ def main():
     print(f"data_de.json after: {len(de_data)} (Added: {de_added}, Skipped: {de_skipped})")
 
     # 2. Update data_architecture.json
-    with open(ARCH_FILE, 'r') as f:
+    with open(ARCH_FILE) as f:
         arch_data = json.load(f)
     print(f"data_architecture.json before: {len(arch_data)}")
     existing_arch_ids = {d['id'] for d in arch_data}
@@ -60,7 +59,7 @@ def main():
             print(f"[data_architecture] SKIP duplicate: {arch_id}")
             arch_skipped += 1
             continue
-        
+
         arch_entry = {
             "id": arch_id,
             "source": "Architecture Hub",

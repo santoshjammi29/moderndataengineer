@@ -15,8 +15,6 @@ Author: Principal Lakehouse & Distributed Data Systems Architect
 Platform: moderndataengineer.uk
 """
 
-import os
-import re
 import json
 import shutil
 from pathlib import Path
@@ -177,9 +175,9 @@ trim_trailing_whitespace = false
 def generate_contributing_md(repo_key: str, meta: dict) -> str:
     name = meta['name']
     github = meta['github']
-    role = meta['role']
+    meta['role']
     pillar = meta['primary_pillar']
-    
+
     return f"""# Contributing to {name}
 
 Thank you for your interest in contributing to **{name}** (`{github}`)! This repository is an official component of the **Modern Data Engineering Lakehouse Ecosystem** ([moderndataengineer.uk](https://moderndataengineer.uk)).
@@ -264,13 +262,13 @@ Before submitting a Pull Request, verify:
 def generate_agents_md(repo_key: str, meta: dict) -> str:
     name = meta['name']
     github = meta['github']
-    role = meta['role']
+    meta['role']
     pillar = meta['primary_pillar']
-    
-    return f"""# Autonomous Agent Operational Guidelines: {name}
 
-> **Repository**: [{github}](https://github.com/{github})  
-> **Ecosystem Hub**: [moderndataengineer.uk](https://moderndataengineer.uk)  
+    return rf"""# Autonomous Agent Operational Guidelines: {name}
+
+> **Repository**: [{github}](https://github.com/{github})
+> **Ecosystem Hub**: [moderndataengineer.uk](https://moderndataengineer.uk)
 > **Primary Authority**: `{pillar}`
 
 ---
@@ -301,17 +299,16 @@ You are assisting on **{name}**, an authoritative satellite repository within th
 def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
     name = meta['name']
     github = meta['github']
-    role = meta['role']
+    meta['role']
     pillar = meta['primary_pillar']
     total_count = len(entries)
-    
+
     # Bucket entries by tier
     tier1 = [] # L100
     tier2 = [] # L200
     tier3 = [] # L300
     tier4 = [] # L400
-    other = []
-    
+
     for e in entries:
         diff = e.get('difficulty', '').upper()
         if 'L100' in diff:
@@ -329,7 +326,7 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
     lines = [
         f"# 🗺️ {name} — Interactive Curriculum Roadmap",
         "",
-        f"> **Interactive Checkbox Study Tracker & Mastery Progression**  ",
+        "> **Interactive Checkbox Study Tracker & Mastery Progression**  ",
         f"> **Canonical Repository**: [{github}](https://github.com/{github}) | **Ecosystem**: [moderndataengineer.uk](https://moderndataengineer.uk)  ",
         f"> **Total Exercises & Drills**: `{total_count}` | **Primary Pillar**: `{pillar}`",
         "",
@@ -358,7 +355,7 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
         "```",
         ""
     ]
-    
+
     if tier1:
         lines.extend([
             "### 🟢 Tier 1: Foundations & Architecture (Level 100)",
@@ -371,7 +368,7 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             link = f"[{title}]({path})" if path else title
             lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 100`")
         lines.append("")
-        
+
     if tier2:
         lines.extend([
             "### 🟡 Tier 2: Core Mechanics & Implementation (Level 200)",
@@ -384,7 +381,7 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             link = f"[{title}]({path})" if path else title
             lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 200`")
         lines.append("")
-        
+
     if tier3:
         lines.extend([
             "### 🟠 Tier 3: Complex Scenarios, Edge Cases & Performance (Level 300)",
@@ -397,7 +394,7 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             link = f"[{title}]({path})" if path else title
             lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 300`")
         lines.append("")
-        
+
     if tier4:
         lines.extend([
             "### 🔴 Tier 4: Production Hardening, FinOps & Staff Architecture (Level 400)",
@@ -410,7 +407,7 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             link = f"[{title}]({path})" if path else title
             lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 400`")
         lines.append("")
-        
+
     lines.extend([
         "---",
         "",
@@ -418,9 +415,9 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
         "",
         "| Schedule | Pace | Target Audience | Focus |",
         "|---|---|---|---|",
-        f"| **4-Week Sprint** | 5-6 drills / day | Interview Prep / Fast Track | Focus on Tier 2 & Tier 3 core drills |",
+        "| **4-Week Sprint** | 5-6 drills / day | Interview Prep / Fast Track | Focus on Tier 2 & Tier 3 core drills |",
         f"| **8-Week Deep-Dive** | 2-3 drills / day | Full Technical Mastery | Complete all {total_count} exercises + tests |",
-        f"| **12-Week Staff Track** | 1-2 drills / day | Architect & Tech Lead | Deep dive into Tier 3 & Tier 4 blueprints |",
+        "| **12-Week Staff Track** | 1-2 drills / day | Architect & Tech Lead | Deep dive into Tier 3 & Tier 4 blueprints |",
         "",
         "---",
         "",
@@ -438,14 +435,14 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
         "- [Interview Handbook](https://github.com/santoshjammi29/data-engineering-interview-handbook)",
         "- [Security Handbook](https://github.com/santoshjammi29/security-handbook)"
     ])
-    
+
     return "\n".join(lines) + "\n"
 
 def generate_hub_roadmap_md() -> str:
     return """# 🗺️ Modern Data Engineer & Lakehouse Architect — Master Ecosystem Roadmap
 
-> **Comprehensive Interactive Learning Roadmap across all 14 Knowledge Pillars**  
-> **Platform**: [moderndataengineer.uk](https://moderndataengineer.uk) | **Codebase**: [santoshjammi29/moderndataengineer](https://github.com/santoshjammi29/moderndataengineer)  
+> **Comprehensive Interactive Learning Roadmap across all 14 Knowledge Pillars**
+> **Platform**: [moderndataengineer.uk](https://moderndataengineer.uk) | **Codebase**: [santoshjammi29/moderndataengineer](https://github.com/santoshjammi29/moderndataengineer)
 > **Scope**: 11,280+ Curated Data Engineering Records across 14 Specialized Repositories
 
 ---
@@ -563,24 +560,24 @@ def update_readme_badges(repo_path: Path, repo_key: str, meta: dict):
     readme_path = repo_path / 'README.md'
     if not readme_path.exists():
         return
-        
-    with open(readme_path, 'r', encoding='utf-8') as f:
+
+    with open(readme_path, encoding='utf-8') as f:
         content = f.read()
-        
-    github = meta['github']
-    name = meta['name']
-    
+
+    meta['github']
+    meta['name']
+
     # Check if ROADMAP and CONTRIBUTING links already exist
     has_roadmap_link = 'ROADMAP.md' in content
     has_contributing_link = 'CONTRIBUTING.md' in content
-    
+
     # If already linked, skip modifying README to keep diff clean
     if has_roadmap_link and has_contributing_link:
         print(f"[{repo_key}] README already links to ROADMAP.md and CONTRIBUTING.md")
         return
 
     # Add quick curriculum navigation section if missing
-    addition = f"""
+    addition = """
 
 ---
 
@@ -598,14 +595,14 @@ def update_readme_badges(repo_path: Path, repo_key: str, meta: dict):
 def sync_agent_skills(repo_path: Path, repo_key: str):
     if repo_path == HUB_DIR:
         return
-        
+
     source_skill_dir = HUB_DIR / '.agents/skills/coding-learning-repo-architect'
     target_agents = repo_path / '.agents'
     target_skills = target_agents / 'skills'
-    
+
     if not source_skill_dir.exists():
         return
-        
+
     # If the repo already has .agents/skills, copy the new skill there
     if target_skills.exists():
         dest = target_skills / 'coding-learning-repo-architect'
@@ -616,11 +613,11 @@ def sync_agent_skills(repo_path: Path, repo_key: str):
             # Overwrite SKILL.md
             shutil.copy2(source_skill_dir / 'SKILL.md', dest / 'SKILL.md')
             print(f"[{repo_key}] Updated coding-learning-repo-architect/SKILL.md")
-            
+
         # Update UPSTREAM.md if exists
         upstream = target_skills / 'UPSTREAM.md'
         if upstream.exists():
-            with open(upstream, 'r', encoding='utf-8') as f:
+            with open(upstream, encoding='utf-8') as f:
                 up_content = f.read()
             if 'coding-learning-repo-architect' not in up_content:
                 entry = "\n- `coding-learning-repo-architect`: Synthesis of 25 top-starred GitHub educational repositories (~5M+ stars) covering the 8 structural archetypes, 4-tier progressive disclosure, code-test-doc triad, and automated test harnesses.\n"
@@ -633,24 +630,24 @@ def process_repository(repo_key: str, meta: dict):
     if not repo_path.exists():
         print(f"[{repo_key}] Directory not found at {repo_path}")
         return
-        
-    print(f"\n==================================================")
+
+    print("\n==================================================")
     print(f"Processing: {meta['name']} ({repo_key})")
-    print(f"==================================================")
-    
+    print("==================================================")
+
     # 1. Ensure .editorconfig
     editorconfig_path = repo_path / '.editorconfig'
     if not editorconfig_path.exists():
         with open(editorconfig_path, 'w', encoding='utf-8') as f:
             f.write(EDITORCONFIG_CONTENT)
         print(f"[{repo_key}] Created .editorconfig")
-        
+
     # 2. Ensure CONTRIBUTING.md
     contributing_path = repo_path / 'CONTRIBUTING.md'
     with open(contributing_path, 'w', encoding='utf-8') as f:
         f.write(generate_contributing_md(repo_key, meta))
     print(f"[{repo_key}] Created/Updated CONTRIBUTING.md")
-    
+
     # 3. Ensure AGENTS.md
     agents_path = repo_path / 'AGENTS.md'
     # If not hub (hub has custom Next.js agent rules), write tailored AGENTS.md
@@ -658,7 +655,7 @@ def process_repository(repo_key: str, meta: dict):
         with open(agents_path, 'w', encoding='utf-8') as f:
             f.write(generate_agents_md(repo_key, meta))
         print(f"[{repo_key}] Created/Updated AGENTS.md")
-        
+
     # 4. Generate ROADMAP.md
     roadmap_path = repo_path / 'ROADMAP.md'
     if meta['is_hub']:
@@ -670,17 +667,17 @@ def process_repository(repo_key: str, meta: dict):
         manifest_path = repo_path / 'manifest.json'
         entries = []
         if manifest_path.exists():
-            with open(manifest_path, 'r', encoding='utf-8') as f:
+            with open(manifest_path, encoding='utf-8') as f:
                 m_data = json.load(f)
                 entries = m_data.get('entries', [])
-        
+
         with open(roadmap_path, 'w', encoding='utf-8') as f:
             f.write(generate_roadmap_md(repo_key, meta, entries))
         print(f"[{repo_key}] Created ROADMAP.md with {len(entries)} tracked items")
-        
+
     # 5. Harmonize README.md
     update_readme_badges(repo_path, repo_key, meta)
-    
+
     # 6. Sync Agent Skills
     sync_agent_skills(repo_path, repo_key)
 

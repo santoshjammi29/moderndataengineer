@@ -5,7 +5,6 @@ Provides complete, authoritative, and grammatically complete architectural defin
 """
 
 import json
-import os
 
 CONCEPTS_PATH = "src/data/json/data_concepts.json"
 
@@ -261,7 +260,7 @@ UPDATED_DEFINITIONS = {
 }
 
 def main():
-    with open(CONCEPTS_PATH, "r", encoding="utf-8") as f:
+    with open(CONCEPTS_PATH, encoding="utf-8") as f:
         concepts = json.load(f)
 
     updated_count = 0

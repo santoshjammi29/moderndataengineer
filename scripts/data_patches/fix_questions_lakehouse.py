@@ -86,7 +86,7 @@ MERGE INTO enterprise_lake.crm.dim_customers AS target
 USING staging.customer_updates AS source
 ON target.customer_id = source.customer_id
 WHEN MATCHED AND target.updated_at < source.updated_at THEN
-  UPDATE SET 
+  UPDATE SET
     target.email = source.email,
     target.status = source.status,
     target.updated_at = source.updated_at
@@ -183,7 +183,7 @@ TBLPROPERTIES ('table_type'='ICEBERG');
    - Athena/Trino detects the `ICEBERG` table type from Glue metadata.
    - Instead of scanning directories, Athena reads the Iceberg metadata JSON pointer in S3, parses manifest files, prunes partitions, and reads Parquet files directly:
 ```sql
-SELECT page_url, count(*) 
+SELECT page_url, count(*)
 FROM awsdatacatalog.analytics.web_traffic
 WHERE event_time >= now() - interval '1' day
 GROUP BY page_url;
@@ -316,19 +316,19 @@ PARTITIONED BY (
 2. **Dynamic Column Masking**:
 ```sql
 -- Unity Catalog / SQL standard syntax
-CREATE FUNCTION mask_ssn(val STRING) 
+CREATE FUNCTION mask_ssn(val STRING)
 RETURN IF(IS_ACCOUNT_GROUP_MEMBER('hr_admin'), val, 'XXX-XX-XXXX');
 
-ALTER TABLE enterprise_lake.hr.employees 
+ALTER TABLE enterprise_lake.hr.employees
   ALTER COLUMN ssn SET MASK mask_ssn;
 ```
 3. **Row-Level Security Filters**:
 ```sql
 CREATE FUNCTION region_filter(record_region STRING)
-RETURN IS_ACCOUNT_GROUP_MEMBER('executives') OR 
+RETURN IS_ACCOUNT_GROUP_MEMBER('executives') OR
        IS_ACCOUNT_GROUP_MEMBER(CONCAT('analysts_', record_region));
 
-ALTER TABLE enterprise_lake.sales.orders 
+ALTER TABLE enterprise_lake.sales.orders
   SET ROW FILTER region_filter ON (sales_region);
 ```
 4. **Underlying Pushdown**:
@@ -405,10 +405,10 @@ def process_cdc_microbatch(microbatch_df, batch_id):
     # Deduplicate within the micro-batch to keep only the latest operation per primary key
     from pyspark.sql.window import Window
     from pyspark.sql.functions import row_number, col
-    
+
     window_spec = Window.partitionBy("customer_id").orderBy(col("__source_ts_ms").desc())
     latest_updates = microbatch_df.withColumn("rn", row_number().over(window_spec)).filter("rn = 1")
-    
+
     # Execute atomic merge
     target_table = DeltaTable.forName(spark, "enterprise_lake.crm.customers")
     (target_table.alias("t")

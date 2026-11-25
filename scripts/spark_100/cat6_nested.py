@@ -194,7 +194,7 @@ from pyspark.sql import functions as F
 def flatten_dataframe(df):
     flat_cols = []
     nested_cols = []
-    
+
     for field in df.schema.fields:
         if isinstance(field.dataType, StructType):
             for sub_field in field.dataType.fields:
@@ -206,9 +206,9 @@ def flatten_dataframe(df):
             flat_cols.append(F.col(field.name))
         else:
             flat_cols.append(F.col(field.name))
-            
+
     df_transformed = df.select(flat_cols + nested_cols)
-    
+
     # Recursively check if any struct fields remain
     has_struct = any(isinstance(f.dataType, StructType) for f in df_transformed.schema.fields)
     if has_struct:

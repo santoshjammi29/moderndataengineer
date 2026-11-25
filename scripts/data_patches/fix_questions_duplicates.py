@@ -38,7 +38,7 @@ def sensor_branching_workflow():
 
     bulk_proc = EmptyOperator(task_id="process_bulk_stream")
     micro_proc = EmptyOperator(task_id="process_micro_batch")
-    
+
     join_task = EmptyOperator(
         task_id="join_branches",
         trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS

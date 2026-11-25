@@ -71,7 +71,7 @@ df_parsed = df.withColumn(
         "root_cause": "Local wall-clock time is non-monotonic: it repeats an hour in autumn (25-hour day) and skips an hour in spring (23-hour day). Bucketing on local wall-clock hours creates non-unique chronological buckets.",
         "failing_code": """-- Failing Spark SQL:
 -- Bucketing on wall-clock local time subject to DST:
-SELECT 
+SELECT
     date_trunc('hour', local_timestamp) AS hour_bucket,
     meter_id,
     SUM(kwh) AS total_kwh
@@ -79,7 +79,7 @@ FROM smart_meters
 GROUP BY 1, 2; -- Duplicates 01:00 AM on DST fallback!""",
         "solution_code": """-- Production-Grade Solution: Bucket on Monotonic UTC Epoch Seconds
 -- Always truncate and group on UTC timestamps:
-SELECT 
+SELECT
     date_trunc('hour', utc_timestamp) AS utc_hour_bucket,
     meter_id,
     SUM(kwh) AS total_kwh,
@@ -259,8 +259,8 @@ streaming_df.withWatermark("tx_time", "7 days") \\ # 80TB State Store! OOM Crash
 -- Delta Lake MERGE INTO handles late-arriving transactions up to 30 days seamlessly:
 MERGE INTO gold.fact_merchant_daily_sales target
 USING (
-    SELECT 
-        merchant_id, 
+    SELECT
+        merchant_id,
         to_date(tx_time) AS tx_date,
         SUM(amount) AS daily_amount
     FROM bronze.transactions
@@ -268,9 +268,9 @@ USING (
     GROUP BY 1, 2
 ) source
 ON target.merchant_id = source.merchant_id AND target.tx_date = source.tx_date
-WHEN MATCHED THEN 
+WHEN MATCHED THEN
     UPDATE SET target.daily_amount = target.daily_amount + source.daily_amount
-WHEN NOT MATCHED THEN 
+WHEN NOT MATCHED THEN
     INSERT (merchant_id, tx_date, daily_amount) VALUES (source.merchant_id, source.tx_date, source.daily_amount);""",
         "interview_takeaway": "Do not force multi-day late arrival handling into streaming state stores; use a tight 2-hour watermark for streaming dashboards and reconcile multi-day delayed records via incremental Delta Lake `MERGE INTO` batch jobs."
     },

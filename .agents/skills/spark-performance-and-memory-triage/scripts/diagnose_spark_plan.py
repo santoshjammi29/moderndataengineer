@@ -13,7 +13,7 @@ from pathlib import Path
 
 def analyze_plan_text(plan_text: str):
     issues = []
-    
+
     # Check 1: Cartesian or Nested Loop Joins
     if "BroadcastNestedLoopJoin" in plan_text:
         issues.append("CRITICAL: BroadcastNestedLoopJoin detected. Check for non-equi joins (e.g. >, <, !=) causing Cartesian explosion.")
@@ -37,15 +37,15 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python diagnose_spark_plan.py <plan_file.txt>")
         sys.exit(1)
-        
+
     path = Path(sys.argv[1])
     if not path.exists():
         print(f"File {path} not found.", file=sys.stderr)
         sys.exit(1)
-        
+
     text = path.read_text(encoding="utf-8")
     issues = analyze_plan_text(text)
-    
+
     if not issues:
         print("✓ No critical join or filter anti-patterns detected in execution plan.")
         sys.exit(0)

@@ -61,18 +61,18 @@ renamed_and_cast AS (
     SELECT
         -- Primary Key
         cast(order_id as string) as order_id,
-        
+
         -- Foreign Keys
         cast(user_id as string) as customer_id,
         cast(store_id as string) as store_id,
-        
+
         -- Dimensions & Statuses
         trim(lower(status)) as order_status,
-        
+
         -- Timestamps
         cast(created_at as timestamp_ntz) as ordered_at,
         cast(updated_at as timestamp_ntz) as last_modified_at,
-        
+
         -- Financials (cents to dollars)
         cast(amount_cents as numeric(18, 2)) / 100.0 as order_amount_usd
     FROM raw_source
@@ -106,7 +106,7 @@ WITH orders AS (
 ),
 
 payments AS (
-    SELECT 
+    SELECT
         order_id,
         sum(payment_amount_usd) as total_paid_amount_usd
     FROM {{ ref('stg_stripe__payments') }}
@@ -229,12 +229,12 @@ seeds:
 ```
 ```sql
 -- Usage in a downstream dbt mart model
-SELECT 
+SELECT
     f.order_id,
     c.channel_name,
     c.is_paid_media
 FROM {{ ref('fct_orders') }} f
-LEFT JOIN {{ ref('ref_attribution_channels') }} c 
+LEFT JOIN {{ ref('ref_attribution_channels') }} c
     ON f.utm_channel_id = c.channel_id
 ```
 3. **Deployment**: Load tables into warehouse using `dbt seed --full-refresh`.
@@ -254,9 +254,9 @@ A data platform that lacks accessible documentation suffers from low stakeholder
 ```markdown
 <!-- models/docs/enterprise_metrics.md -->
 {% docs customer_ltv_definition %}
-**Customer Lifetime Value (LTV)** represents the total gross margin generated 
-by a customer across all historical paid transactions, minus refund amounts 
-and localized acquisition discounts. 
+**Customer Lifetime Value (LTV)** represents the total gross margin generated
+by a customer across all historical paid transactions, minus refund amounts
+and localized acquisition discounts.
 Updated daily at 04:00 UTC. Owned by Finance Analytics.
 {% enddocs %}
 ```

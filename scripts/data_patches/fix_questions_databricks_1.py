@@ -47,18 +47,18 @@ CREATE TABLE IF NOT EXISTS enterprise_lake.crm.accounts (
     created_at TIMESTAMP
 ) USING DELTA;
 
-INSERT INTO enterprise_lake.crm.accounts VALUES 
+INSERT INTO enterprise_lake.crm.accounts VALUES
   ('A1', 'Acme Corp', 'Enterprise', current_timestamp());
 ```
 2. **Atomic Update & Delete**:
 ```sql
 -- Updates rewrite affected Parquet files atomically
-UPDATE enterprise_lake.crm.accounts 
-SET tier = 'VIP' 
+UPDATE enterprise_lake.crm.accounts
+SET tier = 'VIP'
 WHERE account_id = 'A1';
 
 -- Deletes remove rows atomically (or write delete vectors if enabled)
-DELETE FROM enterprise_lake.crm.accounts 
+DELETE FROM enterprise_lake.crm.accounts
 WHERE tier = 'Inactive';
 ```
 3. **PySpark DeltaTable API**:
@@ -174,16 +174,16 @@ with mlflow.start_run(run_name="rf_n_estimators_150") as run:
     max_depth = 8
     mlflow.log_param("n_estimators", n_estimators)
     mlflow.log_param("max_depth", max_depth)
-    
+
     # 2. Train model
     model = RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depth)
     model.fit(X_train, y_train)
-    
+
     # 3. Log metrics
     preds = model.predict(X_val)
     rmse = mean_squared_error(y_val, preds, squared=False)
     mlflow.log_metric("val_rmse", rmse)
-    
+
     # 4. Log model artifact with input signature
     signature = mlflow.models.infer_signature(X_val, preds)
     mlflow.sklearn.log_model(
@@ -214,7 +214,7 @@ print(f"Logged run: {run.info.run_id} with RMSE: {rmse}")
 ### SQL Query Execution Snippet:
 ```sql
 -- Sub-second aggregation running on Photon SQL Warehouse
-SELECT 
+SELECT
     date_trunc('month', order_date) AS sales_month,
     customer_segment,
     COUNT(DISTINCT customer_id) AS active_customers,
@@ -342,7 +342,7 @@ The `OPTIMIZE` command coalesces small files into uniform ~1 GB Parquet files wi
 OPTIMIZE enterprise_prod.sales.orders;
 
 -- Run targeted compaction on a specific partition
-OPTIMIZE enterprise_prod.sales.orders 
+OPTIMIZE enterprise_prod.sales.orders
 WHERE order_date >= current_date() - INTERVAL 7 DAYS;
 ```
 ### Automatic Compaction (Auto-Optimize):
@@ -541,7 +541,7 @@ PARTITIONED BY (event_date);
 ### Query Pruning Benefit:
 - When an analyst queries using the original timestamp:
 ```sql
-SELECT * FROM enterprise_prod.telemetry.events 
+SELECT * FROM enterprise_prod.telemetry.events
 WHERE event_timestamp >= '2024-03-01 00:00:00' AND event_timestamp < '2024-03-02 00:00:00';
 ```
 - Delta Lake automatically recognizes the generation relationship, derives the predicate `event_date = '2024-03-01'`, and prunes all other daily partitions without requiring the analyst to know the partitioning schema!"""),
@@ -578,7 +578,7 @@ while True:
     run_info = requests.get(status_url, headers=headers).json()
     life_cycle_state = run_info["state"]["life_cycle_state"]
     print(f"Current State: {life_cycle_state}")
-    
+
     if life_cycle_state in ["TERMINATED", "SKIPPED", "INTERNAL_ERROR"]:
         result_state = run_info["state"].get("result_state")
         print(f"Run Finished with result: {result_state}")
@@ -631,7 +631,7 @@ USING DELTA;
 
 -- Inserts omit the identity column; Delta populates it automatically
 INSERT INTO enterprise_prod.crm.dim_customers (customer_business_id, customer_name, created_at)
-VALUES 
+VALUES
   ('CUST-1001', 'Acme Logistics', current_timestamp()),
   ('CUST-1002', 'Global Tech', current_timestamp());
 ```
@@ -669,7 +669,7 @@ CREATE OR REPLACE TABLE dr_lake.sales.orders DEEP CLONE enterprise_prod.sales.or
 ### Auditing Queries:
 1. **Audit Tables Missing Liquid Clustering or Partitioning**:
 ```sql
-SELECT 
+SELECT
     table_schema,
     table_name,
     table_type
@@ -679,7 +679,7 @@ ORDER BY table_schema, table_name;
 ```
 2. **Audit User Access Privileges**:
 ```sql
-SELECT 
+SELECT
     grantee,
     table_schema,
     table_name,
@@ -690,12 +690,12 @@ ORDER BY grantee, table_name;
 ```
 3. **Audit Column Data Types for Sensitive PII**:
 ```sql
-SELECT 
+SELECT
     table_name,
     column_name,
     data_type
 FROM enterprise_prod.information_schema.columns
-WHERE column_name ILIKE '%ssn%' 
+WHERE column_name ILIKE '%ssn%'
    OR column_name ILIKE '%credit_card%';
 ```"""),
 
@@ -866,13 +866,13 @@ SET spark.sql.adaptive.advisoryPartitionSizeInBytes = 67108864; -- 64 MB
 ### Enabling CDF:
 ```sql
 -- Enable CDF on a new or existing table
-ALTER TABLE enterprise_prod.crm.accounts 
+ALTER TABLE enterprise_prod.crm.accounts
 SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
 ```
 ### Consuming Changes via SQL:
 ```sql
 -- Query row-level CDC stream between commit versions
-SELECT 
+SELECT
     account_id,
     tier,
     _change_type,      -- 'insert', 'update_preimage', 'update_postimage', 'delete'
@@ -904,7 +904,7 @@ cdf_stream = (
 
 ### Enabling Deletion Vectors:
 ```sql
-ALTER TABLE enterprise_prod.sales.orders 
+ALTER TABLE enterprise_prod.sales.orders
 SET TBLPROPERTIES ('delta.enableDeletionVectors' = 'true');
 ```
 ### Compaction:
@@ -1071,10 +1071,10 @@ CREATE TABLE enterprise_prod.sales.invoices (
 ) USING DELTA;
 
 -- Add CHECK constraints
-ALTER TABLE enterprise_prod.sales.invoices 
+ALTER TABLE enterprise_prod.sales.invoices
   ADD CONSTRAINT valid_amount CHECK (amount >= 0.0);
 
-ALTER TABLE enterprise_prod.sales.invoices 
+ALTER TABLE enterprise_prod.sales.invoices
   ADD CONSTRAINT valid_status CHECK (status IN ('draft', 'sent', 'paid', 'void'));
 ```
 ### Enforcement Mechanics:
@@ -1186,7 +1186,7 @@ USING CONNECTION postgres_crm_conn
 OPTIONS (database 'crm_production');
 
 -- 3. Cross-platform join: live PostgreSQL CRM joined with Delta Lake orders!
-SELECT 
+SELECT
     o.order_id,
     c.company_name,
     o.total_amount_usd
@@ -1257,22 +1257,22 @@ dbutils.widgets.text("date_param", "2024-03-01")
 ### SQL Implementation:
 ```sql
 CREATE OR REPLACE VIEW enterprise_prod.hr.vw_employee_salaries AS
-SELECT 
+SELECT
     employee_id,
     department,
     -- Column masking: show real salary to HR admins, mask for everyone else
-    CASE 
+    CASE
       WHEN is_account_group_member('hr_directors') THEN base_salary
       ELSE 0.00
     END AS base_salary,
     -- Column masking: mask SSN
-    CASE 
+    CASE
       WHEN is_account_group_member('hr_directors') THEN ssn
       ELSE CONCAT('XXX-XX-', RIGHT(ssn, 4))
     END AS ssn
 FROM enterprise_prod.hr.employees_secured
 -- Row filter: non-HR employees see only their own department
-WHERE is_account_group_member('hr_directors') 
+WHERE is_account_group_member('hr_directors')
    OR department = current_user();
 ```
 - Users are granted `SELECT` exclusively on the Dynamic View, with permissions on the underlying table restricted to service principals."""),

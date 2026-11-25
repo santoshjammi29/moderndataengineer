@@ -1,6 +1,4 @@
 import json
-import os
-import sys
 
 CONCEPTS_FILE = 'src/data/json/data_concepts.json'
 QUESTIONS_FILE = 'src/data/json/questions.json'
@@ -623,9 +621,9 @@ new_modern_concepts = [
 
 def append_dataset(filepath, new_items, key_field='id'):
     print(f"\nProcessing {filepath}...")
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding='utf-8') as f:
         existing = json.load(f)
-    
+
     existing_ids = {item[key_field] for item in existing}
     added = 0
     for item in new_items:
@@ -636,10 +634,10 @@ def append_dataset(filepath, new_items, key_field='id'):
             existing_ids.add(item[key_field])
             added += 1
             print(f"  [ADDED] {item[key_field]}")
-            
+
     with open(filepath, 'w', encoding='utf-8') as f:
         json.dump(existing, f, indent=2, ensure_ascii=False)
-        
+
     print(f"Completed {filepath}: Added {added} items. Total: {len(existing)}")
     return added
 
@@ -649,7 +647,7 @@ q_added = append_dataset(QUESTIONS_FILE, new_questions)
 m_added = append_dataset(MSSQL_FILE, new_mssql_sheets)
 mc_added = append_dataset(MODERN_CONCEPTS_FILE, new_modern_concepts)
 
-print(f"\n=== SUMMARY OF APPENDED KNOWLEDGE BASE ITEMS ===")
+print("\n=== SUMMARY OF APPENDED KNOWLEDGE BASE ITEMS ===")
 print(f"Concepts added: {c_added}")
 print(f"Questions added: {q_added}")
 print(f"MSSQL Code Sheets added: {m_added}")

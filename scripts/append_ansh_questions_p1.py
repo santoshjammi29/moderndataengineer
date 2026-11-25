@@ -274,12 +274,12 @@ To achieve idempotency:
 CREATE PROCEDURE usp_upsert_sales AS
 BEGIN
   SET NOCOUNT ON;
-  
+
   MERGE target_sales AS t
   USING stg_sales AS s
   ON t.order_id = s.order_id AND t.order_date = s.order_date
   WHEN MATCHED THEN
-    UPDATE SET 
+    UPDATE SET
       t.sale_amount = s.sale_amount,
       t.customer_id = s.customer_id,
       t.updated_at = GETUTCDATE()
@@ -596,11 +596,11 @@ If a record arrives with:
 - Malformed JSON/CSV characters.
 Auto Loader does **not** drop the row or crash the job. It ingests the row, sets the mismatched column to `null`, and stores the raw, unparsed content in the `_rescued_data` column as a JSON string:
 ```sql
-SELECT 
-  customer_id, 
-  age, 
-  _rescued_data 
-FROM bronze_customers 
+SELECT
+  customer_id,
+  age,
+  _rescued_data
+FROM bronze_customers
 WHERE _rescued_data IS NOT NULL;
 ```
 
@@ -623,7 +623,7 @@ Delta Lake performance relies on minimizing I/O by reading only relevant data fi
 
 ### Phase 2: Implementation & Column Selection Criteria
 ```sql
-OPTIMIZE gold_sales 
+OPTIMIZE gold_sales
 ZORDER BY (customer_id, transaction_date);
 ```
 - **When to Z-Order**:
@@ -668,7 +668,7 @@ Databricks throws an `IllegalArgumentException` stating that retention period mu
 
 def main():
     print(f"Reading {FILE_PATH}...")
-    with open(FILE_PATH, 'r') as f:
+    with open(FILE_PATH) as f:
         data = json.load(f)
     print(f"Initial count: {len(data)}")
 

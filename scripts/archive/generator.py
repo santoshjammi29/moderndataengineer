@@ -3,10 +3,10 @@ import json
 concepts_file = "src/data/json/data_concepts.json"
 questions_file = "src/data/json/questions.json"
 
-with open(concepts_file, 'r') as f:
+with open(concepts_file) as f:
     concepts = json.load(f)
 
-with open(questions_file, 'r') as f:
+with open(questions_file) as f:
     questions = json.load(f)
 
 # Task 1: Add 150 concepts
@@ -32,9 +32,9 @@ def add_concept(terms, category, prefix, difficulty):
         explanation = f"In the context of {category}, {term} plays a crucial role. It allows engineers and analysts to efficiently manage data pipelines. Understanding {term} is essential for passing certification exams. It provides robust functionality for data processing. Organizations leverage it to scale their data platforms."
         key_points = [
             f"Enables robust integration within {category} ecosystems.",
-            f"Optimizes performance for large-scale data workflows.",
-            f"Provides scalable architecture for enterprise usage.",
-            f"Facilitates seamless deployment and monitoring."
+            "Optimizes performance for large-scale data workflows.",
+            "Provides scalable architecture for enterprise usage.",
+            "Facilitates seamless deployment and monitoring."
         ]
         concepts.append({
             "id": id_str,
@@ -85,11 +85,11 @@ for i in range(1, 101):
         diff = 'HARD'
     else:
         diff = 'ARCHITECT'
-    
+
     niche = db_niches[diff]
     topic_list = db_topics[diff].split(", ")
     topic = topic_list[i % len(topic_list)]
-    
+
     q_id = f"databricks-q-{i:03}"
     question_text = f"How do you implement and troubleshoot {topic} in a production Databricks environment?"
     answer_text = f"""### Phase 1: Conceptual Foundation
@@ -108,7 +108,7 @@ df.writeStream.format("delta").outputMode("append").option("checkpointLocation",
 - **Misconfigured Checkpoints**: If checkpoints are not aligned with {topic}, streaming jobs fail. *Remediation*: Always use dedicated distributed storage paths.
 - **Resource Exhaustion**: Running {topic} without auto-scaling can lead to OOM errors. *Remediation*: Enable photon and configure strict cluster policies.
 - **Security Misalignment**: Failing to bind {topic} to Unity Catalog exposes data. *Remediation*: Enforce strict Table ACLs and Row-Level security."""
-    
+
     questions.append({
         "id": q_id,
         "source": "Core Architect",

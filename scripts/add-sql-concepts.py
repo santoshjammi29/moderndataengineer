@@ -3,7 +3,7 @@ import os
 
 FILE = 'src/data/json/data_concepts.json'
 
-with open(FILE, 'r', encoding='utf-8') as f:
+with open(FILE, encoding='utf-8') as f:
     data = json.load(f)
 
 before_count = len(data)
@@ -377,7 +377,7 @@ with open(temp_file, 'w', encoding='utf-8') as f:
 
 os.replace(temp_file, FILE)
 
-with open(FILE, 'r', encoding='utf-8') as f:
+with open(FILE, encoding='utf-8') as f:
     verified = json.load(f)
 
 print(f"Successfully updated! New count: {len(verified)} (+{len(new_concepts)})")

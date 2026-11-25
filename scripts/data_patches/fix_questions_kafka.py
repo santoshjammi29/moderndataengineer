@@ -449,16 +449,16 @@ def process_message_batch(records, db_conn):
         # 1. Begin atomic DB transaction
         for record in records:
             cur.execute("INSERT INTO business_table (id, val) VALUES (%s, %s)", (record.key, record.value))
-        
+
         # 2. Update committed offset in the same transaction
         for tp, offset in calculate_max_offsets(records).items():
             cur.execute(\"\"\"
                 INSERT INTO kafka_consumer_offsets (topic, partition, committed_offset)
                 VALUES (%s, %s, %s)
-                ON CONFLICT (topic, partition) 
+                ON CONFLICT (topic, partition)
                 DO UPDATE SET committed_offset = EXCLUDED.committed_offset
             \"\"\", (tp.topic, tp.partition, offset))
-        
+
         # 3. Commit atomically - either both succeed or neither does
         db_conn.commit()
 ```
@@ -504,11 +504,11 @@ public class PiiMaskingInterceptor implements ProducerInterceptor<String, Object
     public ProducerRecord<String, Object> onSend(ProducerRecord<String, Object> record) {
         // Inspect headers or payload
         Object maskedValue = piiEngine.maskSensitiveFields(record.value());
-        
+
         // Add audit header
         Headers headers = record.headers();
         headers.add("x-pii-masked", "true".getBytes(StandardCharsets.UTF_8));
-        
+
         return new ProducerRecord<>(
             record.topic(), record.partition(), record.timestamp(),
             record.key(), maskedValue, headers

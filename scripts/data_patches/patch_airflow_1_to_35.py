@@ -409,7 +409,7 @@ run_gold_aggregation = SQLExecuteQueryOperator(
     sql=\"\"\"
         MERGE INTO gold.monthly_revenue AS target
         USING (
-            SELECT 
+            SELECT
                 tenant_id,
                 SUM(amount) AS total_revenue,
                 '{{ data_interval_start.strftime("%Y-%m-%d") }}' AS reporting_month
@@ -418,7 +418,7 @@ run_gold_aggregation = SQLExecuteQueryOperator(
               AND event_timestamp < '{{ data_interval_end }}'
             GROUP BY tenant_id
         ) AS source
-        ON target.tenant_id = source.tenant_id 
+        ON target.tenant_id = source.tenant_id
        AND target.reporting_month = source.reporting_month
         WHEN MATCHED THEN UPDATE SET total_revenue = source.total_revenue
         WHEN NOT MATCHED THEN INSERT (tenant_id, total_revenue, reporting_month)
@@ -973,7 +973,7 @@ def pipeline():
     @task
     def stream_large_dataset():
         hook = PostgresHook(postgres_conn_id="postgres_oltp")
-        
+
         # Using server-side cursors to prevent worker OOM crashes
         with hook.get_conn() as conn:
             with conn.cursor(name="server_side_orders_cursor") as cursor:

@@ -36,7 +36,7 @@ def daily_incremental_sales_pipeline():
     @task
     def extract_incremental(start_ts: str, end_ts: str):
         query = f\"\"\"
-            SELECT * FROM raw_sales 
+            SELECT * FROM raw_sales
             WHERE updated_at >= '{start_ts}' AND updated_at < '{end_ts}'
         \"\"\"
         # Execute query and dump to stage

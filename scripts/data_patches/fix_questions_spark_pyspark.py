@@ -97,7 +97,7 @@ curated_df.persist(StorageLevel.MEMORY_AND_DISK)
 try:
     # Action 1: Write summary KPI report
     curated_df.groupBy("category").sum("sales").write.parquet("s3://bucket/kpis/")
-    
+
     # Action 2: Write filtered anomaly data
     curated_df.filter("sales > 10000").write.parquet("s3://bucket/anomalies/")
 finally:
@@ -300,7 +300,7 @@ from pyspark.sql.functions import concat, lit, floor, rand, explode, array
 SALT_FACTOR = 16
 # Salt the skewed fact table
 salted_fact = fact_df.withColumn(
-    "salted_key", 
+    "salted_key",
     concat(col("join_key"), lit("_"), floor(rand() * SALT_FACTOR))
 )
 
@@ -661,12 +661,12 @@ def test_clean_sales_pipeline(spark):
     input_data = [("TX100", 150.0, "COMPLETED"), ("TX101", -20.0, "FAILED")]
     schema = "txn_id string, amount double, status string"
     input_df = spark.createDataFrame(input_data, schema)
-    
+
     result_df = clean_sales_pipeline(input_df)
-    
+
     expected_data = [("TX100", 150.0, "COMPLETED")]
     expected_df = spark.createDataFrame(expected_data, schema)
-    
+
     assertDataFrameEqual(result_df, expected_df, checkRowOrder=False)
 ```
 
@@ -741,7 +741,7 @@ NUM_PARTITIONS = 400
 # High-cost records get dynamic salting across 16 sub-bins; low-cost get direct hash
 balanced_df = weighted_df.withColumn(
     "partition_key",
-    when(col("cost_weight") > 500000, 
+    when(col("cost_weight") > 500000,
          concat(col("tenant_id"), lit("_"), pmod(hash(col("event_id")), lit(16))))
     .otherwise(col("tenant_id"))
 )
@@ -949,11 +949,11 @@ def run_c_model_inference(batch_iterator):
         # Access contiguous memory buffers without copying
         pyarrow_table = pa.Table.from_batches([arrow_record_batch])
         tensor_data = torch.from_dlpack(pyarrow_table.column("features"))
-        
+
         # GPU execution in external C++ runtime
         predictions = model_forward_pass(tensor_data)
         yield pa.RecordBatch.from_arrays(
-            [pa.array(predictions.cpu().numpy())], 
+            [pa.array(predictions.cpu().numpy())],
             names=["prediction"]
         )
 
@@ -980,7 +980,7 @@ from pyspark.sql.functions import col, when, array, lit, struct, to_json
 def evaluate_and_route(micro_batch_df, batch_id):
     if micro_batch_df.isEmpty():
         return
-        
+
     # Single-pass inline rule validation
     validated_df = micro_batch_df.withColumn(
         "validation_errors",
@@ -990,16 +990,16 @@ def evaluate_and_route(micro_batch_df, batch_id):
             when(col("event_timestamp").isNull(), lit("ERR_MISSING_TIMESTAMP"))
         ])
     ).withColumn(
-        "is_valid", 
-        col("validation_errors")[0].isNull() & 
-        col("validation_errors")[1].isNull() & 
+        "is_valid",
+        col("validation_errors")[0].isNull() &
+        col("validation_errors")[1].isNull() &
         col("validation_errors")[2].isNull()
     )
-    
+
     # 1. Clean records -> Gold Table
     clean_df = validated_df.filter(col("is_valid") == True).drop("validation_errors", "is_valid")
     clean_df.write.format("delta").mode("append").save("s3a://lakehouse/gold_transactions")
-    
+
     # 2. Corrupt records -> Quarantine DLQ Table
     quarantine_df = validated_df.filter(col("is_valid") == False) \\
         .withColumn("ingestion_batch_id", lit(batch_id))
