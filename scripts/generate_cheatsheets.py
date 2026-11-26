@@ -2,7 +2,7 @@
 """
 Databricks Architecture & Coding Cheat Sheets Generator - Ultra High-Density 12-Card Edition
 Reworked Layout: Zero unused blank space, uniform card density, comprehensive code breakdown & mechanics below every code block.
-Generates print-ready multi-page PDFs and 250-DPI PNG images
+Generates print-ready multi-page PDFs and 250-DPI WebP images
 for Spark SQL, PySpark, Spark Core & Architecture, and Python in Databricks.
 
 Author: Santosh Jammi | Principal Data Architect

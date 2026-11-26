@@ -66,23 +66,26 @@ def run_repo_tests(repo_name: str) -> (bool, str):
     if not repo_dir.exists():
         return False, "Repo directory missing"
 
+    fallback_py = BASE_DIR / "databricks-handbook" / ".venv" / "bin" / "python"
+    py_exec = str(fallback_py) if fallback_py.exists() else sys.executable
+
     test_script = repo_dir / "scripts" / "run_tests.py"
     if test_script.exists():
-        res = subprocess.run([sys.executable, str(test_script)], cwd=str(repo_dir), capture_output=True, text=True)
+        res = subprocess.run([py_exec, str(test_script)], cwd=str(repo_dir), capture_output=True, text=True)
         if res.returncode == 0:
             return True, "Tests passed"
         return False, f"Test failed: {res.stderr.strip() or res.stdout.strip()[-150:]}"
 
     validate_nb = repo_dir / "scripts" / "validate_notebooks.py"
     if validate_nb.exists():
-        res = subprocess.run([sys.executable, str(validate_nb)], cwd=str(repo_dir), capture_output=True, text=True)
+        res = subprocess.run([py_exec, str(validate_nb)], cwd=str(repo_dir), capture_output=True, text=True)
         if res.returncode == 0:
             return True, "Notebooks valid"
         return False, "Notebook validation failed"
 
     validate_md = repo_dir / "scripts" / "validate_markdown.py"
     if validate_md.exists():
-        res = subprocess.run([sys.executable, str(validate_md)], cwd=str(repo_dir), capture_output=True, text=True)
+        res = subprocess.run([py_exec, str(validate_md)], cwd=str(repo_dir), capture_output=True, text=True)
         if res.returncode == 0:
             return True, "Markdown valid"
         return False, "Markdown validation failed"
@@ -90,7 +93,12 @@ def run_repo_tests(repo_name: str) -> (bool, str):
     # Databricks handbook or modern repos using pytest / uv
     venv_pytest = repo_dir / ".venv" / "bin" / "pytest"
     if venv_pytest.exists():
-        res = subprocess.run([str(venv_pytest), "-q"], cwd=str(repo_dir), capture_output=True, text=True)
+        env = os.environ.copy()
+        venv_py = repo_dir / ".venv" / "bin" / "python"
+        if venv_py.exists():
+            env["PYSPARK_PYTHON"] = str(venv_py)
+            env["PYSPARK_DRIVER_PYTHON"] = str(venv_py)
+        res = subprocess.run([str(venv_pytest), "-q"], cwd=str(repo_dir), env=env, capture_output=True, text=True)
         if res.returncode == 0:
             return True, "Tests passed (pytest)"
         return False, f"Test failed: {res.stderr.strip() or res.stdout.strip()[-150:]}"
