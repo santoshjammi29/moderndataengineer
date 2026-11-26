@@ -47,8 +47,5 @@ next-env.d.ts
 .wrangler
 public/_artifacts
 
-# Vercel project metadata must remain local and untracked
-.vercel
-
 # AI assistant configs
 CLAUDE.md

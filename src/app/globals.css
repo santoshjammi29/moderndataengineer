@@ -202,7 +202,7 @@ html.dark {
   --glass-bg: rgba(22, 22, 24, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
   
-  /* Shadows — Linear/Vercel Muted Style */
+  /* Shadows — Linear Muted Style */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -757,7 +757,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Modern minimalist overlay scrollbar (Linear / Apple / Vercel style) */
+/* Modern minimalist overlay scrollbar (Linear / Apple style) */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

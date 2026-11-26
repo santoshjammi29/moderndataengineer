@@ -147,39 +147,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "fabric-pbi-prep.vercel.app",
-          },
-        ],
-        destination: "https://moderndataengineer.uk/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "lakehouse-architect.vercel.app",
-          },
-        ],
-        destination: "https://moderndataengineer.uk/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "lakehousearchitect.vercel.app",
-          },
-        ],
-        destination: "https://moderndataengineer.uk/:path*",
-        permanent: true,
-      },
-      {
         source: "/security.txt",
         destination: "/.well-known/security.txt",
         permanent: true,

@@ -64,7 +64,7 @@ Tested from global edge vantage points simulating broadband and mobile networks:
 | | **LCP** | 2.85 s | **0.78 s** | `-72.6%` | AVIF/WebP assets + `next/image` with `priority` |
 | | **FID / INP** | 72 ms | **< 16 ms** | `-77.8%` | Compute offloaded to Web Workers; lock-free UI thread |
 | | **CLS** | 0.142 | **0.000** | `-100.0%` | Strict aspect ratios and Next.js image bounding boxes |
-| **London (lhr1)** | **TTFB** | 560 ms | **44 ms** | `-92.1%` | Global Vercel Edge replication & Server-Side DAL |
+| **London (lhr1)** | **TTFB** | 560 ms | **44 ms** | `-92.1%` | Global Cloudflare Edge replication & Server-Side DAL |
 | | **LCP** | 3.10 s | **0.84 s** | `-72.9%` | ISR 1h pre-rendered HTML served directly from edge |
 | | **FID / INP** | 88 ms | **< 16 ms** | `-81.8%` | Virtualized DOM with `@tanstack/react-virtual` |
 | | **CLS** | 0.158 | **0.000** | `-100.0%` | Zero asynchronous layout shifting |
