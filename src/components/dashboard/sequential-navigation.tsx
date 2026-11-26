@@ -62,7 +62,7 @@ const PHASES: PhaseSection[] = [
         subLinks: [
           { label: "Concept Glossary", href: "/concepts" },
           { label: "Interactive Mind Map", href: "/mindmap" },
-          { label: "Flashcards", href: "/concepts?view=flashcards" },
+          { label: "Flashcards", href: "/concepts?view=study" },
         ],
       },
       {
@@ -155,7 +155,7 @@ const PHASES: PhaseSection[] = [
   {
     number: "03",
     title: "Production Coding & Emergency Runbooks",
-    tagline: "Hands-on implementation drills, memory triage runbooks, and vector PDF reference cards.",
+    tagline: "Hands-on implementation drills, memory triage runbooks, and interactive reference cards.",
     steps: [
       {
         step: "Step 07",
@@ -192,18 +192,17 @@ const PHASES: PhaseSection[] = [
       },
       {
         step: "Step 09",
-        title: "Emergency Cheat Sheets & 7 Master PDFs",
-        badge: "7 Master PDFs",
+        title: "Emergency Cheat Sheets & Runbooks",
+        badge: "124 Cards",
         badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
         icon: FileText,
         iconColor: "text-blue-400",
-        description: "76 Sev-1 incident runbooks, 48 Databricks cheatsheets, and 7 compiled printable A4 vector PDFs available for instant download.",
+        description: "76 Sev-1 incident runbooks, 48 Databricks cheatsheets, and 250-DPI panoramic architecture posters.",
         href: "/cheat-sheet",
-        actionText: "Download Cheat Sheets",
+        actionText: "Open Cheat Sheets",
         subLinks: [
           { label: "Incident Runbooks", href: "/cheat-sheet?tab=runbooks" },
           { label: "Databricks Sheets", href: "/cheat-sheet?tab=databricks" },
-          { label: "PDF Downloads Hub", href: "/cheat-sheet?tab=pdf_hub" },
         ],
       },
     ],

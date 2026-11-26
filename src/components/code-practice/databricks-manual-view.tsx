@@ -23,7 +23,6 @@ import {
   Bot,
   Flame,
   ArrowRight,
-  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -160,16 +159,6 @@ export function DatabricksManualView() {
                 <AlertTriangle size={13} className="text-amber-400" /> 6 Incident Triage Playbooks
               </span>
             </div>
-
-            <a
-              href="/api/download/pdf/databricks_data_intelligence_platform_technical_manual.pdf"
-              download="databricks_data_intelligence_platform_technical_manual.pdf"
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-sans text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-              title="Download Complete 20-Page A4 PDF Manual"
-            >
-              <Download size={13} />
-              <span>Download 20-Page Technical Manual PDF</span>
-            </a>
           </div>
         </div>
       </div>

@@ -40,11 +40,11 @@ export async function GET() {
   </item>
 
   <item>
-    <title>Production Cheat Sheets &amp; Compiled Master Vector PDFs</title>
+    <title>Production Cheat Sheets &amp; Incident Runbooks</title>
     <link>${BASE_URL}/cheat-sheet</link>
     <guid>${BASE_URL}/cheat-sheet</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>Production runbooks and 7 downloadable high-resolution vector PDFs covering PySpark, Databricks, Incident Runbooks, and Master Reference.</description>
+    <description>Production runbooks and 48 interactive Databricks reference cards with 250-DPI posters covering PySpark, Databricks, and Incident Runbooks.</description>
   </item>
 
   <item>

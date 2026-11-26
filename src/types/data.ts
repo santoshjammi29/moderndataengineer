@@ -406,8 +406,8 @@ export interface DatabricksDomainMeta {
   subtitle: string;
   badge: string;
   accentColor: string;
-  pdf: string;
-  pdfSize: string;
+  pdf?: string;
+  pdfSize?: string;
   poster: string;
   posterDimensions: string;
   pageImages: string[];
@@ -418,7 +418,7 @@ export interface DatabricksDomainMeta {
 export interface DatabricksSuiteData {
   suiteTitle: string;
   suiteSubtitle: string;
-  masterPdf: {
+  masterPdf?: {
     title: string;
     url: string;
     size: string;

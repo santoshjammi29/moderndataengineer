@@ -704,7 +704,7 @@ SET ROW FILTER prod_catalog.security.region_rls ON (country_code);</div>
       <div class="module-header">Module 5 (Level 3–4): Compute Engine Internals — Spark, Catalyst &amp; Photon</div>
       <div class="section-title">5.1 Catalyst Optimizer &amp; Adaptive Query Execution (AQE)</div>
       <p>
-        Apache Spark compiles SQL queries and DataFrame transformations through the Catalyst Optimizer pipeline: Unresolved Logical Plan &rarr; Analyzed Logical Plan (Catalog binding) &rarr; Optimized Logical Plan (Predicate Pushdown, Column Pruning, Constant Folding) &rarr; Physical Plan (Cost-Based Join Selection).
+        Apache Spark 3.5+/4.0 compiles SQL queries, <code class="inline-code">VARIANT</code> semi-structured shredding, and DataFrame transformations through the Catalyst Optimizer pipeline: Unresolved Logical Plan &rarr; Analyzed Logical Plan (Catalog binding &amp; ANSI mode casting) &rarr; Optimized Logical Plan (Predicate Pushdown, Column Pruning, Constant Folding) &rarr; Physical Plan (Cost-Based Join Selection).
       </p>
       <p>
         Because static table statistics can be missing or outdated after complex filters, Adaptive Query Execution (AQE) intercepts shuffle stage boundaries at runtime and re-optimizes the remaining physical plan using exact runtime byte and row counts:
@@ -837,11 +837,11 @@ clicks = (
 # 3. Stream-to-Stream Left Outer Join with explicit time-range predicate for state eviction
 ad_attribution_stream = impressions.join(
     clicks,
-    F.expr("'"'
+    F.expr('''
         imp.ad_id = clk.ad_id AND
         clk.click_ts &gt;= imp.impression_ts AND
         clk.click_ts &lt;= imp.impression_ts + interval 15 minutes
-    '"'"),
+    '''),
     "leftOuter"
 )</div>
     </div>
@@ -964,7 +964,7 @@ def dynamic_silver_upsert(micro_batch_df, batch_id):
       <div class="module-header">Module 7 (Level 4): Enterprise DevOps, CI/CD &amp; Databricks Asset Bundles</div>
       <div class="section-title">7.1 Databricks Asset Bundles (DABs) Architecture</div>
       <p>
-        Databricks Asset Bundles (DABs) provide a unified Infrastructure-as-Code (IaC) specification to define notebooks, Python wheels, Lakeflow Jobs, Declarative Pipelines, and permissions in YAML files deployed via the Databricks CLI (<code class="inline-code">databricks bundle validate</code>, <code class="inline-code">databricks bundle deploy</code>, <code class="inline-code">databricks bundle run</code>).
+        Databricks Asset Bundles (DABs) provide a unified Infrastructure-as-Code (IaC) specification to define notebooks, Python wheels, Lakeflow Jobs, Declarative Pipelines, and Databricks Apps in YAML deployed via OIDC Workload Identity Federation (<code class="inline-code">databricks bundle validate</code>, <code class="inline-code">deploy</code>, <code class="inline-code">run</code>).
       </p>
 
       <div class="code-container"># Root Bundle Configuration: databricks.yml
@@ -1110,9 +1110,9 @@ def test_standardize_orders_cleans_and_deduplicates(spark):
   <!-- ==================== PAGE 18 ==================== -->
   <div class="page">
     <div class="page-content">
-      <div class="section-title">8.2 Enterprise FinOps &amp; Observability via System Tables</div>
+      <div class="section-title">8.2 Enterprise FinOps &amp; Observability via System Tables &amp; Databricks Apps</div>
       <p>
-        Unity Catalog exposes operational telemetry across the entire account in the <code class="inline-code">system</code> catalog. Platform teams run scheduled SQL queries against <code class="inline-code">system.billing.usage</code>, <code class="inline-code">system.query.history</code>, and <code class="inline-code">system.access.table_lineage</code> to enforce cost governance and SLA monitoring:
+        Unity Catalog exposes account-wide telemetry in the <code class="inline-code">system</code> catalog (<code class="inline-code">system.billing.usage</code>, <code class="inline-code">system.query.history</code>, <code class="inline-code">system.access.table_lineage</code>). Teams host governed Lakehouse FinOps Monitors on <strong>Databricks Apps</strong> (<code class="inline-code">app.yaml</code> + service principal OAuth) to enforce cost governance and SLA monitoring:
       </p>
 
       <div class="code-container">-- 1. FinOps Query: 30-Day DBU &amp; USD Spend by Workspace, SKU, and Job ID

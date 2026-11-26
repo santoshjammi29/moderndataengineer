@@ -301,8 +301,8 @@ pre.code {
         </div>
       </div>
       <div class="header-badges">
-        <span class="badge badge-primary">Spark SQL</span>
-        <span class="badge badge-secondary">DBR 15.4+ LTS</span>
+        <span class="badge badge-primary">Spark SQL 4.0</span>
+        <span class="badge badge-secondary">DBR 15.4 / 16.0 LTS</span>
         <span class="badge badge-dark">Photon Engine</span>
         <span class="badge badge-accent">Unity Catalog</span>
       </div>
@@ -608,7 +608,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-tip">
-          💡 <b>Storage Recommendation:</b> Store semi-structured payloads as native Parquet STRUCTs to achieve column pruning and 10x faster query scans.
+          💡 <b>Storage Recommendation:</b> Use Spark 4.0 / Delta 3.2 binary <code>VARIANT</code> (<code>parse_json</code> / <code>variant_get</code>) or native Parquet STRUCTs for shredded columnar scans.
         </div>
       </div>
 
@@ -746,7 +746,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Engine Auto-Tuning:</b> In DBR 15.4+, <code>spark.sql.shuffle.partitions = auto</code> lets AQE dynamically tune shuffle partitions at runtime.
+          ⚡ <b>Engine Auto-Tuning:</b> In DBR 15.4+ / Spark 4.0, <code>spark.sql.shuffle.partitions = auto</code> tunes partitions dynamically; use <code>TRY_CAST</code> for ANSI mode safety.
         </div>
       </div>
     </div>

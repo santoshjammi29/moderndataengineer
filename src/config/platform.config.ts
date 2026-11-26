@@ -94,7 +94,7 @@ export const PLATFORM_CONFIG = {
       title: "Data Engineering Cheatsheets",
       path: "/cheat-sheet",
       badge: "124 Reference Cards",
-      description: "Syntax, patterns, and best practices across PySpark, SQL, Delta Lake, and dbt with 7 master vector PDFs.",
+      description: "Syntax, patterns, and best practices across PySpark, SQL, Delta Lake, and dbt with 250-DPI reference posters.",
     },
   },
 

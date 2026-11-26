@@ -301,8 +301,8 @@ pre.code {
         </div>
       </div>
       <div class="header-badges">
-        <span class="badge badge-primary">Spark SQL</span>
-        <span class="badge badge-secondary">DBR 15.4+ LTS</span>
+        <span class="badge badge-primary">Spark SQL 4.0</span>
+        <span class="badge badge-secondary">DBR 15.4 / 16.0 LTS</span>
         <span class="badge badge-dark">Photon Engine</span>
         <span class="badge badge-accent">Unity Catalog</span>
       </div>
@@ -608,7 +608,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-tip">
-          💡 <b>Storage Recommendation:</b> Store semi-structured payloads as native Parquet STRUCTs to achieve column pruning and 10x faster query scans.
+          💡 <b>Storage Recommendation:</b> Use Spark 4.0 / Delta 3.2 binary <code>VARIANT</code> (<code>parse_json</code> / <code>variant_get</code>) or native Parquet STRUCTs for shredded columnar scans.
         </div>
       </div>
 
@@ -746,7 +746,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Engine Auto-Tuning:</b> In DBR 15.4+, <code>spark.sql.shuffle.partitions = auto</code> lets AQE dynamically tune shuffle partitions at runtime.
+          ⚡ <b>Engine Auto-Tuning:</b> In DBR 15.4+ / Spark 4.0, <code>spark.sql.shuffle.partitions = auto</code> tunes partitions dynamically; use <code>TRY_CAST</code> for ANSI mode safety.
         </div>
       </div>
     </div>
@@ -771,10 +771,10 @@ top_spenders <span class="kw">AS</span> (
         </div>
       </div>
       <div class="header-badges">
-        <span class="badge badge-primary">PySpark</span>
+        <span class="badge badge-primary">PySpark 3.5+ / 4.0</span>
         <span class="badge badge-secondary">DBR 15.4+ LTS</span>
         <span class="badge badge-dark">DataFrame API</span>
-        <span class="badge badge-accent">Delta Lake</span>
+        <span class="badge badge-accent">Delta Lake 3.2</span>
       </div>
     </div>
 
@@ -807,7 +807,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Serverless Note:</b> On Databricks Serverless compute, the SparkSession is pre-initialized and instantly auto-tuned for sub-second scaling.
+          ⚡ <b>Serverless &amp; Spark Connect:</b> Serverless compute and Spark Connect (<code>sc://</code>) auto-tune sessions; avoid <code>.rdd</code> / <code>_jvm</code> and use <code>F.try_cast()</code> in ANSI mode.
         </div>
       </div>
 
@@ -1037,7 +1037,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Deletion Vectors:</b> In DBR 14.1+, enable Deletion Vectors (<code>delta.enableDeletionVectors = true</code>) to execute row updates without file rewrites!
+          ⚡ <b>Deletion Vectors &amp; replaceWhere:</b> Enable Deletion Vectors for fast MoR updates, or use <code>.option("replaceWhere", "date &gt;= ...")</code> for atomic partition overwrites.
         </div>
       </div>
 
@@ -1356,12 +1356,12 @@ JVM Heap Pools:
         <pre class="code"><span class="cm"># Inspect Catalyst Execution Pipeline</span>
 <span class="var">df</span>.explain(mode=<span class="str">"formatted"</span>)
 
-<span class="cm"># 4 Stages of Catalyst:</span>
-1. <b>Unresolved Logical Plan:</b> Verifies SQL syntax & AST
-2. <b>Analyzed Logical Plan:</b> Resolves column names against Catalog
-3. <b>Optimized Logical Plan:</b> Pushes down predicates & prunes columns
-4. <b>Physical Plan:</b> Selects algorithms (HashJoin vs SortMerge)
-   └── <b>Whole-Stage CodeGen:</b> Emits Java Bytecode (clean for loops)</pre>
+<span class="cm"># 5 Stages of Catalyst:</span>
+1. <b>Unresolved Logical Plan:</b> Verifies SQL syntax &amp; AST
+2. <b>Analyzed Logical Plan:</b> Resolves columns via Catalog
+3. <b>Optimized Logical Plan:</b> Pushes predicates &amp; prunes cols
+4. <b>Physical Plan (CBO):</b> Chooses Join (BHJ vs SMJ)
+5. <b>Whole-Stage CodeGen:</b> Janino emits Java Bytecode loops</pre>
         <div class="code-explain">
           <div class="explain-head">🔍 Code Breakdown & Engine Mechanics:</div>
           <ul class="explain-list">
@@ -1511,7 +1511,7 @@ JVM Heap Pools:
           </ul>
         </div>
         <div class="alert alert-warn">
-          ⚠️ <b>Triage Playbook:</b> Always check the Stages tab first; identify the longest stage, then inspect task duration distribution to find bottlenecks.
+          ⚠️ <b>5S Triage Playbook:</b> Diagnose bottlenecks across the 5 S's: <b>Spill</b>, <b>Skew</b>, <b>Shuffle</b>, <b>Storage</b> (small files), and <b>Serialization</b> (Python UDFs).
         </div>
       </div>
 
@@ -1926,7 +1926,7 @@ resources:
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Modern DevOps:</b> Databricks Asset Bundles (DABs) are the standard for deploying enterprise data engineering projects in 2025/2026.
+          ⚡ <b>Modern DevOps:</b> Databricks Asset Bundles (DABs) with GitHub Actions OIDC Workload Identity &amp; <code>run_as</code> service principals eliminate static PAT secrets.
         </div>
       </div>
 
@@ -2045,10 +2045,10 @@ resources:
 <span class="kw">def</span> test_filter_active(spark):
     input_data = [(<span class="num">1</span>, <span class="str">"ACTIVE"</span>), (<span class="num">2</span>, <span class="str">"CANCELLED"</span>)]
     input_df = spark.createDataFrame(input_data, [<span class="str">"id"</span>, <span class="str">"status"</span>])
-    
+
     expected_data = [(<span class="num">1</span>, <span class="str">"ACTIVE"</span>)]
     expected_df = spark.createDataFrame(expected_data, [<span class="str">"id"</span>, <span class="str">"status"</span>])
-    
+
     result_df = input_df.filter(<span class="str">"status = 'ACTIVE'"</span>)
     <span class="cm"># Spark 3.5+ built-in test assertion</span>
     assertDataFrameEqual(result_df, expected_df)</pre>

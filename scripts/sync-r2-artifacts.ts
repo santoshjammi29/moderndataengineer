@@ -11,11 +11,14 @@ const run = promisify(execFile);
 
 function listFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
-    if (entry.startsWith(".")) return [];
+    if (entry.startsWith(".") || entry === "pdf") return [];
     const absolutePath = path.join(directory, entry);
-    return statSync(absolutePath).isDirectory()
-      ? listFiles(absolutePath)
-      : [absolutePath];
+    if (statSync(absolutePath).isDirectory()) {
+      return listFiles(absolutePath);
+    }
+    // PDFs are repository-only (docs/pdf/) and must never be uploaded to R2.
+    if (entry.toLowerCase().endsWith(".pdf")) return [];
+    return [absolutePath];
   });
 }
 

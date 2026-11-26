@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, RotateCcw } from "lucide-react";
 import { useDiagramTheme } from "@/lib/diagram-theme";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -17,14 +17,13 @@ export function WhiteboardThemeToggle({
   size = "sm",
   showLabel = true,
 }: WhiteboardThemeToggleProps) {
-  const [theme, setTheme] = useDiagramTheme();
+  const [theme, setTheme, , meta] = useDiagramTheme();
 
-  const handleToggle = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
+  const handleSelect = (target: "dark" | "light") => {
+    if (theme === target) return;
+    setTheme(target);
     toast.success(
-      next === "dark"
+      target === "dark"
         ? "Whiteboard: Switched to Dark Slate Blueprint"
         : "Whiteboard: Switched to Light Whiteboard Canvas"
     );
@@ -44,16 +43,15 @@ export function WhiteboardThemeToggle({
     >
       <button
         type="button"
-        onClick={() => {
-          if (!isDark) handleToggle();
-        }}
+        onClick={() => handleSelect("dark")}
+        aria-pressed={isDark}
         className={cn(
           "inline-flex items-center gap-1.5 rounded-lg font-medium transition-all cursor-pointer touch-manipulation",
           size === "xs" && "px-2 py-0.5 text-[10px]",
           size === "sm" && "px-2.5 py-1 text-xs",
           size === "md" && "px-3 py-1.5 text-xs sm:text-sm",
           isDark
-            ? "bg-purple-600 text-white font-semibold shadow-xs"
+            ? "bg-purple-700 text-white font-semibold shadow-xs"
             : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
         )}
         title="View in Dark Slate Blueprint mode"
@@ -64,23 +62,41 @@ export function WhiteboardThemeToggle({
 
       <button
         type="button"
-        onClick={() => {
-          if (isDark) handleToggle();
-        }}
+        onClick={() => handleSelect("light")}
+        aria-pressed={!isDark}
         className={cn(
           "inline-flex items-center gap-1.5 rounded-lg font-medium transition-all cursor-pointer touch-manipulation",
           size === "xs" && "px-2 py-0.5 text-[10px]",
           size === "sm" && "px-2.5 py-1 text-xs",
           size === "md" && "px-3 py-1.5 text-xs sm:text-sm",
           !isDark
-            ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+            ? "bg-amber-700 text-white font-bold shadow-xs"
             : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
         )}
         title="View in Light Whiteboard Canvas mode"
       >
-        <Sun size={size === "xs" ? 11 : 13} className={!isDark ? "text-amber-950" : "text-amber-400"} />
+        <Sun size={size === "xs" ? 11 : 13} className={!isDark ? "text-amber-100" : "text-amber-400"} />
         {showLabel && <span>Light Canvas</span>}
       </button>
+
+      {meta?.isOverridden && (
+        <button
+          type="button"
+          onClick={() => {
+            meta.resetToSiteTheme();
+            toast.success(`Synced diagrams to ${meta.siteTheme} theme`);
+          }}
+          className={cn(
+            "inline-flex items-center gap-1 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-3)] transition-colors cursor-pointer touch-manipulation",
+            size === "xs" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-1 text-[11px]"
+          )}
+          title={`Override active — click to follow site (${meta.siteTheme}) theme`}
+          aria-label="Reset diagram canvas to match site theme"
+        >
+          <RotateCcw size={size === "xs" ? 10 : 12} />
+          {showLabel && <span className="hidden lg:inline">Auto</span>}
+        </button>
+      )}
     </div>
   );
 }

@@ -14,14 +14,14 @@
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.x_Strict-3178C6?style=flat-square&logo=typescript" alt="TypeScript"></a>
   <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-62_Suites_%E2%80%A2_522_Passed-emerald?style=flat-square&logo=vitest" alt="Vitest 62/62"></a>
   <a href="https://developers.cloudflare.com/workers/"><img src="https://img.shields.io/badge/Deployment-Cloudflare_OpenNext-F38020?style=flat-square&logo=cloudflare" alt="Cloudflare Workers"></a>
-  <a href="src/data/content-counts.json"><img src="https://img.shields.io/badge/Assets-11%2C361%2B_Verified-blueviolet?style=flat-square" alt="11,361+ Assets"></a>
+  <a href="src/data/content-counts.json"><img src="https://img.shields.io/badge/Assets-11%2C368%2B_Verified-blueviolet?style=flat-square" alt="11,368+ Assets"></a>
   <a href="docs/content-expansion-plan.md"><img src="https://img.shields.io/badge/Research-21_Authoritative_Sources-emerald?style=flat-square" alt="21 Research Sources"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="MIT License"></a>
   <a href="SECURITY.md"><img src="https://img.shields.io/badge/Security-Policy_Active-blue?style=flat-square&logo=securityscorecard" alt="Security Policy"></a>
 </p>
 
 > **The Definitive Open-Access Enterprise Data Engineering & Lakehouse Systems Encyclopedia**  
-> **11,361+ verified assets**, architectural scenarios, interactive execution simulators, and high-resolution blueprints covering **Microsoft Fabric (DP-600/DP-700), Databricks, Apache Spark 3.5+/4.0, Delta Lake 3.2, Apache Iceberg v2/v3, Unity Catalog, dbt, Apache Airflow, and Governed Agentic Data Systems**.
+> **11,368+ validated assets (12,218+ search records)**, architectural scenarios, interactive execution simulators, and high-resolution blueprints covering **Microsoft Fabric (DP-600/DP-700), Databricks, Apache Spark 3.5+/4.0, Delta Lake 3.2, Apache Iceberg v2/v3, Unity Catalog, dbt, Apache Airflow, and Governed Agentic Data Systems**.
 >
 > 🌐 **Live Production Web Application**: **[https://moderndataengineer.uk](https://moderndataengineer.uk)**  
 > 📦 **Sister Repositories**: **[The PySpark Handbook (105 Production Recipes)](https://github.com/santoshjammi29/pyspark-handbook)** • **[The SQL Handbook (105 Production Exercises)](https://github.com/santoshjammi29/sql-handbook)** • **[The Databricks Handbook (105 Production Recipes)](https://github.com/santoshjammi29/databricks-handbook)** • **[The Security Handbook](https://github.com/santoshjammi29/security-handbook)** • **[Azure Databricks Project Blueprints](https://github.com/santoshjammi29/azure-databricks-project-blueprints)** • **[Azure Enterprise Cheat Sheet](https://github.com/santoshjammi29/azure-cheat-sheet)** • **[The dbt Handbook](https://github.com/santoshjammi29/dbt-handbook)** • **[The Streaming Handbook](https://github.com/santoshjammi29/streaming-handbook)** • **[Data System Design Handbook](https://github.com/santoshjammi29/data-system-design-handbook)** • **[DataOps & CI/CD Handbook](https://github.com/santoshjammi29/dataops-cicd-handbook)** • **[Banking Risk & ALM Lakehouse](https://github.com/santoshjammi29/enterprise-banking-risk-alm-lakehouse)** • **[Spark Experiments](https://github.com/santoshjammi29/spark-experiments)** • **[Interview Handbook](https://github.com/santoshjammi29/data-engineering-interview-handbook)**
@@ -79,7 +79,7 @@ Built on a **Zero-Bundle, Zero-Egress, Edge-Native Architecture**: massive datas
 │     EDGE RUNTIME (Cloudflare OpenNext)│   │       OBJECT STORAGE TIER (R2)        │
 │  - React 19 Server Components (RSC)   │   │  - 106+ Pre-Sharded JSON Partitions   │
 │  - Strict Data Access Layer (DAL)     │◀──│  - 52 High-Res Whiteboard WebP Assets │
-│  - Google-Grade BM25F Search Ranking  │   │  - 11 Vector A4 Technical PDFs        │
+│  - Google-Grade BM25F Search Ranking  │   │  - High-Res Cheatsheet WebP Posters   │
 │  - Zero-Bundle Client JSON Payloads   │   │  - Automated Cache-Control Headers    │
 └───────────────────┬───────────────────┘   └───────────────────────────────────────┘
                     │
@@ -96,18 +96,18 @@ Built on a **Zero-Bundle, Zero-Egress, Edge-Native Architecture**: massive datas
 
 ---
 
-## 📊 3. Curated Knowledge Inventory (11,361+ Assets)
+## 📊 3. Curated Knowledge Inventory (11,368+ Validated Assets · 12,218+ Search Records)
 
 The knowledge base is continuously validated via strict Zod schemas in CI/CD, guaranteeing data integrity across all 14 pillars:
 
 | Category | Count | Canonical Location | Description |
 |:---|:---:|:---|:---|
 | **Core Concepts** | **921** | `src/data/json/data_concepts.json` | Theoretical principles, internal engine mechanisms, and architectural definitions |
-| **Architecture Scenarios** | **3,305** | `src/data/json/data_architecture.json` | Real-world lakehouse design dilemmas, cross-cloud trade-offs, and failure recovery |
-| **QA Bank Items** | **7,135** | `src/data/json/questions.json` | Deep-dive interview questions, staff-level architectural defense, and code snippets |
+| **Architecture Scenarios** | **3,307** | `src/data/json/data_architecture.json` | Real-world lakehouse design dilemmas, cross-cloud trade-offs, and failure recovery |
+| **QA Bank Items** | **7,140** | `src/data/json/questions.json` | Deep-dive interview questions, staff-level architectural defense, and code snippets |
 | **Whiteboard Blueprints** | **52** | `public/diagrams/` | High-resolution architectural schematics covering enterprise ingestion and Medallion flows |
-| **Technical Manuals (PDF)** | **11** | `docs/pdf/` & `public/cheatsheets/pdf/` | Vector A4 printable technical reference manuals and incident runbooks |
-| **Total Valid Assets** | **11,361** | Verified in CI | 100% compliant with automated Zod schemas (`content:validate`) |
+| **Technical Manuals (PDF)** | **11** | `docs/pdf/` *(Git Repository Only)* | Vector A4 printable technical reference manuals and 91 incident runbooks |
+| **Total Validated Assets** | **11,368** | Verified in CI | 100% compliant with automated Zod schemas (`content:validate`) |
 
 ---
 
@@ -195,7 +195,7 @@ All technical manuals, architecture decision records (ADRs), and research plans 
 Automated quality gates validate data schemas, bundle hygiene, accessibility, and search indexing:
 
 - **62 Test Files**: 100% passing across unit, integration, and UI component tests.
-- **522 Tests**: Comprehensive coverage spanning BM25F ranking, virtual scroll limits, SIMD worker offloads, responsive layout constraints, 42 blueprint persona structures, whiteboard asset integrity verification, dynamic font scaling, and PDF download streaming headers.
+- **522+ Tests**: Comprehensive coverage spanning BM25F ranking, virtual scroll limits, SIMD worker offloads, responsive layout constraints, 52 blueprint persona structures, whiteboard asset integrity verification, and dynamic font scaling.
 - **Zero-Bundle Enforcement**: Automated tests verify that no raw JSON data leaks into client JavaScript bundles.
 - **Strict TypeScript & ESLint**: `tsc --noEmit` and `eslint` pass with 0 errors.
 

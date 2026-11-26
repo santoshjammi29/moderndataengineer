@@ -163,6 +163,7 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} dark antialiased bg-[var(--background)] text-[var(--foreground)]`}
     >
       <head>
+        <meta name="color-scheme" content="light dark" />
         <Script src="/theme-init.js" strategy="beforeInteractive" />
         <script
           type="speculationrules"

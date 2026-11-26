@@ -192,7 +192,11 @@ export function QaPrepClient({
   const [statusAnnouncement, setStatusAnnouncement] = useState("");
 
   // Study Mode State (Flashcards)
-  const [isStudyMode, setIsStudyMode] = useState(false);
+  const [isStudyMode, setIsStudyMode] = useState(
+    () =>
+      searchParams.get("mode")?.toLowerCase() === "spaced" ||
+      searchParams.get("view")?.toLowerCase() === "study"
+  );
   const [studyIndex, setStudyIndex] = useState(0);
   const [isCardFlipped, setIsCardFlipped] = useState(false);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
@@ -289,26 +293,21 @@ export function QaPrepClient({
     const archetypeParam = (searchParams.get("archetype") || searchParams.get("scenario") || "").toUpperCase() as ScenarioArchetypeId;
     const diffParam = searchParams.get("difficulty");
     const cardParam = searchParams.get("card") || searchParams.get("id");
+    const modeParam = searchParams.get("mode")?.toLowerCase();
+    const viewParam = searchParams.get("view")?.toLowerCase();
 
-    if (qParam !== null) {
-      setSearchQuery(qParam);
-    }
-
-    if (domainParam) {
-      setSelectedDomain(domainParam);
-    }
-
-    if (techParam && TECH_ECOSYSTEMS.some((e) => e.id === techParam)) {
-      setSelectedTech(techParam);
-    }
-
-    if (archetypeParam && SCENARIO_ARCHETYPES.some((a) => a.id === archetypeParam)) {
-      setSelectedArchetype(archetypeParam);
-    }
-
-    if (diffParam && ["EASY", "MEDIUM", "HARD", "ARCHITECT", "ALL"].includes(diffParam.toUpperCase())) {
-      setSelectedDifficulty(diffParam.toUpperCase());
-    }
+    setSearchQuery(qParam ?? "");
+    setSelectedDomain(domainParam || "ALL");
+    setSelectedTech(techParam && TECH_ECOSYSTEMS.some((e) => e.id === techParam) ? techParam : "ALL");
+    setSelectedArchetype(
+      archetypeParam && SCENARIO_ARCHETYPES.some((a) => a.id === archetypeParam) ? archetypeParam : "ALL"
+    );
+    setSelectedDifficulty(
+      diffParam && ["EASY", "MEDIUM", "HARD", "ARCHITECT", "ALL"].includes(diffParam.toUpperCase())
+        ? diffParam.toUpperCase()
+        : "ALL"
+    );
+    setIsStudyMode(modeParam === "spaced" || viewParam === "study");
 
     if (cardParam) {
       const target = questions.find((item) => item.id === cardParam);

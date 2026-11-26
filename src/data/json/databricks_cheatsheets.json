@@ -1,18 +1,6 @@
 {
   "suiteTitle": "Databricks Architecture & Coding Cheat Sheets",
   "suiteSubtitle": "DBR 15.4 / 16.0 LTS • Photon • Unity Catalog • PySpark • Spark Core • Python SDK",
-  "masterPdf": {
-    "title": "Databricks Master Architecture & Coding Cheat Sheet (8 Pages)",
-    "url": "/cheatsheets/pdf/databricks_master_cheatsheet.pdf",
-    "size": "2.1 MB",
-    "pages": 8
-  },
-  "enterpriseMasterPdf": {
-    "title": "Complete Lakehouse Architecture & Runbooks Enterprise Reference (47 Pages)",
-    "url": "/cheatsheets/pdf/lakehouse_enterprise_master_reference.pdf",
-    "size": "2.6 MB",
-    "pages": 47
-  },
   "interactiveHub": {
     "url": "/cheatsheets/html/index.html",
     "title": "Interactive Digital Cheat Sheet Hub"
@@ -25,8 +13,6 @@
       "subtitle": "Production Reference: DDL, DML, Liquid Clustering, Delta Lake ACID & Medallion Patterns",
       "badge": "DBR 15.4+ LTS / Photon",
       "accentColor": "#00A3E0",
-      "pdf": "/cheatsheets/pdf/databricks_sparksql_cheatsheet.pdf",
-      "pdfSize": "912 KB",
       "poster": "/cheatsheets/images/databricks_sparksql_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [
@@ -43,8 +29,6 @@
       "subtitle": "Production Reference: DataFrame API, Streaming, UDFs, Shuffles & Optimizations",
       "badge": "DataFrame API & Catalyst",
       "accentColor": "#E25A1C",
-      "pdf": "/cheatsheets/pdf/databricks_pyspark_cheatsheet.pdf",
-      "pdfSize": "868 KB",
       "poster": "/cheatsheets/images/databricks_pyspark_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [
@@ -61,8 +45,6 @@
       "subtitle": "Production Reference: Cluster Hierarchy, Memory Layout, Catalyst, Shuffle & Triage",
       "badge": "Engine Internals & Memory",
       "accentColor": "#8B5CF6",
-      "pdf": "/cheatsheets/pdf/databricks_spark_core_cheatsheet.pdf",
-      "pdfSize": "878 KB",
       "poster": "/cheatsheets/images/databricks_spark_core_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [
@@ -79,8 +61,6 @@
       "subtitle": "Production Reference: DBUtils, DLT Pipelines, Connect v2, DABs & Enterprise Patterns",
       "badge": "DBUtils, Connect & SDK",
       "accentColor": "#10B981",
-      "pdf": "/cheatsheets/pdf/databricks_python_cheatsheet.pdf",
-      "pdfSize": "878 KB",
       "poster": "/cheatsheets/images/databricks_python_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [

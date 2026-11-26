@@ -54,7 +54,7 @@ import {
   type WhiteboardCategoryData,
 } from "@/data/whiteboards-learning-data";
 import { type ArchitectureDiagramItem } from "@/data/diagrams";
-import { useDiagramTheme } from "@/lib/diagram-theme";
+import { useDiagramTheme, getWebpThemeClass, isLightCanvasWebp } from "@/lib/diagram-theme";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
 import { LearningJourneyViewer } from "@/components/architecture/learning-journey-viewer";
@@ -103,8 +103,14 @@ export function WhiteboardsClient() {
   const [masteredCategories, setMasteredCategories] = useState<string[]>([]);
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
 
-  // Sync state from URL params
+  // Sync state from URL params (?category=, ?tab=, ?diagram=, ?id=)
   useEffect(() => {
+    const DIAGRAM_ALIAS_MAP: Record<string, string> = {
+      data_skew_salting_repartition: "spark-data-skew-aqe-optimization",
+      catalyst_photon_engine: "spark-catalyst-photon-engine",
+      "delta-lake-acid-mechanics": "delta-lake-under-the-hood",
+    };
+
     const cat = searchParams.get("category");
     if (cat && WHITEBOARD_CATEGORIES.some((c) => c.id === cat)) {
       setSelectedCatId(cat);
@@ -112,8 +118,11 @@ export function WhiteboardsClient() {
     const tab = searchParams.get("tab") as ViewMode;
     if (tab && ["master", "diagrams", "concepts", "blueprints", "qa"].includes(tab)) {
       setActiveTab(tab);
+    } else if (!tab) {
+      setActiveTab("master");
     }
-    const diagramParam = searchParams.get("diagram");
+    const rawDiagramParam = searchParams.get("diagram") || searchParams.get("id");
+    const diagramParam = rawDiagramParam ? (DIAGRAM_ALIAS_MAP[rawDiagramParam] || rawDiagramParam) : null;
     if (diagramParam) {
       for (const category of WHITEBOARD_CATEGORIES) {
         const found = category.diagrams.find((d) => d.id === diagramParam);
@@ -124,6 +133,8 @@ export function WhiteboardsClient() {
           break;
         }
       }
+    } else {
+      setActiveDiagram(null);
     }
   }, [searchParams]);
 
@@ -787,7 +798,11 @@ export function WhiteboardsClient() {
                       sizes="(max-width: 1024px) 100vw, 60vw"
                       className={cn(
                         "object-contain p-2 transition-transform duration-300 group-hover:scale-[1.02]",
-                        isDark ? "whiteboard-image-dark" : "whiteboard-image-light"
+                        isLightCanvasWebp(currentCategory.diagrams[0].image)
+                          ? getWebpThemeClass(theme, currentCategory.diagrams[0].image)
+                          : isDark
+                          ? "whiteboard-image-dark"
+                          : "whiteboard-image-light"
                       )}
                       priority
                     />
@@ -1023,7 +1038,7 @@ export function WhiteboardsClient() {
                 >
                   {/* Canvas Container */}
                   <div
-                    style={{ position: "relative", minHeight: "200px", height: "100%" }}
+                    style={{ position: "relative", minHeight: "200px", height: "220px" }}
                     className={cn(
                       "relative aspect-[16/10] min-h-[200px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
@@ -1036,7 +1051,11 @@ export function WhiteboardsClient() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className={cn(
                         "object-contain p-2 transition-transform duration-300 group-hover:scale-105",
-                        isDark ? "whiteboard-image-dark" : "whiteboard-image-light"
+                        isLightCanvasWebp(diagram.image)
+                          ? getWebpThemeClass(theme, diagram.image)
+                          : isDark
+                          ? "whiteboard-image-dark"
+                          : "whiteboard-image-light"
                       )}
                     />
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -1632,7 +1651,11 @@ export function WhiteboardsClient() {
                   height={900}
                   className={cn(
                     "object-contain max-h-[55vh] w-auto h-auto rounded-xl drop-shadow-md",
-                    isDark ? "whiteboard-image-dark" : "whiteboard-image-light"
+                    isLightCanvasWebp(activeDiagram.image)
+                      ? getWebpThemeClass(theme, activeDiagram.image)
+                      : isDark
+                      ? "whiteboard-image-dark"
+                      : "whiteboard-image-light"
                   )}
                   priority
                 />

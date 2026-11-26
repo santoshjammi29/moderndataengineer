@@ -24,7 +24,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { architectureDiagrams, type ArchitectureDiagramItem } from "@/data/diagrams";
-import { useDiagramTheme } from "@/lib/diagram-theme";
+import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
 import { WhiteboardCard } from "./whiteboard-card";
 import { WhiteboardThemeToggle } from "./whiteboard-theme-toggle";
 import { LearningJourneyViewer } from "./learning-journey-viewer";
@@ -294,7 +294,7 @@ export function ArchitectureDiagramsGallery() {
                   sizes="(max-width: 768px) 100vw, 85vw"
                   className={cn(
                     "max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300",
-                    isDark ? "whiteboard-dark" : "whiteboard-light"
+                    getWebpThemeClass(theme, activeDiagram.image)
                   )}
                   priority
                 />
@@ -356,7 +356,7 @@ export function ArchitectureDiagramsGallery() {
                     className={cn(
                       "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
                       modalTab === "triage"
-                        ? "bg-amber-600 text-white shadow-xs"
+                        ? "bg-amber-700 text-white shadow-xs"
                         : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
                     )}
                   >
@@ -375,7 +375,7 @@ export function ArchitectureDiagramsGallery() {
                     className={cn(
                       "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer",
                       modalTab === "governance"
-                        ? "bg-emerald-600 text-white shadow-xs"
+                        ? "bg-emerald-700 text-white shadow-xs"
                         : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]"
                     )}
                   >

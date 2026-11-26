@@ -426,9 +426,10 @@ export function ModernStackClient(props: ModernStackClientProps) {
     };
   }, []);
 
-  // Reactively synchronize from Next.js router searchParams (?tab=, ?view=)
+  // Reactively synchronize from Next.js router searchParams (?tab=, ?view=, #hash)
   useEffect(() => {
     const queryTab = searchParams.get("tab")?.toLowerCase() || searchParams.get("view")?.toLowerCase();
+    const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "").toLowerCase() : "";
     const validTabs: ModernSubtab[] = [
       "compatibility",
       "overview",
@@ -443,7 +444,9 @@ export function ModernStackClient(props: ModernStackClientProps) {
 
     if (queryTab && validTabs.includes(queryTab as ModernSubtab)) {
       setActiveTab(queryTab as ModernSubtab);
-    } else if (!queryTab) {
+    } else if (hash && validTabs.includes(hash as ModernSubtab)) {
+      setActiveTab(hash as ModernSubtab);
+    } else if (!queryTab && !hash) {
       setActiveTab("compatibility");
     }
   }, [searchParams]);
@@ -1827,7 +1830,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                       <span>↗</span>
                     </a>
                     <Link
-                      href="/whiteboards?id=data_skew_salting_repartition"
+                      href="/whiteboards?diagram=spark-data-skew-aqe-optimization"
                       className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:underline"
                     >
                       Architecture Blueprint ↗

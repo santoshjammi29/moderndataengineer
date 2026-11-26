@@ -105,14 +105,11 @@ function getCategoryIcon(cat: string) {
 
 export function SearchTopicsClient() {
   const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
   const router = useRouter();
 
-  const initialQ = searchParams.get("q") || "";
-  const initialCat = searchParams.get("category") || "All";
-  const initialCardId = searchParams.get("id") || "";
-
-  const [query, setQuery] = useState(initialQ);
-  const [selectedCategory, setSelectedCategory] = useState(initialCat);
+  const [query, setQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState<"relevance" | "category" | "title">("relevance");
 
   const [loading, setLoading] = useState(false);
@@ -123,9 +120,7 @@ export function SearchTopicsClient() {
   const [navigationalJump, setNavigationalJump] = useState<NavigationalJump | null>(null);
 
   // Expanded items state: Set of catalog IDs
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
-    return initialCardId ? new Set([initialCardId]) : new Set();
-  });
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set());
 
   // Cached full details for expanded items
   const [detailsCache, setDetailsCache] = useState<Record<string, ResolvedKnowledgeItem>>({});
@@ -230,6 +225,20 @@ export function SearchTopicsClient() {
     []
   );
 
+  // Sync from Next.js client-side navigation searchParams changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchKey);
+    const qParam = params.get("q") || "";
+    const catParam = params.get("category") || "All";
+    const cardIdParam = params.get("id") || "";
+
+    setQuery((prev) => (prev !== qParam ? qParam : prev));
+    setSelectedCategory((prev) => (prev !== catParam ? catParam : prev));
+    if (cardIdParam) {
+      setExpandedIds((prev) => (prev.has(cardIdParam) ? prev : new Set([cardIdParam])));
+    }
+  }, [searchKey]);
+
   // Debounced search trigger & URL sync
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -319,12 +328,13 @@ export function SearchTopicsClient() {
     }
   };
 
-  // Auto-fetch if initial card was provided in URL
+  // Auto-fetch if card id is provided in URL
   useEffect(() => {
-    if (initialCardId) {
-      fetchItemDetails(initialCardId);
+    const cardId = new URLSearchParams(searchKey).get("id");
+    if (cardId) {
+      fetchItemDetails(cardId);
     }
-  }, [initialCardId, fetchItemDetails]);
+  }, [searchKey, fetchItemDetails]);
 
   // Infinite scroll intersection observer
   useEffect(() => {

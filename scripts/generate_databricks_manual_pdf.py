@@ -20,12 +20,10 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 WORKSPACE_DIR = os.path.dirname(SCRIPT_DIR)
 OUTPUT_DIR = os.path.join(WORKSPACE_DIR, "public", "cheatsheets")
 HTML_DIR = os.path.join(OUTPUT_DIR, "html")
-PDF_DIR = os.path.join(OUTPUT_DIR, "pdf")
 IMG_DIR = os.path.join(OUTPUT_DIR, "images")
 DOCS_PDF_DIR = os.path.join(WORKSPACE_DIR, "docs", "pdf")
 
 os.makedirs(HTML_DIR, exist_ok=True)
-os.makedirs(PDF_DIR, exist_ok=True)
 os.makedirs(IMG_DIR, exist_ok=True)
 os.makedirs(DOCS_PDF_DIR, exist_ok=True)
 
@@ -753,7 +751,7 @@ SET ROW FILTER prod_catalog.security.region_rls ON (country_code);</div>
       <div class="module-header">Module 5 (Level 3–4): Compute Engine Internals — Spark, Catalyst &amp; Photon</div>
       <div class="section-title">5.1 Catalyst Optimizer &amp; Adaptive Query Execution (AQE)</div>
       <p>
-        Apache Spark compiles SQL queries and DataFrame transformations through the Catalyst Optimizer pipeline: Unresolved Logical Plan &rarr; Analyzed Logical Plan (Catalog binding) &rarr; Optimized Logical Plan (Predicate Pushdown, Column Pruning, Constant Folding) &rarr; Physical Plan (Cost-Based Join Selection).
+        Apache Spark 3.5+/4.0 compiles SQL queries, <code class="inline-code">VARIANT</code> semi-structured shredding, and DataFrame transformations through the Catalyst Optimizer pipeline: Unresolved Logical Plan &rarr; Analyzed Logical Plan (Catalog binding &amp; ANSI mode casting) &rarr; Optimized Logical Plan (Predicate Pushdown, Column Pruning, Constant Folding) &rarr; Physical Plan (Cost-Based Join Selection).
       </p>
       <p>
         Because static table statistics can be missing or outdated after complex filters, Adaptive Query Execution (AQE) intercepts shuffle stage boundaries at runtime and re-optimizes the remaining physical plan using exact runtime byte and row counts:
@@ -886,11 +884,11 @@ clicks = (
 # 3. Stream-to-Stream Left Outer Join with explicit time-range predicate for state eviction
 ad_attribution_stream = impressions.join(
     clicks,
-    F.expr("'"'
+    F.expr('''
         imp.ad_id = clk.ad_id AND
         clk.click_ts &gt;= imp.impression_ts AND
         clk.click_ts &lt;= imp.impression_ts + interval 15 minutes
-    '"'"),
+    '''),
     "leftOuter"
 )</div>
     </div>
@@ -1013,7 +1011,7 @@ def dynamic_silver_upsert(micro_batch_df, batch_id):
       <div class="module-header">Module 7 (Level 4): Enterprise DevOps, CI/CD &amp; Databricks Asset Bundles</div>
       <div class="section-title">7.1 Databricks Asset Bundles (DABs) Architecture</div>
       <p>
-        Databricks Asset Bundles (DABs) provide a unified Infrastructure-as-Code (IaC) specification to define notebooks, Python wheels, Lakeflow Jobs, Declarative Pipelines, and permissions in YAML files deployed via the Databricks CLI (<code class="inline-code">databricks bundle validate</code>, <code class="inline-code">databricks bundle deploy</code>, <code class="inline-code">databricks bundle run</code>).
+        Databricks Asset Bundles (DABs) provide a unified Infrastructure-as-Code (IaC) specification to define notebooks, Python wheels, Lakeflow Jobs, Declarative Pipelines, and Databricks Apps in YAML deployed via OIDC Workload Identity Federation (<code class="inline-code">databricks bundle validate</code>, <code class="inline-code">deploy</code>, <code class="inline-code">run</code>).
       </p>
 
       <div class="code-container"># Root Bundle Configuration: databricks.yml
@@ -1159,9 +1157,9 @@ def test_standardize_orders_cleans_and_deduplicates(spark):
   <!-- ==================== PAGE 18 ==================== -->
   <div class="page">
     <div class="page-content">
-      <div class="section-title">8.2 Enterprise FinOps &amp; Observability via System Tables</div>
+      <div class="section-title">8.2 Enterprise FinOps &amp; Observability via System Tables &amp; Databricks Apps</div>
       <p>
-        Unity Catalog exposes operational telemetry across the entire account in the <code class="inline-code">system</code> catalog. Platform teams run scheduled SQL queries against <code class="inline-code">system.billing.usage</code>, <code class="inline-code">system.query.history</code>, and <code class="inline-code">system.access.table_lineage</code> to enforce cost governance and SLA monitoring:
+        Unity Catalog exposes account-wide telemetry in the <code class="inline-code">system</code> catalog (<code class="inline-code">system.billing.usage</code>, <code class="inline-code">system.query.history</code>, <code class="inline-code">system.access.table_lineage</code>). Teams host governed Lakehouse FinOps Monitors on <strong>Databricks Apps</strong> (<code class="inline-code">app.yaml</code> + service principal OAuth) to enforce cost governance and SLA monitoring:
       </p>
 
       <div class="code-container">-- 1. FinOps Query: 30-Day DBU &amp; USD Spend by Workspace, SKU, and Job ID
@@ -1370,7 +1368,7 @@ def generate_previews(pdf_path, base_name):
 def main():
     filename_base = "databricks_data_intelligence_platform_technical_manual"
     html_file = os.path.join(HTML_DIR, f"{filename_base}.html")
-    pdf_file = os.path.join(PDF_DIR, f"{filename_base}.pdf")
+    pdf_file = os.path.join(DOCS_PDF_DIR, f"{filename_base}.pdf")
 
     print(f"Generating HTML: {html_file}")
     html_content = generate_html()
@@ -1418,7 +1416,7 @@ def main():
         [2, "7.2 Automated PySpark Unit Testing with Pytest & Chispa", 16],
         [1, "Module 8 (Level 4): DBSQL, FinOps System Tables, Mosaic AI & Troubleshooting", 17],
         [2, "8.1 Databricks SQL (DBSQL) & BI DirectQuery Integration", 17],
-        [2, "8.2 Enterprise FinOps & Observability via System Tables", 18],
+        [2, "8.2 Enterprise FinOps & Observability via System Tables & Databricks Apps", 18],
         [2, "8.3 Mosaic AI, Vector Search & Governed Agent Systems", 18],
         [2, "8.4 Production Troubleshooting & Incident Resolution Playbook", 19],
     ]
@@ -1427,7 +1425,7 @@ def main():
         "title": "Databricks Data Intelligence Platform: End-to-End Technical Manual",
         "author": "Santosh Jammi | Principal Data Architect",
         "subject": "Structured Progression from Foundational Concepts (Level 1) to Principal Production Architecture (Level 4)",
-        "keywords": "Databricks, Lakehouse, Apache Spark, Delta Lake, Unity Catalog, Photon, Liquid Clustering, Deletion Vectors, Auto Loader, Change Data Feed, Lakeflow, DLT, RocksDB, DABs, Chispa, FinOps, Mosaic AI, Troubleshooting",
+        "keywords": "Databricks, Lakehouse, Apache Spark 4.0, VARIANT, Delta Lake, Unity Catalog, Photon, Liquid Clustering, Deletion Vectors, Auto Loader, Change Data Feed, Lakeflow, DLT, RocksDB, DABs, OIDC, Databricks Apps, Chispa, FinOps, Mosaic AI, Troubleshooting",
         "creator": "Modern Data Engineer Reference Publishing Engine",
         "producer": "Headless Chrome / PyMuPDF High-Density Publishing Engine"
     }
@@ -1440,28 +1438,23 @@ def main():
     # Also save as databricks_manual_poster.webp and databricks_manual_page_1.webp
     generate_previews(pdf_file, "databricks_manual")
 
-    # Copy to docs/pdf/
-    shutil.copy2(pdf_file, os.path.join(DOCS_PDF_DIR, f"{filename_base}.pdf"))
-    print(f"Copied to {DOCS_PDF_DIR}")
-
-    # Synchronize to mirrors
+    # Synchronize web-facing HTML and WebP previews (PDFs stay in docs/pdf/ only)
     sync_targets = [
         os.path.join(WORKSPACE_DIR, "public", "_artifacts", "cheat-sheets"),
         os.path.join(WORKSPACE_DIR, ".build-artifacts", "r2", "cheat-sheets"),
     ]
     for target in sync_targets:
-        os.makedirs(os.path.join(target, "pdf"), exist_ok=True)
+        shutil.rmtree(os.path.join(target, "pdf"), ignore_errors=True)
         os.makedirs(os.path.join(target, "html"), exist_ok=True)
         os.makedirs(os.path.join(target, "images"), exist_ok=True)
-        shutil.copy2(pdf_file, os.path.join(target, "pdf", f"{filename_base}.pdf"))
         shutil.copy2(html_file, os.path.join(target, "html", f"{filename_base}.html"))
         for img_name in [f"{filename_base}_page_1.webp", f"{filename_base}_poster.webp", "databricks_manual_page_1.webp", "databricks_manual_poster.webp"]:
             src_img = os.path.join(IMG_DIR, img_name)
             if os.path.exists(src_img):
                 shutil.copy2(src_img, os.path.join(target, "images", img_name))
-        print(f"Synchronized to {target}")
+        print(f"Synchronized HTML/WebP previews to {target}")
 
-    print("Done! 20-Page PDF successfully created, enriched, and synchronized.")
+    print("Done! 20-Page PDF successfully created in docs/pdf/ and enriched.")
 
 if __name__ == "__main__":
     main()

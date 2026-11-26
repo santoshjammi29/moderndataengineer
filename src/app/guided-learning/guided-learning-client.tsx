@@ -35,6 +35,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
+import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 import { LearningPath } from "@/types/data";
 import { learningPathsDb } from "@/data";
 import { CareerCurriculaView } from "@/components/guided-learning/career-curricula-view";
@@ -160,22 +162,22 @@ interface GuidedLearningContentProps {
 
 function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLearningContentProps) {
   const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
+  const [diagramTheme] = useDiagramTheme();
   const paths = useMemo(
     () => (initialPaths && initialPaths.length > 0 ? initialPaths : learningPathsDb),
     [initialPaths]
   );
 
-  const [activeMainTab, setActiveMainTab] = useState<"topics" | "curricula" | "tree">(() => {
-    const tabParam = searchParams.get("tab");
-    if (tabParam === "curricula" || defaultTab === "curricula") return "curricula";
-    if (tabParam === "tree") return "tree";
-    const idParam = searchParams.get("id") || searchParams.get("card");
-    if (idParam && idParam.startsWith("path-")) return "curricula";
-    return "topics";
-  });
+  const [activeMainTab, setActiveMainTab] = useState<"topics" | "curricula" | "tree">(
+    defaultTab === "curricula" ? "curricula" : "topics"
+  );
+
+  const [highlightedTier, setHighlightedTier] = useState<number | null>(null);
 
   useEffect(() => {
-    const tabParam = searchParams.get("tab");
+    const params = new URLSearchParams(searchKey);
+    const tabParam = params.get("tab");
     if (tabParam === "curricula") {
       setActiveMainTab("curricula");
     } else if (tabParam === "tree") {
@@ -183,12 +185,43 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     } else if (tabParam === "topics") {
       setActiveMainTab("topics");
     } else {
-      const idParam = searchParams.get("id") || searchParams.get("card");
+      const idParam = params.get("id") || params.get("card");
       if (idParam && idParam.startsWith("path-")) {
         setActiveMainTab("curricula");
+      } else {
+        setActiveMainTab(defaultTab === "curricula" ? "curricula" : "topics");
       }
     }
-  }, [searchParams]);
+
+    const stageParam = params.get("stage");
+    const stageMap: Record<string, string> = {
+      "1": "EASY",
+      EASY: "EASY",
+      "2": "MEDIUM",
+      MEDIUM: "MEDIUM",
+      "3": "HARD",
+      HARD: "HARD",
+      "4": "ARCHITECT",
+      ARCHITECT: "ARCHITECT",
+    };
+    if (stageParam && stageMap[stageParam.toUpperCase()]) {
+      setStageFilter(stageMap[stageParam.toUpperCase()]);
+    } else if (!stageParam) {
+      setStageFilter("ALL");
+    }
+
+    const tierNum = Number(params.get("tier"));
+    if (tierNum >= 1 && tierNum <= 4) {
+      setHighlightedTier(tierNum);
+      setSelectedDomain("All Tracks");
+      const timer = setTimeout(() => {
+        document.getElementById(`tier-${tierNum}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      setHighlightedTier(null);
+    }
+  }, [searchKey, defaultTab]);
 
   const handleMainTabChange = useCallback((tab: "topics" | "curricula" | "tree") => {
     setActiveMainTab(tab);
@@ -264,7 +297,25 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
       setSelectedType("ALL");
       setSelectedDifficulty("ALL");
       setSelectedStatus("ALL");
-      setStageFilter("ALL");
+      const urlStage =
+        typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("stage")
+          : null;
+      const stageMap: Record<string, string> = {
+        "1": "EASY",
+        EASY: "EASY",
+        "2": "MEDIUM",
+        MEDIUM: "MEDIUM",
+        "3": "HARD",
+        HARD: "HARD",
+        "4": "ARCHITECT",
+        ARCHITECT: "ARCHITECT",
+      };
+      setStageFilter(
+        urlStage && stageMap[urlStage.toUpperCase()]
+          ? stageMap[urlStage.toUpperCase()]
+          : "ALL"
+      );
       setExpandedIds(new Set());
       setIsReadAllMode(false);
       setCollapsedInReadMode(new Set());
@@ -676,7 +727,14 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
         {/* Progressive 4-Tier Tracks: Ordered by increasing difficulty */}
         <div className="space-y-3 pt-1">
           {tieredTopics.map((tier) => (
-            <div key={tier.id} className="space-y-1.5">
+            <div
+              key={tier.id}
+              id={tier.id}
+              className={cn(
+                "space-y-1.5 scroll-mt-24 rounded-xl transition-all",
+                highlightedTier === tier.num && "ring-2 ring-purple-500/60 p-2 bg-purple-500/5"
+              )}
+            >
               <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-2">
                   <span className={cn("text-[9px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider", tier.badgeColor)}>
@@ -1580,6 +1638,8 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     <RotateCcw size={16} />
                   </button>
                   <div className="w-px h-4 bg-[var(--border)] mx-1" />
+                  <WhiteboardThemeToggle size="xs" showLabel={false} />
+                  <div className="w-px h-4 bg-[var(--border)] mx-1" />
                   <button
                     onClick={() => setActiveDiagramModal(null)}
                     className="p-1.5 rounded-md hover:bg-slate-700/40 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
@@ -1591,7 +1651,12 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
               </div>
 
               {/* Modal Body with Zoomable Image */}
-              <div className="flex-1 overflow-auto p-4 flex items-center justify-center bg-black/60 min-h-[360px]">
+              <div
+                className={cn(
+                  "flex-1 overflow-auto p-4 flex items-center justify-center min-h-[360px] transition-colors",
+                  diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
+                )}
+              >
                 <Image
                   src={activeDiagramModal.image}
                   alt={activeDiagramModal.title}
@@ -1600,7 +1665,10 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                   sizes="(max-width: 768px) 100vw, 85vw"
                   priority={true}
                   style={{ transform: `scale(${diagramZoom})`, transformOrigin: "center center" }}
-                  className="max-h-[58vh] max-w-full w-auto h-auto object-contain rounded-lg transition-transform duration-150"
+                  className={cn(
+                    "max-h-[58vh] max-w-full w-auto h-auto object-contain rounded-lg transition-transform duration-150",
+                    getWebpThemeClass(diagramTheme, activeDiagramModal.image)
+                  )}
                 />
               </div>
 
@@ -1615,7 +1683,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     download
                     className="text-xs text-[var(--muted-foreground)] hover:text-purple-400 transition-colors"
                   >
-                    Download Full PNG
+                    Download Blueprint
                   </a>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[var(--muted-foreground)]">

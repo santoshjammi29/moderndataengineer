@@ -71,11 +71,11 @@ async function addApplicationHeaders(request: NextRequest): Promise<NextResponse
 
   const cspPolicy = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://clerk.moderndataengineer.uk https://*.clerk.accounts.dev https://*.clerk.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://static.cloudflareinsights.com https://clerk.moderndataengineer.uk https://*.clerk.accounts.dev https://*.clerk.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https://moderndataengineer.uk https://www.moderndataengineer.uk https://cdn.lakehousearchitect.com https://img.clerk.com https://challenges.cloudflare.com",
     "font-src 'self' data: https://fonts.gstatic.com",
-    "connect-src 'self' https://challenges.cloudflare.com https://clerk.moderndataengineer.uk https://*.clerk.accounts.dev https://*.clerk.com https://*.upstash.io https://*.upstash.com https://*.supabase.co",
+    "connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com https://*.cloudflareinsights.com https://clerk.moderndataengineer.uk https://*.clerk.accounts.dev https://*.clerk.com https://*.upstash.io https://*.upstash.com https://*.supabase.co",
     "frame-src 'self' https://challenges.cloudflare.com https://*.clerk.accounts.dev",
     "frame-ancestors 'none'",
     "object-src 'none'",

@@ -41,7 +41,7 @@ describe("Databricks Polyglot Coding Subpage (/code-practice/databricks)", () =>
     expect(screen.getByText("Databricks Polyglot Coding Hub")).toBeDefined();
     expect(screen.getByText(/48 Cheatsheet Cards/i)).toBeDefined();
     expect(screen.getByText(/100 Architecture Ops/i)).toBeDefined();
-    expect(screen.getByText(/Download Master PDF/i)).toBeDefined();
+    expect(screen.getByText(/250-DPI Reference Poster/i)).toBeDefined();
   });
 
   it("renders production memory triage playbooks (OOM, Spill, Skew)", () => {

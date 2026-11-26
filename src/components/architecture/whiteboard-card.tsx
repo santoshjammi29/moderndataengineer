@@ -6,7 +6,7 @@ import { Maximize2, Share2, Download, Check, Sparkles, ChevronRight, Bookmark, B
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ArchitectureDiagramItem } from "@/data/diagrams";
-import { useDiagramTheme } from "@/lib/diagram-theme";
+import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
 
 interface WhiteboardCardProps {
   diagram: ArchitectureDiagramItem;
@@ -112,7 +112,7 @@ export function WhiteboardCard({
         )}
       >
         {/* Diagram Image with Hardware-Accelerated Theme Transition */}
-        <div style={{ position: "relative", minHeight: "220px", height: "100%" }} className="relative w-full h-full min-h-[220px] flex items-center justify-center">
+        <div style={{ position: "relative", minHeight: "220px", height: "220px" }} className="relative w-full h-full min-h-[220px] flex items-center justify-center">
           <Image
             src={diagram.image}
             alt={diagram.title}
@@ -120,7 +120,7 @@ export function WhiteboardCard({
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className={cn(
               "object-contain transition-transform duration-500 group-hover:scale-[1.018]",
-              isDark ? "whiteboard-dark" : "whiteboard-light"
+              getWebpThemeClass(theme, diagram.image)
             )}
             priority={priority}
           />

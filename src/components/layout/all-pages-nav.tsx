@@ -163,11 +163,10 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Cheat Sheets",
     href: "/cheat-sheet",
     icon: FileCode2,
-    badge: "PDFs",
+    badge: "124 Cards",
     subpages: [
       { label: "Production Runbooks", href: "/cheat-sheet?tab=runbooks", badge: "76", description: "Severity-1 triage & emergency commands" },
       { label: "Databricks Cheat Sheets", href: "/cheat-sheet?tab=databricks", badge: "48", description: "Photon, Spark conf, and DBFS cheat codes" },
-      { label: "A4 PDF Reference Hub", href: "/cheat-sheet?tab=pdf_hub", badge: "7 PDFs", description: "Printable high-density architect sheets" },
     ],
   },
   {

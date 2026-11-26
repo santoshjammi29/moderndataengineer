@@ -103,10 +103,14 @@
 }
 
 /* ── Dark Theme (default) ─────────────────────────── */
-:root,
 .dark,
 html.dark {
   color-scheme: dark;
+}
+
+:root,
+.dark,
+html.dark {
   --background: #0A0A0B;
   --foreground: #f0f0f5;
   --card: #161618;
@@ -520,7 +524,15 @@ html.e-ink {
 html {
   background-color: var(--background, #0A0A0B);
   color: var(--foreground, #f0f0f5);
+  color-scheme: light dark;
+}
+
+html:has(> head > meta[name="color-scheme"][content="dark"]) {
   color-scheme: dark;
+}
+
+html:has(> head > meta[name="color-scheme"][content="light"]) {
+  color-scheme: light;
 }
 
 html.dark {
@@ -2136,7 +2148,7 @@ code:not(pre code) {
   contain: layout style;
 }
 
-/* Whiteboard Blueprint Themes (Interactive Dark Mode / Light Canvas) */
+/* Whiteboard & Cheatsheet WebP Blueprint Themes (Dark, Light, Grey, E-Ink + Manual Toggle) */
 .whiteboard-dark,
 .whiteboard-image-dark {
   filter: none;
@@ -2151,12 +2163,61 @@ code:not(pre code) {
 
 .whiteboard-container-dark {
   background-color: #080808 !important;
+  color-scheme: dark;
+  color: #f0f0f5;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .whiteboard-container-light {
   background-color: #FFFFFF !important;
+  color-scheme: light;
+  color: #0f172a;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Grey theme adaptation for dark-canvas diagrams & containers */
+.grey .whiteboard-container-dark {
+  background-color: #121317 !important;
+  color-scheme: dark;
+  color: #f3f4f6;
+}
+
+.grey .whiteboard-dark,
+.grey .whiteboard-image-dark {
+  filter: brightness(1.04) contrast(0.96);
+}
+
+/* E-Ink theme adaptation: high-contrast monochrome ink on warm paper canvas */
+.e-ink .whiteboard-container-light {
+  background-color: #f7f6f2 !important;
+  color-scheme: light;
+  color: #111111;
+}
+
+.e-ink .whiteboard-light,
+.e-ink .whiteboard-image-light {
+  filter: invert(0.93) hue-rotate(180deg) grayscale(0.85) contrast(1.18) brightness(1.02);
+  mix-blend-mode: multiply;
+}
+
+/* Native light-canvas WebPs (e.g. manuals, Spark matrix cheatsheets) */
+.webp-light-canvas-light {
+  filter: none;
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.e-ink .webp-light-canvas-light {
+  filter: grayscale(0.85) contrast(1.15);
+  mix-blend-mode: multiply;
+}
+
+.webp-light-canvas-dark {
+  filter: invert(0.92) hue-rotate(180deg) contrast(1.08) brightness(0.98);
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.grey .webp-light-canvas-dark {
+  filter: invert(0.88) hue-rotate(180deg) contrast(1.04) brightness(0.98);
 }
 
 /* Forced Colors / High Contrast Mode (Windows High Contrast & WCAG 2.2 Forced Colors) */

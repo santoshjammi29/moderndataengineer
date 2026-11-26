@@ -335,12 +335,22 @@ while (streamReader.hasMoreSlices(startBlock, endBlock)) {
 
 export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps) {
   const searchParams = useSearchParams();
-  const initialTabParam = searchParams.get("tab") as CatalystSubtab | null;
+  const initialTabParam = searchParams.get("tab")?.toLowerCase() as CatalystSubtab | undefined;
   const [activeTab, setActiveTab] = useState<CatalystSubtab>(
     initialTabParam && ["visualizer", "pipeline", "inspector", "blueprint", "tuning"].includes(initialTabParam)
       ? initialTabParam
       : "visualizer"
   );
+
+  // Reactively sync tab with URL searchParams
+  useEffect(() => {
+    const paramTab = searchParams.get("tab")?.toLowerCase() as CatalystSubtab | undefined;
+    if (paramTab && ["visualizer", "pipeline", "inspector", "blueprint", "tuning"].includes(paramTab)) {
+      setActiveTab(paramTab);
+    } else if (!paramTab) {
+      setActiveTab("visualizer");
+    }
+  }, [searchParams]);
 
   // Sync tab with URL
   const handleTabChange = useCallback((tab: CatalystSubtab) => {

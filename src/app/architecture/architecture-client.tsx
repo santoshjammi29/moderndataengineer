@@ -486,8 +486,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
   const [activeTab, setActiveTab] = useState<ArchHubTab>("scenarios");
 
   // Scenarios filter states
-  const initialSearch = searchParams.get("search") || searchParams.get("q") || "";
-  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [searchQuery, setSearchQuery] = useState("");
   const deferredSearch = useDeferredValue(searchQuery);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("ALL");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
@@ -631,74 +630,63 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
     }
   }, [tabParam]);
 
-  // Sync URL parameters on initial load & popstate
+  // Sync URL parameters reactively on searchParams change & popstate
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const syncFromUrl = () => {
-      const params = new URLSearchParams(window.location.search);
-      const qTab = params.get("tab") as ArchHubTab | null;
-      if (qTab && ["scenarios", "diagrams", "python", "polyglot", "distributed"].includes(qTab)) {
-        setActiveTab(qTab);
-      }
+    const qTab = searchParams.get("tab") as ArchHubTab | null;
+    const cardParam = searchParams.get("card") || searchParams.get("id") || searchParams.get("diagram");
+    const qParam = searchParams.get("q") || searchParams.get("search") || searchParams.get("scenario");
+    const catParam = searchParams.get("category");
+    const diffParam = searchParams.get("difficulty");
+    const levelParam = searchParams.get("level");
+    const kwParam = searchParams.get("keyword") || searchParams.get("kw");
 
-      const cardParam = params.get("card") || params.get("id");
-      const qParam = params.get("q") || params.get("search");
-      const catParam = params.get("category");
-      const diffParam = params.get("difficulty");
-      const levelParam = params.get("level");
-      const kwParam = params.get("keyword") || params.get("kw");
+    setSearchQuery(qParam ?? "");
+    setPySearch(qParam ?? "");
+    setSelectedCategory(catParam || "ALL");
+    setSelectedDifficulty(diffParam || "ALL");
+    setSelectedKeyword(kwParam || "ALL");
+    if (levelParam && ["all", "beginner", "intermediate", "advanced", "architect"].includes(levelParam)) {
+      setSelectedPyLevel(levelParam as CodeLevel);
+    } else {
+      setSelectedPyLevel("all");
+    }
 
-      if (qParam) {
-        setSearchQuery(qParam);
-        setPySearch(qParam);
-      }
-      if (catParam) setSelectedCategory(catParam);
-      if (diffParam) setSelectedDifficulty(diffParam);
-      if (kwParam) setSelectedKeyword(kwParam);
-      if (levelParam && ["all", "beginner", "intermediate", "advanced", "architect"].includes(levelParam)) {
-        setSelectedPyLevel(levelParam as CodeLevel);
-      }
-
-      if (cardParam) {
-        const isDiagram = qTab === "diagrams" || architectureDiagrams.some((d) => d.id === cardParam);
-        if (isDiagram) {
-          setActiveTab("diagrams");
-        } else if (cardParam.startsWith("py-") || cardParam.startsWith("python-")) {
-          setActiveTab("python");
-          const cleanId = cardParam.replace(/^python-/, "");
-          setPyExpandedIds((prev) => new Set([...prev, cleanId]));
-          if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
-          scrollTimerRef.current = setTimeout(() => {
-            const el = document.getElementById(`python-${cleanId}`);
-            if (el) {
-              el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            }
-          }, 350);
-        } else {
-          if (!qTab || qTab === "scenarios") {
-            setActiveTab("scenarios");
+    if (cardParam) {
+      const isDiagram = qTab === "diagrams" || architectureDiagrams.some((d) => d.id === cardParam);
+      if (isDiagram) {
+        setActiveTab("diagrams");
+      } else if (cardParam.startsWith("py-") || cardParam.startsWith("python-")) {
+        setActiveTab("python");
+        const cleanId = cardParam.replace(/^python-/, "");
+        setPyExpandedIds((prev) => new Set([...prev, cleanId]));
+        if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+        scrollTimerRef.current = setTimeout(() => {
+          const el = document.getElementById(`python-${cleanId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "nearest" });
           }
-          const cleanId = cardParam.replace(/^arch-/, "");
-          setExpandedIds((prev) => new Set([...prev, cleanId]));
-          if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
-          scrollTimerRef.current = setTimeout(() => {
-            const el = document.getElementById(`arch-${cleanId}`);
-            if (el) {
-              el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            }
-          }, 350);
+        }, 350);
+      } else {
+        if (!qTab || qTab === "scenarios") {
+          setActiveTab("scenarios");
         }
+        const cleanId = cardParam.replace(/^arch-/, "");
+        setExpandedIds((prev) => new Set([...prev, cleanId]));
+        if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+        scrollTimerRef.current = setTimeout(() => {
+          const el = document.getElementById(`arch-${cleanId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        }, 350);
       }
-    };
+    }
 
-    syncFromUrl();
-    window.addEventListener("popstate", syncFromUrl);
     return () => {
-      window.removeEventListener("popstate", syncFromUrl);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     };
-  }, []);
+  }, [searchParams]);
 
   // Update URL helper
   const updateUrlParam = useCallback((key: string, value: string | null) => {

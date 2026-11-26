@@ -323,9 +323,9 @@ pre.code {
   <span class="var">freshness:</span> <span class="str">"15m"</span>        <span class="cm"># Maximum allowed pipeline delay</span>
   <span class="var">expected_daily_volume:</span> { min: 50000, max: 2000000 }</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Contract Primitives</div>
+          <div class="explain-head">🔍 Contract Primitives &amp; OpenLineage</div>
           <ul class="explain-list">
-            <li><strong>Producer Responsibility:</strong> Upstream services validate against contract prior to landing payloads in Bronze Kafka/S3.</li>
+            <li><strong>Producer Responsibility:</strong> Upstream services validate ODCS v3 contracts and emit <b>OpenLineage</b> schema/SLA facets before Bronze landing.</li>
             <li><strong>Automated Tooling:</strong> Parsed by CI/CD to generate JSONSchema, Great Expectations suites, and dbt schema yaml.</li>
           </ul>
         </div>
@@ -539,10 +539,10 @@ quarantined_records.write.format(<span class="str">"delta"</span>).mode(<span cl
         <span class="kw">if:</span> always()
         <span class="var">run:</span> dbt run-operation drop_pr_schema --args '{"pr_id": "${{ github.event.number }}"}'</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Slim CI Mechanics</div>
+          <div class="explain-head">🔍 Slim CI &amp; Zero-Trust Supply Chain</div>
           <ul class="explain-list">
-            <li><strong>State Deferral:</strong> Unmodified upstream models read production tables directly without recomputing historical data.</li>
-            <li><strong>Cost Elimination:</strong> PR validation finishes in &lt;3 minutes while verifying exact column dependencies.</li>
+            <li><strong>State Deferral:</strong> Unmodified upstream models read production tables directly without recomputing historical data (&lt;3m PR runs).</li>
+            <li><strong>SLSA &amp; OIDC:</strong> Authenticate CI via OIDC Workload Identity (zero PATs), pin action SHAs, and gate with Trivy/Gitleaks/Cosign.</li>
           </ul>
         </div>
       </div>

@@ -196,12 +196,25 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
   const [statusAnnouncement, setStatusAnnouncement] = useState("");
 
   // Unified View Mode State (Mindmap, Glossary, Study)
-  const initialViewParam = searchParams.get("view");
+  const initialViewParam = (searchParams.get("view") || searchParams.get("tab"))?.toLowerCase();
+  const hasFilterParams = Boolean(
+    searchParams.get("term") ||
+      searchParams.get("q") ||
+      searchParams.get("search") ||
+      searchParams.get("category") ||
+      searchParams.get("difficulty") ||
+      searchParams.get("card") ||
+      searchParams.get("id")
+  );
   const [viewMode, setViewMode] = useState<ConceptViewMode>(
-    initialViewParam === "glossary" || initialViewParam === "cards" || initialViewParam === "list"
-      ? "glossary"
-      : initialViewParam === "study"
+    initialViewParam === "study" || initialViewParam === "flashcards"
       ? "study"
+      : initialViewParam === "glossary" ||
+        initialViewParam === "cards" ||
+        initialViewParam === "list" ||
+        initialViewParam === "concepts" ||
+        (hasFilterParams && initialViewParam !== "mindmap")
+      ? "glossary"
       : "mindmap"
   );
   const isStudyMode = viewMode === "study";
@@ -248,23 +261,33 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
     } catch {}
   }, []);
 
-  // Reactively synchronize URL search parameters (term, q, search, category, difficulty, card, id, view)
+  // Reactively synchronize URL search parameters (term, q, search, category, difficulty, card, id, view, tab)
   useEffect(() => {
     const termParam = searchParams.get("term") || searchParams.get("q") || searchParams.get("search");
     const catParam = searchParams.get("category");
     const diffParam = searchParams.get("difficulty");
     const cardParam = searchParams.get("card") || searchParams.get("id");
-    const viewParam = searchParams.get("view");
-    if (viewParam === "study") {
+    const viewParam = (searchParams.get("view") || searchParams.get("tab"))?.toLowerCase();
+    const hasFilter = Boolean(termParam || catParam || diffParam || cardParam);
+
+    if (viewParam === "study" || viewParam === "flashcards") {
       setViewMode("study");
-    } else if (viewParam === "glossary" || viewParam === "cards" || viewParam === "list") {
+    } else if (
+      viewParam === "glossary" ||
+      viewParam === "cards" ||
+      viewParam === "list" ||
+      viewParam === "concepts" ||
+      (hasFilter && viewParam !== "mindmap")
+    ) {
       setViewMode("glossary");
-    } else if (viewParam === "mindmap") {
+    } else if (viewParam === "mindmap" || (!viewParam && !hasFilter)) {
       setViewMode("mindmap");
     }
 
     if (termParam !== null) {
       setSearchQuery(termParam);
+    } else {
+      setSearchQuery("");
     }
 
     if (catParam) {
@@ -274,10 +297,14 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
       } else {
         setSelectedCategory(catParam);
       }
+    } else {
+      setSelectedCategory("ALL");
     }
 
     if (diffParam && ["EASY", "MEDIUM", "HARD", "ARCHITECT", "ALL"].includes(diffParam.toUpperCase())) {
       setSelectedDifficulty(diffParam.toUpperCase());
+    } else {
+      setSelectedDifficulty("ALL");
     }
 
     if (cardParam) {

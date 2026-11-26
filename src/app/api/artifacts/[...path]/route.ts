@@ -59,6 +59,9 @@ export async function GET(
   if (normalizedKey.startsWith('..') || path.posix.isAbsolute(normalizedKey)) {
     return NextResponse.json({ error: 'Path traversal attempt detected' }, { status: 400 });
   }
+  if (normalizedKey.toLowerCase().endsWith('.pdf')) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
 
   // 1. Edge Cache: Check Cloudflare Cache API first to eliminate Worker & R2 Class B reads
   const cache = typeof caches !== 'undefined' && (caches as any).default ? ((caches as any).default as Cache) : null;
@@ -154,8 +157,6 @@ export async function GET(
         headers.set('Content-Type', 'application/json; charset=utf-8');
       } else if (normalizedKey.endsWith('.webp')) {
         headers.set('Content-Type', 'image/webp');
-      } else if (normalizedKey.endsWith('.pdf')) {
-        headers.set('Content-Type', 'application/pdf');
       }
 
       if (normalizedKey.endsWith('manifest.json')) {

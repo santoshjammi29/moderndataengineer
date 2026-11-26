@@ -119,15 +119,15 @@ describe("Databricks Architecture & Coding Cheat Sheet Suite", () => {
     expect(databricksCheatsheetData).toBeDefined();
     expect(databricksCheatsheetData.cards.length).toBe(48);
     expect(databricksCheatsheetData.domains.length).toBe(4);
-    expect(databricksCheatsheetData.masterPdf.url).toBe("/cheatsheets/pdf/databricks_master_cheatsheet.pdf");
+    expect(databricksCheatsheetData.masterPdf).toBeUndefined();
   });
 
-  it("each domain has 12 cards, valid pdf, and poster assets", () => {
+  it("each domain has 12 cards and valid poster assets", () => {
     const validDomainIds = ["sparksql", "pyspark", "spark_core", "python"];
     databricksCheatsheetData.domains.forEach((dom) => {
       expect(validDomainIds).toContain(dom.id);
       expect(dom.cardCount).toBe(12);
-      expect(dom.pdf.endsWith(".pdf")).toBe(true);
+      expect(dom.pdf).toBeUndefined();
       expect(dom.poster.endsWith(".webp")).toBe(true);
       expect(dom.pageImages.length).toBe(2);
       dom.pageImages.forEach((img) => expect(img.endsWith(".webp")).toBe(true));
@@ -163,10 +163,10 @@ describe("Databricks Architecture & Coding Cheat Sheet Suite", () => {
     expect(screen.getByText(/Code Breakdown & Engine Mechanics/i)).toBeDefined();
   });
 
-  it("renders DatabricksCheatsheetView with domain tabs and master download link", () => {
+  it("renders DatabricksCheatsheetView with domain tabs and wall posters button", () => {
     render(<DatabricksCheatsheetView data={databricksCheatsheetData} />);
     expect(screen.getByText(/Databricks Architecture &/i)).toBeDefined();
-    expect(screen.getByText(/Download Master PDF/i)).toBeDefined();
+    expect(screen.getAllByText(/Wall Posters/i).length).toBeGreaterThan(0);
     expect(screen.getByText("All 48 Cards")).toBeDefined();
     expect(screen.getAllByText("Spark SQL").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("PySpark").length).toBeGreaterThanOrEqual(1);

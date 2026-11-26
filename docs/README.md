@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://moderndataengineer.uk"><img src="https://img.shields.io/badge/Live_Site-moderndataengineer.uk-blueviolet?style=flat-square" alt="Live Site"></a>
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js" alt="Next.js 16"></a>
-  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-61_Files_%E2%80%A2_509_Passed-green?style=flat-square&logo=vitest" alt="Vitest 61/61"></a>
-  <a href="../src/data/content-counts.json"><img src="https://img.shields.io/badge/Inventory-11%2C956%2B_Assets-blue?style=flat-square" alt="11,956+ Assets"></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-62_Files_%E2%80%A2_522_Passed-green?style=flat-square&logo=vitest" alt="Vitest 62/62"></a>
+  <a href="../src/data/content-counts.json"><img src="https://img.shields.io/badge/Inventory-12%2C218%2B_Search_Records-blue?style=flat-square" alt="12,218+ Search Records"></a>
   <a href="content-expansion-plan.md"><img src="https://img.shields.io/badge/Research-21_Authoritative_Sources-emerald?style=flat-square" alt="21 Research Sources"></a>
 </p>
 
@@ -24,7 +24,7 @@ The documentation is organized into six specialized pillars designed for Lead Ar
 docs/
 ├── architecture/             # 9 Deep-Dive Modules + JSON Export + 52 Blueprints
 ├── whiteboard_diagrams/      # 52 Hand-Drawn Whiteboard Blueprints Catalog (Markdown Embeds & Personas)
-├── pdf/                      # 11 Master A4 Vector PDFs & Technical Manuals
+├── pdf/                      # 11 Master A4 Vector PDFs & Technical Manuals (Git Repository Only)
 ├── audits/                   # Production Edge Benchmarks, Theme & Design System Audits
 ├── design-system/            # Design Token System 2.0, UI Primitives, Editorial Spec
 ├── engineering/              # Development Quickstart, Vitest Testing Runbook, Roadmap
@@ -53,7 +53,7 @@ In-depth technical guides, failure mode analysis, decision trees, and production
 | **10** | **Production Databricks Medallion Blueprint & Triage** | Auto Loader, DLT Liquid Clustering, Unity Catalog, Spark UI Triage | Complete end-to-end Medallion design with DDL, selective salting, and step-by-step skew/spill triage. | [`architecture/10_production_databricks_medallion_blueprint_and_runbook.md`](./architecture/10_production_databricks_medallion_blueprint_and_runbook.md) |
 | **Data**| **Machine-Readable Export** | Full Dataset JSON (`knowledge_base_export.json`) | Machine-readable export with metadata, schema tags, questions, and code snippets for SSGs and RAG. | [`architecture/knowledge_base_export.json`](./architecture/knowledge_base_export.json) |
 
-👉 **[Explore Full Architecture Library](./architecture/README.md)** · **[View 52 Whiteboard Blueprints](./whiteboard_diagrams/README.md)** · **[Download Enterprise PDFs](./pdf/README.md)**
+👉 **[Explore Full Architecture Library](./architecture/README.md)** · **[View 52 Whiteboard Blueprints](./whiteboard_diagrams/README.md)** · **[View Repository PDFs](./pdf/README.md)**
 
 ---
 

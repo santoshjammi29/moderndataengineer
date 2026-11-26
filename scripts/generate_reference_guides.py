@@ -14,6 +14,7 @@ Enriches all 10 PDFs (7 existing + 3 new) with:
 Author: Santosh Jammi | Principal Data Architect
 """
 
+import json
 import os
 import shutil
 import subprocess
@@ -24,7 +25,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 WORKSPACE_DIR = os.path.dirname(SCRIPT_DIR)
 OUTPUT_DIR = os.path.join(WORKSPACE_DIR, "public", "cheatsheets")
 HTML_DIR = os.path.join(OUTPUT_DIR, "html")
-PDF_DIR = os.path.join(OUTPUT_DIR, "pdf")
+PDF_DIR = os.path.join(WORKSPACE_DIR, "docs", "pdf")
 IMG_DIR = os.path.join(OUTPUT_DIR, "images")
 
 os.makedirs(HTML_DIR, exist_ok=True)
@@ -455,10 +456,10 @@ CATALYST_BODY = """
 <span class="cls">CollapseRepartition:</span>
   Merges consecutive <code>repartition()</code> or <code>coalesce()</code> into single exchange.</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 PushedFilter Verification</div>
+          <div class="explain-head">🔍 PushedFilter &amp; Spark 4.0 Verification</div>
           <ul class="explain-list">
-            <li><strong>Scan Check:</strong> Verify <code>PushedFilters: [IsNotNull(id), EqualTo(status, 'COMPLETE')]</code> in leaf scan metadata.</li>
-            <li><strong>Parquet Pruning:</strong> Predicates must match file statistics (min/max) to skip entire row groups without disk reads.</li>
+            <li><strong>Scan Check:</strong> Verify <code>PushedFilters: [IsNotNull(id), EqualTo(status, 'COMPLETE')]</code> and shredded <code>VARIANT</code> sub-column pruning in leaf scans.</li>
+            <li><strong>Spark Connect &amp; ANSI:</strong> Spark 4.0 sends protobuf <code>LogicalPlan</code> over gRPC and defaults to ANSI mode (use <code>try_cast()</code> for safe casts).</li>
           </ul>
         </div>
       </div>
@@ -678,10 +679,10 @@ joined_df = skewed_df.join(replicated_dim, on=<span class="str">"salt"</span>, h
 <span class="cls">4. Task Duration Distribution:</span>
    <code>Max / Median &gt; 3.0x</code> indicates structural data skew in stage.</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 DAG Visualization Inspection</div>
+          <div class="explain-head">🔍 DAG Visualization &amp; 5S Triage</div>
           <ul class="explain-list">
-            <li><strong>Blue Rectangles:</strong> WholeStageCodegen blocks; click to reveal underlying operator pipeline details.</li>
-            <li><strong>Dotted Lines:</strong> Shuffle exchange stage boundaries; identify network transfers and partition counts.</li>
+            <li><strong>5 S's Bottlenecks:</strong> Audit <b>Spill</b>, <b>Skew</b>, <b>Shuffle</b>, <b>Storage</b> (small files), and <b>Serialization</b> (<code>BatchEvalPython</code>) across DAG blocks.</li>
+            <li><strong>Dotted Lines:</strong> Shuffle exchange stage boundaries; identify network transfers, AQE coalescing, and partition counts.</li>
           </ul>
         </div>
       </div>
@@ -858,9 +859,9 @@ table_root/
   <span class="fn">bucket</span>(<span class="num">16</span>, cust_id)     <span class="cm">-- Murmur3 hash bucket transform</span>
 );</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Clustering Superiority</div>
+          <div class="explain-head">🔍 Clustering, Row Tracking &amp; Predictive Opt</div>
           <ul class="explain-list">
-            <li><strong>Liquid Clustering:</strong> Non-destructive; keys can be changed anytime via <code>ALTER TABLE ... CLUSTER BY</code> without rewriting data.</li>
+            <li><strong>Liquid &amp; Row Tracking:</strong> Non-destructive <code>CLUSTER BY</code> + <code>delta.enableRowTracking</code> enables concurrent row-level merges and Predictive Optimization.</li>
             <li><strong>Hidden Partitioning:</strong> Iceberg prevents consumer query errors; <code>WHERE event_time &gt; '2026-01-01'</code> automatically prunes day partitions.</li>
           </ul>
         </div>
@@ -1091,9 +1092,9 @@ ice_stream = spark.readStream.format(<span class="str">"iceberg"</span>) \
    - <span class="fn">Google BigQuery:</span> BigLake native integration for Iceberg & Delta.
    - <span class="fn">AWS Athena / EMR:</span> Native read/write on both formats via AWS Glue.</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Catalog Protocol</div>
+          <div class="explain-head">🔍 Catalog Protocol &amp; Unity Catalog Iceberg</div>
           <ul class="explain-list">
-            <li><strong>Vendor Neutrality:</strong> Iceberg REST catalog protocol prevents cloud vendor lock-in with standard HTTP commit calls.</li>
+            <li><strong>Vendor Neutrality:</strong> Iceberg REST catalog (Apache Polaris, Nessie, Unity Catalog REST) uses standard HTTP commit calls without lock-in.</li>
             <li><strong>PyIceberg:</strong> Enables lightweight AWS Lambda / Cloud Functions to execute ACID queries without starting Spark clusters.</li>
           </ul>
         </div>
@@ -1189,9 +1190,9 @@ SDLC_CONTRACTS_BODY = """
   <span class="var">freshness:</span> <span class="str">"15m"</span>        <span class="cm"># Maximum allowed pipeline delay</span>
   <span class="var">expected_daily_volume:</span> { min: 50000, max: 2000000 }</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Contract Primitives</div>
+          <div class="explain-head">🔍 Contract Primitives &amp; OpenLineage</div>
           <ul class="explain-list">
-            <li><strong>Producer Responsibility:</strong> Upstream services validate against contract prior to landing payloads in Bronze Kafka/S3.</li>
+            <li><strong>Producer Responsibility:</strong> Upstream services validate ODCS v3 contracts and emit <b>OpenLineage</b> schema/SLA facets before Bronze landing.</li>
             <li><strong>Automated Tooling:</strong> Parsed by CI/CD to generate JSONSchema, Great Expectations suites, and dbt schema yaml.</li>
           </ul>
         </div>
@@ -1409,10 +1410,10 @@ quarantined_records.write.format(<span class="str">"delta"</span>).mode(<span cl
         <span class="kw">if:</span> always()
         <span class="var">run:</span> dbt run-operation drop_pr_schema --args '{"pr_id": "${{ github.event.number }}"}'</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Slim CI Mechanics</div>
+          <div class="explain-head">🔍 Slim CI &amp; Zero-Trust Supply Chain</div>
           <ul class="explain-list">
-            <li><strong>State Deferral:</strong> Unmodified upstream models read production tables directly without recomputing historical data.</li>
-            <li><strong>Cost Elimination:</strong> PR validation finishes in &lt;3 minutes while verifying exact column dependencies.</li>
+            <li><strong>State Deferral:</strong> Unmodified upstream models read production tables directly without recomputing historical data (&lt;3m PR runs).</li>
+            <li><strong>SLSA &amp; OIDC:</strong> Authenticate CI via OIDC Workload Identity (zero PATs), pin action SHAs, and gate with Trivy/Gitleaks/Cosign.</li>
           </ul>
         </div>
       </div>
@@ -1633,6 +1634,32 @@ def inject_bookmarks_and_metadata(pdf_path, toc_entries, metadata):
     print(f"  ✓ Verified: {len(verify_doc.get_toc())} TOC entries, Title: '{verify_doc.metadata.get('title')}'")
     verify_doc.close()
 
+def build_runbooks_toc(pdf_path, page_offset=0):
+    """Build accurate TOC bookmarks for all runbooks from data_cheatsheet.json."""
+    data_path = os.path.join(WORKSPACE_DIR, "src", "data", "json", "data_cheatsheet.json")
+    with open(data_path, encoding="utf-8") as f:
+        runbooks = json.load(f)
+
+    doc = fitz.open(pdf_path)
+    page_texts = [doc[i].get_text() for i in range(doc.page_count)]
+    total_pages = doc.page_count
+    doc.close()
+
+    toc = []
+    search_start = page_offset
+    for idx, item in enumerate(runbooks, 1):
+        title = item.get("title", f"Runbook {idx}")
+        matched_page = search_start + 1
+        snippet = title[:36]
+        for p_idx in range(search_start, total_pages):
+            if title in page_texts[p_idx] or snippet in page_texts[p_idx]:
+                matched_page = p_idx + 1
+                search_start = p_idx
+                break
+        toc.append([3 if page_offset > 0 else 2, f"{idx}. {title}", matched_page])
+    return toc, len(runbooks), total_pages
+
+
 def main():
     print("=" * 75)
     print("ENTERPRISE REFERENCE GUIDES GENERATOR & PDF BOOKMARK ENGINE")
@@ -1762,93 +1789,93 @@ def main():
         {
             "filename": "databricks_sparksql_cheatsheet.pdf",
             "title": "Databricks Spark SQL Architecture & Query Suite",
-            "subject": "Spark SQL Lakehouse Foundation, DDL, Liquid Clustering, Deletion Vectors, and AQE Optimization",
-            "keywords": "Spark SQL, Databricks, Delta Lake, Liquid Clustering, Deletion Vectors, Window Functions, AQE",
+            "subject": "Spark SQL 4.0, DDL, Liquid Clustering, Delta Lake MERGE INTO, QUALIFY, Higher-Order Functions, and Row Filters",
+            "keywords": "Spark SQL, Databricks, Delta Lake, Liquid Clustering, VARIANT, QUALIFY, Window Functions, AQE",
             "toc": [
                 [1, "Databricks Spark SQL Architecture & Query Suite", 1],
-                [2, "Page 1: Lakehouse Foundation, DDL & Window Mechanics", 1],
+                [2, "Page 1: DDL, DML & Maintenance", 1],
                 [3, "Unity Catalog 3-Level Namespace & DDL", 1],
-                [3, "Window Frame Aggregations & QUALIFY Deduplication", 1],
-                [3, "Complex Nested JSON & Higher-Order Array Transforms", 1],
-                [3, "Liquid Clustering vs Z-Order Multi-Dimensional Indexing", 1],
-                [3, "Delta Lake ACID Merge with Schema Evolution", 1],
-                [3, "Adaptive Query Execution (AQE) Optimizer Hints", 1],
-                [2, "Page 2: Advanced MERGE INTO, Deletion Vectors & Optimization", 2],
-                [3, "Deletion Vectors & Fast In-Place Deletions", 2],
-                [3, "Dynamic File Pruning (DFP) & Bloom Filters", 2],
-                [3, "Photon Engine Vectorized Execution Acceleration", 2],
-                [3, "Materialized Views & Streaming Tables in DLT", 2],
-                [3, "Dynamic Table Partitions & Ingestion Staging", 2],
-                [3, "FinOps Optimization & Query Profile Diagnostic Triage", 2],
+                [3, "Delta Lake ACID Upsert (MERGE INTO)", 1],
+                [3, "Compaction, Z-Order & Vacuum", 1],
+                [3, "Delta Time Travel, Audit & Instant Rollback", 1],
+                [3, "Chained CTEs, Window Slicing & Set Operations", 1],
+                [3, "Medallion SQL & QUALIFY Deduplication", 1],
+                [2, "Page 2: Analytics, Functions & Engine Knobs", 2],
+                [3, "Window Functions & Analytical Framing", 2],
+                [3, "Complex Types: Structs, Arrays & Maps (VARIANT)", 2],
+                [3, "Higher-Order Functions (In-Engine Array Ops)", 2],
+                [3, "Unity Catalog Row Filters & Column Masks", 2],
+                [3, "Dynamic Pivot, Unpivot & Grouping Sets", 2],
+                [3, "Spark SQL Performance Hints & Config Knobs", 2],
             ]
         },
         {
             "filename": "databricks_pyspark_cheatsheet.pdf",
             "title": "Databricks PySpark Architecture & Engine Suite",
-            "subject": "Distributed PySpark DataFrames, Broadcast Joins, Key Salting, Structured Streaming, and Arrow UDFs",
-            "keywords": "PySpark, Databricks, Broadcast Hash Join, Salting, Structured Streaming, Arrow UDF, Watermarking",
+            "subject": "PySpark 3.5+/4.0 DataFrames, Spark Connect, Broadcast Joins, Key Salting, Auto Loader, and Arrow UDFs",
+            "keywords": "PySpark, Databricks, Spark Connect, Broadcast Hash Join, Salting, Auto Loader, Arrow UDF, replaceWhere",
             "toc": [
                 [1, "Databricks PySpark Architecture & Engine Suite", 1],
-                [2, "Page 1: Distributed DataFrame APIs & Broadcast Joins", 1],
-                [3, "DataFrame Transformation Chains & Column Expressions", 1],
-                [3, "Broadcast Hash Joins & Dynamic Memory Thresholds", 1],
-                [3, "Key Salting for Extreme Stage Skew Elimination", 1],
-                [3, "Dynamic Partition Pruning & Broadcast Exchange", 1],
-                [3, "Bucket-Aware Joins & Zero-Shuffle Strategies", 1],
-                [3, "DataFrame Persistence, Unpersisting & Storage Levels", 1],
-                [2, "Page 2: Stateful Structured Streaming & Vectorized Arrow UDFs", 2],
-                [3, "Stateful Structured Streaming with Watermarks", 2],
-                [3, "Apache Arrow Vectorized Pandas UDFs", 2],
-                [3, "Delta Lake Time Travel & Historical Point-in-Time Audits", 2],
-                [3, "Window Aggregations & Analytical Lead/Lag Patterns", 2],
-                [3, "Auto Loader (cloudFiles) Production Ingestion", 2],
-                [3, "PySpark Unit Testing with Chispa & Schema Assertions", 2],
+                [2, "Page 1: DataFrame API & Windows", 1],
+                [3, "SparkSession Initialization & DBR Sizing", 1],
+                [3, "DataFrame Projections, Transforms & Filters", 1],
+                [3, "Strict Schema Definition (StructType & StructField)", 1],
+                [3, "pyspark.sql.functions (F) Master Reference", 1],
+                [3, "Joins, Broadcast Hints & Skew Salting", 1],
+                [3, "Analytical Window Specifications (pyspark.sql.Window)", 1],
+                [2, "Page 2: Delta API, Auto Loader & Streaming", 2],
+                [3, "DeltaTable Python API & Upsert", 2],
+                [3, "Structured Streaming with Auto Loader (cloudFiles)", 2],
+                [3, "Vectorized Apache Arrow UDFs (@pandas_udf)", 2],
+                [3, "Partitioning Strategy (repartition vs coalesce)", 2],
+                [3, "Storage Levels & Memory Persistence", 2],
+                [3, "Streaming Microbatch Merges (foreachBatch)", 2],
             ]
         },
         {
             "filename": "databricks_spark_core_cheatsheet.pdf",
             "title": "Databricks Spark Core Internals & JVM Tuning Suite",
-            "subject": "Spark Core Memory Pools, JVM G1GC Flags, Tungsten Memory, Shuffle Spill Triage, and Task Scheduling",
-            "keywords": "Spark Core, JVM Tuning, G1GC, Memory Pools, Tungsten, Shuffle Spill, Executor Allocation, OOM Exit 137",
+            "subject": "Spark Cluster Topography, JVM Unified Memory, Shuffle Spill, 5-Stage Catalyst, Photon C++, AQE, and 5S Triage",
+            "keywords": "Spark Core, JVM Tuning, G1GC, Memory Pools, Tungsten, Shuffle Spill, Catalyst, Photon, AQE, 5S Triage",
             "toc": [
                 [1, "Databricks Spark Core Internals & JVM Tuning Suite", 1],
-                [2, "Page 1: JVM Memory Breakdown, Storage vs Execution Pools", 1],
-                [3, "JVM On-Heap vs Off-Heap Memory Pool Breakdown", 1],
-                [3, "Production G1GC Garbage Collection Flags for Large Heaps", 1],
-                [3, "Tungsten Project: Binary Memory Management & Off-Heap Allocations", 1],
-                [3, "Shuffle Spill Triage: Memory vs Disk Spill Mitigation", 1],
-                [3, "Dynamic Allocation & Executor Rightsizing Calculations", 1],
-                [3, "Task Serialization, Closure Capture & Kryo Registrations", 1],
-                [2, "Page 2: Shuffle Spill Triage, Schedulers & Resource Allocation", 2],
-                [3, "Shuffle Service Mechanics & Push-Based Shuffle Architecture", 2],
-                [3, "Stage Failure Triage & FetchFailedException Remediation", 2],
-                [3, "Spark Driver vs Executor Memory Budgeting Formulas", 2],
-                [3, "Locality Levels & Task Scheduling Optimization", 2],
-                [3, "Triaging Container Killed (Exit Code 137) OOM Scenarios", 2],
-                [3, "Spark UI Metrics Interpretation & Execution Bottlenecks", 2],
+                [2, "Page 1: Cluster, Memory, Shuffle & Catalyst", 1],
+                [3, "Cluster Topography & Execution Hierarchy", 1],
+                [3, "JVM Unified Memory Management (Heap & Off-Heap)", 1],
+                [3, "Dependency Graph: Narrow vs Wide Transformations", 1],
+                [3, "Shuffle Mechanics & Spill Bottlenecks", 1],
+                [3, "Catalyst Query Optimizer & Whole-Stage CodeGen", 1],
+                [3, "Production Executor Sizing Formula", 1],
+                [2, "Page 2: Photon, AQE, Spark UI & Diagnostics", 2],
+                [3, "Databricks Photon Native Vectorized Engine", 2],
+                [3, "Adaptive Query Execution (AQE) 3 Superpowers", 2],
+                [3, "Spark UI Diagnostic & 5S Triage Playbook", 2],
+                [3, "Data Skew Root Causes & Solutions", 2],
+                [3, "Storage Levels & Checkpoint Decision Matrix", 2],
+                [3, "JVM Garbage Collection (G1GC) & Shuffle Math", 2],
             ]
         },
         {
             "filename": "databricks_python_cheatsheet.pdf",
             "title": "Python in Databricks SDK, CLI & DABs Suite",
-            "subject": "Databricks Asset Bundles (DABs), dbutils Volumes, Secrets Retrieval, Workspace REST API v2.1, and Unity Catalog",
-            "keywords": "Databricks Python, DABs, dbutils, Volumes, Secrets, REST API, Unity Catalog RBAC, CI/CD",
+            "subject": "DBUtils, Lakeflow DLT, Pandas on Spark, Databricks Connect v2, SDK, UC Volumes, OIDC DABs CI/CD, and Pytest",
+            "keywords": "Databricks Python, DABs, OIDC, dbutils, Volumes, DLT, Lakeflow, Databricks Connect v2, WorkspaceClient, assertDataFrameEqual",
             "toc": [
                 [1, "Python in Databricks SDK, CLI & DABs Suite", 1],
-                [2, "Page 1: Databricks Asset Bundles (DABs) & dbutils Operations", 1],
-                [3, "Databricks Asset Bundles (DABs) Declarative CI/CD Specs", 1],
-                [3, "dbutils Filesystem & Unity Catalog Volume Operations", 1],
-                [3, "Secure Multi-Cloud Secrets Retrieval (KeyVault & AWS KMS)", 1],
-                [3, "Databricks CLI v0.200+ Authentication & Profile Switching", 1],
-                [3, "Delta Live Tables (DLT) Python Declarative Pipelines", 1],
-                [3, "Python SDK Workspace Client Initialization & Operations", 1],
-                [2, "Page 2: Workspace REST API v2.1 Clients & Unity Catalog RBAC", 2],
-                [3, "Workspace REST API v2.1 Programmatic Execution", 2],
-                [3, "Programmatic Unity Catalog Permissions & Grants", 2],
-                [3, "Databricks Repos & Git Provider Automation", 2],
-                [3, "Cluster Policy Enforcement via Python SDK", 2],
-                [3, "Model Serving & MLflow Registry Integrations", 2],
-                [3, "Serverless Compute API & Job Run Triggers", 2],
+                [2, "Page 1: DBUtils, DLT, SDK & Magic", 1],
+                [3, "dbutils Master Reference (fs, secrets, notebook)", 1],
+                [3, "Delta Live Tables (DLT) Declarative Pipelines", 1],
+                [3, "Streaming CDC with dlt.apply_changes() (SCD 1 & 2)", 1],
+                [3, "Pandas API on Spark (pyspark.pandas as ps)", 1],
+                [3, "Databricks Connect v2 & Databricks Python SDK", 1],
+                [3, "Databricks Magic Commands & Scoping", 1],
+                [2, "Page 2: Wheels, DABs, Observability, Types & Testing", 2],
+                [3, "Wheels & Unity Catalog Volumes", 2],
+                [3, "Databricks Asset Bundles (DABs) CI/CD", 2],
+                [3, "Structured Logging & Observability", 2],
+                [3, "Concurrent Extraction & Exponential Retries", 2],
+                [3, "Type Annotations & Schema Contracts", 2],
+                [3, "Unit Testing PySpark Pipelines in CI/CD", 2],
             ]
         },
         {
@@ -1859,130 +1886,51 @@ def main():
             "toc": [
                 [1, "Databricks Unified Architecture & Coding Suite (Master Edition)", 1],
                 [2, "Domain 1: Spark SQL Architecture & Query Suite", 1],
-                [3, "Page 1: Lakehouse Foundation, DDL & Window Mechanics", 1],
-                [3, "Page 2: Advanced MERGE INTO, Deletion Vectors & AQE", 2],
+                [3, "Page 1: DDL, DML & Maintenance", 1],
+                [3, "Page 2: Analytics, Functions & Engine Knobs", 2],
                 [2, "Domain 2: PySpark Architecture & Engine Suite", 3],
-                [3, "Page 3: Distributed DataFrame APIs & Broadcast Joins", 3],
-                [3, "Page 4: Stateful Structured Streaming & Arrow UDFs", 4],
+                [3, "Page 3: DataFrame API & Windows", 3],
+                [3, "Page 4: Delta API, Auto Loader & Streaming", 4],
                 [2, "Domain 3: Spark Core Internals & JVM Tuning Suite", 5],
-                [3, "Page 5: JVM Memory Pool Sizing & G1GC Flags", 5],
-                [3, "Page 6: Shuffle Spill Elimination & Task Schedulers", 6],
+                [3, "Page 5: Cluster, Memory, Shuffle & Catalyst", 5],
+                [3, "Page 6: Photon, AQE, Spark UI & Diagnostics", 6],
                 [2, "Domain 4: Python in Databricks Automation Suite", 7],
-                [3, "Page 7: Databricks Asset Bundles (DABs) & dbutils", 7],
-                [3, "Page 8: Workspace REST API v2.1 & Unity Catalog RBAC", 8],
+                [3, "Page 7: DBUtils, DLT, SDK & Magic", 7],
+                [3, "Page 8: Wheels, DABs, Observability, Types & Testing", 8],
             ]
         },
-        {
+    ]
+
+    rb_pdf_path = os.path.join(PDF_DIR, "incident_runbooks.pdf")
+    if os.path.exists(rb_pdf_path):
+        rb_items_toc, rb_count, rb_pages = build_runbooks_toc(rb_pdf_path, page_offset=0)
+        existing_enrichments.append({
             "filename": "incident_runbooks.pdf",
             "title": "Data Engineering Production Incident Runbooks (Master Reference)",
-            "subject": "Comprehensive 39-Page A4 Reference: 76 Emergency Production Incident Triage Runbooks",
-            "keywords": "Incident Runbooks, Data Engineering, Spark OOM, Exit Code 137, Airflow Triage, dbt Testing, Iceberg, Delta Lake",
-            "toc": [
-                [1, "Data Engineering Production Incident Runbooks (Master Reference)", 1],
-                [2, "Page 1: Runbooks Overview & High-Impact Index", 1],
-                [2, "Page 2: Surgical DataFrame Persistence & Cache Eviction", 2],
-                [2, "Page 3: Lineage Truncation via Checkpoint & Cut-Off", 3],
-                [2, "Page 4: Low-Overhead Custom Accumulators for Auditing", 4],
-                [2, "Page 5: Kryo Serialization & Primitive Memory Layout", 5],
-                [2, "Page 6: Join Tuning: BHJ, Bucketing & AQE Dynamic Switch", 6],
-                [2, "Page 7: Key Salting & Two-Phase Skew Stage Elimination", 7],
-                [2, "Page 8: Triage & Elimination of Tungsten Shuffle Spill", 8],
-                [2, "Page 9: Bypassing the 64KB JVM Bytecode Method Limit", 9],
-                [2, "Page 10: Separation of Concerns: Airflow Orchestration & dbt", 10],
-                [2, "Page 11: Airflow Zombie Task Detection & Heartbeat Recovery", 11],
-                [2, "Page 12: Bulletproof Idempotent Backfills & Partition Cleansing", 12],
-                [2, "Page 13: Airflow DB Connection Pool Starvation Triage", 13],
-                [2, "Page 14: Fail-Fast Observability & Exponential System Retries", 14],
-                [2, "Page 15: SQL Triage: CPU-Bound vs Wait-Bottlenecks", 15],
-                [2, "Page 16: Triaging Exit Code 137: OOMKilled vs JVM Heap Limit", 16],
-                [2, "Page 17: JVM G1GC Pause Tuning for 32GB+ Heap Nodes", 17],
-                [2, "Page 18: Kafka Consumer Lag & Rebalance Storm Triage", 18],
-                [2, "Page 19: OpenTelemetry Distributed Tracing in PySpark", 19],
-                [2, "Page 20: Safe VACUUM Operations: Dry-Runs & Retention Checks", 20],
-                [2, "Page 21: Apache Iceberg: Copy-On-Write vs Merge-On-Read Tradeoffs", 21],
-                [2, "Page 22: Eliminating T-SQL Parameter Sniffing Regressions", 22],
-                [2, "Page 23: Bloom Filter Indexes for High-Speed Lookups", 23],
-                [2, "Page 24: dbt Automated Data Integrity Gates & Fail-Fast Tests", 24],
-                [2, "Page 25: Spot Instance Graceful Node Decommissioning", 25],
-                [2, "Page 26: Runtime Data Contracts & Schema Quarantine (DLQ)", 26],
-                [2, "Page 27: Stateful Idempotent MERGE with Watermarking", 27],
-                [2, "Page 28: Zero-Downtime Schema Migration with gh-ost", 28],
-                [2, "Page 29: Read-After-Write Consistency with GTID Tracking", 29],
-                [2, "Page 30: Database Connection Pool Thrashing & Storms", 30],
-                [2, "Page 31: Eliminate DynamoDB Hot Partitions via Key Salting", 31],
-                [2, "Page 32: LSM Compaction Backlog & Write-Stall Recovery", 32],
-                [2, "Page 33: Fabric Direct Lake Mode Fallback Troubleshooting", 33],
-                [2, "Page 34: Delta Lake & Iceberg VACUUM Compaction Regressions", 34],
-                [2, "Page 35: Lakehouse Small File Compaction & S3/ADLS Throttling", 35],
-                [2, "Page 36: Snowflake Parquet Semi-Structured Loading Optimization", 36],
-                [2, "Page 37: Microsoft Fabric & Purview Native Governance", 37],
-                [2, "Page 38: Triage: Executor Container Killed (Exit Code 137)", 38],
-                [2, "Page 39: Triage: Delta Lake Small File Metadata Degradation", 39],
-            ]
-        },
-        {
+            "subject": f"Comprehensive {rb_pages}-Page A4 Reference: {rb_count} Emergency Production Incident Triage Runbooks",
+            "keywords": "Incident Runbooks, Data Engineering, Spark OOM, Exit Code 137, Airflow Triage, ADF, dbt Testing, Iceberg, Delta Lake, Synapse MPP",
+            "toc": [[1, f"Data Engineering Production Incident Runbooks ({rb_count} Playbooks)", 1], *rb_items_toc],
+        })
+
+    master_ref_path = os.path.join(PDF_DIR, "lakehouse_enterprise_master_reference.pdf")
+    if os.path.exists(master_ref_path):
+        mr_items_toc, mr_count, mr_pages = build_runbooks_toc(master_ref_path, page_offset=8)
+        existing_enrichments.append({
             "filename": "lakehouse_enterprise_master_reference.pdf",
             "title": "Complete Lakehouse Architecture & Runbooks Enterprise Reference (All-in-One Master)",
-            "subject": "Comprehensive 47-Page All-in-One Enterprise Handbook: 48 Architecture Coding Cards and 76 Incident Runbooks",
+            "subject": f"Comprehensive {mr_pages}-Page All-in-One Enterprise Handbook: 48 Architecture Coding Cards and {mr_count} Incident Runbooks",
             "keywords": "Lakehouse Master, Enterprise Handbook, Spark SQL, PySpark, Spark Core, Python SDK, Incident Runbooks, Databricks",
             "toc": [
                 [1, "Lakehouse Enterprise Master Reference: Architecture, Coding & Runbooks", 1],
-                [2, "Part 1: Databricks Unified Architecture & Coding Suite", 1],
+                [2, "Part 1: Databricks Unified Architecture & Coding Suite (8 Pages)", 1],
                 [3, "Section 1: Spark SQL Architecture & Query Suite", 1],
-                [4, "Page 1: Lakehouse Foundation, DDL & Window Mechanics", 1],
-                [4, "Page 2: Advanced MERGE INTO, Deletion Vectors & AQE", 2],
                 [3, "Section 2: PySpark Distributed Execution Suite", 3],
-                [4, "Page 3: Distributed DataFrame APIs & Broadcast Joins", 3],
-                [4, "Page 4: Stateful Structured Streaming & Arrow UDFs", 4],
                 [3, "Section 3: Spark Core Internals & JVM Tuning", 5],
-                [4, "Page 5: JVM Memory Pool Sizing & G1GC Flags", 5],
-                [4, "Page 6: Shuffle Spill Elimination & Task Schedulers", 6],
                 [3, "Section 4: Python in Databricks Automation", 7],
-                [4, "Page 7: Databricks Asset Bundles (DABs) & dbutils", 7],
-                [4, "Page 8: Workspace REST API v2.1 & Unity Catalog RBAC", 8],
-                [2, "Part 2: Production Incident Triage Runbooks (76 Playbooks)", 9],
-                [3, "Page 9: Architecture & Runbooks Overview Index", 9],
-                [3, "Page 10: Surgical DataFrame Persistence & Cache Eviction", 10],
-                [3, "Page 11: Lineage Truncation via Checkpoint & Cut-Off", 11],
-                [3, "Page 12: Low-Overhead Custom Accumulators for Auditing", 12],
-                [3, "Page 13: Kryo Serialization & Primitive Memory Layout", 13],
-                [3, "Page 14: Join Tuning: BHJ, Bucketing & AQE Dynamic Switch", 14],
-                [3, "Page 15: Key Salting & Two-Phase Skew Stage Elimination", 15],
-                [3, "Page 16: Triage & Elimination of Tungsten Shuffle Spill", 16],
-                [3, "Page 17: Bypassing the 64KB JVM Bytecode Method Limit", 17],
-                [3, "Page 18: Separation of Concerns: Airflow Orchestration & dbt", 18],
-                [3, "Page 19: Airflow Zombie Task Detection & Heartbeat Recovery", 19],
-                [3, "Page 20: Bulletproof Idempotent Backfills & Partition Cleansing", 20],
-                [3, "Page 21: Airflow DB Connection Pool Starvation Triage", 21],
-                [3, "Page 22: Fail-Fast Observability & Exponential System Retries", 22],
-                [3, "Page 23: SQL Triage: CPU-Bound vs Wait-Bottlenecks", 23],
-                [3, "Page 24: Triaging Exit Code 137: OOMKilled vs JVM Heap Limit", 24],
-                [3, "Page 25: JVM G1GC Pause Tuning for 32GB+ Heap Nodes", 25],
-                [3, "Page 26: Kafka Consumer Lag & Rebalance Storm Triage", 26],
-                [3, "Page 27: OpenTelemetry Distributed Tracing in PySpark", 27],
-                [3, "Page 28: Safe VACUUM Operations: Dry-Runs & Retention Checks", 28],
-                [3, "Page 29: Apache Iceberg: Copy-On-Write vs Merge-On-Read Tradeoffs", 29],
-                [3, "Page 30: Eliminating T-SQL Parameter Sniffing Regressions", 30],
-                [3, "Page 31: Bloom Filter Indexes for High-Speed Lookups", 31],
-                [3, "Page 32: dbt Automated Data Integrity Gates & Fail-Fast Tests", 32],
-                [3, "Page 33: Spot Instance Graceful Node Decommissioning", 33],
-                [3, "Page 34: Runtime Data Contracts & Schema Quarantine (DLQ)", 34],
-                [3, "Page 35: Stateful Idempotent MERGE with Watermarking", 35],
-                [3, "Page 36: Zero-Downtime Schema Migration with gh-ost", 36],
-                [3, "Page 37: Read-After-Write Consistency with GTID Tracking", 37],
-                [3, "Page 38: Database Connection Pool Thrashing & Storms", 38],
-                [3, "Page 39: Eliminate DynamoDB Hot Partitions via Key Salting", 39],
-                [3, "Page 40: LSM Compaction Backlog & Write-Stall Recovery", 40],
-                [3, "Page 41: Fabric Direct Lake Mode Fallback Troubleshooting", 41],
-                [3, "Page 42: Delta Lake & Iceberg VACUUM Compaction Regressions", 42],
-                [3, "Page 43: Lakehouse Small File Compaction & S3/ADLS Throttling", 43],
-                [3, "Page 44: Snowflake Parquet Semi-Structured Loading Optimization", 44],
-                [3, "Page 45: Microsoft Fabric & Purview Native Governance", 45],
-                [3, "Page 46: Triage: Executor Container Killed (Exit Code 137)", 46],
-                [3, "Page 47: Triage: Delta Lake Small File Metadata Degradation", 47],
-            ]
-        }
-    ]
+                [2, f"Part 2: Production Incident Triage Runbooks ({mr_count} Playbooks)", 9],
+                *mr_items_toc,
+            ],
+        })
 
     for item in existing_enrichments:
         pdf_path = os.path.join(PDF_DIR, item["filename"])
@@ -1997,9 +1945,9 @@ def main():
             }
             inject_bookmarks_and_metadata(pdf_path, item["toc"], meta)
 
-    # 3. Synchronize All Outputs to Target Locations
+    # 3. Synchronize Web-Facing HTML/Images Only (PDFs live strictly in docs/pdf/)
     print("\n" + "=" * 75)
-    print("SYNCHRONIZING PUBLISHED ASSETS ACROSS REPOSITORY MIRRORS")
+    print("SYNCHRONIZING WEB-FACING HTML/IMAGES ACROSS ARTIFACT MIRRORS")
     print("=" * 75)
 
     sync_targets = [
@@ -2008,16 +1956,14 @@ def main():
     ]
     for target in sync_targets:
         try:
-            os.makedirs(os.path.join(target, "pdf"), exist_ok=True)
+            shutil.rmtree(os.path.join(target, "pdf"), ignore_errors=True)
             os.makedirs(os.path.join(target, "html"), exist_ok=True)
             os.makedirs(os.path.join(target, "images"), exist_ok=True)
-            for f in os.listdir(PDF_DIR):
-                shutil.copy2(os.path.join(PDF_DIR, f), os.path.join(target, "pdf", f))
             for f in os.listdir(HTML_DIR):
                 shutil.copy2(os.path.join(HTML_DIR, f), os.path.join(target, "html", f))
             for f in os.listdir(IMG_DIR):
                 shutil.copy2(os.path.join(IMG_DIR, f), os.path.join(target, "images", f))
-            print(f"  ✓ Synchronized assets to: {target}")
+            print(f"  ✓ Synchronized HTML/WebP assets to: {target}")
         except Exception as e:
             print(f"  ⚠️ Warning syncing to {target}: {e}")
 

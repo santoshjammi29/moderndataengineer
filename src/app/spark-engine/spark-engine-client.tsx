@@ -33,7 +33,7 @@ import { architectureDiagrams, ArchitectureDiagramItem } from "@/data/diagrams";
 import { CodeSheetItem } from "@/types/data";
 import { WhiteboardCard } from "@/components/architecture/whiteboard-card";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
-import { useDiagramTheme } from "@/lib/diagram-theme";
+import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { PrerequisiteBanner } from "@/components/ui/prerequisite-banner";
@@ -219,6 +219,8 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
   useEffect(() => {
     const queryTab = searchParams.get("tab")?.toLowerCase();
     const queryFlow = searchParams.get("flow")?.toLowerCase();
+    const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "").toLowerCase() : "";
+    const target = queryTab || hash;
 
     const validTabs: SparkSubtab[] = [
       "architecture",
@@ -228,8 +230,10 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
       "lexicon",
     ];
 
-    if (queryTab && validTabs.includes(queryTab as SparkSubtab)) {
-      setActiveTab(queryTab as SparkSubtab);
+    if (target && validTabs.includes(target as SparkSubtab)) {
+      setActiveTab(target as SparkSubtab);
+    } else if (!target) {
+      setActiveTab("architecture");
     }
 
     if (queryFlow && ["narrow", "wide", "broadcast", "aggregation", "aqe_skew"].includes(queryFlow)) {
@@ -409,7 +413,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
               </span>
             </div>
             <p className="text-[11px] text-[var(--muted-foreground)] break-words mt-0.5">
-              Vector PDFs and 250-DPI posters covering Spark Core &amp; Architecture Internals, PySpark, Spark SQL, and JVM Memory Formulas.
+              250-DPI posters and interactive reference cards covering Spark Core &amp; Architecture Internals, PySpark, Spark SQL, and JVM Memory Formulas.
             </p>
           </div>
         </div>
@@ -420,14 +424,6 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
           >
             Spark Core Cheat Sheet &rarr;
           </Link>
-          <a
-            href="/api/download/pdf/databricks_spark_core_cheatsheet.pdf"
-            download="databricks_spark_core_cheatsheet.pdf"
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-xs font-semibold text-[var(--foreground)] transition-colors"
-          >
-            <Download size={13} className="text-blue-400" />
-            <span>PDF (2p)</span>
-          </a>
         </div>
       </div>
 
@@ -1268,7 +1264,7 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                   priority={true}
                   className={cn(
                     "max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300",
-                    diagramTheme === "dark" ? "whiteboard-dark" : "whiteboard-light"
+                    getWebpThemeClass(diagramTheme, activeModalDiagram.image)
                   )}
                 />
               </div>

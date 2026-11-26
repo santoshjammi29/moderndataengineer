@@ -46,17 +46,21 @@ type TabType = "connectivity" | "cicd" | "lifecycle" | "diagram";
 
 export function DataOpsClient({ initialData }: DataOpsClientProps) {
   const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
   const router = useRouter();
 
   const initialTab = (searchParams.get("tab") as TabType) || "connectivity";
   const [currentTab, setCurrentTab] = useState<TabType>(initialTab);
 
   useEffect(() => {
-    const paramTab = searchParams.get("tab") as TabType;
+    const params = new URLSearchParams(searchKey);
+    const paramTab = params.get("tab") as TabType;
     if (paramTab && ["connectivity", "cicd", "lifecycle", "diagram"].includes(paramTab)) {
       setCurrentTab(paramTab);
+    } else if (!paramTab) {
+      setCurrentTab("connectivity");
     }
-  }, [searchParams]);
+  }, [searchKey]);
 
   const setTab = (tab: TabType) => {
     setCurrentTab(tab);

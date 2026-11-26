@@ -570,7 +570,7 @@ java.lang.OutOfMemoryError: Java heap space
         ],
         simulatorUrl: "/modern-stack#simulators",
         simulatorLabel: "Open Table Format & Catalog Selector",
-        notebookUrl: "https://moderndataengineer.com/whiteboards?id=delta-lake-acid-mechanics",
+        notebookUrl: "/whiteboards?diagram=delta-lake-under-the-hood",
         notebookLabel: "Inspect Delta ACID Whiteboard",
         experimentSteps: [
           "Step 1: Open /modern-stack#simulators and select 'Table Format & Catalog Selector'.",
@@ -692,7 +692,7 @@ export function getLearningJourney(diagram: ArchitectureDiagramItem): LearningJo
   // Determine relevant simulator based on category and tags
   let simulatorUrl = "/modern-stack#simulators";
   let simulatorLabel = "Open Modern Stack Simulators";
-  let notebookUrl = diagram.docLink || "https://moderndataengineer.com/whiteboards?id=" + diagram.id;
+  let notebookUrl = diagram.docLink || "/whiteboards?diagram=" + diagram.id;
   let notebookLabel = "Inspect Official Reference & Blueprint";
 
   if (category === "Compute & Optimization" || diagram.tags.includes("spark") || diagram.tags.includes("catalyst")) {

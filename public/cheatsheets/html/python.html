@@ -605,7 +605,7 @@ resources:
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Modern DevOps:</b> Databricks Asset Bundles (DABs) are the standard for deploying enterprise data engineering projects in 2025/2026.
+          ⚡ <b>Modern DevOps:</b> Databricks Asset Bundles (DABs) with GitHub Actions OIDC Workload Identity &amp; <code>run_as</code> service principals eliminate static PAT secrets.
         </div>
       </div>
 
@@ -724,10 +724,10 @@ resources:
 <span class="kw">def</span> test_filter_active(spark):
     input_data = [(<span class="num">1</span>, <span class="str">"ACTIVE"</span>), (<span class="num">2</span>, <span class="str">"CANCELLED"</span>)]
     input_df = spark.createDataFrame(input_data, [<span class="str">"id"</span>, <span class="str">"status"</span>])
-    
+
     expected_data = [(<span class="num">1</span>, <span class="str">"ACTIVE"</span>)]
     expected_df = spark.createDataFrame(expected_data, [<span class="str">"id"</span>, <span class="str">"status"</span>])
-    
+
     result_df = input_df.filter(<span class="str">"status = 'ACTIVE'"</span>)
     <span class="cm"># Spark 3.5+ built-in test assertion</span>
     assertDataFrameEqual(result_df, expected_df)</pre>

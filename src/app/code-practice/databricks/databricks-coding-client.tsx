@@ -414,14 +414,28 @@ export function DatabricksCodingClient({
     url: string;
     title: string;
     subtitle: string;
-    pdfUrl: string;
   } | null>(null);
 
-  // Sync viewMode from URL searchParams
+  // Sync viewMode from URL searchParams and hash anchors (#triage, #day100)
   useEffect(() => {
     const v = searchParams.get("view")?.toLowerCase();
+    const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "").toLowerCase() : "";
     if (v && ["all", "manual", "cheatsheets", "d100", "bottlenecks", "dbfs"].includes(v)) {
       setViewMode(v as CodingViewMode);
+    } else if (!v) {
+      if (hash === "triage") {
+        setViewMode("all");
+      } else if (hash === "day100") {
+        setViewMode("all");
+      } else {
+        setViewMode("all");
+      }
+    }
+    if (hash === "triage" || hash === "day100") {
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
     }
   }, [searchParams]);
 
@@ -566,17 +580,8 @@ export function DatabricksCodingClient({
             </div>
           </div>
 
-          {/* Action Downloads & Links */}
+          {/* Action Links & Poster */}
           <div className="flex flex-row lg:flex-col items-center lg:items-end gap-2 shrink-0">
-            <a
-              href="/api/download/pdf/databricks_master_cheatsheet.pdf"
-              download="databricks_master_cheatsheet.pdf"
-              className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all flex items-center gap-2 shadow-xs cursor-pointer"
-            >
-              <Download size={14} />
-              <span>Download Master PDF (8 Pages)</span>
-            </a>
-
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
@@ -585,19 +590,18 @@ export function DatabricksCodingClient({
                     url: "/cheatsheets/images/databricks_sparksql_poster.webp",
                     title: "Databricks Spark SQL Poster",
                     subtitle: "Full-Resolution 250-DPI Architectural Reference",
-                    pdfUrl: "/cheatsheets/pdf/databricks_sparksql_cheatsheet.pdf",
                   });
                   setLightboxOpen(true);
                 }}
-                className="px-2.5 py-1.5 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-xs text-[var(--foreground)] border border-[var(--border)] transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all flex items-center gap-2 shadow-xs cursor-pointer"
               >
-                <Sparkles size={12} className="text-amber-400" />
-                <span>250-DPI Poster</span>
+                <Sparkles size={13} className="text-amber-300" />
+                <span>250-DPI Reference Poster</span>
               </button>
 
               <Link
                 href="/code-practice"
-                className="px-2.5 py-1.5 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)] transition-colors flex items-center gap-1"
+                className="px-2.5 py-2 rounded-xl bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)] transition-colors flex items-center gap-1"
               >
                 <span>Other Languages</span>
                 <ArrowRight size={11} />
@@ -714,7 +718,7 @@ export function DatabricksCodingClient({
 
       {/* VIEW: MEMORY & BOTTLENECK TRIAGE */}
       {(viewMode === "all" || viewMode === "bottlenecks") && (
-        <div className="space-y-3">
+        <div id="triage" className="space-y-3 scroll-mt-20">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
               <Bug size={16} className="text-amber-400" />
@@ -846,7 +850,7 @@ export function DatabricksCodingClient({
 
       {/* VIEW: DATABRICKS 100 OPERATIONS */}
       {(viewMode === "all" || viewMode === "d100") && (
-        <div className="space-y-3 pt-3">
+        <div id="day100" className="space-y-3 pt-3 scroll-mt-20">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
               <Cpu size={16} className="text-amber-400" />
@@ -964,7 +968,6 @@ export function DatabricksCodingClient({
           posterUrl={lightboxPoster.url}
           title={lightboxPoster.title}
           subtitle={lightboxPoster.subtitle}
-          pdfUrl={lightboxPoster.pdfUrl}
         />
       )}
     </div>

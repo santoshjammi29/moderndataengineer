@@ -102,7 +102,7 @@ export function ArchitectDigest() {
               </div>
               <div className="text-sm font-bold text-slate-900 dark:text-white">You&rsquo;re on the VIP list!</div>
               <p className="text-[11px] text-slate-600 dark:text-slate-300">
-                Check your inbox for the 2026 Lakehouse Architecture Reference PDF.
+                Check your inbox for the 2026 Lakehouse Architecture Reference Guide.
               </p>
             </div>
           )}

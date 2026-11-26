@@ -405,9 +405,9 @@ table_root/
   <span class="fn">bucket</span>(<span class="num">16</span>, cust_id)     <span class="cm">-- Murmur3 hash bucket transform</span>
 );</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Clustering Superiority</div>
+          <div class="explain-head">🔍 Clustering, Row Tracking &amp; Predictive Opt</div>
           <ul class="explain-list">
-            <li><strong>Liquid Clustering:</strong> Non-destructive; keys can be changed anytime via <code>ALTER TABLE ... CLUSTER BY</code> without rewriting data.</li>
+            <li><strong>Liquid &amp; Row Tracking:</strong> Non-destructive <code>CLUSTER BY</code> + <code>delta.enableRowTracking</code> enables concurrent row-level merges and Predictive Optimization.</li>
             <li><strong>Hidden Partitioning:</strong> Iceberg prevents consumer query errors; <code>WHERE event_time &gt; '2026-01-01'</code> automatically prunes day partitions.</li>
           </ul>
         </div>
@@ -633,9 +633,9 @@ ice_stream = spark.readStream.format(<span class="str">"iceberg"</span>)   .opti
    - <span class="fn">Google BigQuery:</span> BigLake native integration for Iceberg & Delta.
    - <span class="fn">AWS Athena / EMR:</span> Native read/write on both formats via AWS Glue.</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 Catalog Protocol</div>
+          <div class="explain-head">🔍 Catalog Protocol &amp; Unity Catalog Iceberg</div>
           <ul class="explain-list">
-            <li><strong>Vendor Neutrality:</strong> Iceberg REST catalog protocol prevents cloud vendor lock-in with standard HTTP commit calls.</li>
+            <li><strong>Vendor Neutrality:</strong> Iceberg REST catalog (Apache Polaris, Nessie, Unity Catalog REST) uses standard HTTP commit calls without lock-in.</li>
             <li><strong>PyIceberg:</strong> Enables lightweight AWS Lambda / Cloud Functions to execute ACID queries without starting Spark clusters.</li>
           </ul>
         </div>

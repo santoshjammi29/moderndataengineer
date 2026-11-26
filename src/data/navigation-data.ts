@@ -4,7 +4,6 @@ import {
   Home,
   BookOpen,
   FileCode2,
-  FileText,
   Layers,
   MessageSquare,
   User,
@@ -248,7 +247,6 @@ export const NAV_GROUPS: NavGroup[] = [
         subItems: [
           { label: "Incident Runbooks", href: "/cheat-sheet?tab=runbooks", badge: "76" },
           { label: "Databricks References", href: "/cheat-sheet?tab=databricks", badge: "48" },
-          { label: "PDF Downloads", href: "/cheat-sheet?tab=pdf_hub", badge: "7 PDFs" },
         ],
       },
     ],
@@ -376,7 +374,6 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
   { id: "cheat-sheet", label: "Production Cheat Sheets", shortLabel: "Cheat Sheet", href: "/cheat-sheet", category: "Build & Operate", categoryColor: "cyan", icon: FileCode2, badge: "Runbooks" },
   { id: "cheat-runbooks", label: "Severity-1 Incident Runbooks", shortLabel: "Runbooks", href: "/cheat-sheet?tab=runbooks", category: "Build & Operate", categoryColor: "cyan", icon: Terminal, badge: "76" },
   { id: "dbx-cheat-sheet", label: "Databricks Cheat Sheets", shortLabel: "DBX Sheets", href: "/cheat-sheet?tab=databricks", category: "Build & Operate", categoryColor: "cyan", icon: Terminal, badge: "48" },
-  { id: "pdf-hub", label: "A4 PDF Reference Hub", shortLabel: "PDF Hub", href: "/cheat-sheet?tab=pdf_hub", category: "Build & Operate", categoryColor: "cyan", icon: FileText, badge: "7 PDFs" },
 
   // Assess and explore careers
   { id: "qa-prep", label: "Interview Question Drill Bank", shortLabel: "Interview Bank", href: "/qa-prep", category: "Careers", categoryColor: "amber", icon: MessageSquare, badge: `${formatContentCount(CONTENT_COUNTS.qa)}+` },
@@ -439,7 +436,9 @@ export function isSubHrefActive(
     if (pathname === "/guided-learning" && (!currentTab || currentTab === "topics")) return true;
     if (pathname === "/qa-prep" && !currentDifficulty && (!currentDomain || currentDomain === "all")) return true;
     if (pathname === "/company-research" && !currentLocation && (!currentView || currentView === "cards")) return true;
-    if (pathname === "/studio" && !hash) return true;
+    if (pathname === "/studio" && !hash) {
+      return typeof window === "undefined" || window.location.hash !== "#bookmarks";
+    }
 
     return false;
   }
@@ -605,7 +604,6 @@ export const SITEMAP_SECTIONS: SitemapSection[] = [
         subpages: [
           { label: "Incident Runbooks", href: "/cheat-sheet?tab=runbooks", badge: "76" },
           { label: "Databricks Cheat Sheets", href: "/cheat-sheet?tab=databricks", badge: "48" },
-          { label: "A4 PDF Reference Hub", href: "/cheat-sheet?tab=pdf_hub", badge: "7 PDFs" },
         ],
       },
     ],

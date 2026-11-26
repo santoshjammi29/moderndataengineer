@@ -396,10 +396,10 @@ pre.code {
 <span class="cls">CollapseRepartition:</span>
   Merges consecutive <code>repartition()</code> or <code>coalesce()</code> into single exchange.</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 PushedFilter Verification</div>
+          <div class="explain-head">🔍 PushedFilter &amp; Spark 4.0 Verification</div>
           <ul class="explain-list">
-            <li><strong>Scan Check:</strong> Verify <code>PushedFilters: [IsNotNull(id), EqualTo(status, 'COMPLETE')]</code> in leaf scan metadata.</li>
-            <li><strong>Parquet Pruning:</strong> Predicates must match file statistics (min/max) to skip entire row groups without disk reads.</li>
+            <li><strong>Scan Check:</strong> Verify <code>PushedFilters: [IsNotNull(id), EqualTo(status, 'COMPLETE')]</code> and shredded <code>VARIANT</code> sub-column pruning in leaf scans.</li>
+            <li><strong>Spark Connect &amp; ANSI:</strong> Spark 4.0 sends protobuf <code>LogicalPlan</code> over gRPC and defaults to ANSI mode (use <code>try_cast()</code> for safe casts).</li>
           </ul>
         </div>
       </div>
@@ -617,10 +617,10 @@ joined_df = skewed_df.join(replicated_dim, on=<span class="str">"salt"</span>, h
 <span class="cls">4. Task Duration Distribution:</span>
    <code>Max / Median &gt; 3.0x</code> indicates structural data skew in stage.</pre>
         <div class="code-explain">
-          <div class="explain-head">🔍 DAG Visualization Inspection</div>
+          <div class="explain-head">🔍 DAG Visualization &amp; 5S Triage</div>
           <ul class="explain-list">
-            <li><strong>Blue Rectangles:</strong> WholeStageCodegen blocks; click to reveal underlying operator pipeline details.</li>
-            <li><strong>Dotted Lines:</strong> Shuffle exchange stage boundaries; identify network transfers and partition counts.</li>
+            <li><strong>5 S's Bottlenecks:</strong> Audit <b>Spill</b>, <b>Skew</b>, <b>Shuffle</b>, <b>Storage</b> (small files), and <b>Serialization</b> (<code>BatchEvalPython</code>) across DAG blocks.</li>
+            <li><strong>Dotted Lines:</strong> Shuffle exchange stage boundaries; identify network transfers, AQE coalescing, and partition counts.</li>
           </ul>
         </div>
       </div>

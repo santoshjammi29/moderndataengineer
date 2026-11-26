@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -684,9 +684,28 @@ FROM fact_normal;`,
 
 export function SqlClient() {
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as SqlSubtab) || "stepper";
+  const searchKey = searchParams.toString();
 
-  const [activeTab, setActiveTab] = useState<SqlSubtab>(initialTab);
+  const [activeTab, setActiveTab] = useState<SqlSubtab>("stepper");
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchKey);
+    const paramTab = params.get("tab")?.toLowerCase() as SqlSubtab | undefined;
+    if (paramTab && ["stepper", "window", "rosetta", "drills", "runbooks"].includes(paramTab)) {
+      setActiveTab(paramTab);
+    } else if (!paramTab) {
+      setActiveTab("stepper");
+    }
+  }, [searchKey]);
+
+  const handleTabChange = useCallback((tab: SqlSubtab) => {
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tab);
+      window.history.replaceState(null, "", url.toString());
+    }
+  }, []);
 
   // Stepper state
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
@@ -905,7 +924,7 @@ export function SqlClient() {
           {/* Navigation Subtabs */}
           <div className="mt-8 flex items-center gap-2 border-b border-[var(--border)] overflow-x-auto pb-px">
             <button
-              onClick={() => setActiveTab("stepper")}
+              onClick={() => handleTabChange("stepper")}
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors",
                 activeTab === "stepper"
@@ -917,7 +936,7 @@ export function SqlClient() {
               1. Query Execution Stepper (S-F-W-G-H-O)
             </button>
             <button
-              onClick={() => setActiveTab("window")}
+              onClick={() => handleTabChange("window")}
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors",
                 activeTab === "window"
@@ -929,7 +948,7 @@ export function SqlClient() {
               2. Window Function Visualizer
             </button>
             <button
-              onClick={() => setActiveTab("rosetta")}
+              onClick={() => handleTabChange("rosetta")}
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors",
                 activeTab === "rosetta"
@@ -941,7 +960,7 @@ export function SqlClient() {
               3. Multi-Engine Rosetta Stone
             </button>
             <button
-              onClick={() => setActiveTab("drills")}
+              onClick={() => handleTabChange("drills")}
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors",
                 activeTab === "drills"
@@ -953,7 +972,7 @@ export function SqlClient() {
               4. 4-Tier Practice Drills
             </button>
             <button
-              onClick={() => setActiveTab("runbooks")}
+              onClick={() => handleTabChange("runbooks")}
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors",
                 activeTab === "runbooks"

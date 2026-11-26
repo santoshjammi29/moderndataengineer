@@ -8,7 +8,10 @@ for Spark SQL, PySpark, Spark Core & Architecture, and Python in Databricks.
 Author: Santosh Jammi | Principal Data Architect
 """
 
+import html
+import json
 import os
+import shutil
 import subprocess
 import fitz  # PyMuPDF
 from PIL import Image
@@ -17,7 +20,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 WORKSPACE_DIR = os.path.dirname(SCRIPT_DIR)
 OUTPUT_DIR = os.path.join(WORKSPACE_DIR, "public", "cheatsheets")
 HTML_DIR = os.path.join(OUTPUT_DIR, "html")
-PDF_DIR = os.path.join(OUTPUT_DIR, "pdf")
+PDF_DIR = os.path.join(WORKSPACE_DIR, "docs", "pdf")
 IMG_DIR = os.path.join(OUTPUT_DIR, "images")
 
 os.makedirs(HTML_DIR, exist_ok=True)
@@ -340,8 +343,8 @@ SPARKSQL_BODY = """
         </div>
       </div>
       <div class="header-badges">
-        <span class="badge badge-primary">Spark SQL</span>
-        <span class="badge badge-secondary">DBR 15.4+ LTS</span>
+        <span class="badge badge-primary">Spark SQL 4.0</span>
+        <span class="badge badge-secondary">DBR 15.4 / 16.0 LTS</span>
         <span class="badge badge-dark">Photon Engine</span>
         <span class="badge badge-accent">Unity Catalog</span>
       </div>
@@ -647,7 +650,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-tip">
-          💡 <b>Storage Recommendation:</b> Store semi-structured payloads as native Parquet STRUCTs to achieve column pruning and 10x faster query scans.
+          💡 <b>Storage Recommendation:</b> Use Spark 4.0 / Delta 3.2 binary <code>VARIANT</code> (<code>parse_json</code> / <code>variant_get</code>) or native Parquet STRUCTs for shredded columnar scans.
         </div>
       </div>
 
@@ -785,7 +788,7 @@ top_spenders <span class="kw">AS</span> (
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Engine Auto-Tuning:</b> In DBR 15.4+, <code>spark.sql.shuffle.partitions = auto</code> lets AQE dynamically tune shuffle partitions at runtime.
+          ⚡ <b>Engine Auto-Tuning:</b> In DBR 15.4+ / Spark 4.0, <code>spark.sql.shuffle.partitions = auto</code> tunes partitions dynamically; use <code>TRY_CAST</code> for ANSI mode safety.
         </div>
       </div>
     </div>
@@ -815,10 +818,10 @@ PYSPARK_BODY = """
         </div>
       </div>
       <div class="header-badges">
-        <span class="badge badge-primary">PySpark</span>
+        <span class="badge badge-primary">PySpark 3.5+ / 4.0</span>
         <span class="badge badge-secondary">DBR 15.4+ LTS</span>
         <span class="badge badge-dark">DataFrame API</span>
-        <span class="badge badge-accent">Delta Lake</span>
+        <span class="badge badge-accent">Delta Lake 3.2</span>
       </div>
     </div>
 
@@ -851,7 +854,7 @@ PYSPARK_BODY = """
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Serverless Note:</b> On Databricks Serverless compute, the SparkSession is pre-initialized and instantly auto-tuned for sub-second scaling.
+          ⚡ <b>Serverless &amp; Spark Connect:</b> Serverless compute and Spark Connect (<code>sc://</code>) auto-tune sessions; avoid <code>.rdd</code> / <code>_jvm</code> and use <code>F.try_cast()</code> in ANSI mode.
         </div>
       </div>
 
@@ -1081,7 +1084,7 @@ PYSPARK_BODY = """
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Deletion Vectors:</b> In DBR 14.1+, enable Deletion Vectors (<code>delta.enableDeletionVectors = true</code>) to execute row updates without file rewrites!
+          ⚡ <b>Deletion Vectors &amp; replaceWhere:</b> Enable Deletion Vectors for fast MoR updates, or use <code>.option("replaceWhere", "date &gt;= ...")</code> for atomic partition overwrites.
         </div>
       </div>
 
@@ -1405,12 +1408,12 @@ JVM Heap Pools:
         <pre class="code"><span class="cm"># Inspect Catalyst Execution Pipeline</span>
 <span class="var">df</span>.explain(mode=<span class="str">"formatted"</span>)
 
-<span class="cm"># 4 Stages of Catalyst:</span>
-1. <b>Unresolved Logical Plan:</b> Verifies SQL syntax & AST
-2. <b>Analyzed Logical Plan:</b> Resolves column names against Catalog
-3. <b>Optimized Logical Plan:</b> Pushes down predicates & prunes columns
-4. <b>Physical Plan:</b> Selects algorithms (HashJoin vs SortMerge)
-   └── <b>Whole-Stage CodeGen:</b> Emits Java Bytecode (clean for loops)</pre>
+<span class="cm"># 5 Stages of Catalyst:</span>
+1. <b>Unresolved Logical Plan:</b> Verifies SQL syntax &amp; AST
+2. <b>Analyzed Logical Plan:</b> Resolves columns via Catalog
+3. <b>Optimized Logical Plan:</b> Pushes predicates &amp; prunes cols
+4. <b>Physical Plan (CBO):</b> Chooses Join (BHJ vs SMJ)
+5. <b>Whole-Stage CodeGen:</b> Janino emits Java Bytecode loops</pre>
         <div class="code-explain">
           <div class="explain-head">🔍 Code Breakdown & Engine Mechanics:</div>
           <ul class="explain-list">
@@ -1560,7 +1563,7 @@ JVM Heap Pools:
           </ul>
         </div>
         <div class="alert alert-warn">
-          ⚠️ <b>Triage Playbook:</b> Always check the Stages tab first; identify the longest stage, then inspect task duration distribution to find bottlenecks.
+          ⚠️ <b>5S Triage Playbook:</b> Diagnose bottlenecks across the 5 S's: <b>Spill</b>, <b>Skew</b>, <b>Shuffle</b>, <b>Storage</b> (small files), and <b>Serialization</b> (Python UDFs).
         </div>
       </div>
 
@@ -1980,7 +1983,7 @@ resources:
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Modern DevOps:</b> Databricks Asset Bundles (DABs) are the standard for deploying enterprise data engineering projects in 2025/2026.
+          ⚡ <b>Modern DevOps:</b> Databricks Asset Bundles (DABs) with GitHub Actions OIDC Workload Identity &amp; <code>run_as</code> service principals eliminate static PAT secrets.
         </div>
       </div>
 
@@ -2315,10 +2318,10 @@ def generate_index_html():
 
   <div class="master-banner">
     <div class="master-info">
-      <h2>📘 Databricks Master Unified Cheat Sheet (8-Page Manual)</h2>
-      <p>All four domains bound into a single comprehensive, print-ready document with high-density code blocks, detailed mechanics explanations, and performance tuning rules.</p>
+      <h2>📘 Databricks Unified Architecture & Coding Cheat Sheet Suite</h2>
+      <p>All four domains with high-density code blocks, detailed mechanics explanations, and performance tuning rules. Vector A4 PDFs are maintained in <code>docs/pdf/</code> in the repository.</p>
     </div>
-    <a href="../pdf/databricks_master_cheatsheet.pdf" download class="master-btn">Download Master PDF (8 Pages)</a>
+    <a href="../images/databricks_sparksql_poster.webp" target="_blank" class="master-btn">Explore Wall Posters (250 DPI)</a>
   </div>
 
   <div class="grid">
@@ -2333,7 +2336,7 @@ def generate_index_html():
           <div class="card-desc">12 Cards: DDL, Liquid Clustering, Delta MERGE INTO, QUALIFY Deduplication, Higher-Order Functions, Row Filters & Tuning.</div>
         </div>
         <div class="card-actions">
-          <a href="../pdf/databricks_sparksql_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
+          <a href="../images/databricks_sparksql_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
           <a href="../images/databricks_sparksql_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
@@ -2350,7 +2353,7 @@ def generate_index_html():
           <div class="card-desc">12 Cards: Strict Schemas, Standard Functions, Broadcast & Salting, Delta API, Auto Loader Streaming & Arrow UDFs.</div>
         </div>
         <div class="card-actions">
-          <a href="../pdf/databricks_pyspark_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
+          <a href="../images/databricks_pyspark_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
           <a href="../images/databricks_pyspark_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
@@ -2367,7 +2370,7 @@ def generate_index_html():
           <div class="card-desc">12 Cards: Topography, JVM Unified Memory, Shuffle Spill, Catalyst Optimizer, Cluster Sizing Formula, Photon & AQE.</div>
         </div>
         <div class="card-actions">
-          <a href="../pdf/databricks_spark_core_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
+          <a href="../images/databricks_spark_core_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
           <a href="../images/databricks_spark_core_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
@@ -2384,7 +2387,7 @@ def generate_index_html():
           <div class="card-desc">12 Cards: DBUtils, Delta Live Tables (DLT), CDC apply_changes, Pandas on Spark, DABs CI/CD & Unit Testing.</div>
         </div>
         <div class="card-actions">
-          <a href="../pdf/databricks_python_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
+          <a href="../images/databricks_python_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
           <a href="../images/databricks_python_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
@@ -2401,6 +2404,205 @@ def generate_index_html():
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"✓ Generated Interactive Hub: {path}")
+
+def generate_incident_runbooks_html(runbooks_html_path):
+    """Build incident_runbooks.html dynamically from src/data/json/data_cheatsheet.json."""
+    data_path = os.path.join(WORKSPACE_DIR, "src", "data", "json", "data_cheatsheet.json")
+    with open(data_path, encoding="utf-8") as f:
+        runbooks = json.load(f)
+
+    cards_html = []
+    for item in runbooks:
+        title = html.escape(item.get("title", ""))
+        category = html.escape(item.get("category", "General"))
+        impact = html.escape(item.get("impact", "High Impact"))
+        problem = html.escape(item.get("problem", ""))
+        solution = html.escape(item.get("solution", ""))
+        code = html.escape(item.get("codeSnippet", ""))
+        why = html.escape(item.get("whyItMatters", ""))
+        metrics = html.escape(item.get("metrics", ""))
+        cards_html.append(
+            f"""<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">{title}</span>
+    <span class="card-category">{category} · {impact}</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> {problem}</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> {solution}</div>
+  <div class="code-box">{code}</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> {why}</span>
+    <span><strong>Impact Metric:</strong> {metrics}</span>
+  </div>
+</div>"""
+        )
+
+    full_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data Engineering Production Incident Runbooks — Master A4 Reference</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@page {{
+  size: A4 portrait;
+  margin: 12mm 10mm 12mm 10mm;
+}}
+
+* {{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}}
+
+body {{
+  background: #ffffff;
+  color: #0f172a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 8pt;
+  line-height: 1.4;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}}
+
+.cover-page {{
+  padding: 24px 15px;
+  border-bottom: 2px solid #2563eb;
+  margin-bottom: 14px;
+  page-break-after: avoid;
+}}
+
+.cover-title {{
+  font-size: 18pt;
+  font-weight: 800;
+  color: #1e3a8a;
+  letter-spacing: -0.5px;
+}}
+
+.cover-subtitle {{
+  font-size: 9.5pt;
+  color: #475569;
+  margin-top: 4px;
+}}
+
+.meta-badges {{
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}}
+
+.meta-badge {{
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 7.5pt;
+  font-weight: 600;
+  border-radius: 4px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}}
+
+.runbook-card {{
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: 9px 11px;
+  margin-bottom: 10px;
+  page-break-inside: avoid;
+}}
+
+.card-header {{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 4px;
+  margin-bottom: 5px;
+}}
+
+.card-title {{
+  font-size: 10pt;
+  font-weight: 700;
+  color: #0f172a;
+}}
+
+.card-category {{
+  font-size: 7pt;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #dbeafe;
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}}
+
+.problem-box {{
+  background: #fef2f2;
+  border-left: 3px solid #ef4444;
+  padding: 4px 7px;
+  font-size: 7.5pt;
+  color: #991b1b;
+  margin: 3px 0;
+  border-radius: 0 4px 4px 0;
+}}
+
+.solution-box {{
+  background: #ecfdf5;
+  border-left: 3px solid #10b981;
+  padding: 4px 7px;
+  font-size: 7.5pt;
+  color: #065f46;
+  margin: 3px 0;
+  border-radius: 0 4px 4px 0;
+}}
+
+.code-box {{
+  background: #0f172a;
+  color: #f1f5f9;
+  border-radius: 4px;
+  padding: 7px 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7pt;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 5px 0;
+}}
+
+.metrics-box {{
+  font-size: 7pt;
+  color: #475569;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 3px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 3px;
+}}
+</style>
+</head>
+<body>
+<div class="cover-page">
+  <div class="cover-title">Data Engineering Production Incident Runbooks</div>
+  <div class="cover-subtitle">Battle-tested emergency triage procedures, root causes, and hardened solutions for Apache Spark, Lakehouse, Databricks, ADF, dbt, SQL &amp; Airflow.</div>
+  <div class="meta-badges">
+    <span class="meta-badge">{len(runbooks)} Production Runbooks</span>
+    <span class="meta-badge">Format: ISO 216 Standard A4</span>
+    <span class="meta-badge">High-Contrast Print-Ready</span>
+  </div>
+</div>
+
+{chr(10).join(cards_html)}
+
+</body>
+</html>"""
+
+    with open(runbooks_html_path, "w", encoding="utf-8") as f:
+        f.write(full_html)
+    print(f"  ✓ Generated Incident Runbooks HTML ({len(runbooks)} runbooks): {os.path.basename(runbooks_html_path)}")
+    return len(runbooks)
+
 
 def main():
     print("=" * 70)
@@ -2486,12 +2688,13 @@ def main():
     compile_pdf(master_html_file, master_pdf_file)
     render_images(master_pdf_file, "databricks_master", dpi=250)
 
-    # Generate Incident Runbooks PDF
+    # Generate Incident Runbooks PDF from data_cheatsheet.json
     print("\n" + "=" * 70)
     print("GENERATING INCIDENT RUNBOOKS A4 PDF & THUMBNAIL")
     print("=" * 70)
     runbooks_html = os.path.join(HTML_DIR, "incident_runbooks.html")
     runbooks_pdf = os.path.join(PDF_DIR, "incident_runbooks.pdf")
+    generate_incident_runbooks_html(runbooks_html)
     if os.path.exists(runbooks_html):
         compile_pdf(runbooks_html, runbooks_pdf)
         try:
@@ -2500,6 +2703,7 @@ def main():
             rb_img_path = os.path.join(IMG_DIR, "incident_runbooks_page_1.webp")
             Image.frombytes("RGB", [rb_pix.width, rb_pix.height], rb_pix.samples).save(rb_img_path, "WEBP", quality=90, method=6)
             print(f"  ✓ Rendered Runbooks Thumbnail: incident_runbooks_page_1.webp ({rb_doc.page_count} pages)")
+            rb_doc.close()
         except Exception as e:
             print(f"  ⚠️ Warning rendering runbook image: {e}")
 
@@ -2511,32 +2715,32 @@ def main():
     try:
         combined_doc = fitz.open()
         if os.path.exists(master_pdf_file):
-            combined_doc.insert_pdf(fitz.open(master_pdf_file))
+            with fitz.open(master_pdf_file) as m_doc:
+                combined_doc.insert_pdf(m_doc)
         if os.path.exists(runbooks_pdf):
-            combined_doc.insert_pdf(fitz.open(runbooks_pdf))
+            with fitz.open(runbooks_pdf) as r_doc:
+                combined_doc.insert_pdf(r_doc)
         combined_doc.save(complete_master_pdf)
         print(f"  ✓ Created Enterprise Master Reference PDF: {os.path.basename(complete_master_pdf)} ({combined_doc.page_count} Pages, {os.path.getsize(complete_master_pdf)/1024:.1f} KB)")
+        combined_doc.close()
     except Exception as e:
         print(f"  ⚠️ Warning creating combined master PDF: {e}")
 
-    # Copy files to public/_artifacts/cheat-sheets and .build-artifacts/r2/cheat-sheets
-    import shutil
+    # Sync web-facing HTML and WebP images only (PDFs live strictly in docs/pdf/)
     sync_targets = [
         os.path.join(WORKSPACE_DIR, "public", "_artifacts", "cheat-sheets"),
         os.path.join(WORKSPACE_DIR, ".build-artifacts", "r2", "cheat-sheets"),
     ]
     for target in sync_targets:
         try:
-            os.makedirs(os.path.join(target, "pdf"), exist_ok=True)
+            shutil.rmtree(os.path.join(target, "pdf"), ignore_errors=True)
             os.makedirs(os.path.join(target, "html"), exist_ok=True)
             os.makedirs(os.path.join(target, "images"), exist_ok=True)
-            for f in os.listdir(PDF_DIR):
-                shutil.copy2(os.path.join(PDF_DIR, f), os.path.join(target, "pdf", f))
             for f in os.listdir(HTML_DIR):
                 shutil.copy2(os.path.join(HTML_DIR, f), os.path.join(target, "html", f))
             for f in os.listdir(IMG_DIR):
                 shutil.copy2(os.path.join(IMG_DIR, f), os.path.join(target, "images", f))
-            print(f"  ✓ Synchronized cheatsheet assets to: {target}")
+            print(f"  ✓ Synchronized HTML/WebP cheatsheet assets to: {target}")
         except Exception as e:
             print(f"  ⚠️ Warning syncing to {target}: {e}")
 

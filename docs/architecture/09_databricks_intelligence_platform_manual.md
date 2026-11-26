@@ -1,7 +1,7 @@
 # Databricks Data Intelligence Platform: End-to-End Technical Manual
 > **Structured Progression from Foundational Concepts (Level 1) to Principal Production Architecture (Level 4)**  
 > **Author:** Santosh Jammi | Principal Data Architect  
-> **Published Reference PDF:** [`docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf`](../pdf/databricks_data_intelligence_platform_technical_manual.pdf) · [Download Live PDF](https://moderndataengineer.uk/api/download/pdf/databricks_data_intelligence_platform_technical_manual.pdf)
+> **Published Reference PDF:** [`docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf`](../pdf/databricks_data_intelligence_platform_technical_manual.pdf) (Git Repository Reference)
 
 ---
 

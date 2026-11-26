@@ -124,18 +124,25 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
     const locationParam = searchParams.get("location");
     const viewParam = searchParams.get("view") as ViewMode | null;
 
-    if (qParam !== null) setSearchQuery(qParam);
-    if (tierParam) setSelectedTier(tierParam);
-    if (techParam) setSelectedTech(techParam);
-    if (hubParam) setSelectedHub(hubParam);
+    setSearchQuery(qParam ?? "");
+    setSelectedTier(tierParam || "ALL");
+    setSelectedTech(techParam || "All");
+
     if (locationParam) {
       const normalizedLocation = locationParam.toLowerCase() === "bangalore"
         ? "Bengaluru"
         : MAJOR_HUBS.find((hub) => hub.toLowerCase() === locationParam.toLowerCase());
-      if (normalizedLocation) setSelectedHub(normalizedLocation);
+      setSelectedHub(normalizedLocation || "All Hubs");
+    } else if (hubParam) {
+      setSelectedHub(hubParam);
+    } else {
+      setSelectedHub("All Hubs");
     }
+
     if (viewParam && ["grid", "split", "table"].includes(viewParam)) {
       setViewMode(viewParam);
+    } else {
+      setViewMode("grid");
     }
   }, [searchParams]);
 

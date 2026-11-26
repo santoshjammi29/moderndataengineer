@@ -27,7 +27,6 @@ const ROUTE_LABELS: Record<string, string> = {
   "/concepts": "Key Concepts",
   "/mindmap": "Concepts Mind Map",
   "/code-practice": "Code Practice",
-  "/python": "Python Data Hub",
   "/qa-prep": "Q&A Prep",
   "/company-research": "Company Research",
   "/studio": "My Learning Studio",
@@ -36,6 +35,9 @@ const ROUTE_LABELS: Record<string, string> = {
   "/dataops": "DataOps & CI/CD Lifecycle",
   "/code-practice/databricks": "Databricks Coding Hub",
   "/stages": "Mastery Stages Hub",
+  "/search-topics": "Search All Content",
+  "/security": "Security & Contact",
+  "/sql": "SQL Study Guide",
 };
 
 const ARCHITECTURE_TABS: Record<string, string> = {
@@ -49,7 +51,6 @@ const ARCHITECTURE_TABS: Record<string, string> = {
 const CHEATSHEET_TABS: Record<string, string> = {
   runbooks: "Production Runbooks",
   databricks: "Databricks Cheat Sheets",
-  pdf_hub: "A4 PDF Reference Hub",
 };
 
 const CODE_PRACTICE_TABS: Record<string, string> = {
@@ -167,7 +168,15 @@ function BreadcrumbsInner() {
         });
       }
     } else if (pathname === "/concepts") {
-      const term = searchParams.get("term");
+      const view = (searchParams.get("view") || searchParams.get("tab"))?.toLowerCase();
+      if (view === "study" || view === "flashcards") {
+        list.push({ label: "Flashcards Study", href: "/concepts?view=study" });
+      } else if (view === "mindmap") {
+        list.push({ label: "Concepts Mind Map", href: "/concepts?view=mindmap" });
+      } else if (view === "glossary" || view === "concepts") {
+        list.push({ label: "Glossary & Cards", href: "/concepts?view=glossary" });
+      }
+      const term = searchParams.get("term") || searchParams.get("q");
       const category = searchParams.get("category");
       if (category && category !== "ALL") {
         list.push({ label: category, href: `/concepts?category=${encodeURIComponent(category)}` });
@@ -233,13 +242,43 @@ function BreadcrumbsInner() {
         list.push({ label: cat });
       }
     } else if (pathname === "/qa-prep") {
+      const difficulty = searchParams.get("difficulty");
       const domain = searchParams.get("domain") || searchParams.get("category");
+      const mode = searchParams.get("mode");
+      const q = searchParams.get("q") || searchParams.get("search");
+      if (difficulty && difficulty !== "ALL") {
+        list.push({ label: `${difficulty} Level`, href: `/qa-prep?difficulty=${encodeURIComponent(difficulty)}` });
+      }
       if (domain && domain !== "ALL") {
         list.push({ label: domain, href: `/qa-prep?domain=${encodeURIComponent(domain)}` });
       }
-      const q = searchParams.get("q") || searchParams.get("search");
+      if (mode === "spaced") {
+        list.push({ label: "Active Recall", href: "/qa-prep?mode=spaced" });
+      }
       if (q) {
         list.push({ label: `"${q.length > 25 ? q.slice(0, 25) + "..." : q}"` });
+      }
+    } else if (pathname === "/company-research") {
+      const location = searchParams.get("location") || searchParams.get("hub");
+      const view = searchParams.get("view");
+      if (location && location !== "All Hubs") {
+        const label = location.toLowerCase() === "bangalore" ? "Bengaluru" : location;
+        list.push({ label, href: `/company-research?location=${encodeURIComponent(location)}` });
+      }
+      if (view === "table") {
+        list.push({ label: "Table View", href: "/company-research?view=table" });
+      }
+    } else if (pathname === "/sql") {
+      const sqlTabs: Record<string, string> = {
+        stepper: "Execution Stepper",
+        window: "Window Visualizer",
+        rosetta: "Rosetta Stone",
+        drills: "Practice Drills",
+        runbooks: "Architecture Runbooks",
+      };
+      const tab = searchParams.get("tab")?.toLowerCase();
+      if (tab && sqlTabs[tab]) {
+        list.push({ label: sqlTabs[tab], href: `/sql?tab=${tab}` });
       }
     }
 

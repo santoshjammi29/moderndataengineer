@@ -301,10 +301,10 @@ pre.code {
         </div>
       </div>
       <div class="header-badges">
-        <span class="badge badge-primary">PySpark</span>
+        <span class="badge badge-primary">PySpark 3.5+ / 4.0</span>
         <span class="badge badge-secondary">DBR 15.4+ LTS</span>
         <span class="badge badge-dark">DataFrame API</span>
-        <span class="badge badge-accent">Delta Lake</span>
+        <span class="badge badge-accent">Delta Lake 3.2</span>
       </div>
     </div>
 
@@ -337,7 +337,7 @@ pre.code {
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Serverless Note:</b> On Databricks Serverless compute, the SparkSession is pre-initialized and instantly auto-tuned for sub-second scaling.
+          ⚡ <b>Serverless &amp; Spark Connect:</b> Serverless compute and Spark Connect (<code>sc://</code>) auto-tune sessions; avoid <code>.rdd</code> / <code>_jvm</code> and use <code>F.try_cast()</code> in ANSI mode.
         </div>
       </div>
 
@@ -567,7 +567,7 @@ pre.code {
           </ul>
         </div>
         <div class="alert alert-perf">
-          ⚡ <b>Deletion Vectors:</b> In DBR 14.1+, enable Deletion Vectors (<code>delta.enableDeletionVectors = true</code>) to execute row updates without file rewrites!
+          ⚡ <b>Deletion Vectors &amp; replaceWhere:</b> Enable Deletion Vectors for fast MoR updates, or use <code>.option("replaceWhere", "date &gt;= ...")</code> for atomic partition overwrites.
         </div>
       </div>
 

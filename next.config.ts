@@ -207,11 +207,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/mindmap",
-        destination: "/concepts?tab=mindmap",
-        permanent: true,
-      },
-      {
         source: "/prep",
         destination: "/qa-prep",
         permanent: true,
@@ -258,17 +253,17 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/pdf",
-        destination: "/cheat-sheet?tab=pdf_hub",
+        destination: "/cheat-sheet",
         permanent: true,
       },
       {
         source: "/pdfs",
-        destination: "/cheat-sheet?tab=pdf_hub",
+        destination: "/cheat-sheet",
         permanent: true,
       },
       {
         source: "/downloads",
-        destination: "/cheat-sheet?tab=pdf_hub",
+        destination: "/cheat-sheet",
         permanent: true,
       },
       {

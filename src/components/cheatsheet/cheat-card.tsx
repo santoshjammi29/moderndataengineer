@@ -85,7 +85,7 @@ export function CheatCard({
       className={cn(
         "group relative flex flex-col rounded-xl border bg-[var(--card)] p-3 sm:p-3.5 transition-all duration-200 shadow-xs hover:shadow-sm scroll-mt-20",
         isHighlighted
-          ? "border-blue-500 ring-2 ring-blue-500/30 bg-blue-950/10"
+          ? "border-blue-500 ring-2 ring-blue-500/30 bg-blue-500/10"
           : "border-[var(--border)] hover:border-[var(--border-hover)] hover:bg-[var(--card-hover)]"
       )}
     >
@@ -154,7 +154,7 @@ export function CheatCard({
       )}
 
       {/* Problem Callout */}
-      <div className="mt-2 p-2.5 rounded-lg bg-[var(--surface-1)] border border-[var(--border)] text-xs text-[var(--foreground)] leading-relaxed break-words whitespace-normal">
+      <div className="mt-2 p-2.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--foreground)] leading-relaxed break-words whitespace-normal">
         <span className="font-semibold text-amber-400 block mb-0.5">Problem / Challenge:</span>
         {cheat.problem}
       </div>

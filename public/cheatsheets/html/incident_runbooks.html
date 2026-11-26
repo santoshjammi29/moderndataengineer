@@ -28,9 +28,9 @@ body {
 }
 
 .cover-page {
-  padding: 30px 15px;
+  padding: 24px 15px;
   border-bottom: 2px solid #2563eb;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   page-break-after: avoid;
 }
 
@@ -91,7 +91,7 @@ body {
 .card-category {
   font-size: 7pt;
   font-weight: 600;
-  color: #2563eb;
+  color: #1d4ed8;
   background: #dbeafe;
   padding: 1px 6px;
   border-radius: 3px;
@@ -136,6 +136,7 @@ body {
   color: #475569;
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   margin-top: 3px;
   border-top: 1px dashed #e2e8f0;
   padding-top: 3px;
@@ -145,9 +146,9 @@ body {
 <body>
 <div class="cover-page">
   <div class="cover-title">Data Engineering Production Incident Runbooks</div>
-  <div class="cover-subtitle">Battle-tested emergency triage procedures, root causes, and hardened solutions for Apache Spark, Lakehouse, dbt, and Airflow.</div>
+  <div class="cover-subtitle">Battle-tested emergency triage procedures, root causes, and hardened solutions for Apache Spark, Lakehouse, Databricks, ADF, dbt, SQL &amp; Airflow.</div>
   <div class="meta-badges">
-    <span class="meta-badge">76 Production Runbooks</span>
+    <span class="meta-badge">91 Production Runbooks</span>
     <span class="meta-badge">Format: ISO 216 Standard A4</span>
     <span class="meta-badge">High-Contrast Print-Ready</span>
   </div>
@@ -182,7 +183,6 @@ final_df = df_summary.selectExpr(
     <span><strong>Impact Metric:</strong> 0% overhead, identical physical execution plan</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Arrow-Vectorized Pandas UDFs</span>
@@ -210,7 +210,6 @@ df_with_returns = df.withColumn(
     <span><strong>Impact Metric:</strong> 10x-100x speedup over row-by-row Python UDFs</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Surgical DataFrame Persistence</span>
@@ -240,7 +239,6 @@ finally:
     <span><strong>Impact Metric:</strong> 50-70% job runtime reduction on branching DAGs</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Dynamic Partition Pruning (DPP) in Star Joins</span>
@@ -271,7 +269,6 @@ df_joined = spark.sql(&quot;&quot;&quot;
     <span><strong>Impact Metric:</strong> 80%-95% reduction in fact table I/O scan bytes</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Lineage Truncation via checkpoint()</span>
@@ -298,7 +295,6 @@ for iteration in range(50):
     <span><strong>Impact Metric:</strong> Eliminates driver StackOverflowError; drops driver JVM memory by 80%</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Native Higher-Order Functions (UDF Bypass)</span>
@@ -335,7 +331,6 @@ optimized_df = optimized_df.withColumn(
     <span><strong>Impact Metric:</strong> 15x-30x faster execution than Python UDFs; 0 JVM-Python serialization</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Low-Overhead Custom Accumulators for Auditing</span>
@@ -377,7 +372,6 @@ print(&quot;Audit Telemetry:&quot;, audit_acc.value)</div>
     <span><strong>Impact Metric:</strong> 40%-60% job runtime reduction on audit-heavy pipelines</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Off-Heap Memory &amp; Tungsten Allocations</span>
@@ -402,7 +396,6 @@ spark = SparkSession.builder \
     <span><strong>Impact Metric:</strong> 90% reduction in JVM GC pause durations on 1TB+ shuffles</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Kryo Serialization &amp; Primitive Memory</span>
@@ -423,7 +416,6 @@ spark = SparkSession.builder \
     <span><strong>Impact Metric:</strong> 10x faster SerDe, 60% smaller shuffle payloads</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Task Parallelism &amp; OOM Elimination</span>
@@ -449,7 +441,6 @@ df_aggregated = df.groupBy(&quot;tenant_id&quot;, &quot;region&quot;).agg({&quot
     <span><strong>Impact Metric:</strong> Up to 90% network shuffle reduction</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Join Tuning: BHJ, Bucketing &amp; AQE</span>
@@ -481,7 +472,6 @@ bucketed_join = spark.table(&quot;bucketed_orders&quot;).join(
     <span><strong>Impact Metric:</strong> Zero network shuffle on bucketed joins, 5x-10x query speedup</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Adaptive Query Execution (AQE) Mastery</span>
@@ -502,7 +492,6 @@ spark.conf.set(&quot;spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes
     <span><strong>Impact Metric:</strong> Automated 3x-8x speedup on skewed datasets</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Key Salting &amp; Two-Phase Skew Elimination</span>
@@ -533,7 +522,6 @@ balanced_joined_df = salted_fact_df.join(replicated_dim_df, &quot;salted_key&quo
     <span><strong>Impact Metric:</strong> Eliminates straggler tasks; 8x-15x faster completion on skewed joins</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Eliminating BroadcastNestedLoopJoin (BNLJ)</span>
@@ -569,7 +557,6 @@ optimal_joined = telemetry_bucketed.join(
     <span><strong>Impact Metric:</strong> Reduces query time from 4+ hours to sub-2 minutes</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage &amp; Elimination of Shuffle Spill</span>
@@ -597,7 +584,6 @@ df_repartitioned = df.repartition(1200, &quot;join_key&quot;)</div>
     <span><strong>Impact Metric:</strong> 100% elimination of disk spill; 4x-8x stage speedup</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">RocksDB State Store for Streaming Scale</span>
@@ -626,7 +612,6 @@ query = stream_df.writeStream \
     <span><strong>Impact Metric:</strong> Scales state from 5M to 200M+ keys with zero heap growth</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Bypassing the 64KB JVM Bytecode Limit</span>
@@ -655,7 +640,6 @@ result_df = df_split1.join(df_split2, &quot;id&quot;)</div>
     <span><strong>Impact Metric:</strong> Restores Whole-Stage CodeGen; 4x-5x speedup on wide tables</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Remedying FetchFailed &amp; Shuffle File Not Found</span>
@@ -678,7 +662,6 @@ spark = SparkSession.builder \
     <span><strong>Impact Metric:</strong> 100% elimination of transient network timeout job aborts</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Separation of Concerns: Airflow &amp; dbt</span>
@@ -720,7 +703,6 @@ with DAG(
     <span><strong>Impact Metric:</strong> Decoupled deployment cycles, 0 Airflow redeployments for SQL changes</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Domain Bundling vs Task-per-Model</span>
@@ -743,7 +725,6 @@ with DAG(
     <span><strong>Impact Metric:</strong> 85% reduction in Airflow task scheduling latency</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Airflow Zombie Task Detection &amp; Recovery</span>
@@ -777,7 +758,6 @@ heavy_task = KubernetesPodOperator(
     <span><strong>Impact Metric:</strong> Zero false-positive zombie kills on multi-hour tasks</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Eliminating Top-Level Code in DAG Files</span>
@@ -816,7 +796,6 @@ pipeline_clean()</div>
     <span><strong>Impact Metric:</strong> 95% reduction in DAG parse time; scheduler CPU drops from 100% to 15%</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Bulletproof Idempotent Backfills &amp; Partitioning</span>
@@ -848,7 +827,6 @@ daily_events_df.write \
     <span><strong>Impact Metric:</strong> 100% idempotent pipeline runs; zero data duplication</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">ADF: Data Integration Units (DIU) &amp; Throughput</span>
@@ -886,7 +864,6 @@ daily_events_df.write \
     <span><strong>Impact Metric:</strong> 10x throughput speedup (25 MB/s -&gt; 350+ MB/s)</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Airflow DB Connection Pool Starvation</span>
@@ -917,7 +894,6 @@ sql_alchemy_conn = postgresql+psycopg2://airflow:password@pgbouncer.internal:643
     <span><strong>Impact Metric:</strong> Supports 500+ concurrent worker tasks without DB connection starvation</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Fabric Pipeline Capacity &amp; Burst Smoothing</span>
@@ -948,7 +924,6 @@ sql_alchemy_conn = postgresql+psycopg2://airflow:password@pgbouncer.internal:643
     <span><strong>Impact Metric:</strong> Eliminates CU throttling and workspace pause events</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Fail-Fast Observability &amp; System Retries</span>
@@ -990,7 +965,6 @@ def execute_production_write(df, target_path: str) -&gt; None:
     <span><strong>Impact Metric:</strong> 100% automated recovery on transient node faults</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">SQL Triage: CPU-Bound vs Wait-Bottleneck</span>
@@ -1029,7 +1003,6 @@ DIAGNOSTIC CHEAT CODE:
     <span><strong>Impact Metric:</strong> Instant triage in &lt;30 seconds during outages</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Lakeflow &amp; Delta Event Log Telemetry</span>
@@ -1055,7 +1028,6 @@ ORDER BY timestamp DESC;</div>
     <span><strong>Impact Metric:</strong> Automated early warning for pipeline degradation</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triaging Exit Code 137: OOMKilled vs JVM Heap</span>
@@ -1081,7 +1053,6 @@ spark.conf.set(&quot;spark.executor.memoryOverhead&quot;, &quot;5120m&quot;)
     <span><strong>Impact Metric:</strong> Eliminates 100% of recurring container SIGKILL loops</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Spark UI Event Timeline: Straggler Triage</span>
@@ -1109,7 +1080,6 @@ spark.conf.set(&quot;spark.blacklist.stage.maxFailedTasksPerExecutor&quot;, &quo
     <span><strong>Impact Metric:</strong> Root cause identified in under 1 minute from Spark UI</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">JVM G1GC Pause Tuning for Large Heaps</span>
@@ -1139,7 +1109,6 @@ spark.conf.set(&quot;spark.driver.extraJavaOptions&quot;, &quot;&quot;&quot;
     <span><strong>Impact Metric:</strong> Reduces stop-the-world GC pause duration by up to 85%</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Resolving ConcurrentAppendException</span>
@@ -1164,7 +1133,6 @@ SET spark.databricks.delta.commitValidation.enabled = true;
     <span><strong>Impact Metric:</strong> 100% elimination of concurrent write collision exceptions</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Kafka Consumer Lag &amp; Rebalance Storm Triage</span>
@@ -1188,7 +1156,6 @@ kafka_stream_df = spark.readStream \
     <span><strong>Impact Metric:</strong> Zero stop-the-world rebalance storms; steady-state lag recovery</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Spark UI Thread Dumps for Deadlock Triage</span>
@@ -1215,7 +1182,6 @@ jdbc_df = spark.read.format(&quot;jdbc&quot;) \
     <span><strong>Impact Metric:</strong> Instantly pinpoints frozen external dependencies; prevents infinite cluster hangs</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">OpenTelemetry Distributed Tracing in PySpark</span>
@@ -1249,7 +1215,6 @@ def run_instrumented_stage(df, stage_name: str, parent_traceparent: str):
     <span><strong>Impact Metric:</strong> End-to-end trace correlation across orchestrator, cloud storage, and Spark</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Delta &amp; Iceberg: Liquid Clustering &amp; Vacuum</span>
@@ -1278,7 +1243,6 @@ VACUUM sales_silver RETAIN 168 HOURS;</div>
     <span><strong>Impact Metric:</strong> 95% faster file scan times, elimination of small file syndrome</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Safe VACUUM Operations: Dry-Runs &amp; Retention</span>
@@ -1302,7 +1266,6 @@ VACUUM sales_gold RETAIN 168 HOURS;
     <span><strong>Impact Metric:</strong> Recovers 40%-70% storage cost with 0% risk of reader corruption</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Deletion Vectors (DVs): Sub-Second Row Updates</span>
@@ -1331,7 +1294,6 @@ REORG TABLE customer_silver APPLY (PURGE);</div>
     <span><strong>Impact Metric:</strong> 80%-90% reduction in write I/O during CDC MERGE</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Apache Iceberg: Copy-On-Write vs Merge-On-Read</span>
@@ -1364,7 +1326,6 @@ CALL lakehouse.system.rewrite_data_files(
     <span><strong>Impact Metric:</strong> 5x faster write latency; predictable sub-second analytical scans</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Parquet Row Group Sizing &amp; Dictionary Encoding</span>
@@ -1389,7 +1350,6 @@ print(f&quot;Row Groups: {parquet_file.num_row_groups}, Columns: {parquet_file.s
     <span><strong>Impact Metric:</strong> 90% reduction in cloud storage metadata GET requests; 3x faster column decompression</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Eliminating T-SQL Parameter Sniffing Regressions</span>
@@ -1426,7 +1386,6 @@ GO
     <span><strong>Impact Metric:</strong> 100% predictable execution times; eliminates cache poisoning outages</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Resolving Distributed Hash Spills to TempDB</span>
@@ -1457,7 +1416,6 @@ EXEC sp_addrolemember &#x27;staticrc20&#x27;, &#x27;etl_service_principal&#x27;;
     <span><strong>Impact Metric:</strong> Eliminates TempDB disk contention; 4x-6x faster analytical joins</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Bloom Filter Indexes for High-Speed Lookups</span>
@@ -1479,7 +1437,6 @@ SELECT * FROM fact_telemetry WHERE device_uuid = &#x27;9b1deb4d-3b7d-4bad-9bdd-2
     <span><strong>Impact Metric:</strong> 95%-99% of Parquet files skipped on needle-in-a-haystack queries</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">OneLake Shortcuts &amp; Delta UniForm Zero-Copy</span>
@@ -1506,7 +1463,6 @@ METADATA_FILE_PATH = &#x27;customer_gold/metadata/v1.metadata.json&#x27;;
     <span><strong>Impact Metric:</strong> 50% storage cost savings; zero ETL lag between Databricks and Snowflake</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">dbt Automated Data Integrity Gates</span>
@@ -1549,7 +1505,6 @@ models:
     <span><strong>Impact Metric:</strong> Zero downstream data corruption reaches executive marts</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Managed Scaling &amp; Shuffle Spill Triage</span>
@@ -1576,7 +1531,6 @@ spark.conf.set(&quot;spark.storage.decommission.shuffleData.enabled&quot;, &quot
     <span><strong>Impact Metric:</strong> Zero disk spill, 40-60% cloud compute cost savings</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Spot Instance Graceful Node Decommissioning</span>
@@ -1600,7 +1554,6 @@ spark.conf.set(&quot;spark.task.maxFailures&quot;, &quot;8&quot;)</div>
     <span><strong>Impact Metric:</strong> 60%-80% compute cost savings with 99.9% pipeline completion SLA</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Zero-Downtime Expand-Contract Schema Evolution</span>
@@ -1627,7 +1580,6 @@ df_expanded.write.format(&quot;delta&quot;).mode(&quot;append&quot;).option(&quo
     <span><strong>Impact Metric:</strong> Zero downtime schema evolution; zero breaking changes across 50+ consumers</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Runtime Data Contracts &amp; Schema Quarantine</span>
@@ -1665,7 +1617,6 @@ def validate_batch_with_contract(partition):
     <span><strong>Impact Metric:</strong> 100% guarantee of clean Silver/Gold data; automated DLQ routing</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Hardening Log Redaction &amp; Secret Masking</span>
@@ -1691,7 +1642,6 @@ jdbc_url = &quot;jdbc:sqlserver://sqldb.database.windows.net:1433;database=analy
     <span><strong>Impact Metric:</strong> Zero credential leaks in cluster logs and Spark UI</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Stateful Idempotent MERGE with Watermarks</span>
@@ -1728,7 +1678,6 @@ WHEN NOT MATCHED THEN
     <span><strong>Impact Metric:</strong> 100% deterministic state reconciliation; zero lost updates</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">FinOps: Auto-Termination &amp; Cluster Guardrails</span>
@@ -1767,7 +1716,6 @@ WHEN NOT MATCHED THEN
     <span><strong>Impact Metric:</strong> 35%-50% reduction in non-production cloud compute waste</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Zero-Downtime Schema Migration with gh-ost</span>
@@ -1798,7 +1746,6 @@ gh-ost \
     <span><strong>Impact Metric:</strong> Zero query stalls; replica lag strictly bounded under 1.5s; 100% rollback safety using preserved _old table.</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Vitess VSchema Routing &amp; Scatter-Gather Triage</span>
@@ -1837,7 +1784,6 @@ vtctlclient ApplyVSchema -vschema=&#x27;{
     <span><strong>Impact Metric:</strong> Replaces 64-shard scatter-gather with single-shard point routing, cutting P99 latency from 140ms to 2.4ms.</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Read-After-Write Consistency with GTID Tracking</span>
@@ -1879,7 +1825,6 @@ async def execute_consistent_read(query: str, params: dict, request):
     <span><strong>Impact Metric:</strong> Zero user reports of stale data post-mutation; primary database CPU remains protected under 35%.</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Database Connection Pool Thrashing &amp; Storm Triage</span>
@@ -1916,7 +1861,6 @@ max_user_connections = 10000</div>
     <span><strong>Impact Metric:</strong> Drops database memory usage by 80%; eliminates connection handshake latency (&lt;1ms pool checkout vs 45ms TCP/SSL handshake).</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Eliminate DynamoDB Hot Partitions via Key Salting</span>
@@ -1965,7 +1909,6 @@ def read_event_history(event_id: str, start_ts: int, end_ts: int) -&gt; List[Dic
     <span><strong>Impact Metric:</strong> Zero ProvisionedThroughputExceededException errors; uniform distribution across DynamoDB storage partitions.</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">LSM Compaction Backlog &amp; Write-Stall Recovery</span>
@@ -2001,7 +1944,6 @@ rate_limiter_bytes_per_sec = 419430400 # 400 MB/s max background disk write</div
     <span><strong>Impact Metric:</strong> Eliminates write stall pauses; reduces P99 point-lookup read latency by 85% by keeping Level 0 file count under 8.</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Synapse Data Skew Diagnosis &amp; Distribution Rebuild</span>
@@ -2029,7 +1971,6 @@ RENAME OBJECT dbo.FactSales_Rehashed TO FactSales;</div>
     <span><strong>Impact Metric:</strong> Eliminates straggler tasks, 8x-15x query acceleration</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Fabric Direct Lake Mode Fallback Troubleshooting</span>
@@ -2055,7 +1996,6 @@ df_gold.write.format(&#x27;delta&#x27;).mode(&#x27;overwrite&#x27;).saveAsTable(
     <span><strong>Impact Metric:</strong> Restores sub-second VertiPaq memory paging</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Cosmos DB HTTP 429 Surge &amp; Synthetic Key Runbook</span>
@@ -2086,7 +2026,6 @@ const client = new CosmosClient({
     <span><strong>Impact Metric:</strong> Eliminates HTTP 429 throttling, cuts RU waste by 60%</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Delta Lake &amp; Iceberg VACUUM Compaction Runbook</span>
@@ -2109,7 +2048,6 @@ VACUUM gold.fact_orders RETAIN 168 HOURS DRY RUN;</div>
     <span><strong>Impact Metric:</strong> 30%-50% storage cost reduction, 4x faster file pruning</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Synapse COPY INTO Parquet Tuning &amp; Error Handling Runbook</span>
@@ -2153,7 +2091,6 @@ WHERE t.name = &#x27;FactOnlineSales&#x27;;</div>
     <span><strong>Impact Metric:</strong> Load throughput scales from 15 MB/s to 1.2 GB/s; eliminates out-of-memory errors</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Lakehouse Small File Compaction &amp; S3/ADLS 503 Runbook</span>
@@ -2182,7 +2119,6 @@ stats = detail_df.select(
     <span><strong>Impact Metric:</strong> Eliminates HTTP 503 errors; 10x-50x reduction in query scan duration</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Decimal Precision Mismatch &amp; Schema Drift Remediation Runbook</span>
@@ -2215,7 +2151,6 @@ FROM OPENROWSET(
     <span><strong>Impact Metric:</strong> Zero arithmetic overflow exceptions; guarantees financial ledger accuracy</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Snowflake Parquet Semi-Structured Loading &amp; Vectorized Parsing</span>
@@ -2258,7 +2193,6 @@ LATERAL FLATTEN(input =&gt; event_properties) f;</div>
     <span><strong>Impact Metric:</strong> 3x-5x faster ingestion than raw JSON; preserves nested schemas flawlessly</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Columnstore Storage: Compression Encodings &amp; Batch Mode Vectorization</span>
@@ -2287,7 +2221,6 @@ GROUP BY ProductCategory;
     <span><strong>Impact Metric:</strong> 10x storage compression, 5x-10x CPU reduction via batch mode, 90%+ I/O eliminated</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Microsoft Fabric &amp; Purview: Native Governance Architecture Rules</span>
@@ -2311,7 +2244,6 @@ GROUP BY ProductCategory;
     <span><strong>Impact Metric:</strong> 0 custom sync code required, 100% automated lineage capture, zero-risk non-destructive cataloging</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage: Driver Out Of Memory (OOM) via .collect()</span>
@@ -2338,7 +2270,6 @@ result = ps_df.groupby(&quot;country&quot;).revenue.sum() # Executes on workers,
     <span><strong>Impact Metric:</strong> Eliminates 100% of driver crash terminations, saves driver scaling costs</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage: Executor Container Killed (Exit Code 137 / YARN)</span>
@@ -2361,7 +2292,6 @@ spark.conf.set(&quot;spark.sql.execution.arrow.maxRecordsPerBatch&quot;, &quot;5
     <span><strong>Impact Metric:</strong> Zero container terminations, stable memory overhead ceilings</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage: Severe Join Data Skew &amp; Straggler Tasks</span>
@@ -2382,7 +2312,6 @@ spark.conf.set(&quot;spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes
     <span><strong>Impact Metric:</strong> 80-95% reduction in stage runtime, uniform task duration distribution</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage: Tungsten Memory vs Disk Spill Elimination</span>
@@ -2406,7 +2335,6 @@ spark.conf.set(&quot;spark.sql.adaptive.advisoryPartitionSizeInBytes&quot;, &quo
     <span><strong>Impact Metric:</strong> 3x-5x faster shuffle stages, 0 GB disk spill</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage: Delta Lake Small File Metadata Degradation</span>
@@ -2431,7 +2359,6 @@ VACUUM prod_catalog.silver.telemetry_events RETAIN 168 HOURS;</div>
     <span><strong>Impact Metric:</strong> 20x faster file scan &amp; metadata resolution</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage: Optimistic Concurrency Control (OCC) Conflicts</span>
@@ -2454,7 +2381,6 @@ ALTER TABLE prod_catalog.silver.orders CLUSTER BY (store_id, order_date);
     <span><strong>Impact Metric:</strong> Zero OCC collision aborts, 100% concurrent write success</span>
   </div>
 </div>
-
 <div class="runbook-card">
   <div class="card-header">
     <span class="card-title">Triage: Broadcast Exchange Timeout (300 Seconds)</span>
@@ -2473,6 +2399,414 @@ spark.conf.set(&quot;spark.sql.autoBroadcastJoinThreshold&quot;, &quot;-1&quot;)
   <div class="metrics-box">
     <span><strong>Why It Matters:</strong> When table statistics are missing, Spark Catalyst may incorrectly estimate a multi-gigabyte table as small enough to broadcast. The driver stalls collecting the dataset, eventually timing out after 300 seconds.</span>
     <span><strong>Impact Metric:</strong> Prevents catastrophic job termination, enforces deterministic join planning</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">ADF Tumbling Window Dependency &amp; Backfill Chaining</span>
+    <span class="card-category">Orchestration · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Schedule triggers skip historical intervals during cluster downtime and cannot enforce sequential time-window dependency ordering.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Configure Tumbling Window Triggers with dependsOn self-referencing offset and upstream trigger binding, specifying maxConcurrency and retry policies.</div>
+  <div class="code-box">{
+  &quot;type&quot;: &quot;TumblingWindowTrigger&quot;,
+  &quot;typeProperties&quot;: {
+    &quot;frequency&quot;: &quot;Hour&quot;,
+    &quot;interval&quot;: 1,
+    &quot;startTime&quot;: &quot;2026-01-01T00:00:00Z&quot;,
+    &quot;delay&quot;: &quot;00:05:00&quot;,
+    &quot;maxConcurrency&quot;: 4,
+    &quot;retryPolicy&quot;: { &quot;count&quot;: 3, &quot;intervalInSeconds&quot;: 60 },
+    &quot;dependsOn&quot;: [
+      {
+        &quot;type&quot;: &quot;TumblingWindowTriggerDependencyReference&quot;,
+        &quot;offset&quot;: &quot;-01:00:00&quot;,
+        &quot;size&quot;: &quot;01:00:00&quot;,
+        &quot;referenceTrigger&quot;: { &quot;referenceName&quot;: &quot;trig_upstream_bronze&quot;, &quot;type&quot;: &quot;TriggerReference&quot; }
+      }
+    ]
+  }
+}</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Guarantees deterministic, out-of-the-box historical backfilling upon trigger reactivation and prevents downstream processing until upstream time slices complete.</span>
+    <span><strong>Impact Metric:</strong> 100% automated chronological backfill; zero skipped intervals</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">ADF Copy Activity DIU &amp; Dynamic Range Partition Slicing</span>
+    <span class="card-category">Orchestration · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Copy activity runs at slow single-threaded speeds even when allocated 64 DIUs because SQL queries execute as a single unpartitioned table scan.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Enable DynamicRange partitionOption on the SQL source and bind partitionColumnName with upper and lower boundary bounds, matching parallelCopies.</div>
+  <div class="code-box">{
+  &quot;source&quot;: {
+    &quot;type&quot;: &quot;SqlSource&quot;,
+    &quot;partitionOption&quot;: &quot;DynamicRange&quot;,
+    &quot;partitionSettings&quot;: {
+      &quot;partitionColumnName&quot;: &quot;TransactionId&quot;,
+      &quot;partitionUpperBound&quot;: &quot;500000000&quot;,
+      &quot;partitionLowerBound&quot;: &quot;1&quot;
+    }
+  },
+  &quot;sink&quot;: { &quot;type&quot;: &quot;ParquetSink&quot; },
+  &quot;dataIntegrationUnits&quot;: 32,
+  &quot;parallelCopies&quot;: 16
+}</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Slices single monolithic queries into parallel bounded range extracts, allowing all 32 DIUs to saturate available network bandwidth.</span>
+    <span><strong>Impact Metric:</strong> 8x-12x throughput acceleration (up to 250 MB/s)</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">ADF Activity Error Branching &amp; Dead Letter Queue</span>
+    <span class="card-category">Production Best Practices · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Single corrupted records crash entire pipeline batches, halting downstream analytics and leaving staging containers uncleaned.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Branch activity failure dependencies to a Dead Letter Queue (DLQ) copy task that isolates rejected payloads, logs failure metadata, and terminates with a Fail activity.</div>
+  <div class="code-box">{
+  &quot;name&quot;: &quot;Quarantine_Bad_Data&quot;,
+  &quot;type&quot;: &quot;Copy&quot;,
+  &quot;dependsOn&quot;: [
+    { &quot;activity&quot;: &quot;Transform_Orders&quot;, &quot;dependencyConditions&quot;: [&quot;Failed&quot;] }
+  ],
+  &quot;typeProperties&quot;: {
+    &quot;source&quot;: { &quot;type&quot;: &quot;BinarySource&quot; },
+    &quot;sink&quot;: {
+      &quot;type&quot;: &quot;BinarySink&quot;,
+      &quot;storeSettings&quot;: {
+        &quot;type&quot;: &quot;AzureBlobFSWriteSettings&quot;,
+        &quot;copyBehavior&quot;: &quot;PreserveHierarchy&quot;
+      }
+    }
+  }
+}</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Preserves audit compliance by capturing faulty records into an isolated quarantine zone while keeping main production pipelines operational.</span>
+    <span><strong>Impact Metric:</strong> Zero dropped records; MTTR reduced from hours to minutes</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">ADF Real-Time Webhook Alerting via Teams Adaptive Cards</span>
+    <span class="card-category">Debugging &amp; Observability · Medium Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Pipeline failure notifications delivered via email get lost or delayed, leading to unnoticed SLA breaches.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Use an ADF Web Activity attached to failed activity branches to format and POST dynamic JSON Adaptive Cards directly to a Microsoft Teams incoming webhook.</div>
+  <div class="code-box">{
+  &quot;name&quot;: &quot;Send_Teams_Incident_Card&quot;,
+  &quot;type&quot;: &quot;WebActivity&quot;,
+  &quot;dependsOn&quot;: [{ &quot;activity&quot;: &quot;Copy_Sales&quot;, &quot;dependencyConditions&quot;: [&quot;Failed&quot;] }],
+  &quot;typeProperties&quot;: {
+    &quot;url&quot;: &quot;@pipeline().globalParameters.teams_webhook_url&quot;,
+    &quot;method&quot;: &quot;POST&quot;,
+    &quot;body&quot;: {
+      &quot;type&quot;: &quot;message&quot;,
+      &quot;attachments&quot;: [{
+        &quot;contentType&quot;: &quot;application/vnd.microsoft.card.adaptive&quot;,
+        &quot;content&quot;: {
+          &quot;type&quot;: &quot;AdaptiveCard&quot;,
+          &quot;body&quot;: [
+            { &quot;type&quot;: &quot;TextBlock&quot;, &quot;text&quot;: &quot;Pipeline Failure Alert&quot;, &quot;weight&quot;: &quot;Bolder&quot;, &quot;color&quot;: &quot;Attention&quot; },
+            { &quot;type&quot;: &quot;FactSet&quot;, &quot;facts&quot;: [
+              { &quot;title&quot;: &quot;Pipeline:&quot;, &quot;value&quot;: &quot;@{pipeline().Pipeline}&quot; },
+              { &quot;title&quot;: &quot;Run ID:&quot;, &quot;value&quot;: &quot;@{pipeline().RunId}&quot; },
+              { &quot;title&quot;: &quot;Error:&quot;, &quot;value&quot;: &quot;@{activity(&#x27;Copy_Sales&#x27;).error.message}&quot; }
+            ]}
+          ]
+        }
+      }]
+    }
+  }
+}</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Instantly notifies on-call data engineers in collaboration channels with direct run IDs and error messages for immediate triage.</span>
+    <span><strong>Impact Metric:</strong> Sub-minute incident notification; zero email lag</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">PySpark Production Retry Decorator with Full Jitter</span>
+    <span class="card-category">Production Best Practices · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Transient cloud storage throttling (HTTP 503/429) or temporary network blips terminate multi-hour Spark batch writes.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Wrap write actions in an exponential backoff decorator with randomized jitter, retrying only transient errors while failing fast on deterministic code bugs.</div>
+  <div class="code-box">import time, random
+from functools import wraps
+
+def with_exponential_backoff(max_retries=4, base_delay=2.0):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(1, max_retries + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_retries or not any(k in str(e).lower() for k in [&quot;503&quot;, &quot;429&quot;, &quot;timeout&quot;]):
+                        raise e
+                    delay = random.uniform(0, min(60.0, base_delay * (2 ** (attempt - 1))))
+                    time.sleep(delay)
+        return wrapper
+    return decorator
+
+@with_exponential_backoff(max_retries=3)
+def write_delta(df, path):
+    df.write.format(&quot;delta&quot;).mode(&quot;append&quot;).save(path)</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Prevents the thundering herd problem when dozens of tasks fail simultaneously, allowing storage endpoints to recover without crashing jobs.</span>
+    <span><strong>Impact Metric:</strong> 99.9% resilience against transient HTTP 503/429 throttling</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Delta Lake Atomic Partition Overwrite via replaceWhere</span>
+    <span class="card-category">SQL &amp; Storage · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Standard Spark mode(&#x27;overwrite&#x27;) wipes entire table directories, destroying historical data on misconfigured jobs.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Use Delta Lake replaceWhere option to atomically overwrite exactly the target partition without modifying historical partitions.</div>
+  <div class="code-box"># Atomically overwrite exactly one date partition
+df_daily.write \
+    .format(&quot;delta&quot;) \
+    .mode(&quot;overwrite&quot;) \
+    .option(&quot;replaceWhere&quot;, f&quot;sale_date = &#x27;{load_date}&#x27;&quot;) \
+    .option(&quot;mergeSchema&quot;, &quot;false&quot;) \
+    .saveAsTable(&quot;lakehouse_prod.gold.daily_sales&quot;)</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Guarantees that re-running a failed or backfilled pipeline is 100% idempotent and safe from accidental multi-partition data deletion.</span>
+    <span><strong>Impact Metric:</strong> 100% partition-atomic ACID overwrite; zero historical deletion risk</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Auto Loader Streaming with Schema Evolution &amp; Rescued Data</span>
+    <span class="card-category">Spark Core · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Unexpected schema drift or corrupted columns in raw landing JSON files crash production streaming jobs.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Configure Auto Loader cloudFiles with schemaEvolutionMode=&#x27;addNewColumns&#x27; and leverage the automatic _rescued_data column to prevent dropped data.</div>
+  <div class="code-box">(spark.readStream
+    .format(&quot;cloudFiles&quot;)
+    .option(&quot;cloudFiles.format&quot;, &quot;json&quot;)
+    .option(&quot;cloudFiles.schemaLocation&quot;, checkpoint_path + &quot;schema/&quot;)
+    .option(&quot;cloudFiles.schemaEvolutionMode&quot;, &quot;addNewColumns&quot;)
+    .option(&quot;cloudFiles.schemaHints&quot;, &quot;event_time TIMESTAMP, user_id STRING&quot;)
+    .load(landing_path)
+    .writeStream
+    .format(&quot;delta&quot;)
+    .outputMode(&quot;append&quot;)
+    .option(&quot;checkpointLocation&quot;, checkpoint_path + &quot;offsets/&quot;)
+    .option(&quot;mergeSchema&quot;, &quot;true&quot;)
+    .trigger(availableNow=True)
+    .toTable(&quot;bronze.raw_events&quot;))</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Preserves stream continuity while capturing malformed or unmapped columns into _rescued_data for inspection without human intervention.</span>
+    <span><strong>Impact Metric:</strong> Zero pipeline halts on schema drift; 100% unmapped field preservation</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Skew Remediation via Mathematical Key Salting</span>
+    <span class="card-category">Spark Optimization · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Extreme data skew on a join key creates a single straggler task running 100x longer than the median, bottlenecking the entire cluster.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Add a random salt [0..K-1] to the large table key and replicate the small table rows K times via explode(array) before joining on the salted key.</div>
+  <div class="code-box">import pyspark.sql.functions as F
+
+SALT_K = 16
+# 1. Salt large table with random suffix [0..K-1]
+large_salted = large_df.withColumn(
+    &quot;salted_key&quot;,
+    F.concat(F.col(&quot;join_id&quot;), F.lit(&quot;_&quot;), (F.rand() * SALT_K).cast(&quot;int&quot;))
+)
+
+# 2. Explode small table across all K salt values
+small_exploded = small_df.withColumn(
+    &quot;salted_key&quot;,
+    F.explode(F.array([F.concat(F.col(&quot;join_id&quot;), F.lit(f&quot;_{i}&quot;)) for i in range(SALT_K)]))
+)
+
+# 3. Join on salted key
+joined_df = large_salted.join(small_exploded, on=&quot;salted_key&quot;, how=&quot;inner&quot;).drop(&quot;salted_key&quot;)</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Evenly distributes skewed key records across all cluster workers, eliminating single-task executor memory saturation.</span>
+    <span><strong>Impact Metric:</strong> 10x-50x runtime reduction on severely skewed joins</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Databricks Asset Bundles Multi-Task Job with Shared Cluster</span>
+    <span class="card-category">Orchestration · High Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Multi-stage workflows spinning up separate new clusters for each task incur 5-minute VM provisioning delays per task and inflate DBU costs.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Define a root job_clusters block in the DAB YAML and reference the shared cluster across all workflow tasks using job_cluster_key.</div>
+  <div class="code-box">resources:
+  jobs:
+    daily_etl:
+      name: &quot;${bundle.target}-daily-etl&quot;
+      job_clusters:
+        - job_cluster_key: shared_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_D8s_v5
+            num_workers: 4
+      tasks:
+        - task_key: bronze
+          job_cluster_key: shared_cluster
+          notebook_task: { notebook_path: ../src/bronze.py }
+        - task_key: silver
+          depends_on: [{ task_key: bronze }]
+          job_cluster_key: shared_cluster
+          notebook_task: { notebook_path: ../src/silver.py }</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Keeps worker VMs warm across all task stages, slashing pipeline execution overhead by 15-20 minutes and consolidating billing.</span>
+    <span><strong>Impact Metric:</strong> 15-20 minutes eliminated per run; 40% DBU savings</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Azure Monitor KQL Diagnostic Query for Databricks SLAs</span>
+    <span class="card-category">Debugging &amp; Observability · Medium Impact</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Silent job failures or jobs exceeding expected SLA durations escape notice until business analysts report stale dashboard metrics.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Deploy an Azure Monitor Alert Rule running a scheduled KQL query over DatabricksJobs diagnostic telemetry to alert on failure or execution spikes.</div>
+  <div class="code-box">// KQL Alert: Detect Failed Jobs &amp; Runs Exceeding 2 Hours in last 15m
+DatabricksJobs
+| where TimeGenerated &gt; ago(15m)
+| where ActionName in (&quot;runFailed&quot;, &quot;runSucceeded&quot;)
+| extend DurationMin = todouble(RequestParams.executionDuration) / 60000
+| extend JobName = tostring(RequestParams.jobName)
+| extend RunId = tostring(RequestParams.runId)
+| where ActionName == &quot;runFailed&quot; or DurationMin &gt; 120
+| project TimeGenerated, JobName, RunId, ActionName, DurationMin, Response
+| order by TimeGenerated desc</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Integrates Databricks telemetry directly into enterprise Azure Monitor / PagerDuty incident management with zero custom agent setup.</span>
+    <span><strong>Impact Metric:</strong> Near real-time alert trigger within 5 minutes of SLA breach</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">SQL Window Functions Master Cheat Sheet</span>
+    <span class="card-category">SQL &amp; Storage · High (Analytics Performance &amp; Code Elegance)</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Developers write inefficient, convoluted correlated subqueries and multiple self-joins to calculate running totals, moving averages, and top-N category rankings.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Leverage ANSI SQL Window Functions with explicit frame bounds (ROWS BETWEEN) and the modern QUALIFY clause to evaluate rankings and aggregates in a single logarithmic pass.</div>
+  <div class="code-box">-- Finding Top 1 Product per Category + Running Monthly Revenue
+SELECT 
+    category_id,
+    product_id,
+    order_date,
+    revenue,
+    DENSE_RANK() OVER (PARTITION BY category_id ORDER BY revenue DESC) AS rank_in_cat,
+    SUM(revenue) OVER (
+        PARTITION BY category_id 
+        ORDER BY order_date 
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_monthly_revenue
+FROM fact_sales
+QUALIFY rank_in_cat = 1;</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Window functions process partitions without collapsing rows, reducing time complexity from O(N^2) correlated subqueries to O(N log N) sorted passes.</span>
+    <span><strong>Impact Metric:</strong> Up to 80% faster execution; eliminates 5+ self-join roundtrips.</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Cross-Engine Rosetta Stone (SQL ↔ PySpark ↔ Pandas ↔ Polars)</span>
+    <span class="card-category">SQL &amp; Storage · Critical (Multi-Engine Developer Velocity)</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Data engineers working across SQL warehouses, distributed Spark clusters, and local Python pipelines waste time looking up equivalent syntax for common data manipulations.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Use this drop-in translation matrix mapping SQL, PySpark, Pandas, and Polars expressions for filtering, sorting, column creation, aggregation, and ranking.</div>
+  <div class="code-box">-- SQL:
+SELECT dept, AVG(salary) AS avg_sal FROM emp WHERE status = &#x27;A&#x27; GROUP BY dept;
+
+# PySpark:
+df.filter(col(&#x27;status&#x27;) == &#x27;A&#x27;).groupBy(&#x27;dept&#x27;).agg(avg(&#x27;salary&#x27;).alias(&#x27;avg_sal&#x27;))
+
+# Pandas:
+df[df[&#x27;status&#x27;] == &#x27;A&#x27;].groupby(&#x27;dept&#x27;)[&#x27;salary&#x27;].mean().reset_index(name=&#x27;avg_sal&#x27;)
+
+# Polars:
+df.filter(pl.col(&#x27;status&#x27;) == &#x27;A&#x27;).group_by(&#x27;dept&#x27;).agg(pl.mean(&#x27;salary&#x27;).alias(&#x27;avg_sal&#x27;))</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Eliminates cognitive load and avoids silent semantic differences (e.g. Pandas groupby dropping nulls by default vs SQL/Polars preserving them).</span>
+    <span><strong>Impact Metric:</strong> Zero semantic divergence; consistent data quality across multi-hop pipelines.</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Apache Spark 5S Performance Triage Runbook</span>
+    <span class="card-category">Spark Optimization · Maximum (Cluster Stability &amp; Cost Reduction)</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Spark jobs fail with OOM crashes, stall indefinitely at 99% completion, or experience massive shuffle disk spill penalties.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Triage performance issues across the 5 S&#x27;s: Storage (compaction), Skew (salting/AQE), Spill (shuffle partition sizing), Shuffle (broadcast joins), and Serialization (vectorized Pandas UDFs).</div>
+  <div class="code-box">-- 1. SKEW: Enable AQE Skew Join
+spark.conf.set(&#x27;spark.sql.adaptive.skewJoin.enabled&#x27;, &#x27;true&#x27;)
+
+-- 2. SPILL: Size shuffle partitions dynamically (data_size_mb / 150)
+spark.conf.set(&#x27;spark.sql.shuffle.partitions&#x27;, str(int(input_mb / 150)))
+
+-- 3. SHUFFLE: Broadcast small dimensions (&lt;100MB)
+from pyspark.sql.functions import broadcast
+df_joined = df_fact.join(broadcast(df_dim), on=&#x27;dim_id&#x27;, how=&#x27;inner&#x27;)</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Eliminates 95% of production Spark job failures and prevents expensive cluster autoscaling overspend.</span>
+    <span><strong>Impact Metric:</strong> Reduces job runtimes by 50%–90%; eliminates disk spill I/O.</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">SQL Server Deadlock (Error 1205) Triage Cheat Sheet</span>
+    <span class="card-category">SQL &amp; Storage · High (Database Availability &amp; Concurrency)</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Concurrent batch updates and analytical reporting queries generate frequent Error 1205 deadlock victim exceptions.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Enforce uniform table access order across all stored procedures, enable Read Committed Snapshot Isolation (RCSI), and ensure covering indexes eliminate bookmark lookups.</div>
+  <div class="code-box">-- 1. Enable RCSI to eliminate reader-writer blocking:
+ALTER DATABASE CoreBanking 
+SET READ_COMMITTED_SNAPSHOT ON 
+WITH ROLLBACK IMMEDIATE;
+
+-- 2. Stored Procedure Safe Pattern with TRY...CATCH &amp; Uniform Order:
+BEGIN TRY
+    BEGIN TRANSACTION;
+    -- Always access Customers before Orders across ALL procedures:
+    UPDATE dbo.Customers SET LastActive = GETDATE() WHERE CustomerID = @cust_id;
+    UPDATE dbo.Orders SET Status = &#x27;Processed&#x27; WHERE CustomerID = @cust_id;
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT &gt; 0 ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> RCSI directs readers to row versions in TempDB, completely preventing select statements from blocking concurrent update statements.</span>
+    <span><strong>Impact Metric:</strong> Eliminates up to 98% of transactional deadlock events.</span>
+  </div>
+</div>
+<div class="runbook-card">
+  <div class="card-header">
+    <span class="card-title">Azure Synapse MPP 60-Distribution Table Design Matrix</span>
+    <span class="card-category">SQL &amp; Storage · High (MPP Query Performance &amp; FinOps)</span>
+  </div>
+  <div class="problem-box"><strong>Problem Triage:</strong> Queries in Azure Synapse Analytics run slowly and exhaust DWU memory slots due to cross-node Data Movement Service (DMS) shuffle broadcasts.</div>
+  <div class="solution-box"><strong>Hardened Solution:</strong> Apply the 60-distribution rule: Replicate dimension tables under 2 GB, Hash-distribute large fact tables (&gt;100M rows) on high-cardinality join keys, and Round-Robin staging tables.</div>
+  <div class="code-box">-- 1. Staging Table: Maximum Ingestion Throughput
+CREATE TABLE stage.Orders (
+    OrderID INT NOT NULL, CustomerID INT NOT NULL, Amount DECIMAL(18,2)
+) WITH (DISTRIBUTION = ROUND_ROBIN, HEAP);
+
+-- 2. Replicated Dimension (&lt; 2 GB): Eliminates DMS Broadcast Moves
+CREATE TABLE dbo.DimStore (
+    StoreID INT NOT NULL, StoreName VARCHAR(100) NOT NULL
+) WITH (DISTRIBUTION = REPLICATE, CLUSTERED COLUMNSTORE INDEX);
+
+-- 3. Hash Distributed Fact (&gt; 100M Rows): Colocated Joins
+CREATE TABLE fact.Orders (
+    OrderID INT NOT NULL, CustomerID INT NOT NULL, Amount DECIMAL(18,2)
+) WITH (DISTRIBUTION = HASH(CustomerID), CLUSTERED COLUMNSTORE INDEX);</div>
+  <div class="metrics-box">
+    <span><strong>Why It Matters:</strong> Colocated hash joins execute locally within each compute slice with zero inter-node network data movement.</span>
+    <span><strong>Impact Metric:</strong> Up to 10x faster analytical joins; eliminates DMS bottlenecks.</span>
   </div>
 </div>
 

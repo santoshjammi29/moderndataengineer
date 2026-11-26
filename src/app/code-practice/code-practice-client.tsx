@@ -160,6 +160,12 @@ export function CodePracticeClient({
     if (dbParam && validLangs.includes(dbParam as LanguageKey)) {
       setActiveMainTab("drills");
       setActiveLang(dbParam as LanguageKey);
+      return;
+    }
+
+    if (!rawTabParam && !dbParam) {
+      setActiveMainTab("drills");
+      setActiveLang("pyspark");
     }
   }, [rawTabParam, dbParam]);
 

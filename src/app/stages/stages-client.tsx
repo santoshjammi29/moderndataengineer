@@ -71,6 +71,8 @@ export function StagesClient() {
     const validTabs: StageTab[] = ["mastery", "lakehouse", "sdlc", "catalyst", "flows"];
     if (queryTab && validTabs.includes(queryTab)) {
       setActiveTab(queryTab);
+    } else if (!queryTab) {
+      setActiveTab("mastery");
     }
   }, [queryTab]);
 

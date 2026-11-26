@@ -1,30 +1,22 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Flame,
   Search,
-  Download,
-  FileCode2,
   Terminal,
   Cpu,
   Code2,
-  ExternalLink,
   Layers,
-  Sparkles,
   Maximize2,
   RefreshCw,
   CheckCircle2,
-  ArrowRight,
   Eye,
-  FileText,
 } from "lucide-react";
 import type {
   DatabricksSuiteData,
   DatabricksDomainId,
-  DatabricksCheatCard,
   DatabricksDomainMeta,
 } from "@/types/data";
 import { DatabricksCard } from "@/components/cheatsheet/databricks-card";
@@ -39,6 +31,13 @@ interface DatabricksCheatsheetViewProps {
   initialDomain?: string;
   initialCardId?: string;
 }
+
+const DOMAIN_BADGE_CLASSES: Record<DatabricksDomainId, string> = {
+  sparksql: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
+  pyspark: "bg-orange-500/15 text-orange-800 dark:text-orange-400",
+  spark_core: "bg-purple-500/15 text-purple-700 dark:text-purple-400",
+  python: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+};
 
 const DOMAIN_ICONS: Record<DatabricksDomainId, React.ElementType> = {
   sparksql: Terminal,
@@ -82,7 +81,6 @@ export function DatabricksCheatsheetView({
     url: string;
     title: string;
     subtitle: string;
-    pdfUrl: string;
   } | null>(null);
 
   // Shuffle state
@@ -165,8 +163,7 @@ export function DatabricksCheatsheetView({
     setLightboxPoster({
       url: target.poster,
       title: `${target.title} Wall Poster`,
-      subtitle: `${target.badge} • 4162 × 2924 • 250 DPI Print-Ready`,
-      pdfUrl: target.pdf,
+      subtitle: `${target.badge} • 4162 × 2924 • 250 DPI High-Res`,
     });
     setLightboxOpen(true);
   };
@@ -189,7 +186,6 @@ export function DatabricksCheatsheetView({
           posterUrl={lightboxPoster.url}
           title={lightboxPoster.title}
           subtitle={lightboxPoster.subtitle}
-          pdfUrl={lightboxPoster.pdfUrl}
         />
       )}
 
@@ -211,7 +207,7 @@ export function DatabricksCheatsheetView({
             </h1>
 
             <p className="text-xs sm:text-sm text-[var(--muted-foreground)] leading-relaxed max-w-3xl">
-              High-density, production-grade cheat sheets covering Spark SQL, PySpark, Spark Core &amp; Architecture Internals, and Python in Databricks. Complete with memory mechanics, shuffle formulas, code breakdowns, and vector PDFs.
+              High-density, production-grade cheat sheets covering Spark SQL, PySpark, Spark Core &amp; Architecture Internals, and Python in Databricks. Complete with memory mechanics, shuffle formulas, code breakdowns, and panoramic wall posters.
             </p>
 
             {/* Quick Metrics Bar */}
@@ -221,45 +217,22 @@ export function DatabricksCheatsheetView({
                 48 Production Cards
               </span>
               <span className="flex items-center gap-1 text-[var(--foreground)] font-semibold bg-[var(--surface-2)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
-                <CheckCircle2 size={13} className="text-sky-600 dark:text-sky-400" />
-                5 Vector PDFs (Print-Ready)
-              </span>
-              <span className="flex items-center gap-1 text-[var(--foreground)] font-semibold bg-[var(--surface-2)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
                 <CheckCircle2 size={13} className="text-purple-600 dark:text-purple-400" />
                 4 Panoramic Wall Posters (250 DPI)
               </span>
             </div>
           </div>
 
-          {/* Master Downloads & Standalone Hub CTA */}
+          {/* Wall Posters Preview Trigger */}
           <div className="flex flex-col sm:flex-row md:flex-col items-stretch gap-2 shrink-0">
-            <a
-              href="/api/download/pdf/databricks_master_cheatsheet.pdf"
-              download="databricks_master_cheatsheet.pdf"
-              className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-98 text-white text-xs font-semibold shadow-md transition-all cursor-pointer"
+            <button
+              type="button"
+              onClick={() => handleOpenPoster(activeDomainMeta || data.domains[0])}
+              className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--foreground)] text-xs font-semibold border border-[var(--border)] shadow-xs transition-all cursor-pointer"
             >
-              <Download size={14} />
-              <span>Download Master PDF (8 Pages)</span>
-            </a>
-
-            <div className="flex items-center gap-2">
-              <Link
-                href="/cheat-sheet?tab=pdf_hub"
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 text-xs font-semibold border border-purple-500/30 transition-colors"
-              >
-                <FileText size={12} className="text-purple-400" />
-                <span>PDF Hub</span>
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => handleOpenPoster(activeDomainMeta || data.domains[0])}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
-              >
-                <Eye size={12} className="text-amber-400" />
-                <span>Wall Posters</span>
-              </button>
-            </div>
+              <Eye size={14} className="text-amber-600 dark:text-amber-400" />
+              <span>View Wall Posters</span>
+            </button>
           </div>
         </div>
       </div>
@@ -303,11 +276,10 @@ export function DatabricksCheatsheetView({
               />
               <span>{dom.shortTitle}</span>
               <span
-                className="text-[10px] px-1.5 py-0.2 rounded-full font-mono font-semibold"
-                style={{
-                  backgroundColor: `${dom.accentColor}20`,
-                  color: dom.accentColor,
-                }}
+                className={cn(
+                  "text-[10px] px-1.5 py-0.2 rounded-full font-mono font-semibold",
+                  DOMAIN_BADGE_CLASSES[dom.id]
+                )}
               >
                 12
               </span>
@@ -376,16 +348,6 @@ export function DatabricksCheatsheetView({
                 Page 2 (#7-#12)
               </button>
             </div>
-
-            {/* Download PDF button */}
-            <a
-              href={`/api/download/pdf/${activeDomainMeta.pdf.split('/').pop()}`}
-              download={activeDomainMeta.pdf.split('/').pop()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--foreground)] text-xs font-semibold border border-[var(--border)] transition-colors cursor-pointer"
-            >
-              <Download size={13} className="text-sky-600 dark:text-sky-400" />
-              <span>PDF ({activeDomainMeta.pdfSize})</span>
-            </a>
 
             {/* View Poster button */}
             <button
