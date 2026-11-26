@@ -88,7 +88,7 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── guided-learning.ts             # Topic-based cross-dataset aggregation
 │   │   └── diagram-theme.ts               # Whiteboard blueprint styling & asset links
 │   ├── types/data.ts                      # TypeScript interfaces & types
-│   └── __tests__/                         # Vitest test suite (61 test files, 509 unit/integration tests)
+│   └── __tests__/                         # Vitest test suite (62 test files, 522 unit/integration tests)
 ```
 
 ---
@@ -99,13 +99,13 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 # Development server (port 3000)
 npm run dev
 
-# Run all 61 test files (509 unit & integration tests)
+# Run all 62 test files (522 unit & integration tests)
 npm test
 
 # Run tests in watch mode during development
 npx vitest
 
-# Validate search catalog integrity (11,280+ assets)
+# Validate search catalog integrity (11,368+ assets)
 npm run content:validate
 
 # Reshard & optimize BM25F search index
@@ -128,7 +128,8 @@ npm run deploy:quick
 1. **Strict Server/Client Boundary**: Every page has `page.tsx` (Server Component for ISR/metadata) + `*-client.tsx` (Client Component for interactivity).
 2. **Never bundle giant JSON directly into client chunks**: Load datasets via `src/lib/dal.ts` on server, or stream from R2 via `/api/artifacts/[shard]` on client.
 3. **Responsive Display Scaling**: Use `w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto` to scale beautifully from laptops to 4K and 3440px ultrawide displays.
-4. **Preserve Tests**: Always run `npm test` after modifying components, types, or data access code. All 61 test files (509 tests) must pass with 100% success.
+4. **Preserve Tests**: Always run `npm test` after modifying components, types, or data access code. All 62 test files (522 tests) must pass with 100% success.
+5. **Cheatsheet WebP Invariant**: Keep all generated cheatsheet visuals in `public/cheatsheets/images/` as `.webp` (generated via `scripts/generate_cheatsheets.py`) and run `../databricks-handbook/.venv/bin/ruff check --select E,F,W,B,UP --ignore E501 .` after editing Python scripts.
 
 ---
 
@@ -189,7 +190,7 @@ npm run deploy:quick
 
 ### 7. Cloudflare Deployment Pipeline Sequence
 To guarantee zero-downtime, no 404s on sharded JSON, and consistent asset hashes, always follow the complete 4-step sequence:
-1. `npm run content:validate && npm run content:shard` — validates 11,280+ records and updates search catalogs.
+1. `npm run content:validate && npm run content:shard` — validates 11,368+ records and updates search catalogs.
 2. `npm run build:worker` — compiles Next.js 16 and OpenNext Cloudflare Worker bundle.
 3. `npm run r2:sync:remote` — synchronizes 106+ JSON artifact shards and PDFs to Cloudflare R2.
 4. `npm run deploy:worker` — deploys the edge worker via Wrangler with `--cacheChunkSize 10`.

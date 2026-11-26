@@ -102,7 +102,7 @@ Before running `git push` on ANY repository, execute the matching local validati
 
 | Repository | Role | Local Verification Command | Pass Criteria |
 |:---|:---|:---|:---|
-| **`charming-fermi`** | Web Hub (Next.js) | `npm run typecheck && npm run content:validate && npm run content:shard && npm test` | 0 type errors, 11,360+ valid assets, 62 test files passed |
+| **`charming-fermi`** | Web Hub (Next.js) | `../databricks-handbook/.venv/bin/ruff check --select E,F,W,B,UP --ignore E501 . && npm run typecheck && npm run content:validate && npm run content:shard && npm test` | 0 Ruff issues, 0 type errors, 11,368+ valid assets, 62 test files (522 tests) passed |
 | **`databricks-handbook`** | 105 Databricks Recipes | `python3 scripts/run_tests.py` | 15 passed, 0 failed, 52 whiteboards |
 | **`pyspark-handbook`** | 105 PySpark Code Drills | `python3 scripts/run_tests.py` | 15 passed, 0 failed, 52 whiteboards |
 | **`sql-handbook`** | 105 SQL Exercises | `python3 scripts/run_tests.py` | 9 passed, 0 failed, 52 whiteboards |
@@ -128,5 +128,6 @@ python3 scripts/verify_ecosystem_ci.py
 
 This verifies:
 1. Every repository has exactly 52 whiteboard blueprints in `assets/whiteboards/`.
-2. Every test runner (`run_tests.py`, `validate_notebooks.py`, `validate_markdown.py`) passes 100%.
+2. Every test runner (`run_tests.py`, `validate_notebooks.py`, `validate_markdown.py`, and `databricks-handbook/.venv/bin/pytest` with `PYSPARK_PYTHON` / `PYSPARK_DRIVER_PYTHON` pinned to `.venv/bin/python`) passes 100%.
 3. No repository has uncommitted unstaged drift or dirty states before syndication.
+4. After pushing cross-repo updates, verify GitHub Actions workflows via `gh run list` across pushed repositories.
