@@ -52,10 +52,10 @@ This guide documents the structural and content principles synthesized from anal
 ## 3. The 4-Tier Progressive Disclosure Model
 
 All technical curricula must structure modules across four progressive skill tiers:
-- **Level 100 (Foundations)**: High-level mental model, physical analogies, and minimal runnable snippets ($\le 15$ lines).
-- **Level 200 (Core Mechanics)**: Idiomatic, production-ready code with unit tests and Big-O complexity bounds.
-- **Level 300 (Complex Scenarios & Edge Cases)**: Concurrency, memory allocation, skew, failure modes, and benchmarks.
-- **Level 400 (Production Hardening & Architecture)**: Multi-tenancy, FinOps cost economics, zero-trust security, and operational triage runbooks.
+- **Level 1 (Foundations)**: High-level mental model, physical analogies, and minimal runnable snippets ($\le 15$ lines).
+- **Level 2 (Core Mechanics)**: Idiomatic, production-ready code with unit tests and Big-O complexity bounds.
+- **Level 3 (Complex Scenarios & Edge Cases)**: Concurrency, memory allocation, skew, failure modes, and benchmarks.
+- **Level 4 (Production Hardening & Architecture)**: Multi-tenancy, FinOps cost economics, zero-trust security, and operational triage runbooks.
 
 ---
 

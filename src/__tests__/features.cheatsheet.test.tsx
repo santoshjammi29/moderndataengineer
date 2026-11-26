@@ -128,8 +128,9 @@ describe("Databricks Architecture & Coding Cheat Sheet Suite", () => {
       expect(validDomainIds).toContain(dom.id);
       expect(dom.cardCount).toBe(12);
       expect(dom.pdf.endsWith(".pdf")).toBe(true);
-      expect(dom.poster.endsWith(".png")).toBe(true);
+      expect(dom.poster.endsWith(".webp")).toBe(true);
       expect(dom.pageImages.length).toBe(2);
+      dom.pageImages.forEach((img) => expect(img.endsWith(".webp")).toBe(true));
 
       const domainCards = databricksCheatsheetData.cards.filter((c) => c.domain === dom.id);
       expect(domainCards.length).toBe(12);

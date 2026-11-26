@@ -192,7 +192,7 @@ export const REPOSITORIES: ProjectRepository[] = [
     category: "Profile",
     tags: ["Portfolio", "Resume", "Certifications"],
     githubUrl: github("SantoshJammiProfile"),
-    portalHref: "https://santosh-jammi-resume.vercel.app/",
+    portalHref: "https://santoshjammi29.github.io/SantoshJammiProfile/",
     portalLabel: "Open live resume",
   },
 ];

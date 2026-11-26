@@ -65291,5 +65291,51 @@
     "difficulty": "ARCHITECT",
     "question": "How do you architect an ELT data transformation pipeline in Azure Synapse Analytics that materializes aggregated gold marts to ADLS Gen2 as compressed Parquet files using CETAS while achieving automated column statistics and zero compute idle costs?",
     "answer": "Architectural Blueprint:\n\n1. CETAS (Create External Table As Select) Export Pattern:\n- Define an External Data Source pointing to the ADLS Gen2 gold container using Managed Identity authentication.\n- Define an External File Format configured for SNAPPY-compressed PARQUET.\n- Execute CETAS to materialize transformations directly from silver tables into cloud storage:\nCREATE EXTERNAL TABLE gold.MonthlyCustomerMetrics\nWITH (\n    LOCATION = 'metrics/monthly_customer/',\n    DATA_SOURCE = ADLSGen2GoldSource,\n    FILE_FORMAT = ParquetSnappy\n)\nAS\nSELECT customer_id, DATE_TRUNC('month', order_date) AS metric_month, COUNT(*) AS total_orders, SUM(amount) AS total_spend\nFROM silver.Orders\nGROUP BY customer_id, DATE_TRUNC('month', order_date);\n\n2. Automatic Statistics Advantage:\n- Synapse automatically creates single-column statistics on external tables upon the first query, allowing subsequent Serverless SQL queries to optimize join orders and partition pruning without manual CREATE STATISTICS maintenance.\n\n3. FinOps Pause/Resume & Serverless Querying:\n- For batch transformations, use Synapse Serverless SQL Pools (pay-per-TB-scanned: ~$5 per TB) instead of running a 24/7 dedicated pool. The compute spins up on demand, executes CETAS, and incurs zero cost once data is written to object storage."
+  },
+  {
+    "id": "eco-new-arch-01",
+    "source": "Security Handbook",
+    "category": "Security & Governance",
+    "niche": "Zero-Trust Lakehouse",
+    "difficulty": "ARCHITECT",
+    "question": "Design a Zero-Trust Cloud Perimeter and Fine-Grained Data Governance Architecture for a Multi-Business-Unit Databricks & Azure Lakehouse.",
+    "answer": "### 1. Network Perimeter & Control/Compute Plane Isolation\n- Deploy compute planes into customer-managed VNets (`No Public IP` / Secure Cluster Connectivity) with Azure Private Link backhaul for both front-end Workspace access and back-end Control Plane relays.\n- Disable public network access on ADLS Gen2 and Azure Key Vault; route all storage traffic through dedicated Private Endpoints and egress firewall rules.\n\n### 2. Identity & Secretless CI/CD\n- Eliminate static Service Principal secrets by federating GitHub Actions OIDC tokens to Entra ID Workload Identities scoped to `prod` environments.\n- Use Unity Catalog Storage Credentials backed by Azure Access Connectors (Managed Identity) rather than SAS tokens or account keys.\n\n### 3. Fine-Grained Data Access & Compliance\n- Enforce Unity Catalog Row Filters (`CREATE FUNCTION ... RETURN ...`) and Dynamic Column Masks on PII tables so analysts only see unmasked values for their authorized region.\n- Stream `system.access.audit` logs to Microsoft Sentinel / SIEM for immutable forensic alerting.",
+    "constraints": [
+      "Zero public internet exposure for storage accounts and Spark worker nodes",
+      "No long-lived cloud secrets in CI/CD or notebooks",
+      "Row-level and column-level PII masking enforced consistently across SQL and PySpark"
+    ],
+    "tradeoffs": [
+      "VNet injection + Private Link DNS adds initial IaC complexity vs. workspace-managed networks",
+      "Serverless SQL/Compute relies on Databricks-managed NCC (Network Connectivity Config) private endpoints rather than customer VNet injection"
+    ],
+    "sources": [
+      {
+        "title": "Databricks Security & Trust Center: Private Link",
+        "url": "https://docs.databricks.com/en/security/network/classic/private-link.html"
+      }
+    ]
+  },
+  {
+    "id": "eco-new-arch-02",
+    "source": "PySpark Handbook",
+    "category": "Compute & Optimization",
+    "niche": "Multi-Engine Spark 4.0 Adapters",
+    "difficulty": "ARCHITECT",
+    "question": "Architect a Cloud-Portable PySpark 4.0 Platform Layer Supporting Microsoft Fabric OneLake, AWS EMR Glue, GCP Dataproc Serverless, and Kubernetes Spark Operator.",
+    "answer": "### 1. Decoupled Control & Client Plane\n- Standardize thin client services on **Spark Connect** (`sc://`) with ANSI mode enabled (`try_cast` for defensive casting) and structured JSON logging.\n\n### 2. Platform Adapter Boundary\n- Abstract cloud-specific secrets and filesystem prefixes behind typed Python `Protocol` adapters (`06_platform_adapters`):\n  - **Microsoft Fabric**: `notebookutils` credential injection + `abfss://<workspace>@onelake.dfs.fabric.microsoft.com/...` + `spark.sql.parquet.vorder.enabled=true` for Direct Lake.\n  - **AWS EMR**: Glue Data Catalog Hive metastore sync + S3A Magic Committer (`fs.s3a.committer.name=magic`) for zero-rename atomic writes.\n  - **GCP Dataproc Serverless**: `spark-bigquery-with-dependencies` indirect GCS staging + CMEK encryption.\n  - **Kubernetes**: Spark Operator `SparkApplication` CRD paired with **Volcano** gang scheduling to prevent executor pod deadlocks under cluster saturation.",
+    "constraints": [
+      "Business transformation code must remain 100% cloud-agnostic",
+      "Zero `dbfs:/` or `mssparkutils` hardcoding in core transformation modules"
+    ],
+    "tradeoffs": [
+      "Adapter abstraction adds thin boilerplate vs. direct vendor SDK calls, but prevents expensive multi-cloud rewrites"
+    ],
+    "sources": [
+      {
+        "title": "Apache Spark 4.0 Documentation",
+        "url": "https://spark.apache.org/docs/latest/"
+      }
+    ]
   }
 ]

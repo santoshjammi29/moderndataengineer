@@ -118,7 +118,7 @@ npm test
 3. **Google BM25F Search Engine (`src/__tests__/features.google-search-algo.test.ts`)**: BM25F scoring, typo tolerance, prefix matching, and ranking accuracy.
 4. **Whiteboard Learning & Blueprint Integrity (`src/__tests__/features.whiteboards-learning.test.tsx` & `features.whiteboards-integrity.test.ts`)**: 52 blueprints, multi-persona metadata structures, disk asset presence and minimum byte size, and 7 architectural categories.
 5. **Keyword Filter Bar (`src/__tests__/features.architecture-keyword-filters.test.tsx`)**: 36-keyword scenario filter logic across 6 domain groups.
-6. **Databricks Coding Hub (`src/__tests__/features.code-practice-databricks.test.tsx`)**: Unified operations, memory triage views, 20-page Level 100-400 manual, and category filtering.
+6. **Databricks Coding Hub (`src/__tests__/features.code-practice-databricks.test.tsx`)**: Unified operations, memory triage views, 20-page Level 1-4 manual, and category filtering.
 7. **Target Company Intel Hub (`src/__tests__/features.company-research-client.test.tsx` & `features.company-research.test.tsx`)**: Triple view modes (Compact Grid, Split Workbench, Comparison Table), in-card drawer tabs, GCC hub filtering, and 1-click clipboard prompt copying.
 8. **PDF Download API Route (`src/__tests__/features.pdf-download-route.test.ts`)**: Security against path traversal, attachment headers, and streaming responses across all 11 approved PDFs.
 9. **Collection Shuffle Engine (`src/__tests__/features.shuffle-engine.test.ts`)**: Unbiased Knuth Fisher–Yates distribution, deterministic seed repeatability, and non-mutating array operations.

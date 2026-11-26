@@ -27,11 +27,11 @@
       "accentColor": "#00A3E0",
       "pdf": "/cheatsheets/pdf/databricks_sparksql_cheatsheet.pdf",
       "pdfSize": "912 KB",
-      "poster": "/cheatsheets/images/databricks_sparksql_poster.png",
+      "poster": "/cheatsheets/images/databricks_sparksql_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [
-        "/cheatsheets/images/databricks_sparksql_page_1.png",
-        "/cheatsheets/images/databricks_sparksql_page_2.png"
+        "/cheatsheets/images/databricks_sparksql_page_1.webp",
+        "/cheatsheets/images/databricks_sparksql_page_2.webp"
       ],
       "html": "/cheatsheets/html/sparksql.html",
       "cardCount": 12
@@ -45,11 +45,11 @@
       "accentColor": "#E25A1C",
       "pdf": "/cheatsheets/pdf/databricks_pyspark_cheatsheet.pdf",
       "pdfSize": "868 KB",
-      "poster": "/cheatsheets/images/databricks_pyspark_poster.png",
+      "poster": "/cheatsheets/images/databricks_pyspark_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [
-        "/cheatsheets/images/databricks_pyspark_page_1.png",
-        "/cheatsheets/images/databricks_pyspark_page_2.png"
+        "/cheatsheets/images/databricks_pyspark_page_1.webp",
+        "/cheatsheets/images/databricks_pyspark_page_2.webp"
       ],
       "html": "/cheatsheets/html/pyspark.html",
       "cardCount": 12
@@ -63,11 +63,11 @@
       "accentColor": "#8B5CF6",
       "pdf": "/cheatsheets/pdf/databricks_spark_core_cheatsheet.pdf",
       "pdfSize": "878 KB",
-      "poster": "/cheatsheets/images/databricks_spark_core_poster.png",
+      "poster": "/cheatsheets/images/databricks_spark_core_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [
-        "/cheatsheets/images/databricks_spark_core_page_1.png",
-        "/cheatsheets/images/databricks_spark_core_page_2.png"
+        "/cheatsheets/images/databricks_spark_core_page_1.webp",
+        "/cheatsheets/images/databricks_spark_core_page_2.webp"
       ],
       "html": "/cheatsheets/html/spark_core.html",
       "cardCount": 12
@@ -81,11 +81,11 @@
       "accentColor": "#10B981",
       "pdf": "/cheatsheets/pdf/databricks_python_cheatsheet.pdf",
       "pdfSize": "878 KB",
-      "poster": "/cheatsheets/images/databricks_python_poster.png",
+      "poster": "/cheatsheets/images/databricks_python_poster.webp",
       "posterDimensions": "4162 × 2924",
       "pageImages": [
-        "/cheatsheets/images/databricks_python_page_1.png",
-        "/cheatsheets/images/databricks_python_page_2.png"
+        "/cheatsheets/images/databricks_python_page_1.webp",
+        "/cheatsheets/images/databricks_python_page_2.webp"
       ],
       "html": "/cheatsheets/html/python.html",
       "cardCount": 12

@@ -245,27 +245,27 @@ A common failure mode of technical tutorials is overloading beginners with opera
 
 ```mermaid
 flowchart TD
-    T1["Tier 1: Foundations & Mental Model<br/>(Level 100)<br/>Target: Novice<br/>Focus: 'What is it?' +<br/>First-principles analogy + Hello<br/>World"]
-    T2["Tier 2: Core Mechanics & Pragmatic<br/>Implementation (Level 200)<br/>Target: Mid-level<br/>Focus: 'How does it work?' +<br/>Idiomatic code + Unit tests"]
-    T3["Tier 3: Complex Scenarios & Edge<br/>Cases (Level 300)<br/>Target: Senior<br/>Focus: 'Where does it break?' +<br/>Concurrency, memory, scale,<br/>failure modes"]
-    T4["Tier 4: Production Hardening &<br/>Staff Engineering (Level 400)<br/>Target: Lead / Architect<br/>Focus: 'What are the enterprise<br/>trade-offs?' + FinOps, security,<br/>triage runbooks"]
+    T1["Tier 1: Foundations & Mental Model<br/>(Level 1)<br/>Target: Novice<br/>Focus: 'What is it?' +<br/>First-principles analogy + Hello<br/>World"]
+    T2["Tier 2: Core Mechanics & Pragmatic<br/>Implementation (Level 2)<br/>Target: Mid-level<br/>Focus: 'How does it work?' +<br/>Idiomatic code + Unit tests"]
+    T3["Tier 3: Complex Scenarios & Edge<br/>Cases (Level 3)<br/>Target: Senior<br/>Focus: 'Where does it break?' +<br/>Concurrency, memory, scale,<br/>failure modes"]
+    T4["Tier 4: Production Hardening &<br/>Staff Engineering (Level 4)<br/>Target: Lead / Architect<br/>Focus: 'What are the enterprise<br/>trade-offs?' + FinOps, security,<br/>triage runbooks"]
 
     T1 --> T2 --> T3 --> T4
 ```
 
-1. **Tier 1 (Level 100 - Foundations)**:
+1. **Tier 1 (Level 1 - Foundations)**:
    - Concepts explained through physical or mechanical analogies.
    - Minimal runnable example ($\le 15$ lines of code).
    - Zero esoteric jargon; all foundational vocabulary explicitly defined.
-2. **Tier 2 (Level 200 - Core Mechanics)**:
+2. **Tier 2 (Level 2 - Core Mechanics)**:
    - Standard idiomatic implementation.
    - Accompanying unit test assertions.
    - Algorithmic Big-O time and space complexity annotations.
-3. **Tier 3 (Level 300 - Edge Cases & Performance)**:
+3. **Tier 3 (Level 3 - Edge Cases & Performance)**:
    - What happens when inputs are malicious, empty, or $10^9$ elements?
    - Concurrency race conditions, memory pressure, and garbage collection behavior.
    - Profiling and benchmarking traces.
-4. **Tier 4 (Level 400 - Production Hardening & Architecture)**:
+4. **Tier 4 (Level 4 - Production Hardening & Architecture)**:
    - Multi-tenant security, zero trust boundaries, and dynamic masking.
    - FinOps cost optimization and compute scaling economics.
    - Incident triage runbooks and post-mortem defense playbooks.
@@ -281,7 +281,7 @@ When creating a new exercise or coding drill, adhere strictly to this template:
 ```markdown
 # [Module ID]: [Descriptive Title]
 
-> **Tier**: [Level 100/200/300/400] | **Difficulty**: [Beginner/Intermediate/Advanced]
+> **Tier**: [Level 1/200/300/400] | **Difficulty**: [Beginner/Intermediate/Advanced]
 > **Prerequisites**: [Module-X, Concept-Y] | **Estimated Time**: [15-30 mins]
 > **Key Concepts**: `keyword1`, `keyword2`, `keyword3`
 

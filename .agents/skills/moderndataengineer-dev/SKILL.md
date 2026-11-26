@@ -25,7 +25,7 @@ You are working on **Lakehouse Architect / Modern Data Engineer** (`moderndataen
 │   │   ├── mindmap/                       # Standalone route (cross-links to /concepts single-roof view)
 │   │   ├── qa-prep/                       # 7,135 Q&A scenarios (questions.json [3,446] + data_de.json [3,689])
 │   │   ├── architecture/                  # 3,305 architecture scenarios + 36-keyword filter bar + 52 whiteboard blueprints
-│   │   ├── code-practice/                 # Unified Code Practice Hub: 178 Drills, 148+ Databricks Operations & Triage, 15 Polyglot Matrix, 62 Python Runbooks, 20-Page Level 100-400 Technical Manual
+│   │   ├── code-practice/                 # Unified Code Practice Hub: 178 Drills, 148+ Databricks Operations & Triage, 15 Polyglot Matrix, 62 Python Runbooks, 20-Page Level 1-4 Technical Manual
 │   │   │   └── databricks/                # Dedicated Databricks Coding Hub (148+ operations, memory triage & 20-Page PDF manual download)
 │   │   ├── learning-paths/                # 13 structured career paths (Fabric, Databricks, Azure, AWS, GCP, Snowflake, and 16-Week Production Lakehouse Track)
 │   │   ├── company-research/              # 156 GCC company profiles (BigTech, FinTech, GCCs)

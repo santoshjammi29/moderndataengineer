@@ -37,7 +37,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Catalyst Optimizer & Execution Plans (24 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -47,7 +47,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (8 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -63,7 +63,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (8 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -79,7 +79,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -98,7 +98,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Memory Management & Tungsten Engine (26 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -111,7 +111,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (15 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (15 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -134,7 +134,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -153,7 +153,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Partitioning, Shuffling & Skew Mitigation (25 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -163,7 +163,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -177,7 +177,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (12 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (12 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -197,7 +197,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -215,7 +215,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Join Strategies & Broadcast Mechanics (2 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -230,7 +230,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Streaming, Vectorization & UDFs (8 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -243,7 +243,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -253,7 +253,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -267,7 +267,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Core Architecture & RDD/DataFrame Primitives (50 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -280,7 +280,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (26 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (26 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -314,7 +314,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (15 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (15 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -337,7 +337,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -359,7 +359,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Unity Catalog 3-Tier Governance & Security (42 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (7 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -374,7 +374,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (11 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (11 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -393,7 +393,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (9 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -410,7 +410,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (15 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (15 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -438,7 +438,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Delta Lake 3.x ACID Mechanics & Transaction Log (10 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -450,7 +450,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -462,7 +462,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -471,7 +471,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -485,7 +485,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Physical Layout, Liquid Clustering & Deletion Vectors (12 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -494,7 +494,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -508,7 +508,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -519,7 +519,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -534,7 +534,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Workflows, DLT & Lakeflow Pipelines (18 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -546,7 +546,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -560,7 +560,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (7 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -575,7 +575,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -589,7 +589,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Workspace, Serverless Compute & FinOps (50 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (10 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (10 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -607,7 +607,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (16 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (16 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -631,7 +631,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (11 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (11 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -650,7 +650,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (13 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -681,7 +681,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Query Execution Plans & Optimization (13 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -691,7 +691,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -704,7 +704,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -717,7 +717,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -731,7 +731,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Window Functions & Analytical Framing (9 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -740,7 +740,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -752,7 +752,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -769,7 +769,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: CTEs, Recursion & Set Operations (4 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -778,7 +778,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -794,7 +794,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Indexing Strategies & Storage Architecture (15 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -806,7 +806,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -817,7 +817,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (7 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -832,7 +832,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -846,7 +846,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Transactions, Locking & Concurrency (50 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (12 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (12 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -866,7 +866,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (13 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -887,7 +887,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (17 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (17 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -912,7 +912,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (8 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -938,7 +938,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Distributed Consensus & Replication (8 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -948,7 +948,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -959,7 +959,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -975,7 +975,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Storage Engines, LSM & B-Trees (4 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -984,7 +984,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -994,7 +994,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1008,7 +1008,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Sharding, Partitioning & Traffic Control (6 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1017,7 +1017,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1026,7 +1026,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1035,7 +1035,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1051,7 +1051,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Compute-Storage Decoupling & Modern MPP (61 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1064,7 +1064,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (13 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1085,7 +1085,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (20 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (20 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1113,7 +1113,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (23 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (23 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1154,7 +1154,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Open Table Formats (Iceberg, Delta, Hudi) (22 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1163,7 +1163,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1175,7 +1175,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1189,7 +1189,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (11 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (11 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1213,7 +1213,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Real-Time Streaming & Watermarking (3 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1223,7 +1223,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1237,7 +1237,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Engine Vectorization & Hardware Acceleration (4 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1247,7 +1247,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1256,7 +1256,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1270,7 +1270,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Distributed State, CDC & Lakehouse Ingestion (47 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1284,7 +1284,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (9 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1301,7 +1301,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (32 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (32 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1351,7 +1351,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Cloud Object Storage & Prefix Optimization (4 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1360,7 +1360,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1370,7 +1370,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1384,7 +1384,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Columnar & Row Storage Formats (Parquet/ORC/Avro) (13 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1396,7 +1396,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1408,7 +1408,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1426,7 +1426,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Storage Compaction, Pruning & Data Layout (38 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1439,7 +1439,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (16 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (16 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1463,7 +1463,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (10 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (10 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1481,7 +1481,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (7 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1506,7 +1506,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Distributed Theorems & Trade-Offs (7 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1516,7 +1516,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1526,7 +1526,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1542,7 +1542,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Fault Tolerance, Rate Limiting & High Availability (7 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1556,7 +1556,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1570,7 +1570,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Caching Topologies & Synchronization (4 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1579,7 +1579,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1588,7 +1588,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1603,7 +1603,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Event-Driven Topologies & Decoupled Ingestion (50 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1613,7 +1613,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (13 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1634,7 +1634,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (26 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (26 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1668,7 +1668,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (9 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1695,7 +1695,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Project Architecture & Modeling Primitives (24 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (8 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1711,7 +1711,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (7 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1726,7 +1726,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1739,7 +1739,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1756,7 +1756,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Incremental Materialization & Microbatch (7 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1766,7 +1766,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1775,7 +1775,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1786,7 +1786,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1800,7 +1800,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Contracts, Testing & Governance (10 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1810,7 +1810,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1820,7 +1820,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1830,7 +1830,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1847,7 +1847,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: dbt Mesh & Semantic Layer Modeling (16 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1860,7 +1860,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1874,7 +1874,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1897,7 +1897,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Core Engine & Decoupled Scheduler (11 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1906,7 +1906,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1917,7 +1917,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1931,7 +1931,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1945,7 +1945,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: DAG Authoring, Dynamic Task Mapping & Operators (21 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (9 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1962,7 +1962,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1975,7 +1975,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -1987,7 +1987,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2003,7 +2003,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Orchestration Resiliency, Datasets & Connections (20 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2014,7 +2014,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (7 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2029,7 +2029,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2041,7 +2041,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2065,7 +2065,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: OneLake & Cross-Cloud Shortcuts (18 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2076,7 +2076,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2088,7 +2088,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2101,7 +2101,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2120,7 +2120,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Direct Lake Mode & Semantic Models (5 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2131,7 +2131,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2146,7 +2146,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Workload Engines, F-SKU Capacities & Governance (16 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2155,7 +2155,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2168,7 +2168,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2180,7 +2180,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2204,7 +2204,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Control Flow, Pipelines & Parameterization (12 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2214,7 +2214,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2225,7 +2225,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2236,7 +2236,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2253,7 +2253,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Integration Runtimes (Azure IR / Self-Hosted IR) (4 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2262,7 +2262,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2271,7 +2271,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2280,7 +2280,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2294,7 +2294,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Data Movement, Managed VNets & Security (11 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2304,7 +2304,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2317,7 +2317,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2328,7 +2328,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2347,7 +2347,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: VertiPaq Engine & Columnar Compression (5 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2356,7 +2356,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2365,7 +2365,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2374,7 +2374,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2389,7 +2389,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: DAX Evaluation Context & Calculations (6 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2399,7 +2399,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2409,7 +2409,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2424,7 +2424,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Composite Models, Semantic Refresh & Aggregations (14 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2433,7 +2433,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2445,7 +2445,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2458,7 +2458,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2480,7 +2480,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: CPython Internals & Memory Architecture (10 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2489,7 +2489,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2500,7 +2500,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2511,7 +2511,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2527,7 +2527,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Vectorized & In-Memory IPC (Arrow / Polars) (2 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2536,7 +2536,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2550,7 +2550,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Language Idioms, Generators & Type Contracts (10 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2561,7 +2561,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2573,7 +2573,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2582,7 +2582,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2602,7 +2602,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Dimensional Modeling & Kimball Standards (6 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2613,7 +2613,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2622,7 +2622,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2637,7 +2637,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: ETL Architecture, CDC & Idempotency (57 Topics)</b> — <i>Click to expand functional domain</i></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (9 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2654,7 +2654,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (10 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (10 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2672,7 +2672,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (17 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (17 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|
@@ -2697,7 +2697,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (21 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (21 Topics)</b></summary>
 
 | # | Topic / Concept | Difficulty | Architectural Definition & Core Principle |
 |:---:|---|:---:|---|

@@ -145,7 +145,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                     "id": f"{repo_info['slug']}-{file_stem}",
                     "type": "notebook_recipe" if nb_file.suffix == ".py" else "empirical_notebook",
                     "title": raw_title,
-                    "difficulty": "L300",
+                    "difficulty": "L3",
                     "relative_path": str(nb_file.relative_to(repo_dir)),
                     "pillars": repo_info["pillars"],
                 })
@@ -159,7 +159,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                 "id": f"{repo_info['slug']}-{ex_file.stem}",
                 "type": "sql_exercise",
                 "title": f"SQL: {title}",
-                "difficulty": "L200",
+                "difficulty": "L2",
                 "relative_path": str(ex_file.relative_to(repo_dir)),
                 "pillars": repo_info["pillars"],
             })
@@ -176,7 +176,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                     "type": "curriculum_module",
                     "title": mod_title,
                     "module": mod.name,
-                    "difficulty": "L200",
+                    "difficulty": "L2",
                     "relative_path": str(readme.relative_to(repo_dir)) if readme.exists() else str(mod.relative_to(repo_dir)),
                     "pillars": repo_info["pillars"],
                 })
@@ -191,7 +191,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                     "id": f"{repo_info['slug']}-{proj.name}",
                     "type": "production_project",
                     "title": f"Project: {proj_title}",
-                    "difficulty": "L400",
+                    "difficulty": "L4",
                     "relative_path": str(proj.relative_to(repo_dir)),
                     "pillars": repo_info["pillars"],
                 })
@@ -205,7 +205,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                 "id": f"{repo_info['slug']}-rb-{rb_file.stem}",
                 "type": "incident_runbook",
                 "title": f"Incident Runbook: {title}",
-                "difficulty": "L400",
+                "difficulty": "L4",
                 "relative_path": str(rb_file.relative_to(repo_dir)),
                 "pillars": repo_info["pillars"],
             })
@@ -222,7 +222,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                     "id": f"{repo_info['slug']}-doc-{doc_file.stem}",
                     "type": "architecture_blueprint",
                     "title": f"Architecture: {title}",
-                    "difficulty": "L400",
+                    "difficulty": "L4",
                     "relative_path": str(doc_file.relative_to(repo_dir)),
                     "pillars": repo_info["pillars"],
                 })
@@ -236,7 +236,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                 "id": f"{repo_info['slug']}-cs-{cs_file.stem}",
                 "type": "reference_cheatsheet",
                 "title": f"Cheat Sheet: {title}",
-                "difficulty": "L200",
+                "difficulty": "L2",
                 "relative_path": str(cs_file.relative_to(repo_dir)),
                 "pillars": repo_info["pillars"],
             })
@@ -251,7 +251,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
                     "id": f"interview-{p_folder}-{p_file.stem}",
                     "type": "knowledge_pillar" if p_folder == "pillars" else "interview_playbook",
                     "title": title,
-                    "difficulty": "L300",
+                    "difficulty": "L3",
                     "relative_path": str(p_file.relative_to(repo_dir)),
                     "pillars": repo_info["pillars"],
                 })
@@ -263,7 +263,7 @@ def generate_handbook_manifest(repo_key: str, repo_info: dict[str, Any]) -> dict
             "id": f"{repo_info['slug']}-curriculum-topics",
             "type": "curriculum_topics_catalog",
             "title": f"Topics Directory: {repo_info['name']}",
-            "difficulty": "L200",
+            "difficulty": "L2",
             "relative_path": "topics/README.md",
             "pillars": repo_info["pillars"],
         })

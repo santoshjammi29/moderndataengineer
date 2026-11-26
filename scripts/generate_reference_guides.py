@@ -1593,15 +1593,15 @@ def render_images(pdf_path, prefix, dpi=250):
 
     for i, page in enumerate(doc):
         pix = page.get_pixmap(dpi=dpi)
-        img_name = f"{prefix}_page_{i+1}.png"
+        img_name = f"{prefix}_page_{i+1}.webp"
         img_path = os.path.join(IMG_DIR, img_name)
-        pix.save(img_path)
+        Image.frombytes("RGB", [pix.width, pix.height], pix.samples).save(img_path, "WEBP", quality=90, method=6)
         page_images.append(img_path)
         print(f"  ✓ Rendered Page {i+1}: {img_name} ({pix.width}x{pix.height})")
 
     # If 2 pages, create side-by-side poster
     if len(page_images) == 2:
-        poster_name = f"{prefix}_poster.png"
+        poster_name = f"{prefix}_poster.webp"
         poster_path = os.path.join(IMG_DIR, poster_name)
         img1 = Image.open(page_images[0])
         img2 = Image.open(page_images[1])
@@ -1613,7 +1613,7 @@ def render_images(pdf_path, prefix, dpi=250):
         poster = Image.new("RGB", (total_width, max_height), color=(8, 12, 21))
         poster.paste(img1, (0, 0))
         poster.paste(img2, (img1.width + gap, 0))
-        poster.save(poster_path, quality=95)
+        poster.save(poster_path, "WEBP", quality=90, method=6)
         print(f"  ✓ Created Side-by-Side Panoramic Poster: {poster_name} ({total_width}x{max_height})")
 
 def inject_bookmarks_and_metadata(pdf_path, toc_entries, metadata):

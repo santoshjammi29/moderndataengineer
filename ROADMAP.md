@@ -16,7 +16,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Catalyst Optimizer & Execution Plans (24 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `spark-managed-tables` — **Managed vs External Tables** (`🟢 Easy`): Catalog table definitions specifying whether Spark manages both the metadata and the physical storage data....
 - [ ] `databricks-temp-views-global-temp-views` — **Temp Views & Global Temp Views** (`🟢 Easy`): Session-scoped and cluster-scoped virtual tables that provide temporary SQL query interfaces over DataFrames without per...
@@ -24,7 +24,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (8 Topics)</b></summary>
 
 - [ ] `spark-aqe` — **Adaptive Query Execution (AQE)** (`🟡 Intermediate`): An optimization framework that dynamically adjusts Spark physical execution plans during runtime based on intermediate s...
 - [ ] `spark-catalyst` — **Catalyst Optimizer** (`🟡 Intermediate`): The core query optimization engine powering Spark SQL and the DataFrame API....
@@ -38,7 +38,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (8 Topics)</b></summary>
 
 - [ ] `spark-broadcast-nested-loop-join-trap` — **BroadcastNestedLoopJoin Anti-Pattern** (`🔴 Advanced`): The most dangerous physical join operator in Apache Spark, executing an $O(M \times N)$ Cartesian product comparison whe...
 - [ ] `spark-catalyst-analysis-phase` — **Catalyst Optimizer — Analysis Phase** (`🔴 Advanced`): The first phase of Spark's Catalyst Optimizer where unresolved logical plans are validated against the catalog to produc...
@@ -52,7 +52,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 - [ ] `spark-aqe-deep-dive` — **Adaptive Query Execution (AQE) Runtime Optimization** (`🟣 Architect`): Dynamic query re-optimization framework in Apache Spark inspecting physical shuffle statistics at stage boundaries to re...
 - [ ] `prod-concept-aqe-boundaries` — **AQE Query Stage Re-Optimization Boundaries** (`🟣 Architect`): The runtime execution boundaries in Apache Spark where completed shuffle stages materialize partition statistics, enabli...
@@ -69,7 +69,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Memory Management & Tungsten Engine (26 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 - [ ] `spark-broadcast-variable` — **Broadcast Variable** (`🟡 Intermediate`): A Spark mechanism to efficiently distribute a read-only value (e.g., a lookup table or configuration map) to every execu...
 - [ ] `spark-cache-persist` — **Cache vs Persist Operations** (`🟡 Intermediate`): DataFrame operations used to store intermediate execution results in memory or disk to avoid recalculations....
@@ -80,7 +80,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (15 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (15 Topics)</b></summary>
 
 - [ ] `spark-memory-overhead` — **Executor Memory Overhead** (`🔴 Advanced`): The amount of non-heap off-JVM memory reserved per executor for native processes, Python workers, and JVM internal overh...
 - [ ] `spark-gc-g1gc` — **G1GC Garbage Collector in Spark** (`🔴 Advanced`): The Garbage-First (G1) GC is the recommended JVM garbage collector for Spark executors, offering predictable pause times...
@@ -101,7 +101,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 - [ ] `spark-driver-oom` — **Driver OutOfMemory (OOM)** (`🟣 Architect`): A fatal Spark application failure where the driver JVM process exhausts its heap memory, typically caused by collecting ...
 - [ ] `spark-executor-oom` — **Executor OutOfMemory (OOM)** (`🟣 Architect`): A Spark task failure where an executor JVM process runs out of heap memory during task execution, typically caused by da...
@@ -118,7 +118,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Partitioning, Shuffling & Skew Mitigation (25 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `spark-narrow-transformation` — **Narrow Transformation** (`🟢 Easy`): A Spark transformation where each output partition depends on exactly one input partition, requiring no data movement ac...
 - [ ] `spark-wide-transformation` — **Wide Transformation** (`🟢 Easy`): A Spark transformation where each output partition may depend on multiple input partitions from different executors, req...
@@ -126,7 +126,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 - [ ] `spark-coalesce-vs-repartition` — **coalesce() vs repartition()** (`🟡 Intermediate`): Two Spark functions for changing partition count: coalesce() reduces partitions without a full shuffle by merging local ...
 - [ ] `spark-dynamic-partition-overwrite` — **Dynamic Partition Overwrite** (`🟡 Intermediate`): A Spark write mode that overwrites only the partitions present in the incoming DataFrame, leaving partitions not touched...
@@ -138,7 +138,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (12 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (12 Topics)</b></summary>
 
 - [ ] `aqe-dynamic-join-switching` — **AQE Dynamic Join Strategy Switching** (`🔴 Advanced`): A runtime optimization in Adaptive Query Execution that converts planned SortMergeJoins into BroadcastHashJoins based on...
 - [ ] `aqe-skew-join-splitting` — **AQE Dynamic Skew Join Splitting** (`🔴 Advanced`): An AQE optimization that automatically identifies skewed shuffle partitions at runtime and splits them into smaller sub-...
@@ -156,7 +156,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (5 Topics)</b></summary>
 
 - [ ] `spark-salted-join` — **Salted Join (Skew Mitigation)** (`🟣 Architect`): A technique to handle data skew in Spark joins by appending a random integer ('salt') to skewed keys, exploding the smal...
 - [ ] `spark-shuffle-fetch-failed` — **Shuffle Fetch Failed** (`🟣 Architect`): A Spark task failure that occurs when a downstream task cannot retrieve shuffle data from an upstream executor, typicall...
@@ -172,7 +172,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Join Strategies & Broadcast Mechanics (2 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 - [ ] `broadcast-join-auto-threshold-tuning-concept` — **Broadcast Join Auto-Threshold Tuning** (`🟡 Intermediate`): Configuring `spark.sql.autoBroadcastJoinThreshold` to safely broadcast lookup tables without driver OutOfMemoryError....
 - [ ] `spark-semi-anti-join` — **Semi Join & Anti Join** (`🟡 Intermediate`): Spark join types that filter the left table based on existence (semi) or non-existence (anti) of matching rows in the ri...
@@ -185,7 +185,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Streaming, Vectorization & UDFs (8 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 - [ ] `databricks-foreachbatch-pattern` — **foreachBatch Pattern** (`🟡 Intermediate`): A Structured Streaming sink API method that processes each micro-batch as a static DataFrame, enabling custom multi-tabl...
 - [ ] `spark-pyspark-pandas-api` — **PySpark Pandas API on Spark (formerly Koalas)** (`🟡 Intermediate`): A PySpark API that implements the pandas DataFrame interface on top of distributed Spark DataFrames, allowing pandas cod...
@@ -196,7 +196,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 - [ ] `spark-pandas-udf-scalar` — **Pandas UDF — SCALAR Type** (`🔴 Advanced`): A vectorised PySpark UDF that receives a batch of column values as a Pandas Series, applies a Python function, and retur...
 - [ ] `spark-watermark` — **Structured Streaming Watermark** (`🔴 Advanced`): A Spark Structured Streaming mechanism that defines how late an event can arrive and still be included in a windowed agg...
@@ -204,7 +204,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `spark-streaming-checkpointing` — **Structured Streaming Checkpointing & Exactly-Once Semantics** (`🟣 Architect`): End-to-end fault tolerance mechanism guaranteeing each incoming stream event is processed and written to sink storage ex...
 
@@ -216,7 +216,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Core Architecture & RDD/DataFrame Primitives (50 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (5 Topics)</b></summary>
 
 - [ ] `spark-cte` — **Common Table Expression (CTE) in Spark SQL** (`🟢 Easy`): A named temporary result set defined within a WITH clause in Spark SQL that can be referenced multiple times in the same...
 - [ ] `spark-dataframe` — **DataFrame** (`🟢 Easy`): A distributed collection of data organized into named columns, equivalent to a table in a relational database....
@@ -227,7 +227,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (26 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (26 Topics)</b></summary>
 
 - [ ] `spark-accumulator` — **Accumulator** (`🟡 Intermediate`): A Spark shared variable that allows tasks running on executors to additively update a counter or collection, which the d...
 - [ ] `spark-avro-format` — **Apache Avro Format in Spark** (`🟡 Intermediate`): A row-oriented binary serialisation format used in Kafka/streaming pipelines and schema-registry-integrated workflows, s...
@@ -259,7 +259,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (15 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (15 Topics)</b></summary>
 
 - [ ] `spark-auto-loader` — **Databricks Auto Loader** (`🔴 Advanced`): A Databricks-native structured streaming source that incrementally ingests new files from cloud storage (S3/ADLS/GCS) as...
 - [ ] `spark-delta-cdf` — **Delta Lake Change Data Feed (CDF)** (`🔴 Advanced`): A Delta Lake feature that records row-level change events (INSERT, UPDATE_PREIMAGE, UPDATE_POSTIMAGE, DELETE) in a speci...
@@ -280,7 +280,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 - [ ] `databricks-photon-engine-internals` — **Databricks Photon Native C++ Engine** (`🟣 Architect`): A ground-up rewrite of Apache Spark's execution engine in native C++, utilizing SIMD vectorized instruction sets to acce...
 - [ ] `photon-vectorized-cpp-engine` — **Databricks Photon Vectorized Execution Engine** (`🟣 Architect`): A native, high-performance vectorized query engine written in C++ designed to accelerate modern lakehouse SQL and DataFr...
@@ -300,7 +300,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Unity Catalog 3-Tier Governance & Security (42 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (7 Topics)</b></summary>
 
 - [ ] `databricks-cluster-policy` — **Cluster Policy** (`🟢 Easy`): A Cluster Policy is an administrative governance rule set that restricts the configuration options available to users wh...
 - [ ] `databricks-data-explorer` — **Data Explorer** (`🟢 Easy`): Data Explorer is the visual UI tool in the Databricks Workspace used to discover, manage, inspect, and grant permissions...
@@ -313,7 +313,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (11 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (11 Topics)</b></summary>
 
 - [ ] `databricks-compute-policies-cluster-governance` — **Compute Policies & Cluster Governance** (`🟡 Intermediate`): Administrative governance guardrails that enforce compute provisioning boundaries—including allowed VM types, max worker...
 - [ ] `databricks-data-lineage` — **Data Lineage** (`🟡 Intermediate`): The automated, real-time metadata tracking engine in Unity Catalog that captures column-level and table-level data flow ...
@@ -330,7 +330,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (9 Topics)</b></summary>
 
 - [ ] `databricks-audit-logging` — **Audit Logging** (`🔴 Advanced`): Audit Logging captures, records, and exports detailed security audit trails of all user and system activities occurring ...
 - [ ] `databricks-dbu-system-billing-usage` — **Databricks DBU Allocation via system.billing.usage** (`🔴 Advanced`): The system catalog telemetry table in Unity Catalog that records minute-by-minute Databricks Unit (DBU) consumption acro...
@@ -345,7 +345,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (15 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (15 Topics)</b></summary>
 
 - [ ] `databricks-data-mesh-on-databricks` — **Data Mesh on Databricks** (`🟣 Architect`): An architectural implementation of the Data Mesh paradigm on Databricks, treating data as a product owned by decentraliz...
 - [ ] `databricks-databricks---dbt-integration` — **Databricks + dbt Integration** (`🟣 Architect`): The production architecture pairing dbt with Databricks SQL Serverless and Unity Catalog, leveraging the dbt-databricks ...
@@ -371,7 +371,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Delta Lake 3.x ACID Mechanics & Transaction Log (10 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 - [ ] `databricks-acid-transactions` — **ACID Transactions** (`🟢 Easy`): The set of transactional guarantees (Atomicity, Consistency, Isolation, Durability) enforced by Delta Lake on top of clo...
 - [ ] `databricks-delta-lake-databricks` — **Delta Lake (Databricks)** (`🟢 Easy`): Delta Lake is an open-source storage framework that brings ACID transactions, scalable metadata handling, and unified st...
@@ -381,7 +381,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 - [ ] `databricks-databricks-sql-warehouse` — **Databricks SQL Warehouse** (`🟡 Intermediate`): A Databricks SQL Warehouse is a specialized compute resource optimized for SQL workloads, business intelligence queries,...
 - [ ] `databricks-delta-time-travel` — **Delta Time Travel** (`🟡 Intermediate`): Delta Time Travel is the ability to query point-in-time historical snapshots of a Delta table using historical commit ve...
@@ -391,14 +391,14 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 - [ ] `databricks-serverless-sql-warehouse` — **Databricks Serverless SQL Warehouse** (`🔴 Advanced`): A fully managed, instant-starting compute tier in Databricks optimized for high-concurrency SQL and BI queries running i...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `research-concept-stream-to-table-commit-boundary` — **Stream-to-Table Commit Boundary** (`🟣 Architect`): The consistency boundary between a streaming engine's checkpoint progress and the durable commit visible in its table si...
 
@@ -410,14 +410,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Physical Layout, Liquid Clustering & Deletion Vectors (12 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `research-concept-liquid-clustering-mechanics` — **Delta Lake Liquid Clustering vs Hive Partitioning** (`🟢 Easy`): A physical data layout protocol that dynamically groups data along multiple columns without the rigidity, small-file exp...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 - [ ] `databricks-cluster-sizing-autoscaling` — **Cluster Sizing & Autoscaling** (`🟡 Intermediate`): The operational strategy of balancing cluster node memory-to-core ratios and autoscaling worker limits to optimize workl...
 - [ ] `databricks-optimize-file-compaction` — **OPTIMIZE & File Compaction** (`🟡 Intermediate`): A Delta Lake table maintenance command that bin-packs small files (1MB–10MB) into optimal larger files (~1GB) to reduce ...
@@ -429,7 +429,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `databricks-delta-table-properties-configuration` — **Delta Table Properties & Configuration** (`🔴 Advanced`): Configurable table-level metadata properties in Delta Lake that govern engine behavior, including Change Data Feed enabl...
 - [ ] `databricks-liquid-clustering` — **Liquid Clustering** (`🔴 Advanced`): Delta Lake 3.x's next-generation data layout engine (`CLUSTER BY`) that organizes data along space-filling curves to opt...
@@ -438,7 +438,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 - [ ] `delta-lake-deletion-vectors` — **Delta Lake Deletion Vectors** (`🟣 Architect`): A storage optimization technique in Delta Lake that marks deleted or updated rows using lightweight bitmap index files i...
 - [ ] `prod-concept-delta-liquid-clustering` — **Delta Lake Liquid Clustering Architecture** (`🟣 Architect`): A modern, dynamic data layout architecture that organizes Delta Lake Parquet files along a space-filling Hilbert curve w...
@@ -451,7 +451,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Workflows, DLT & Lakeflow Pipelines (18 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 - [ ] `databricks-databricks-job` — **Databricks Job** (`🟢 Easy`): A Databricks Job is a scheduled or triggered execution unit that runs non-interactive code (notebooks, JARs, Python scri...
 - [ ] `databricks-databricks-workflow` — **Databricks Workflow** (`🟢 Easy`): Databricks Workflows is the fully managed, native orchestration service within Databricks that designs, schedules, and m...
@@ -461,7 +461,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 - [ ] `databricks-dbu-cost-model-billing` — **DBU Cost Model & Billing** (`🟡 Intermediate`): The consumption-based billing framework where platform workloads consume Databricks Units (DBUs) based on compute SKU ti...
 - [ ] `databricks-delta-live-tables-dlt` — **Delta Live Tables (DLT)** (`🟡 Intermediate`): Delta Live Tables (DLT) is a declarative ETL framework in Databricks that simplifies data pipeline development by managi...
@@ -473,7 +473,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (7 Topics)</b></summary>
 
 - [ ] `databricks-cdc-processing-auto-cdc-into` — **CDC Processing: AUTO CDC INTO** (`🔴 Advanced`): Declarative CDC processing primitives in Lakeflow pipelines that automatically reconcile out-of-order change logs and ma...
 - [ ] `databricks-delta-live-tables-dlt-expectations-concept` — **Databricks Delta Live Tables (DLT) Expectations** (`🔴 Advanced`): Declarative data quality rules (`@dlt.expect`, `@dlt.expect_or_drop`, `@dlt.expect_or_fail`) embedded into streaming pip...
@@ -486,7 +486,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `lakeflow-spark-declarative-pipelines-dlt` — **Lakeflow Spark Declarative Pipelines (DLT)** (`🟣 Architect`): A declarative framework for building, testing, and operating reliable lakehouse ETL pipelines with managed orchestration...
 
@@ -498,7 +498,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Workspace, Serverless Compute & FinOps (50 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (10 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (10 Topics)</b></summary>
 
 - [ ] `databricks-all-purpose-cluster` — **All-Purpose Cluster** (`🟢 Easy`): An All-Purpose Cluster is a shared interactive compute cluster designed for collaborative exploratory data analysis, int...
 - [ ] `databricks-choosing-compute-for-jobs` — **Choosing Compute for Jobs** (`🟢 Easy`): The architectural decision framework for matching workloads to compute tiers: Serverless (zero startup delay, auto-manag...
@@ -514,7 +514,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (16 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (16 Topics)</b></summary>
 
 - [ ] `databricks-ai-functions-for-data-engineers` — **AI Functions for Data Engineers** (`🟡 Intermediate`): Built-in SQL functions (`ai_query()`, `ai_classify()`, `ai_extract()`) in Databricks SQL that invoke foundation LLMs dir...
 - [ ] `databricks-auto-loader` — **Auto Loader** (`🟡 Intermediate`): Auto Loader is an optimized ingestion engine in Databricks that incrementally and efficiently ingests raw data files fro...
@@ -536,7 +536,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (11 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (11 Topics)</b></summary>
 
 - [ ] `databricks-databricks-asset-bundles-dabs` — **Databricks Asset Bundles (DABs)** (`🔴 Advanced`): Databricks Asset Bundles (DABs) is an Infrastructure-as-Code (IaC) framework that allows developers to define, test, and...
 - [ ] `research-concept-databricks-asset-bundles-promotion` — **Databricks Asset Bundles Multi-Environment Promotion** (`🔴 Advanced`): A declarative Infrastructure-as-Code (IaC) packaging framework that defines jobs, pipelines, notebooks, and permissions ...
@@ -553,7 +553,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (13 Topics)</b></summary>
 
 - [ ] `databricks-ci-cd-for-databricks-with-dabs` — **CI/CD for Databricks with DABs** (`🟣 Architect`): The continuous integration and continuous deployment (CI/CD) architecture for Databricks using Databricks Asset Bundles ...
 - [ ] `databricks-asset-bundles-dabs` — **Databricks Asset Bundles (DABs) Infrastructure-as-Code** (`🟣 Architect`): A declarative Infrastructure-as-Code (IaC) standard for authoring, testing, deploying, and version-controlling Databrick...
@@ -582,7 +582,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Query Execution Plans & Optimization (13 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `sql-iceberg-group-by` — **GROUP BY: Stream Aggregate vs Hash Aggregate** (`🟢 Easy`): A relational aggregation operator that collapses rows sharing identical key values into single summary rows via physical...
 - [ ] `sql-iceberg-order-by` — **ORDER BY: Quicksort vs External Merge Sort** (`🟢 Easy`): The physical sorting operator applied to an intermediate rowset to guarantee deterministic ordering across returned reco...
@@ -590,7 +590,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 - [ ] `sql-statistics-histograms` — **Database Statistics & Histograms** (`🟡 Intermediate`): System tables storing data distribution histograms used by the query optimizer to estimate rows and build execution plan...
 - [ ] `sql-query-store` — **Query Store** (`🟡 Intermediate`): A database feature that automatically captures history of queries, execution plans, and runtime statistics to simplify p...
@@ -601,7 +601,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 - [ ] `sql-iceberg-count-star-vs-count-1` — **COUNT(*) vs COUNT(1): Optimizer Equivalence & Semantics** (`🔴 Advanced`): The comparison between full-table tuple counting and scalar expression counting in SQL query engines....
 - [ ] `sql-parameter-sniffing-plan-cache` — **Parameter Sniffing & Query Plan Cache Mechanics** (`🔴 Advanced`): A database optimizer behavior where a query plan is compiled and cached using parameter values from its initial invocati...
@@ -612,7 +612,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `sql-physical-join-algorithms-loops-merge-hash` — **Physical Join Algorithms: Nested Loops, Merge, and Hash Joins** (`🟣 Architect`): The three physical execution operators employed by cost-based query optimizers to combine two data streams....
 
@@ -624,14 +624,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Window Functions & Analytical Framing (9 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `sql-row-number-vs-rank-vs-dense-rank` — **ROW_NUMBER() vs. RANK() vs. DENSE_RANK()** (`🟢 Easy`): The three primary SQL ranking window functions that assign integer ordinals to rows based on an ORDER BY specification w...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 - [ ] `sql-iceberg-recursive-ctes` — **Recursive CTEs: Anchor, Working Tables & Cycle Traps** (`🟡 Intermediate`): A hierarchical query structure that repeatedly executes an iterative subquery over intermediate working tables until an ...
 - [ ] `sql-qualify-clause-window-filtering` — **The QUALIFY Clause in Modern SQL** (`🟡 Intermediate`): A specialized filtering clause in modern analytical engines (Snowflake, BigQuery, Databricks) that filters the results o...
@@ -641,7 +641,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 - [ ] `gaps-and-islands-streak-tracking` — **Gaps & Islands Consecutive Sequence Analysis** (`🔴 Advanced`): The Gaps and Islands problem is a classical SQL analytical challenge that involves identifying contiguous sequences of r...
 - [ ] `sql-iceberg-partial-indexes` — **Partial & Filtered Indexes** (`🔴 Advanced`): A B-Tree index built over a subset of a table's rows defined by an explicit predicate (e.g. WHERE active = true or WHERE...
@@ -656,14 +656,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: CTEs, Recursion & Set Operations (4 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `sql-cte` — **Common Table Expression (CTE)** (`🟢 Easy`): A temporary named result set defined within the execution scope of a single SELECT, INSERT, UPDATE, or DELETE query....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 - [ ] `sql-iceberg-cursors` — **Database Cursors: Row-by-Row Penalty & Tempdb Spooling** (`🟡 Intermediate`): A database control structure that enables procedural, iterative traversal of individual query result set rows, incurring...
 - [ ] `sql-iceberg-lateral-joins` — **LATERAL Joins & CROSS APPLY** (`🟡 Intermediate`): A correlated join mechanism that allows an inline subquery or table-valued function to reference column values provided ...
@@ -677,7 +677,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Indexing Strategies & Storage Architecture (15 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 - [ ] `sql-iceberg-btree-indexes` — **B-Tree Indexes & Leaf Node Traversal** (`🟢 Easy`): Balanced multi-way search tree structures that maintain sorted key orders to facilitate logarithmic O(log N) point seeks...
 - [ ] `sql-clustered-index` — **Clustered Index** (`🟢 Easy`): A database index that determines the physical storage order of rows inside a table....
@@ -687,7 +687,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 - [ ] `sql-iceberg-stored-columns` — **Covering Indexes & Stored Columns (INCLUDE)** (`🟡 Intermediate`): Non-key column payloads appended directly to the leaf nodes of a B-Tree index to satisfy queries without visiting the pr...
 - [ ] `sql-iceberg-keyset-pagination` — **Keyset Pagination (Seek Method)** (`🟡 Intermediate`): An optimal pagination strategy that uses the values of the last retrieved row within an inequality filter to seek direct...
@@ -696,7 +696,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (7 Topics)</b></summary>
 
 - [ ] `azure-sql-optimized-locking` — **Azure SQL Optimized Locking** (`🔴 Advanced`): Optimized Locking is a database engine capability in Azure SQL that replaces traditional multi-granularity page/row lock...
 - [ ] `sql-clustered-vs-nonclustered-indexes` — **Clustered vs. Non-Clustered B-Tree Indexes** (`🔴 Advanced`): The two fundamental indexing physical storage structures in relational database engines that govern how data rows are st...
@@ -709,7 +709,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `sql-columnstore-segment` — **Columnstore Segment Elimination & Memory Grant Governance** (`🟣 Architect`): Low-level columnar storage engine optimization governing rowgroup health, min/max metadata dictionary pruning, and query...
 
@@ -721,7 +721,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Transactions, Locking & Concurrency (50 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (12 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (12 Topics)</b></summary>
 
 - [ ] `aggregate-semantics-count-mechanics` — **Aggregate Semantics: COUNT(*) vs. COUNT(1)** (`🟢 Easy`): Aggregate counting semantics define how the database engine evaluates relational cardinality across row counts, constant...
 - [ ] `sql-iceberg-crud-wal` — **CRUD Lifecycle & Write-Ahead Logging (WAL)** (`🟢 Easy`): The end-to-end execution lifecycle of DML statements governed by ACID write-ahead logging protocols and buffer pool cach...
@@ -739,7 +739,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (13 Topics)</b></summary>
 
 - [ ] `sql-alwayson-listener-endpoint` — **Always On Listener & Read Routing** (`🟡 Intermediate`): A virtual network name and IP address that routes application client connections to the active primary replica or read-s...
 - [ ] `sql-iceberg-ctes` — **Common Table Expressions: Optimization Fences vs Inlining** (`🟡 Intermediate`): Named temporary result sets defined via WITH clauses that act as logical subqueries, subject to engine-specific inlining...
@@ -758,7 +758,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (17 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (17 Topics)</b></summary>
 
 - [ ] `sql-alwayson` — **Always On Availability Groups** (`🔴 Advanced`): A high-availability and disaster recovery solution providing multi-database failover capabilities....
 - [ ] `sql-iceberg-triggers` — **Database Triggers & Hidden Transaction Side Effects** (`🔴 Advanced`): Event-driven procedural routines executed automatically by the database engine in response to DML operations on a table....
@@ -781,7 +781,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (8 Topics)</b></summary>
 
 - [ ] `sql-alwayson-ag-dr` — **Always On Availability Groups Multi-Subnet Disaster Recovery** (`🟣 Architect`): Enterprise database clustering architecture providing zero-data-loss synchronous local commit and cross-region asynchron...
 - [ ] `always-on-availability-groups-quorum-concept` — **Always On Availability Groups Quorum** (`🟣 Architect`): High-availability and disaster recovery architecture using Windows Server Failover Clustering quorum and synchronous rep...
@@ -805,7 +805,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Distributed Consensus & Replication (8 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 - [ ] `sql-iceberg-acid` — **ACID Properties & Physical Engine Enforcements** (`🟡 Intermediate`): The four foundational guarantees—Atomicity, Consistency, Isolation, and Durability—enforced via low-level engine subsyst...
 - [ ] `sql-iceberg-transactions-2pc` — **Database Transactions & Two-Phase Commit (2PC)** (`🟡 Intermediate`): A consensus protocol ensuring atomic commit or rollback across multiple distributed database instances or heterogeneous ...
@@ -813,7 +813,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `db-concept-traffic-control-gtid` — **Database Traffic Control: Read-After-Write Consistency & GTID Pinning** (`🔴 Advanced`): Routing architectures that decouple reads and writes across replicas while tracking Global Transaction Identifiers (GTID...
 - [ ] `db-concept-raft-paxos-quorums` — **Quorum Consensus & Redundancy: Multi-Raft, Paxos & Witness Nodes** (`🔴 Advanced`): Distributed consensus algorithms that guarantee fault-tolerant state machine replication across independent nodes throug...
@@ -822,7 +822,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 - [ ] `sql-iceberg-causal-reverse` — **Causal Reverse Anomaly in Asynchronous Replication** (`🟣 Architect`): A distributed consistency anomaly where an effect appears to precede its cause in replica read logs due to asynchronous ...
 - [ ] `db-concept-distributed-2pc-deadlocks` — **Distributed Two-Phase Commit & Cross-Shard Transaction Latency** (`🟣 Architect`): The distributed consensus protocol used to guarantee atomic transactions across multiple database shards, and the inhere...
@@ -836,14 +836,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Storage Engines, LSM & B-Trees (4 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `db-concept-lsm-vs-btree` — **Storage Engine Trade-offs: LSM-Trees vs B+Trees & Compaction Dynamics** (`🟡 Intermediate`): The foundational architectural trade-offs between write-optimized Log-Structured Merge Trees (LSM) and read-optimized B+...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 - [ ] `sql-iceberg-mvcc-garbage-collection` — **MVCC Garbage Collection & Table Bloat (VACUUM / Undo Purge)** (`🔴 Advanced`): The internal storage engine processes responsible for reclaiming physical disk space occupied by obsolete, dead row vers...
 - [ ] `sql-iceberg-zigzag-join` — **Zigzag Join (Multi-Index Merge Intersection)** (`🔴 Advanced`): An advanced physical query optimization algorithm that finds matching rows across multiple B-Tree indexes by jumping bac...
@@ -851,7 +851,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `db-concept-compute-storage-decoupling` — **Compute & Storage Decoupling: Log-is-the-Database Paradigm** (`🟣 Architect`): A cloud-native database architecture where stateless SQL execution engines are separated from a distributed, purpose-bui...
 
@@ -863,28 +863,28 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Sharding, Partitioning & Traffic Control (6 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `db-concept-sharding-resharding` — **Database Sharding Topologies & Live Dynamic Re-sharding** (`🟢 Easy`): Techniques for horizontally partitioning database tables across independent physical nodes and dynamically splitting sha...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `research-concept-abac-dynamic-column-masking` — **Attribute-Based Dynamic Column Masking (ABAC)** (`🟡 Intermediate`): A runtime security policy engine that evaluates user attributes (role, department, clearance) to conditionally mask, has...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 - [ ] `sql-iceberg-sharding` — **Database Sharding & Distributed Hash Routing** (`🔴 Advanced`): A shared-nothing horizontal scaling architecture where a large relational dataset is partitioned across independent phys...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 - [ ] `synapse-mpp-table-distributions` — **Azure Synapse Table Distributions (Hash, Round-Robin, Replicated)** (`🟣 Architect`): The architectural data distribution strategies across 60 fixed storage buckets that govern data movement and query paral...
 - [ ] `sql-iceberg-database-cracking` — **Database Cracking & Self-Organizing Adaptive Indexing** (`🟣 Architect`): An autonomous physical indexing architecture where queries adaptively partition and sort columns on-the-fly as a side-ef...
@@ -898,7 +898,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Compute-Storage Decoupling & Modern MPP (61 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (5 Topics)</b></summary>
 
 - [ ] `db-high-cardinality` — **High Cardinality** (`🟢 Easy`): Column with many distinct values (like CustomerID with millions of unique customers)....
 - [ ] `db-low-cardinality` — **Low Cardinality** (`🟢 Easy`): Column with few distinct values (like ProductCategory with only 15 categories)....
@@ -909,7 +909,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (13 Topics)</b></summary>
 
 - [ ] `db-columnstore-index` — **Columnstore Index** (`🟡 Intermediate`): A storage structure that organizes data by columns rather than rows, optimized for analytical queries that scan large da...
 - [ ] `sql-iceberg-connection-pools` — **Connection Pools & Thread/Process Multiplexing** (`🟡 Intermediate`): A persistent cache of open database connections that multiplexes high-volume client application requests over a fixed po...
@@ -928,7 +928,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (20 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (20 Topics)</b></summary>
 
 - [ ] `sql-iceberg-ambiguous-network-errors` — **Ambiguous Network Errors & Two-Generals Commit Dilemma** (`🔴 Advanced`): The distributed systems dilemma where a network socket drops during a COMMIT operation, leaving the client in an indeter...
 - [ ] `sql-iceberg-ascending-key-problem` — **Ascending Key Problem in B-Trees** (`🔴 Advanced`): The severe concurrency and optimizer degradation that occurs when high-volume inserts target monotonically increasing pr...
@@ -954,7 +954,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (23 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (23 Topics)</b></summary>
 
 - [ ] `sql-iceberg-jsonb-null-false` — **'null'::jsonb IS NULL Evaluates to False** (`🟣 Architect`): The semantic distinction in PostgreSQL between a JSON-encoded null primitive and a relational SQL NULL value....
 - [ ] `adx-vs-synapse-compute-selection` — **Azure Data Explorer (ADX) vs Azure Synapse Analytics Workload Selection** (`🟣 Architect`): Architectural decision criteria for selecting between indexing-optimized real-time telemetry exploration (ADX/KQL) and m...
@@ -993,14 +993,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Open Table Formats (Iceberg, Delta, Hudi) (22 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `iceberg-hidden-partitioning` — **Apache Iceberg Hidden Partitioning & Manifest List Architecture** (`🟢 Easy`): Decouples table partitioning from physical directory structures, avoiding Hive-style column path rewrites....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 - [ ] `apache-hudi-copy-on-write-cow-concept` — **Apache Hudi Copy-On-Write (COW)** (`🟡 Intermediate`): A table type that rewrites entire Parquet data files upon receiving row updates, maximizing subsequent read scan speeds....
 - [ ] `delta-lake-column-mapping` — **Delta Lake Column Mapping** (`🟡 Intermediate`): A Delta Lake metadata feature that decouples logical column names exposed to users from physical column identifiers stor...
@@ -1010,7 +1010,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (6 Topics)</b></summary>
 
 - [ ] `apache-hudi-merge-on-read-mor-concept` — **Apache Hudi Merge-On-Read (MOR)** (`🔴 Advanced`): A table type storing real-time updates in compact columnar log files, merging with base Parquet files during query execu...
 - [ ] `apache-iceberg-partition-evolution-concept` — **Apache Iceberg Partition Evolution** (`🔴 Advanced`): A table format capability that updates partitioning schemas (e.g. from month to day) without rewriting historical data o...
@@ -1022,7 +1022,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (11 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (11 Topics)</b></summary>
 
 - [ ] `research-concept-iceberg-rest-catalog-spec` — **Apache Iceberg REST Catalog Open Specification** (`🟣 Architect`): A vendor-neutral OpenAPI protocol that standardizes how query engines discover namespaces, load table metadata pointers,...
 - [ ] `apache-iceberg-rest-catalog-spec` — **Apache Iceberg REST Catalog Specification** (`🟣 Architect`): An open, vendor-neutral HTTP OpenAPI standard for metadata discovery, atomic commit coordination, and table credential v...
@@ -1044,7 +1044,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Real-Time Streaming & Watermarking (3 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 - [ ] `apache-paimon-streaming-lakehouse` — **Apache Paimon Streaming Lakehouse** (`🔴 Advanced`): A streaming lakehouse storage format developed for high-throughput changelog ingestion, sub-second real-time streaming u...
 - [ ] `streaming-watermarking-lateness` — **Structured Streaming Watermarking & Allowed Lateness** (`🔴 Advanced`): Threshold specifying how far event-time can lag behind maximum observed event-time before data is dropped....
@@ -1052,7 +1052,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `debezium-cdc-stream-decoupling` — **Debezium CDC & Analytical Stream Decoupling** (`🟣 Architect`): Debezium CDC is a distributed transaction log mining engine that captures row-level database changes in real time, strea...
 
@@ -1064,7 +1064,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Engine Vectorization & Hardware Acceleration (4 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `duckdb-polars-arrow-zerocopy` — **In-Process Analytics Revolution: DuckDB and Polars via Apache Arrow Zero-Copy** (`🟢 Easy`): Serverless local analytical engines sharing columnar memory without serialization or network hops....
 - [ ] `parquet-vectorized-decoding` — **Parquet Vectorized Decoding & Predicate Pushdown** (`🟢 Easy`): SIMD-accelerated column decoding combined with metadata-driven row group skipping via min/max statistics....
@@ -1072,14 +1072,14 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `cross-engine-rosetta-stone` — **Cross-Engine Data Manipulation (Rosetta Stone)** (`🟡 Intermediate`): The Cross-Engine Rosetta Stone is an architectural translation matrix mapping common data engineering operations across ...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `databricks-serverless-photon` — **Databricks Serverless Compute & Photon Vectorized C++ Engine** (`🟣 Architect`): Instant-on, fully managed C++ query engine separating cluster provisioning from SQL execution....
 
@@ -1091,7 +1091,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Distributed State, CDC & Lakehouse Ingestion (47 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 - [ ] `airflow3-asset-scheduling` — **Apache Airflow 3.0 Asset-Driven Scheduling & Deferrable Operators** (`🟡 Intermediate`): Event-driven DAG execution triggered by dataset updates combined with async triggerer workers....
 - [ ] `research-concept-hybrid-search-lakehouse-retrieval` — **Hybrid Search Retrieval over Lakehouse Tables** (`🟡 Intermediate`): An enterprise retrieval architecture that merges sparse keyword search (BM25) with dense vector embeddings to provide ac...
@@ -1103,7 +1103,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (9 Topics)</b></summary>
 
 - [ ] `research-concept-ai-data-workload-unit-economics` — **AI Data Workload Unit Economics** (`🔴 Advanced`): The cost model for delivering one useful AI-enabled data task, including retrieval, query compute, model inference, stor...
 - [ ] `cap-pacelc-modern-data-stores` — **CAP & PACELC Theorem in Modern Data Stores** (`🔴 Advanced`): In a network partition (P), trade off Availability (A) vs Consistency (C). PACELC extends this: Else (E), trade off Late...
@@ -1118,7 +1118,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (32 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (32 Topics)</b></summary>
 
 - [ ] `sdlc-concept-adrs` — **Architectural Decision Records (ADRs) for Data Platforms** (`🟣 Architect`): A lightweight, immutable document capturing significant technical architecture decisions, the historical context, explor...
 - [ ] `sdlc-concept-blameless-postmortems` — **Blameless Data Incident Postmortems & Cost of Downtime** (`🟣 Architect`): A structured, blameless retrospective methodology for analyzing production data outages, identifying systemic root cause...
@@ -1166,14 +1166,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Cloud Object Storage & Prefix Optimization (4 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `research-concept-cloud-storage-lifecycle-tiering` — **Cloud Object Storage Lifecycle Tiering and Transition Policies** (`🟢 Easy`): Automated storage class transition rules that move aged raw data files from hot storage classes to cold or archive tiers...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 - [ ] `research-concept-s3-strong-consistency-boundary` — **Cloud Object Storage Strong Read-After-Write Consistency** (`🟡 Intermediate`): The durability and ordering guarantee in modern object storage where write and delete operations immediately become visi...
 - [ ] `dl-object-storage` — **Object Storage** (`🟡 Intermediate`): Flat storage repositories (like ADLS Gen2, AWS S3, GCS) that manage data as objects rather than hierarchical filesystems...
@@ -1181,7 +1181,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `delta-occ-conflicts` — **Delta Lake Optimistic Concurrency Control (OCC) & Conflict Resolution** (`🟣 Architect`): ACID transaction coordination protocol managing concurrent multi-engine writes on distributed object storage without cen...
 
@@ -1193,7 +1193,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Columnar & Row Storage Formats (Parquet/ORC/Avro) (13 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (4 Topics)</b></summary>
 
 - [ ] `open-format-avro-row-binary` — **Apache Avro Binary Row Format & Schema Evolution** (`🟢 Easy`): A compact, row-based binary serialization format with a JSON-encoded schema stored in the file header, designed for stre...
 - [ ] `open-format-orc-stripes` — **Apache ORC Stripe Architecture & Built-in Indexes** (`🟢 Easy`): An optimized columnar format dividing data into self-contained Stripes (typically 64MB-256MB) with built-in index stream...
@@ -1203,7 +1203,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 - [ ] `open-format-compression-codecs` — **Columnar Compression Codecs: Snappy vs ZSTD vs GZIP** (`🟡 Intermediate`): Algorithm trade-offs between compression ratio, CPU encode/decode throughput, and splittability for lakehouse columnar f...
 - [ ] `lakehouse-delta-transaction-log` — **Delta Lake ACID Transaction Log & Checkpointing** (`🟡 Intermediate`): An ordered, append-only JSON log (_delta_log/) coupled with Parquet checkpoints that guarantees ACID isolation over raw ...
@@ -1213,7 +1213,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 - [ ] `research-concept-cdc-transaction-log-mining-vs-polling` — **CDC Transaction Log Mining vs Query Polling** (`🔴 Advanced`): The architectural comparison between extracting database mutations directly from binary redo logs versus repeatedly quer...
 - [ ] `lakehouse-deletion-vectors-internals` — **Delta Lake Deletion Vectors (Roaring Bitmaps)** (`🔴 Advanced`): A soft-delete storage optimization that tracks deleted rows via Roaring Bitmap files, avoiding full Parquet file rewrite...
@@ -1229,7 +1229,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Storage Compaction, Pruning & Data Layout (38 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (5 Topics)</b></summary>
 
 - [ ] `dl-hdfs` — **HDFS** (`🟢 Easy`): Hadoop Distributed File System, a Java-based file system providing redundant block storage across commoditized hardware ...
 - [ ] `research-concept-medallion-layer-invariants` — **Medallion Architecture Layer Invariants** (`🟢 Easy`): The strict data quality, mutation, and schema rules that establish explicit technical boundaries between Bronze (Raw), S...
@@ -1240,7 +1240,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (16 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (16 Topics)</b></summary>
 
 - [ ] `dl-apache-iceberg` — **Apache Iceberg** (`🟡 Intermediate`): An open-source, high-performance table format designed for massive analytical datasets, supporting schema evolution and ...
 - [ ] `lakehouse-iceberg-metadata-tree` — **Apache Iceberg Hierarchical Metadata Tree** (`🟡 Intermediate`): A 4-tier metadata hierarchy (Catalog -> Metadata JSON -> Manifest List -> Manifest Files) enabling partition evolution a...
@@ -1262,7 +1262,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (10 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (10 Topics)</b></summary>
 
 - [ ] `dl-iceberg` — **Apache Iceberg Format** (`🔴 Advanced`): An open-source, high-performance table format for massive analytical datasets, designed for engines like Spark and Trino...
 - [ ] `research-concept-cdc-context-synchronization` — **CDC Context Synchronization** (`🔴 Advanced`): The process of keeping analytical and AI-facing context aligned with changes captured from operational databases....
@@ -1278,7 +1278,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (7 Topics)</b></summary>
 
 - [ ] `data-contracts-producer-guarantees` — **Data Contracts (Producer-Side Guarantees)** (`🟣 Architect`): A formal, version-controlled agreement between upstream data producers and downstream consumers governing schema structu...
 - [ ] `datalake-tiering-economics` — **Data Lake Storage Tiering Lifecycle & Zero-Egress Economics** (`🟣 Architect`): Cost-optimization architectural model moving petabyte-scale lakehouse data across Hot, Cool, Cold, and Archive storage t...
@@ -1301,7 +1301,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Distributed Theorems & Trade-Offs (7 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `sd-acid-properties` — **ACID Properties** (`🟢 Easy`): A set of four guarantees (Atomicity, Consistency, Isolation, Durability) that ensure database transactions are processed...
 - [ ] `sd-cdn` — **Content Delivery Network (CDN)** (`🟢 Easy`): A geographically distributed network of proxy servers (Points of Presence) that cache and serve static and dynamic conte...
@@ -1309,7 +1309,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 - [ ] `sd-cap-theorem` — **CAP Theorem** (`🟡 Intermediate`): A distributed systems theorem stating that a system can guarantee at most two of three properties: Consistency, Availabi...
 - [ ] `sd-distributed-tracing` — **Distributed Tracing** (`🟡 Intermediate`): An observability technique that tracks the flow of a request through multiple services in a distributed system, correlat...
@@ -1317,7 +1317,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `cap-theorem-trade-offs-in-big-data-concept` — **CAP Theorem Trade-Offs in Big Data** (`🔴 Advanced`): The fundamental architectural constraint: a distributed system can guarantee at most two of Consistency, Availability, a...
 - [ ] `lsm-tree-vs-b-tree-storage-engines` — **LSM-Tree vs. B+ Tree Storage Engines** (`🔴 Advanced`): The architectural comparison between append-only Log-Structured Merge-trees (optimized for write throughput) and B+ Tree...
@@ -1331,7 +1331,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Fault Tolerance, Rate Limiting & High Availability (7 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (6 Topics)</b></summary>
 
 - [ ] `sd-circuit-breaker` — **Circuit Breaker Pattern** (`🟡 Intermediate`): A resilience design pattern that prevents cascading failures by automatically stopping requests to a failing downstream ...
 - [ ] `sd-replication` — **Database Replication** (`🟡 Intermediate`): The process of copying and maintaining database data across multiple servers (replicas) to achieve high availability, di...
@@ -1343,7 +1343,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 - [ ] `distributed-deadlock-detection-concept` — **Distributed Deadlock Detection** (`🔴 Advanced`): Algorithms detecting cyclic wait-for dependencies across distributed database locks to safely abort and retry transactio...
 
@@ -1355,21 +1355,21 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Caching Topologies & Synchronization (4 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `sd-cache-aside-pattern` — **Cache-Aside Pattern** (`🟢 Easy`): A caching strategy where the application code is responsible for loading data into the cache on cache misses, reading fr...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `sd-redis-data-structures` — **Redis Data Structures** (`🟡 Intermediate`): Redis provides rich server-side data structures (Strings, Hashes, Lists, Sets, Sorted Sets, HyperLogLog, Streams, Geospa...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 - [ ] `sd-cache-stampede` — **Cache Stampede (Thundering Herd)** (`🔴 Advanced`): A distributed systems failure pattern where many cache misses occur simultaneously for the same key, causing all clients...
 - [ ] `redis-redlock-distributed-locking` — **Redis Redlock Distributed Locking Algorithm** (`🔴 Advanced`): An algorithm proposed by Salvatore Sanfilippo that achieves fault-tolerant, mutually exclusive distributed locks across ...
@@ -1382,7 +1382,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Event-Driven Topologies & Decoupled Ingestion (50 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `sd-feature-flag` — **Feature Flags (Feature Toggles)** (`🟢 Easy`): A software development technique that allows features to be enabled or disabled at runtime without deploying new code, e...
 - [ ] `sd-horizontal-vs-vertical` — **Horizontal vs Vertical Scaling** (`🟢 Easy`): Two fundamental scaling strategies: vertical scaling adds more resources (CPU, RAM) to a single server; horizontal scali...
@@ -1390,7 +1390,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (13 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (13 Topics)</b></summary>
 
 - [ ] `sd-api-gateway` — **API Gateway** (`🟡 Intermediate`): A server that acts as the single entry point for all API requests to a system, handling cross-cutting concerns like auth...
 - [ ] `research-concept-cloud-native-data-platform-operating-model` — **Cloud-Native Data Platform Operating Model** (`🟡 Intermediate`): The team, platform, and operational practices required to run data products on containerized or managed cloud-native inf...
@@ -1409,7 +1409,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (26 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (26 Topics)</b></summary>
 
 - [ ] `research-concept-agent-execution-sandbox` — **Agent Execution Sandbox** (`🔴 Advanced`): An isolated execution environment that limits what an AI agent can read, run, and connect to while it performs a bounded...
 - [ ] `sd-kafka-internals` — **Apache Kafka Architecture** (`🔴 Advanced`): A distributed event streaming platform based on a distributed commit log, providing high-throughput, durable, and fault-...
@@ -1441,7 +1441,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (9 Topics)</b></summary>
 
 - [ ] `research-concept-agentic-data-engineering-control-plane` — **Agentic Data Engineering Control Plane** (`🟣 Architect`): The governed layer that lets software agents observe and propose data-platform work while enforcing identity, policy, ap...
 - [ ] `research-concept-ai-assisted-data-change-control` — **AI-Assisted Data Change Control** (`🟣 Architect`): A release process for AI-generated data code that preserves reviewability, test evidence, small changes, and rollback co...
@@ -1466,7 +1466,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Project Architecture & Modeling Primitives (24 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (8 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (8 Topics)</b></summary>
 
 - [ ] `dbt-dbt-model` — **dbt Model** (`🟢 Easy`): A dbt model is a single SQL SELECT statement defined in a .sql file that compiles and materializes a table, view, or inc...
 - [ ] `dbt-dbt-run-command` — **dbt run command** (`🟢 Easy`): The dbt run command is the core CLI command that compiles and executes SQL models in the target warehouse according to t...
@@ -1480,7 +1480,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (7 Topics)</b></summary>
 
 - [ ] `dbt-analyses` — **Analyses** (`🟡 Intermediate`): Analyses are one-off SQL queries stored in the analyses/ directory that utilize dbt Jinja and ref() functions but are co...
 - [ ] `dbt-dbt-build-command` — **dbt build Command** (`🟡 Intermediate`): The dbt build command executes models, runs tests, creates snapshots, and loads seeds in a unified DAG sequence, halting...
@@ -1493,7 +1493,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 - [ ] `dbt-dbt-compile-vs-run-vs-build` — **dbt Compile vs Run vs Build** (`🔴 Advanced`): The core architectural distinction between dbt compile (generating warehouse SQL), dbt run (executing model DDL/DML), an...
 - [ ] `dbt-model-contracts-concept` — **dbt Model Contracts** (`🔴 Advanced`): Explicit schema constraints enforced by dbt at build time, guaranteeing column names, data types, and nullability....
@@ -1504,7 +1504,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 - [ ] `dbt-dbt-core-vs-dbt-cloud` — **dbt Core vs dbt Cloud** (`🟣 Architect`): The strategic architectural evaluation between hosting open-source dbt-core via custom orchestrators versus adopting the...
 - [ ] `dbt-mesh-cross-project-dependencies` — **dbt Mesh & Cross-Project Dependencies** (`🟣 Architect`): An enterprise multi-project architecture in dbt that enables decentralized teams to maintain independent dbt repositorie...
@@ -1519,7 +1519,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Incremental Materialization & Microbatch (7 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `dbt-ephemeral-materialization` — **Ephemeral Materialization** (`🟢 Easy`): Ephemeral materialization creates a reusable SQL code block that is not written to the database at all, but rather inter...
 - [ ] `dbt-incremental-materialization` — **Incremental Materialization** (`🟢 Easy`): Incremental materialization allows dbt to transform and insert only newly arrived or modified records since the previous...
@@ -1527,14 +1527,14 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `dbt-incremental-models-unique_key` — **Incremental Models (unique_key)** (`🟡 Intermediate`): The unique_key configuration in incremental models specifies the primary key column(s) used by dbt to update existing re...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `dbt-custom-materializations` — **Custom Materializations** (`🔴 Advanced`): Custom Materializations are user-defined dbt materialization macros that control the exact DDL, staging steps, and trans...
 - [ ] `dbt-incremental-microbatch-strategy-concept` — **dbt Incremental Microbatch Strategy** (`🔴 Advanced`): A partition-aware incremental loading strategy dividing large table updates into discrete time-based batches....
@@ -1543,7 +1543,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `dbt-cost-governance-with-dbt` — **Cost Governance with dbt** (`🟣 Architect`): Cost Governance in dbt involves implementing architectural practices, query tagging, incremental models, and compute war...
 
@@ -1555,7 +1555,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Contracts, Testing & Governance (10 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `dbt-generic-tests` — **Generic Tests** (`🟢 Easy`): Generic tests are parameterized, reusable schema validation tests defined in YAML that assert data quality constraints a...
 - [ ] `dbt-schema-yml` — **schema.yml** (`🟢 Easy`): A schema.yml file is a configuration file where models, columns, descriptions, tests, and documentation metadata are dec...
@@ -1563,7 +1563,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 - [ ] `dbt-custom-schema-override` — **Custom Schema Override** (`🟡 Intermediate`): Custom Schema Override is the pattern of overriding dbt's default `generate_schema_name` macro to control how schema nam...
 - [ ] `dbt-singular-tests` — **Singular Tests** (`🟡 Intermediate`): A singular test is a standalone SQL query stored in the tests/ directory that defines a custom business assertion that f...
@@ -1571,7 +1571,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 - [ ] `research-concept-data-product-contract-slo` — **Data Product Contract and Service Objectives** (`🔴 Advanced`): A consumer-facing agreement that describes a data product's schema, semantics, quality checks, freshness, availability, ...
 - [ ] `dbt-state-based-ci` — **State-Based CI** (`🔴 Advanced`): State-Based CI (Slim CI) is a continuous integration testing strategy that compares pull request code against a producti...
@@ -1579,7 +1579,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 - [ ] `dbt-dbt-testing-pyramid` — **dbt Testing Pyramid** (`🟣 Architect`): The dbt Testing Pyramid is a quality architecture framework that structures data testing across unit tests, generic sche...
 - [ ] `research-concept-open-data-contract-spec` — **Open Data Contract Specification (ODCS)** (`🟣 Architect`): A standardized, vendor-neutral schema and metadata contract format that explicitly defines schema, semantics, SLA target...
@@ -1594,7 +1594,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: dbt Mesh & Semantic Layer Modeling (16 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 - [ ] `research-concept-data-trust-slo` — **Data Trust Service-Level Objective** (`🟡 Intermediate`): A measurable commitment that a data product meets agreed freshness, quality, lineage, and ownership expectations for its...
 - [ ] `dbt-dbt-semantic-layer` — **dbt Semantic Layer** (`🟡 Intermediate`): The dbt Semantic Layer (powered by MetricFlow) allows organizations to centrally define metrics and dimensions on top of...
@@ -1605,7 +1605,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (6 Topics)</b></summary>
 
 - [ ] `dbt---defer-flag` — **--defer Flag** (`🔴 Advanced`): The --defer flag allows dbt to resolve unbuilt upstream dependencies in a developer sandbox by pointing to production mo...
 - [ ] `dbt-adapter-specific-macros` — **Adapter-Specific Macros** (`🔴 Advanced`): Adapter-Specific Macros use dbt's multiple-dispatch mechanism to execute different SQL implementations depending on the ...
@@ -1617,7 +1617,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (5 Topics)</b></summary>
 
 - [ ] `dbt-dbt---airflow-orchestration` — **dbt + Airflow Orchestration** (`🟣 Architect`): The enterprise integration pattern combining Apache Airflow as the global workflow orchestrator with dbt as the speciali...
 - [ ] `dbt-dbt---databricks-integration` — **dbt + Databricks Integration** (`🟣 Architect`): The architectural design pairing dbt with Databricks, utilizing dbt-databricks adapters against Databricks SQL Serverles...
@@ -1638,14 +1638,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Core Engine & Decoupled Scheduler (11 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `airflow-scheduler` — **Scheduler** (`🟢 Easy`): The Scheduler is the heartbeat service of Airflow that monitors DAG files, resolves dependencies, and queues task instan...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 - [ ] `airflow-celeryexecutor` — **CeleryExecutor** (`🟡 Intermediate`): CeleryExecutor is a distributed executor that distributes task execution across an independent, horizontally scalable fl...
 - [ ] `airflow-kubernetesexecutor` — **KubernetesExecutor** (`🟡 Intermediate`): KubernetesExecutor is a cloud-native executor that launches a dedicated, ephemeral Kubernetes pod for each individual ta...
@@ -1654,7 +1654,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (6 Topics)</b></summary>
 
 - [ ] `airflow-kubernetespodoperator-isolation-concept` — **Airflow KubernetesPodOperator Isolation** (`🔴 Advanced`): Executing individual Airflow tasks inside dedicated, ephemeral Kubernetes pods with isolated dependencies and CPU/RAM li...
 - [ ] `airflow-celery-worker-autoscaling` — **Celery Worker Autoscaling** (`🔴 Advanced`): Celery Worker Autoscaling dynamically scales the number of Celery worker processes or nodes based on active task queue d...
@@ -1666,7 +1666,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `airflow-airflow-2-x-architecture-dagprocessor` — **Airflow 2.x Architecture (DagProcessor)** (`🟣 Architect`): The standalone DagProcessor architecture isolates the Python DAG parsing loop into dedicated, decoupled processes outsid...
 
@@ -1678,7 +1678,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: DAG Authoring, Dynamic Task Mapping & Operators (21 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (9 Topics)</b></summary>
 
 - [ ] `airflow-task-sla-alerting-concept` — **Airflow Task SLA Alerting** (`🟢 Easy`): Defining service level agreement thresholds on tasks and triggering automated notifications when tasks exceed duration l...
 - [ ] `airflow-dag-directed-acyclic-graph` — **DAG (Directed Acyclic Graph)** (`🟢 Easy`): A Directed Acyclic Graph (DAG) is a collection of all tasks you want to run, organized in a way that reflects their rela...
@@ -1693,7 +1693,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 - [ ] `airflow-backfill` — **Backfill** (`🟡 Intermediate`): Backfill is the process of executing a DAG across a past historical date range to populate historical data or reprocess ...
 - [ ] `airflow-custom-operators` — **Custom Operators** (`🟡 Intermediate`): Custom Operators are user-defined Python classes extending BaseOperator that implement specialized enterprise task execu...
@@ -1704,7 +1704,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 - [ ] `airflow-dynamic-task-mapping-`expand`-concept` — **Airflow Dynamic Task Mapping (`expand()`)** (`🔴 Advanced`): Dynamically generating parallel task instances at runtime based on the output of an upstream task....
 - [ ] `astronomer-cosmos-dbt-airflow-integration` — **Astronomer Cosmos (dbt Airflow Orchestration)** (`🔴 Advanced`): An open-source library that parses a dbt project directory and renders each individual dbt model as a native, observable...
@@ -1714,7 +1714,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 - [ ] `airflow-airflow---dbt-integration` — **Airflow + dbt Integration** (`🟣 Architect`): The architectural integration between Airflow and dbt, leveraging orchestration frameworks like Cosmos to translate dbt ...
 - [ ] `airflow-airflow-3-0-preview` — **Airflow 3.0 Preview** (`🟣 Architect`): The architectural vision of Apache Airflow 3.0, introducing decoupled execution engines, multi-language task authoring, ...
@@ -1728,7 +1728,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Orchestration Resiliency, Datasets & Connections (20 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 - [ ] `airflow-airflow-connections` — **Airflow Connections** (`🟢 Easy`): Airflow Connections are centralized configuration objects that store credentials, hostnames, ports, and authentication p...
 - [ ] `airflow-airflow-variables` — **Airflow Variables** (`🟢 Easy`): Airflow Variables are global key-value store entries maintained in the metadata database used to store non-sensitive run...
@@ -1737,7 +1737,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (7 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (7 Topics)</b></summary>
 
 - [ ] `airflow-connection-secrets-backend-concept` — **Airflow Connection Secrets Backend** (`🟡 Intermediate`): Storing Airflow database and API connections in cloud secret managers (HashiCorp Vault, AWS Secrets Manager)....
 - [ ] `research-concept-airflow-data-aware-scheduling` — **Airflow Data-Aware Dataset Scheduling** (`🟡 Intermediate`): A declarative orchestration model in Apache Airflow 2.4+ where DAGs execute based on dataset updates produced by upstrea...
@@ -1750,7 +1750,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 - [ ] `airflow-airflow-rest-api` — **Airflow REST API** (`🔴 Advanced`): The Airflow REST API is an OpenAPI-compliant web interface providing programmatic access to trigger runs, manage variabl...
 - [ ] `airflow-custom-timetables` — **Custom Timetables** (`🔴 Advanced`): Custom Timetables (Airflow 2.2+) allow developers to author arbitrary, non-cron scheduling logic that accounts for busin...
@@ -1760,7 +1760,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 - [ ] `airflow-airflow---spark-integration` — **Airflow + Spark Integration** (`🟣 Architect`): The architectural pattern for orchestrating large-scale Apache Spark batch and streaming jobs from Airflow across distri...
 - [ ] `airflow-astronomer-astro-vs-oss` — **Astronomer Astro vs OSS** (`🟣 Architect`): The architectural evaluation between operating self-hosted open-source Apache Airflow versus managed enterprise platform...
@@ -1782,7 +1782,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: OneLake & Cross-Cloud Shortcuts (18 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 - [ ] `fabric-lakehouse` — **Lakehouse** (`🟢 Easy`): An architecture that combines the flexible, cost-effective file storage of a data lake with the ACID transactions of a d...
 - [ ] `fabric-onelake` — **OneLake** (`🟢 Easy`): A single, unified, logical data lake for the entire organization, built on ADLS Gen2 using open Delta Parquet format....
@@ -1791,7 +1791,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 - [ ] `fabric-dataflows-gen2` — **Dataflows Gen2** (`🟡 Intermediate`): A visual, low-code data transformation tool built on Power Query that ingests and transforms data, outputting results di...
 - [ ] `fabric-direct-lake` — **Direct Lake Mode** (`🟡 Intermediate`): A Power BI storage mode that reads Delta Parquet files directly from OneLake without importing or running SQL queries....
@@ -1801,7 +1801,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 - [ ] `fabric-eventhouse-onelake-availability` — **Eventhouse OneLake Availability Synchronization** (`🔴 Advanced`): The streaming synchronization bridge in Microsoft Fabric Real-Time Intelligence that mirrors KQL database tables into On...
 - [ ] `fabric-eventstream-iot-pipeline` — **Fabric Eventstream Architecture: Event Hub to Lakehouse** (`🔴 Advanced`): Microsoft Fabric's no-code/low-code real-time ingestion service that streams high-throughput IoT telemetry from Azure Ev...
@@ -1812,7 +1812,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 - [ ] `fabric-storage-workload-decision-matrix` — **Fabric Storage Workload Decision Matrix: Warehouse vs Lakehouse vs KQL** (`🟣 Architect`): The architectural decision framework evaluating Microsoft Fabric Warehouse, Lakehouse, KQL Database, and OneLake based o...
 - [ ] `microsoft-fabric-onelake-shortcuts-concept` — **Microsoft Fabric OneLake Shortcuts** (`🟣 Architect`): Zero-copy virtualization pointers linking external ADLS Gen2, AWS S3, or Google Cloud Storage buckets into OneLake....
@@ -1829,7 +1829,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Direct Lake Mode & Semantic Models (5 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `powerbi-service-schema-drift-failure` — **Power BI Service Cloud Refresh Schema Drift** (`🔴 Advanced`): Power BI Service Cloud Refresh Schema Drift is a production outage scenario where cloud scheduled data refreshes fail fo...
 - [ ] `fabric-semantic-link` — **Semantic Link** (`🔴 Advanced`): A Python library ('sempy') that establishes a bidirectional bridge between Spark DataFrames and Power BI semantic models...
@@ -1838,7 +1838,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 - [ ] `fabric-direct-lake-fallback` — **Direct Lake Fallback & V-Order Columnar Optimization** (`🟣 Architect`): The in-memory columnar caching architecture where Power BI VertiPaq reads Delta Parquet directly without translation, an...
 - [ ] `fabric-purview-lineage-rbac` — **Fabric Automated Lineage & Decoupled Purview RBAC** (`🟣 Architect`): The governance security model where Fabric automated lineage capture requires specific workspace settings, while Purview...
@@ -1851,14 +1851,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Workload Engines, F-SKU Capacities & Governance (16 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `fabric-copilot` — **Copilot in Microsoft Fabric** (`🟢 Easy`): An AI-powered assistant integrated into Fabric to generate code, summarize datasets, and build reporting visuals....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 - [ ] `fabric-capacities` — **Fabric Capacities (F-SKUs)** (`🟡 Intermediate`): The shared pool of compute resources (expressed in Capacity Units or CUs) that powers all workloads in Microsoft Fabric....
 - [ ] `fabric-deployment-pipelines-concept` — **Fabric Deployment Pipelines** (`🟡 Intermediate`): Built-in CI/CD release management facilitating automated promotion of Fabric workspaces from dev to test to prod....
@@ -1869,7 +1869,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (4 Topics)</b></summary>
 
 - [ ] `fabric-kql-database-eventhouse-concept` — **Fabric KQL Database (Eventhouse)** (`🔴 Advanced`): A high-performance columnar time-series database optimized for real-time telemetry, logs, and free-text search....
 - [ ] `fabric-purview-data-quality-governance` — **Purview Data Quality Rules: Definition vs Execution** (`🔴 Advanced`): The governance boundary establishing that data quality rules in Microsoft Purview are centralized definitions, whereas e...
@@ -1879,7 +1879,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (6 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (6 Topics)</b></summary>
 
 - [ ] `fabric-purview-tenant-integration` — **Fabric & Purview Tenant Co-location & Native Architecture** (`🟣 Architect`): The mandatory single-tenant governance architecture requiring Microsoft Purview and Microsoft Fabric to reside within th...
 - [ ] `fabric-cu-smoothing` — **Fabric Capacity Unit (CU) Smoothing & Throttling** (`🟣 Architect`): The mathematical governor algorithm Microsoft Fabric uses to distribute interactive and background computational spikes ...
@@ -1901,7 +1901,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Control Flow, Pipelines & Parameterization (12 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `adf-pipeline` — **Pipeline** (`🟢 Easy`): A logical grouping of activities that coordinates and executes data workflows....
 - [ ] `adf-trigger` — **Trigger** (`🟢 Easy`): The mechanism that defines when a data pipeline execution should be started....
@@ -1909,7 +1909,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 - [ ] `adf-bounded-foreach-concurrency-concept` — **ADF Bounded ForEach Concurrency** (`🟡 Intermediate`): Configuring the `batchCount` parameter on ForEach activities to limit parallel pipeline invocations....
 - [ ] `adf-schema-drift` — **Schema Drift** (`🟡 Intermediate`): The capability of a data pipeline to gracefully handle changes in source schemas (added or renamed columns) without cras...
@@ -1918,7 +1918,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `adf-ci-cd-global` — **ADF CI/CD and Global Parameters** (`🔴 Advanced`): The deployment pipeline process that promotes ADF configurations across environments using ARM Templates....
 - [ ] `adf-tumbling-window-self-dependency-concept` — **ADF Tumbling Window Self-Dependency** (`🔴 Advanced`): Configuring tumbling window triggers to depend on the successful completion of the preceding time window slice....
@@ -1927,7 +1927,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 - [ ] `adf-metadata-driven-pipeline-framework` — **ADF Metadata-Driven Ingestion Framework** (`🟣 Architect`): An enterprise pipeline architecture where a single parameterized Azure Data Factory pipeline orchestrates extraction for...
 - [ ] `adf-idempotency-concurrency` — **ADF Pipeline Idempotency & Concurrency Governance** (`🟣 Architect`): Fault-tolerant orchestration patterns ensuring pipeline retries produce identical results without data duplication, race...
@@ -1942,28 +1942,28 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Integration Runtimes (Azure IR / Self-Hosted IR) (4 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `adf-shir-auto-update` — **SHIR Auto-Update** (`🟢 Easy`): The automated mechanism that downloads and applies updates to Self-Hosted Integration Runtime nodes....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `adf-shir` — **Self-hosted Integration Runtime (SHIR)** (`🟡 Intermediate`): The compute infrastructure used to run copy activities and scan metadata on private networks....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 - [ ] `adf-self-hosted-integration-runtime` — **ADF Self-Hosted Integration Runtime (SHIR)** (`🔴 Advanced`): An agent installed on an on-premises machine or private cloud virtual network that enables Azure Data Factory to securel...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `adf-shir-ha-cluster` — **Self-Hosted Integration Runtime (SHIR) High-Availability Clustering** (`🟣 Architect`): Scalable multi-node agent topology linking cloud data factories to on-premises enterprise networks with automated failov...
 
@@ -1975,7 +1975,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Data Movement, Managed VNets & Security (11 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `adf-linked-service` — **Linked Service** (`🟢 Easy`): The connection definition that defines connection strings and credentials to external resources in ADF....
 - [ ] `adf-variables-vs-parameters` — **Variables vs Parameters** (`🟢 Easy`): Orchestration primitives defining constant configuration inputs (Parameters) vs dynamic execution values (Variables)....
@@ -1983,7 +1983,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (5 Topics)</b></summary>
 
 - [ ] `adf-rest-api-pagination-handling-concept` — **ADF REST API Pagination Handling** (`🟡 Intermediate`): Configuring pagination rules (AbsoluteUrl, QueryParameters, NextSibling) to incrementally extract paginated JSON feeds....
 - [ ] `adf-managed-airflow` — **Data Factory Managed Airflow** (`🟡 Intermediate`): A managed service in ADF that hosts Apache Airflow environments, enabling Python-based DAG orchestration....
@@ -1994,7 +1994,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `adf-data-flow-vs-databricks` — **ADF Mapping Data Flows vs. Azure Databricks** (`🔴 Advanced`): The architectural decision framework comparing ADF's visual, code-free Spark execution engine (Mapping Data Flows) again...
 - [ ] `adf-synapse-link` — **Azure Synapse Link** (`🔴 Advanced`): A cloud-native, zero-ETL synchronization service that continuously replicates operational data into analytical stores....
@@ -2003,7 +2003,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `adf-managed-pe-architecture` — **ADF Managed Private Endpoint Provisioning & Timeout Bypass** (`🟣 Architect`): Enterprise network security architecture managing lifecycle, approval protocols, and timeout bypass for private endpoint...
 
@@ -2020,28 +2020,28 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: VertiPaq Engine & Columnar Compression (5 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `pbi-import-mode` — **Import Mode** (`🟢 Easy`): A storage mode where data is loaded and compressed directly into the Power BI Analysis Services memory engine....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `pbi-directquery` — **DirectQuery Mode** (`🟡 Intermediate`): A storage mode where Power BI does not import data, but queries the source system in real-time....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 - [ ] `pbi-vertipaq-compression` — **VertiPaq Engine** (`🔴 Advanced`): The in-memory columnar database engine that powers Power BI datasets and Analysis Services models....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 - [ ] `powerbi-direct-lake-mode-vertipaq` — **Power BI Direct Lake Mode & VertiPaq Paging** (`🟣 Architect`): A semantic model connectivity mode in Microsoft Fabric where the VertiPaq engine loads Delta Parquet columnar files dire...
 - [ ] `pbi-vertipaq-optimization` — **VertiPaq Engine Columnar Compression & Cardinality Reduction** (`🟣 Architect`): Low-level memory optimization strategies governing dictionary encoding, Run-Length Encoding (RLE), and bit-packing in th...
@@ -2054,7 +2054,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: DAX Evaluation Context & Calculations (6 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (2 Topics)</b></summary>
 
 - [ ] `pbi-row-context` — **Row Context** (`🟢 Easy`): The active row evaluation environment in DAX that occurs during calculated column evaluations or iterator loops....
 - [ ] `pbi-visual-calculations` — **Visual Calculations** (`🟢 Easy`): DAX calculations defined and executed directly within a specific visual, bypassing semantic model structure changes....
@@ -2062,7 +2062,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (2 Topics)</b></summary>
 
 - [ ] `pbi-calculation-groups` — **Calculation Groups** (`🟡 Intermediate`): A model design pattern that uses the SELECTEDMEASURE() function to define dynamic, reusable DAX calculations that can be...
 - [ ] `pbi-filter-context` — **Filter Context** (`🟡 Intermediate`): The active filtering parameters applied to a visual at the time of DAX measure execution....
@@ -2070,7 +2070,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (2 Topics)</b></summary>
 
 - [ ] `pbi-calculate` — **CALCULATE Function** (`🔴 Advanced`): The primary DAX function used to modify the active Filter Context or trigger Context Transition....
 - [ ] `dax-calculation-groups-concept` — **DAX Calculation Groups** (`🔴 Advanced`): Dynamic calculation modifiers in tabular models allowing a single calculation item (e.g. YTD, YoY%) to apply across all ...
@@ -2083,14 +2083,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Composite Models, Semantic Refresh & Aggregations (14 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `pbi-star-schema` — **Star Schema** (`🟢 Easy`): A dimensional data modeling design containing central fact tables surrounded by descriptive dimension tables....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 - [ ] `pbi-pbip-format` — **Power BI Project (.pbip)** (`🟡 Intermediate`): A developer-focused directory save format that stores reports and semantic models as separate text-based files to enable...
 - [ ] `pbi-dax-query-folding` — **Query Folding** (`🟡 Intermediate`): The capability of Power Query to compile visual transformation steps into a single SQL statement executed by the source ...
@@ -2100,7 +2100,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (5 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (5 Topics)</b></summary>
 
 - [ ] `pbi-composite-models` — **Composite Models** (`🔴 Advanced`): A model design that combines tables with different storage modes (Import and DirectQuery) in a single dataset....
 - [ ] `pbi-hybrid-tables` — **Hybrid Tables** (`🔴 Advanced`): A semantic model partition design that combines historical cached data (Import) with real-time live data (DirectQuery)....
@@ -2111,7 +2111,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (4 Topics)</b></summary>
 
 - [ ] `pbi-composite-hybrid` — **Composite Models & Hybrid Table Partitioning** (`🟣 Architect`): Multi-tiered storage engine architecture combining Import, DirectQuery, and Dual storage modes in a single enterprise se...
 - [ ] `pbi-ols-dynamic-rls` — **Object-Level Security (OLS) & Dynamic RLS at Scale** (`🟣 Architect`): Fine-grained security architecture enforcing dynamic row filters and complete column/table metadata obfuscation across e...
@@ -2131,14 +2131,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: CPython Internals & Memory Architecture (10 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (1 Topics)</b></summary>
 
 - [ ] `py-concept-generators` — **Python Generators & Memory Efficiency** (`🟢 Easy`): Generators are iterator functions written with the yield statement that produce a sequence of values lazily on-demand ra...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (3 Topics)</b></summary>
 
 - [ ] `py-concept-pandas-vectorization` — **Pandas Vectorization vs Itertuples** (`🟡 Intermediate`): Vectorization delegates operations to pre-compiled C/Fortran SIMD loops across contiguous memory buffers, avoiding the m...
 - [ ] `py-concept-concurrency-models` — **Python Multiprocessing vs Multithreading** (`🟡 Intermediate`): Multithreading runs multiple threads within a single process sharing memory under the GIL, while multiprocessing spawns ...
@@ -2147,7 +2147,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (3 Topics)</b></summary>
 
 - [ ] `py-concept-apache-arrow` — **Apache Arrow & Zero-Copy Memory Model** (`🔴 Advanced`): Apache Arrow is a standardized columnar in-memory format that enables zero-copy sharing of data arrays between different...
 - [ ] `py-concept-gil-internals` — **CPython GIL (Global Interpreter Lock)** (`🔴 Advanced`): The Global Interpreter Lock is a mutual exclusion lock used by CPython to prevent multiple native OS threads from execut...
@@ -2156,7 +2156,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (3 Topics)</b></summary>
 
 - [ ] `py-concept-apache-arrow-pycapsule-zero-copy` — **Apache Arrow PyCapsule Zero-Copy Protocol** (`🟣 Architect`): The standard C data interface enabling Python data libraries (Polars, DuckDB, Pandas, PyTorch, PySpark) to exchange colu...
 - [ ] `py-concept-arrow-pycapsule-ipc-memory-sharing-concept` — **Arrow PyCapsule IPC Memory Sharing** (`🟣 Architect`): Standardized C memory protocol allowing zero-copy sharing of PyArrow tables directly to DuckDB or Polars....
@@ -2170,14 +2170,14 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Vectorized & In-Memory IPC (Arrow / Polars) (2 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 - [ ] `py-concept-polars-lazyframe` — **Polars LazyFrame & Query Optimization** (`🔴 Advanced`): Polars LazyFrame defers DataFrame computations into an Abstract Syntax Tree (AST) that undergoes logical optimization (p...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (1 Topics)</b></summary>
 
 - [ ] `py-concept-arrow-flight` — **High-Throughput Polyglot Arrow IPC & Flight Architecture** (`🟣 Architect`): Arrow Flight is a high-performance RPC framework built on gRPC and Arrow columnar data, designed specifically for parall...
 
@@ -2189,7 +2189,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Language Idioms, Generators & Type Contracts (10 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 - [ ] `py-concept-context-managers` — **Python Context Managers & with Statement** (`🟢 Easy`): Context managers encapsulate setup and teardown logic around a code block using the __enter__ and __exit__ dunder method...
 - [ ] `py-concept-comprehensions` — **Python List & Dictionary Comprehensions** (`🟢 Easy`): Comprehensions provide a concise syntactic construct to generate lists, sets, or dictionaries by transforming and filter...
@@ -2198,7 +2198,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (4 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (4 Topics)</b></summary>
 
 - [ ] `py-concept-duckdb-in-process-olap-architecture` — **DuckDB In-Process Vectorized OLAP** (`🟡 Intermediate`): An embeddable, columnar analytical SQL database engine that runs inside the host process without separate server daemon ...
 - [ ] `py-concept-pydantic` — **Pydantic Data Contracts & Validation** (`🟡 Intermediate`): Pydantic is a data validation and parsing library that enforces type hints at runtime, parsing raw dictionaries or JSON ...
@@ -2208,14 +2208,14 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (1 Topics)</b></summary>
 
 - [ ] `py-concept-asyncio` — **Python AsyncIO Event Loop & Non-Blocking I/O** (`🔴 Advanced`): AsyncIO provides single-threaded concurrent execution using cooperative multitasking managed by an event loop, schedulin...
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 - [ ] `py-concept-ray-vs-pyspark` — **Distributed Python Runtimes: Ray vs PySpark Architecture** (`🟣 Architect`): Ray is an asynchronous distributed actor and task execution framework designed for Python-native distributed computing, ...
 - [ ] `py-concept-rust-pyo3` — **Rust PyO3 Extension Architecture for Data Pipelines** (`🟣 Architect`): PyO3 provides Rust bindings for Python, allowing developers to write native Rust extension modules that compile into sha...
@@ -2233,7 +2233,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: Dimensional Modeling & Kimball Standards (6 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (3 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (3 Topics)</b></summary>
 
 - [ ] `de-dimension-table` — **Dimension Table** (`🟢 Easy`): A table in a dimensional database model containing descriptive attributes used to filter, group, and slice facts....
 - [ ] `de-fact-table` — **Fact Table** (`🟢 Easy`): A central table in a dimensional database model containing quantitative metrics and keys referencing dimension tables....
@@ -2242,14 +2242,14 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (1 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (1 Topics)</b></summary>
 
 - [ ] `de-scd-2` — **Slowly Changing Dimensions Type 2 (SCD Type 2)** (`🟡 Intermediate`): A design pattern that tracks historical attribute changes by creating new records with effective start/end dates....
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (2 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (2 Topics)</b></summary>
 
 - [ ] `apache-pinot-star-tree-index` — **Apache Pinot Star-Tree Indexing** (`🟣 Architect`): A pre-aggregation index structure in Apache Pinot that enables sub-second OLAP queries across billions of rows by storin...
 - [ ] `de-scd4-scd6-architecture` — **SCD Type 4 vs Type 6 Enterprise Dimensional Architecture** (`🟣 Architect`): Advanced Kimball dimensional modeling strategies designed to handle rapid historical attribute tracking without explosiv...
@@ -2262,7 +2262,7 @@
 <summary>&nbsp;&nbsp;📂 <b>Section: ETL Architecture, CDC & Idempotency (57 Topics)</b></summary>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 100) (9 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟢 Easy: <b>🟢 Easy (Level 1) (9 Topics)</b></summary>
 
 - [ ] `research-concept-arrow-zero-copy-memory` — **Apache Arrow In-Memory Columnar Model** (`🟢 Easy`): A standardized, language-independent columnar memory layout that enables zero-copy data exchange across analytics engine...
 - [ ] `research-concept-data-freshness-slo` — **Data Freshness Service-Level Objective** (`🟢 Easy`): A measurable target for the delay between a source change and the point at which a consumer can use the corresponding tr...
@@ -2277,7 +2277,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 200) (10 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟡 Intermediate: <b>🟡 Intermediate (Level 2) (10 Topics)</b></summary>
 
 - [ ] `de-cdc` — **Change Data Capture (CDC)** (`🟡 Intermediate`): A technology that monitors database logs in real-time to identify and capture insert, update, and delete actions....
 - [ ] `de-data-mesh` — **Data Mesh** (`🟡 Intermediate`): A decentralized architectural paradigm that shifts data ownership and governance from a central platform team to domain ...
@@ -2293,7 +2293,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 300) (17 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔴 Advanced: <b>🔴 Advanced (Level 3) (17 Topics)</b></summary>
 
 - [ ] `apache-flink-rocksdb-state-backend` — **Apache Flink RocksDB State Backend** (`🔴 Advanced`): An out-of-core state storage backend for Apache Flink that stores stateful stream operators in local embedded RocksDB in...
 - [ ] `apache-kafka-kraft-consensus` — **Apache Kafka KRaft (Kafka Raft) Consensus** (`🔴 Advanced`): The native consensus protocol that replaces Apache ZooKeeper in Apache Kafka, managing metadata quorum directly within K...
@@ -2316,7 +2316,7 @@
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 400) (21 Topics)</b></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🟣 Architect: <b>🟣 Staff Architect (Level 4) (21 Topics)</b></summary>
 
 - [ ] `research-concept-agent-data-access-delegation` — **Agent Data Access Delegation** (`🟣 Architect`): A policy pattern in which an agent uses bounded authority derived from a user or workload identity instead of broad, amb...
 - [ ] `py-concept-arrow-zerocopy` — **Apache Arrow Zero-Copy Memory & C Data Interface in Python** (`🟣 Architect`): A standardized in-memory columnar format and C ABI specification that enables multiple runtimes (Python, JVM, Rust, C++)...

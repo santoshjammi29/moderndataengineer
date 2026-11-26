@@ -549,7 +549,7 @@ export function DatabricksCodingClient({
             {/* Quick Stat Chips */}
             <div className="flex items-center gap-2 flex-wrap pt-1 text-xs">
               <span className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono font-medium">
-                8 Manual Modules (L100-L400)
+                8 Manual Modules (L1-L4)
               </span>
               <span className="px-2.5 py-1 rounded-md bg-sky-500/10 text-sky-300 border border-sky-500/20 font-mono font-medium">
                 48 Cheatsheet Cards
@@ -582,7 +582,7 @@ export function DatabricksCodingClient({
                 type="button"
                 onClick={() => {
                   setLightboxPoster({
-                    url: "/cheatsheets/images/databricks_sparksql_poster.png",
+                    url: "/cheatsheets/images/databricks_sparksql_poster.webp",
                     title: "Databricks Spark SQL Poster",
                     subtitle: "Full-Resolution 250-DPI Architectural Reference",
                     pdfUrl: "/cheatsheets/pdf/databricks_sparksql_cheatsheet.pdf",
@@ -616,7 +616,7 @@ export function DatabricksCodingClient({
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] overflow-x-auto scrollbar-none shadow-xs">
         {[
           { id: "all", label: `All Databricks Coding (${suiteData.cards.length + operationsData.length})`, icon: Flame },
-          { id: "manual", label: "Technical Manual (Level 100–400)", icon: BookOpen },
+          { id: "manual", label: "Technical Manual (Level 1–4)", icon: BookOpen },
           { id: "cheatsheets", label: `Production Cheatsheets (${suiteData.cards.length})`, icon: FileCode2 },
           { id: "d100", label: `Databricks 100 Operations (${operationsData.length})`, icon: Cpu },
           { id: "bottlenecks", label: `Memory & Bottleneck Triage (${PRODUCTION_BOTTLENECK_PLAYBOOKS.length})`, icon: Bug },
@@ -689,14 +689,14 @@ export function DatabricksCodingClient({
       {/* 4. CONTENT SECTIONS */}
       {/* ────────────────────────────────────────────────────────── */}
 
-      {/* VIEW: TECHNICAL MANUAL (LEVEL 100 TO 400) */}
+      {/* VIEW: TECHNICAL MANUAL (LEVEL 1 TO 4) */}
       {(viewMode === "all" || viewMode === "manual") && (
         <div className="space-y-3 pt-2">
           {viewMode === "all" && (
             <div className="flex items-center justify-between pb-1">
               <h2 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
                 <BookOpen size={16} className="text-amber-400" />
-                <span>Databricks Platform Technical Manual (Level 100–400)</span>
+                <span>Databricks Platform Technical Manual (Level 1–4)</span>
               </h2>
               <button
                 type="button"

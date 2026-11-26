@@ -6,7 +6,7 @@ All PDF files are committed to this repository in [`docs/pdf/`](./) and mirrored
 
 | Document Name | Pages | Primary Domain | File Link |
 | :--- | :---: | :--- | :--- |
-| **Databricks Data Intelligence Platform: End-to-End Technical Manual** | **20** | Level 100 to 400 Lakehouse Architecture & Engineering | [Download PDF](./databricks_data_intelligence_platform_technical_manual.pdf) |
+| **Databricks Data Intelligence Platform: End-to-End Technical Manual** | **20** | Level 1 to 4 Lakehouse Architecture & Engineering | [Download PDF](./databricks_data_intelligence_platform_technical_manual.pdf) |
 | **Complete Lakehouse Architecture & Runbooks Enterprise Reference** | 47 | All-in-One Master Architecture & 76 Runbooks | [Download PDF](./lakehouse_enterprise_master_reference.pdf) |
 | **Databricks Unified Architecture & Coding Suite** | 8 | 48 Production Coding Cards Across 4 Domains | [Download PDF](./databricks_master_cheatsheet.pdf) |
 | **Apache Spark Catalyst Optimizer & Execution Plan Triage** | 2 | 12 Plan Reading, Physical Operators & Bottleneck Cards | [Download PDF](./spark_execution_plan_and_catalyst_triage_guide.pdf) |

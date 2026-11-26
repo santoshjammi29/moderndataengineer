@@ -1,5 +1,5 @@
 # Databricks Data Intelligence Platform: End-to-End Technical Manual
-> **Structured Progression from Foundational Concepts (Level 100) to Principal Production Architecture (Level 400)**  
+> **Structured Progression from Foundational Concepts (Level 1) to Principal Production Architecture (Level 4)**  
 > **Author:** Santosh Jammi | Principal Data Architect  
 > **Published Reference PDF:** [`docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf`](../pdf/databricks_data_intelligence_platform_technical_manual.pdf) · [Download Live PDF](https://moderndataengineer.uk/api/download/pdf/databricks_data_intelligence_platform_technical_manual.pdf)
 
@@ -11,14 +11,14 @@ This technical reference manual provides a complete architectural and implementa
 
 | Tier | Core Domain | Key Technical Capabilities Covered |
 | :--- | :--- | :--- |
-| **Level 100**<br>`Foundational` | Platform Architecture & Compute | Control Plane vs. Classic/Serverless Compute Planes, ADLS Gen2/S3 integration, Cluster modes, DBUs, Workspace organization. |
-| **Level 200**<br>`Intermediate` | Delta Lake Storage & Medallion ETL | `_delta_log` ACID internals, Deletion Vectors (MoR), Liquid Clustering, Predictive Optimization, Auto Loader, Change Data Feed, Declarative Pipelines (DLT). |
-| **Level 300**<br>`Advanced` | Unity Catalog Governance & Spark/Photon Engine | 3-level namespace, Row Filters, Column Masks, Lakehouse Federation, Catalyst AQE, Photon C++ vectorization, Spark UI 5 S's diagnostics. |
-| **Level 400**<br>`Expert / Principal` | Frameworks, DevOps, Streaming, FinOps & AI | Metadata-driven PySpark/DLT frameworks, RocksDB stateful streaming, Databricks Asset Bundles (DABs), pytest/chispa, System Tables FinOps, Mosaic AI RAG. |
+| **Level 1**<br>`Foundational` | Platform Architecture & Compute | Control Plane vs. Classic/Serverless Compute Planes, ADLS Gen2/S3 integration, Cluster modes, DBUs, Workspace organization. |
+| **Level 2**<br>`Intermediate` | Delta Lake Storage & Medallion ETL | `_delta_log` ACID internals, Deletion Vectors (MoR), Liquid Clustering, Predictive Optimization, Auto Loader, Change Data Feed, Declarative Pipelines (DLT). |
+| **Level 3**<br>`Advanced` | Unity Catalog Governance & Spark/Photon Engine | 3-level namespace, Row Filters, Column Masks, Lakehouse Federation, Catalyst AQE, Photon C++ vectorization, Spark UI 5 S's diagnostics. |
+| **Level 4**<br>`Expert / Principal` | Frameworks, DevOps, Streaming, FinOps & AI | Metadata-driven PySpark/DLT frameworks, RocksDB stateful streaming, Databricks Asset Bundles (DABs), pytest/chispa, System Tables FinOps, Mosaic AI RAG. |
 
 ---
 
-## Module 1 (Level 100): Platform Architecture & Core Concepts
+## Module 1 (Level 1): Platform Architecture & Core Concepts
 
 ### 1.1 Split-Plane Cloud Architecture
 
@@ -51,7 +51,7 @@ Selecting the appropriate compute type directly governs cloud infrastructure cos
 
 ---
 
-## Module 2 (Level 200): Delta Lake Storage Internals & Optimization
+## Module 2 (Level 2): Delta Lake Storage Internals & Optimization
 
 ### 2.1 The ACID Transaction Log (`_delta_log`)
 
@@ -115,7 +115,7 @@ ALTER TABLE prod_catalog.silver.orders CLUSTER BY (order_ts, order_status);
 
 ---
 
-## Module 3 (Level 200–300): Data Engineering & Medallion Pipelines
+## Module 3 (Level 2–3): Data Engineering & Medallion Pipelines
 
 ### 3.1 The Medallion Lakehouse Architecture
 
@@ -263,7 +263,7 @@ STORED AS SCD TYPE 2;
 
 ---
 
-## Module 4 (Level 300): Unified Governance with Unity Catalog
+## Module 4 (Level 3): Unified Governance with Unity Catalog
 
 ### 4.1 Three-Level Namespace & Securable Object Model
 
@@ -310,7 +310,7 @@ SET ROW FILTER prod_catalog.security.region_rls ON (country_code);
 
 ---
 
-## Module 5 (Level 300–400): Compute Engine Internals — Spark, Catalyst & Photon
+## Module 5 (Level 3–4): Compute Engine Internals — Spark, Catalyst & Photon
 
 ### 5.1 Catalyst Optimizer & Adaptive Query Execution (AQE)
 
@@ -362,7 +362,7 @@ df_final = df_joined_valid.unionByName(df_orders_null, allowMissingColumns=True)
 
 ---
 
-## Module 6 (Level 400): Advanced Stateful Streaming & Metadata-Driven Frameworks
+## Module 6 (Level 4): Advanced Stateful Streaming & Metadata-Driven Frameworks
 
 ### 6.1 Stateful Structured Streaming with RocksDB & Watermarking
 
@@ -499,7 +499,7 @@ def dynamic_silver_upsert(micro_batch_df, batch_id):
 
 ---
 
-## Module 7 (Level 400): Enterprise DevOps, CI/CD & Databricks Asset Bundles
+## Module 7 (Level 4): Enterprise DevOps, CI/CD & Databricks Asset Bundles
 
 ### 7.1 Databricks Asset Bundles (DABs) Architecture
 
@@ -622,7 +622,7 @@ def test_standardize_orders_cleans_and_deduplicates(spark):
 
 ---
 
-## Module 8 (Level 400): DBSQL, FinOps System Tables, Mosaic AI & Troubleshooting
+## Module 8 (Level 4): DBSQL, FinOps System Tables, Mosaic AI & Troubleshooting
 
 ### 8.1 Databricks SQL (DBSQL) & BI DirectQuery Integration
 

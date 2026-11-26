@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 import { CodeBlock } from "@/components/ui/code-block";
 
 interface ManualTier {
-  id: "all" | "100" | "200" | "300" | "400";
+  id: "all" | "1" | "2" | "3" | "4";
   label: string;
   badge: string;
   description: string;
@@ -40,36 +40,36 @@ interface ManualTier {
 const TIERS: ManualTier[] = [
   {
     id: "all",
-    label: "All Modules (Level 100–400)",
+    label: "All Modules (Level 1–4)",
     badge: "Complete Reference",
     description: "Full end-to-end curriculum from cloud platform foundations to principal enterprise architecture.",
     color: "blue",
   },
   {
-    id: "100",
-    label: "Level 100: Foundational Architecture",
-    badge: "Level 100",
+    id: "1",
+    label: "Level 1: Foundational Architecture",
+    badge: "Level 1",
     description: "Split-Plane Cloud Architecture, Classic vs. Serverless compute, ADLS Gen2/S3, DBUs, Workspace setup.",
     color: "sky",
   },
   {
-    id: "200",
-    label: "Level 200: Delta Lake & Medallion",
-    badge: "Level 200",
+    id: "2",
+    label: "Level 2: Delta Lake & Medallion",
+    badge: "Level 2",
     description: "_delta_log ACID protocol, Deletion Vectors (MoR), Liquid Clustering, Auto Loader, CDF & DLT.",
     color: "cyan",
   },
   {
-    id: "300",
-    label: "Level 300: Governance & Engine Internals",
-    badge: "Level 300",
+    id: "3",
+    label: "Level 3: Governance & Engine Internals",
+    badge: "Level 3",
     description: "Unity Catalog 3-level namespace, Row/Column security, Catalyst AQE, Photon C++ SIMD, 5 S's diagnostics.",
     color: "purple",
   },
   {
-    id: "400",
-    label: "Level 400: Frameworks, DevOps & FinOps",
-    badge: "Level 400",
+    id: "4",
+    label: "Level 4: Frameworks, DevOps & FinOps",
+    badge: "Level 4",
     description: "Metadata frameworks, RocksDB stateful streaming, Databricks Asset Bundles (DABs), FinOps System Tables, Mosaic AI.",
     color: "amber",
   },
@@ -131,7 +131,7 @@ export function DatabricksManualView() {
               Enterprise Architecture &amp; Engineering Reference
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">
-              Level 100 → Level 400
+              Level 1 → Level 4
             </span>
           </div>
 
@@ -231,9 +231,9 @@ export function DatabricksManualView() {
       {/* Manual Content Sections */}
       <div className="space-y-4">
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 1: PLATFORM ARCHITECTURE & COMPUTE (LEVEL 100) */}
+        {/* MODULE 1: PLATFORM ARCHITECTURE & COMPUTE (LEVEL 1) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "100") && (
+        {(selectedTier === "all" || selectedTier === "1") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-1")}
@@ -246,7 +246,7 @@ export function DatabricksManualView() {
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-400">
-                      Module 1 • Level 100
+                      Module 1 • Level 1
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
@@ -390,9 +390,9 @@ export function DatabricksManualView() {
         )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 2: DELTA LAKE STORAGE INTERNALS (LEVEL 200) */}
+        {/* MODULE 2: DELTA LAKE STORAGE INTERNALS (LEVEL 2) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "200") && (
+        {(selectedTier === "all" || selectedTier === "2") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-2")}
@@ -405,7 +405,7 @@ export function DatabricksManualView() {
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400">
-                      Module 2 • Level 200
+                      Module 2 • Level 2
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
@@ -567,9 +567,9 @@ ALTER TABLE prod_catalog.silver.orders CLUSTER BY (order_ts, order_status);`}
         )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 3: DATA ENGINEERING & MEDALLION PIPELINES (LEVEL 200-300) */}
+        {/* MODULE 3: DATA ENGINEERING & MEDALLION PIPELINES (LEVEL 2-3) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "200" || selectedTier === "300") && (
+        {(selectedTier === "all" || selectedTier === "2" || selectedTier === "3") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-3")}
@@ -582,7 +582,7 @@ ALTER TABLE prod_catalog.silver.orders CLUSTER BY (order_ts, order_status);`}
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-400">
-                      Module 3 • Level 200–300
+                      Module 3 • Level 2–3
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
@@ -749,9 +749,9 @@ STORED AS SCD TYPE 2;`}
         )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 4: UNIFIED GOVERNANCE WITH UNITY CATALOG (LEVEL 300) */}
+        {/* MODULE 4: UNIFIED GOVERNANCE WITH UNITY CATALOG (LEVEL 3) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "300") && (
+        {(selectedTier === "all" || selectedTier === "3") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-4")}
@@ -764,7 +764,7 @@ STORED AS SCD TYPE 2;`}
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400">
-                      Module 4 • Level 300
+                      Module 4 • Level 3
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
@@ -864,9 +864,9 @@ SET ROW FILTER prod_catalog.security.region_rls ON (country_code);`}
         )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 5: COMPUTE ENGINE INTERNALS (LEVEL 300-400) */}
+        {/* MODULE 5: COMPUTE ENGINE INTERNALS (LEVEL 3-4) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "300" || selectedTier === "400") && (
+        {(selectedTier === "all" || selectedTier === "3" || selectedTier === "4") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-5")}
@@ -879,7 +879,7 @@ SET ROW FILTER prod_catalog.security.region_rls ON (country_code);`}
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-400">
-                      Module 5 • Level 300–400
+                      Module 5 • Level 3–4
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
@@ -1010,9 +1010,9 @@ df_final = df_joined_valid.unionByName(df_orders_null, allowMissingColumns=True)
         )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 6: ADVANCED STATEFUL STREAMING & METADATA (LEVEL 400) */}
+        {/* MODULE 6: ADVANCED STATEFUL STREAMING & METADATA (LEVEL 4) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "400") && (
+        {(selectedTier === "all" || selectedTier === "4") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-6")}
@@ -1025,7 +1025,7 @@ df_final = df_joined_valid.unionByName(df_orders_null, allowMissingColumns=True)
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">
-                      Module 6 • Level 400
+                      Module 6 • Level 4
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
@@ -1123,9 +1123,9 @@ TBLPROPERTIES ('delta.enableDeletionVectors' = true);`}
         )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 7: ENTERPRISE DEVOPS, CI/CD & DABS (LEVEL 400) */}
+        {/* MODULE 7: ENTERPRISE DEVOPS, CI/CD & DABS (LEVEL 4) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "400") && (
+        {(selectedTier === "all" || selectedTier === "4") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-7")}
@@ -1138,7 +1138,7 @@ TBLPROPERTIES ('delta.enableDeletionVectors' = true);`}
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-400">
-                      Module 7 • Level 400
+                      Module 7 • Level 4
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
@@ -1293,9 +1293,9 @@ def test_standardize_orders_cleans_and_deduplicates(spark):
         )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MODULE 8: DBSQL, FINOPS SYSTEM TABLES & INCIDENT PLAYBOOK (LEVEL 400) */}
+        {/* MODULE 8: DBSQL, FINOPS SYSTEM TABLES & INCIDENT PLAYBOOK (LEVEL 4) */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        {(selectedTier === "all" || selectedTier === "400") && (
+        {(selectedTier === "all" || selectedTier === "4") && (
           <div className="rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] overflow-hidden">
             <button
               onClick={() => toggleSection("mod-8")}
@@ -1308,7 +1308,7 @@ def test_standardize_orders_cleans_and_deduplicates(spark):
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">
-                      Module 8 • Level 400
+                      Module 8 • Level 4
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">

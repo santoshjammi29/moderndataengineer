@@ -471,7 +471,7 @@ Detailed syllabi, topic catalogs, and technical manuals are maintained in dedica
 | Resource Hub | Description | Direct Link |
 |:---|:---|:---:|
 | **921-Topic Curriculum Directory** | Complete breakdown of all 14 pillars and difficulty tiers | [`docs/curriculum/topics.md`](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/README.md) |
-| **Databricks Technical Manual** | 20-page end-to-end platform guide (Level 100–400) | [`docs/manuals/databricks.md`](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/README.md) |
+| **Databricks Technical Manual** | 20-page end-to-end platform guide (Level 1–4) | [`docs/manuals/databricks.md`](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/README.md) |
 | **Whiteboard Blueprints Catalog**| High-resolution visual architecture blueprints | [`docs/architecture/whiteboards.md`](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/README.md) |
 | **Production Triage Runbooks** | Driver/Executor OOM, shuffle spill, and data skew playbooks | [`docs/manuals/triage.md`](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/README.md) |
 | **Ecosystem Repositories** | Sister handbooks for PySpark, SQL, dbt, and System Design | [`ecosystem-manifest.json`](https://github.com/santoshjammi29/moderndataengineer/blob/main/ecosystem-manifest.json) |

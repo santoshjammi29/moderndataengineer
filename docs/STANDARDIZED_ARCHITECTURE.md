@@ -49,7 +49,7 @@ src/
 │   │   ├── page.tsx
 │   │   └── architecture-client.tsx # 36-keyword filter deck & 52 whiteboard blueprints
 │   ├── code-practice/             # Unified Code Practice Hub (Drills, Databricks, Matrix, Runbooks)
-│   │   ├── databricks/            # Dedicated Databricks Hub (148+ operations, memory triage & 20-Page Level 100-400 manual)
+│   │   ├── databricks/            # Dedicated Databricks Hub (148+ operations, memory triage & 20-Page Level 1-4 manual)
 │   │   └── code-practice-client.tsx
 │   ├── cheat-sheet/
 │   │   └── cheat-sheet-client.tsx # 11 Master Vector PDFs & PDF Downloads Hub

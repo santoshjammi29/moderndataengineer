@@ -4,7 +4,7 @@ Ecosystem Best Practices & Learning Repo Structure Automation
 ============================================================
 Applies the top-25 GitHub learning repository patterns across all 14 repositories
 in the Modern Data Engineering Lakehouse ecosystem:
-1. Interactive Checkbox Roadmap (ROADMAP.md) categorized by 4 Mastery Tiers (L100-L400).
+1. Interactive Checkbox Roadmap (ROADMAP.md) categorized by 4 Mastery Tiers (L1-L4).
 2. Standardized Curriculum Authoring Guide (CONTRIBUTING.md) enforcing the Triad pattern.
 3. Autonomous AI Agent Guidance (AGENTS.md) enforcing WCAG 2.2 AA and typography rules.
 4. Universal Indentation & Formatting (.editorconfig).
@@ -209,10 +209,10 @@ flowchart LR
    - **The "Otherwise" Requirement**: Explicitly state the operational consequence of ignoring the rule (e.g., *Driver OOM*, *Data Corruption*, *Lock Contention*, *Spill to Disk*).
 
 3. **4-Tier Progressive Disclosure Model**:
-   - **Level 100 (Foundations)**: Core definitions, basic syntax, single-node execution.
-   - **Level 200 (Core Mechanics)**: Standard production patterns, schema validation, error handling.
-   - **Level 300 (Complex Scenarios & Skew)**: Performance tuning, partition skew, memory triage, runbooks.
-   - **Level 400 (Staff Architect)**: Cross-cloud trade-offs, FinOps cost curves, zero-trust security.
+   - **Level 1 (Foundations)**: Core definitions, basic syntax, single-node execution.
+   - **Level 2 (Core Mechanics)**: Standard production patterns, schema validation, error handling.
+   - **Level 3 (Complex Scenarios & Skew)**: Performance tuning, partition skew, memory triage, runbooks.
+   - **Level 4 (Staff Architect)**: Cross-cloud trade-offs, FinOps cost curves, zero-trust security.
 
 ---
 
@@ -304,20 +304,20 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
     total_count = len(entries)
 
     # Bucket entries by tier
-    tier1 = [] # L100
-    tier2 = [] # L200
-    tier3 = [] # L300
-    tier4 = [] # L400
+    tier1 = [] # L1
+    tier2 = [] # L2
+    tier3 = [] # L3
+    tier4 = [] # L4
 
     for e in entries:
         diff = e.get('difficulty', '').upper()
-        if 'L100' in diff:
+        if 'L1' in diff:
             tier1.append(e)
-        elif 'L200' in diff:
+        elif 'L2' in diff:
             tier2.append(e)
-        elif 'L300' in diff:
+        elif 'L3' in diff:
             tier3.append(e)
-        elif 'L400' in diff:
+        elif 'L4' in diff:
             tier4.append(e)
         else:
             # Fallback based on type or index
@@ -349,16 +349,16 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
         "",
         "```mermaid",
         "flowchart LR",
-        '    T1["Tier 1: Foundations<br/>(Level 100)"] --> T2["Tier 2: Core Mechanics<br/>(Level 200)"]',
-        '    T2 --> T3["Tier 3: Complex Scenarios<br/>(Level 300)"]',
-        '    T3 --> T4["Tier 4: Staff Architect<br/>(Level 400)"]',
+        '    T1["Tier 1: Foundations<br/>(Level 1)"] --> T2["Tier 2: Core Mechanics<br/>(Level 2)"]',
+        '    T2 --> T3["Tier 3: Complex Scenarios<br/>(Level 3)"]',
+        '    T3 --> T4["Tier 4: Staff Architect<br/>(Level 4)"]',
         "```",
         ""
     ]
 
     if tier1:
         lines.extend([
-            "### 🟢 Tier 1: Foundations & Architecture (Level 100)",
+            "### 🟢 Tier 1: Foundations & Architecture (Level 1)",
             "> Core concepts, fundamental syntax, mental models, and environment setup.",
             ""
         ])
@@ -366,12 +366,12 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             title = item.get('title', item.get('id', 'Exercise'))
             path = item.get('relative_path', '')
             link = f"[{title}]({path})" if path else title
-            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 100`")
+            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 1`")
         lines.append("")
 
     if tier2:
         lines.extend([
-            "### 🟡 Tier 2: Core Mechanics & Implementation (Level 200)",
+            "### 🟡 Tier 2: Core Mechanics & Implementation (Level 2)",
             "> Production pipeline patterns, schema validation, standard transformations, and unit tests.",
             ""
         ])
@@ -379,12 +379,12 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             title = item.get('title', item.get('id', 'Exercise'))
             path = item.get('relative_path', '')
             link = f"[{title}]({path})" if path else title
-            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 200`")
+            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 2`")
         lines.append("")
 
     if tier3:
         lines.extend([
-            "### 🟠 Tier 3: Complex Scenarios, Edge Cases & Performance (Level 300)",
+            "### 🟠 Tier 3: Complex Scenarios, Edge Cases & Performance (Level 3)",
             "> Performance tuning, partition skew, memory triage runbooks, and failure recovery.",
             ""
         ])
@@ -392,12 +392,12 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             title = item.get('title', item.get('id', 'Exercise'))
             path = item.get('relative_path', '')
             link = f"[{title}]({path})" if path else title
-            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 300`")
+            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 3`")
         lines.append("")
 
     if tier4:
         lines.extend([
-            "### 🔴 Tier 4: Production Hardening, FinOps & Staff Architecture (Level 400)",
+            "### 🔴 Tier 4: Production Hardening, FinOps & Staff Architecture (Level 4)",
             "> Enterprise trade-offs, cross-cloud DR, zero-trust security, and FinOps cost optimization.",
             ""
         ])
@@ -405,7 +405,7 @@ def generate_roadmap_md(repo_key: str, meta: dict, entries: list) -> str:
             title = item.get('title', item.get('id', 'Exercise'))
             path = item.get('relative_path', '')
             link = f"[{title}]({path})" if path else title
-            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 400`")
+            lines.append(f"- [ ] `{item.get('id', '')}` — {link} `Level 4`")
         lines.append("")
 
     lines.extend([
@@ -583,7 +583,7 @@ def update_readme_badges(repo_path: Path, repo_key: str, meta: dict):
 
 ## 🗺️ Interactive Curriculum Roadmap & Contributing
 
-- **[Interactive Roadmap & Checkbox Tracker](ROADMAP.md)**: Track your personal progress across all 4 Mastery Tiers (`Level 100` to `Level 400`).
+- **[Interactive Roadmap & Checkbox Tracker](ROADMAP.md)**: Track your personal progress across all 4 Mastery Tiers (`Level 1` to `Level 4`).
 - **[Curriculum Taxonomy & Standards](TAXONOMY.md)**: Canonical controlled vocabulary, pillar mappings, and evidence standards.
 - **[Contributing Guidelines](CONTRIBUTING.md)**: Authoring standards enforcing the Code-Test-Doc Triad and Anti-Pattern comparisons.
 - **[Live Platform Hub](https://moderndataengineer.uk)**: Access the full 11,280+ record search engine, mindmaps, and vector PDF downloads.

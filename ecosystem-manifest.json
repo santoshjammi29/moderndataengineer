@@ -1,13 +1,13 @@
 {
   "version": "3.0.0",
-  "generated": "2026-11-24T09:03:01.328597Z",
+  "generated": "2026-11-26T09:30:31.619109Z",
   "hub": {
     "name": "Modern Data Engineer & Lakehouse Architect Platform",
     "url": "https://moderndataengineer.uk",
     "repo": "santoshjammi29/moderndataengineer"
   },
   "total_repositories": 14,
-  "total_satellite_entries": 537,
+  "total_satellite_entries": 551,
   "repositories": {
     "R01": {
       "slug": "charming-fermi",
@@ -151,7 +151,7 @@
     },
     "pyspark-handbook": {
       "github": "santoshjammi29/pyspark-handbook",
-      "entry_count": 116
+      "entry_count": 130
     },
     "sql-handbook": {
       "github": "santoshjammi29/sql-handbook",

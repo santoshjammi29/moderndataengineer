@@ -1,7 +1,7 @@
 {
-  "searchDocuments": 12091,
-  "qa": 7135,
-  "scenarios": 3305,
+  "searchDocuments": 12218,
+  "qa": 7140,
+  "scenarios": 3307,
   "concepts": 921,
   "conceptsByCategory": {
     "FABRIC": 39,
@@ -19,11 +19,11 @@
     "SYSTEM DESIGN": 68,
     "MODERN LAKEHOUSE": 76
   },
-  "codeDrills": 299,
-  "pysparkDrills": 156,
-  "sparkSqlDrills": 55,
+  "codeDrills": 419,
+  "pysparkDrills": 170,
+  "sparkSqlDrills": 160,
   "mssqlDrills": 46,
-  "pythonDrills": 42,
+  "pythonDrills": 43,
   "learningPaths": 13,
   "guidedTracks": 15,
   "companyProfiles": 156,

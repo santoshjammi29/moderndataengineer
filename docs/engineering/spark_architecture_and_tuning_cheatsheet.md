@@ -6,7 +6,7 @@
 
 ## Cheatsheet 1: Cluster Architecture & Catalyst Optimizer
 
-![Apache Spark Architecture & Catalyst Optimizer Cheatsheet](../../public/cheatsheets/images/spark_architecture_catalyst_cheatsheet.jpg)
+![Apache Spark Architecture & Catalyst Optimizer Cheatsheet](../../public/cheatsheets/images/spark_architecture_catalyst_cheatsheet.webp)
 
 ### Panel 1: Cluster Topology & DAG Hierarchy
 - **Driver Node**: The JVM coordinator hosting `SparkSession`, `DAGScheduler` (converts logical plan to physical stages), `TaskScheduler` (dispatches task sets), and `BlockManagerMaster`.
@@ -37,7 +37,7 @@
 
 ## Cheatsheet 2: Distributed Join Strategies & Master Decision Tree
 
-![Spark Distributed Join Strategies & Decision Matrix](../../public/cheatsheets/images/spark_join_strategies_decision_matrix.jpg)
+![Spark Distributed Join Strategies & Decision Matrix](../../public/cheatsheets/images/spark_join_strategies_decision_matrix.webp)
 
 ### Master Join Decision Tree
 ```
@@ -71,7 +71,7 @@ Is the join condition an Equi-Join ('=')?
 
 ## Cheatsheet 3: Performance Tuning & Skew/Spill Triage Runbook
 
-![Spark Performance Tuning & Skew/Spill Triage Runbook](../../public/cheatsheets/images/spark_performance_skew_spill_triage.jpg)
+![Spark Performance Tuning & Skew/Spill Triage Runbook](../../public/cheatsheets/images/spark_performance_skew_spill_triage.webp)
 
 ### Panel 1: Spark UI Failure Symptoms & Rapid Diagnosis
 1. **Symptom: Stage stuck at 99% (1 task takes 35 mins while 199 finish in 2 seconds)**

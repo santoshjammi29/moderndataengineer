@@ -125,7 +125,7 @@ describe("Databricks Polyglot Coding Subpage (/code-practice/databricks)", () =>
     );
 
     const manualTabButton = screen.getByRole("button", {
-      name: /Technical Manual \(Level 100–400\)/i,
+      name: /Technical Manual \(Level 1–4\)/i,
     });
     expect(manualTabButton).toBeDefined();
 

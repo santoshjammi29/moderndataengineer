@@ -29,10 +29,10 @@ flowchart LR
    - **The "Otherwise" Requirement**: Explicitly state the operational consequence of ignoring the rule (e.g., *Driver OOM*, *Data Corruption*, *Lock Contention*, *Spill to Disk*).
 
 3. **4-Tier Progressive Disclosure Model**:
-   - **Level 100 (Foundations)**: Core definitions, basic syntax, single-node execution.
-   - **Level 200 (Core Mechanics)**: Standard production patterns, schema validation, error handling.
-   - **Level 300 (Complex Scenarios & Skew)**: Performance tuning, partition skew, memory triage, runbooks.
-   - **Level 400 (Staff Architect)**: Cross-cloud trade-offs, FinOps cost curves, zero-trust security.
+   - **Level 1 (Foundations)**: Core definitions, basic syntax, single-node execution.
+   - **Level 2 (Core Mechanics)**: Standard production patterns, schema validation, error handling.
+   - **Level 3 (Complex Scenarios & Skew)**: Performance tuning, partition skew, memory triage, runbooks.
+   - **Level 4 (Staff Architect)**: Cross-cloud trade-offs, FinOps cost curves, zero-trust security.
 
 ---
 

@@ -36,7 +36,7 @@ Start by consulting [the notebook catalog](references/notebook-catalog.md) to lo
 
 ## Reference Manuals & Technical Documentation
 
-- 📘 **[Databricks Data Intelligence Platform 20-Page Technical Manual (PDF)](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 100 (Architecture), Level 200 (Delta Lake), Level 300 (Unity Catalog & Photon), and Level 400 (DevOps, Streaming, FinOps & AI).
+- 📘 **[Databricks Data Intelligence Platform 20-Page Technical Manual (PDF)](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf)**: Complete curriculum across Level 1 (Architecture), Level 2 (Delta Lake), Level 3 (Unity Catalog & Photon), and Level 4 (DevOps, Streaming, FinOps & AI).
 - 📖 **[Authoritative Technical Manual Markdown](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/architecture/09_databricks_intelligence_platform_manual.md)**: Full platform architectural manual covering 8 modules and 14 production blueprints.
 - 📐 **[52 Architecture Whiteboard Blueprints](https://github.com/santoshjammi29/moderndataengineer/blob/main/docs/whiteboard_diagrams/README.md)**: Master whiteboard schematics across 7 lakehouse domains.
 - 📦 **[The Databricks Handbook Repository](https://github.com/santoshjammi29/databricks-handbook)**: Pinned production repository containing 105 runnable notebooks, DABs YAML definitions, incident runbooks, and CI test runner.

@@ -217,7 +217,7 @@ When surfacing large collections of practice materials, learners benefit from ra
 The repository maintains a unified Single Roof A4 PDF Library of **11 vector documents** (the authoritative 20-page Databricks Technical Manual + 7 Databricks cheatsheets/runbooks + 3 architectural reference guides).
 
 ### Production Scripts:
-- `scripts/generate_databricks_manual_pdf.py`: Compiles the 20-page A4 Databricks Data Intelligence Platform Technical Manual (Level 100 to Level 400) with 33 hierarchical bookmarks and synchronizes to `docs/pdf/` and `public/cheatsheets/`.
+- `scripts/generate_databricks_manual_pdf.py`: Compiles the 20-page A4 Databricks Data Intelligence Platform Technical Manual (Level 1 to Level 4) with 33 hierarchical bookmarks and synchronizes to `docs/pdf/` and `public/cheatsheets/`.
 - `scripts/generate_cheatsheets.py`: Compiles the 7 Databricks cheatsheet suites.
 - `scripts/generate_reference_guides.py`: Compiles the 3 architecture & SDLC guides, and enriches all PDFs with hierarchical TOC bookmarks and metadata.
 - `scripts/build_whiteboards_docs_and_assets.py`: Builds markdown catalog (`docs/whiteboard_diagrams/README.md`) and copies all 52 blueprints to `assets/whiteboards/`.

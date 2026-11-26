@@ -2,7 +2,7 @@
 """
 Databricks Data Intelligence Platform: End-to-End Technical Manual PDF Generator
 Compiles the authoritative 20-page A4 manual with:
-  - Pixel-perfect enterprise typography and layout (Level 100 - Level 400)
+  - Pixel-perfect enterprise typography and layout (Level 1 - Level 4)
   - Hierarchical PDF bookmarks (TOC outline)
   - Full document metadata
   - High-res cover thumbnails and preview posters
@@ -279,11 +279,11 @@ def generate_html():
     <div class="page-content">
       <div class="doc-eyebrow">ENTERPRISE ARCHITECTURE &amp; ENGINEERING REFERENCE</div>
       <h1 class="doc-title">Databricks Data Intelligence Platform: End-to-End Technical Manual</h1>
-      <div class="doc-subtitle">Structured Progression from Foundational Concepts (Level 100) to Principal Production Architecture (Level 400)</div>
+      <div class="doc-subtitle">Structured Progression from Foundational Concepts (Level 1) to Principal Production Architecture (Level 4)</div>
       <div class="title-divider"></div>
 
       <div class="callout-box">
-        <strong>Document Curriculum Overview:</strong> This technical manual provides a complete architectural and implementation reference for the Databricks Lakehouse Platform. It is organized sequentially across four mastery tiers: <strong>Level 100 (Foundational Architecture)</strong>, <strong>Level 200 (Delta Lake Internals &amp; Medallion Engineering)</strong>, <strong>Level 300 (Unity Catalog Governance, Catalyst &amp; Photon Internals)</strong>, and <strong>Level 400 (Metadata Frameworks, Stateful Streaming, CI/CD Asset Bundles, FinOps &amp; Mosaic AI)</strong>.
+        <strong>Document Curriculum Overview:</strong> This technical manual provides a complete architectural and implementation reference for the Databricks Lakehouse Platform. It is organized sequentially across four mastery tiers: <strong>Level 1 (Foundational Architecture)</strong>, <strong>Level 2 (Delta Lake Internals &amp; Medallion Engineering)</strong>, <strong>Level 3 (Unity Catalog Governance, Catalyst &amp; Photon Internals)</strong>, and <strong>Level 4 (Metadata Frameworks, Stateful Streaming, CI/CD Asset Bundles, FinOps &amp; Mosaic AI)</strong>.
       </div>
 
       <table class="data-table">
@@ -296,29 +296,29 @@ def generate_html():
         </thead>
         <tbody>
           <tr>
-            <td><strong>Level 100</strong><br><span style="font-weight:400; color:#64748b;">Foundational</span></td>
+            <td><strong>Level 1</strong><br><span style="font-weight:400; color:#64748b;">Foundational</span></td>
             <td>Platform Architecture &amp; Compute</td>
             <td>Control Plane vs. Classic/Serverless Compute Planes, ADLS Gen2/S3 integration, Cluster modes, DBUs, Workspace organization.</td>
           </tr>
           <tr>
-            <td><strong>Level 200</strong><br><span style="font-weight:400; color:#64748b;">Intermediate</span></td>
+            <td><strong>Level 2</strong><br><span style="font-weight:400; color:#64748b;">Intermediate</span></td>
             <td>Delta Lake Storage &amp; Medallion ETL</td>
             <td><code class="inline-code">_delta_log</code> ACID internals, Deletion Vectors, Liquid Clustering, Predictive Optimization, Auto Loader, Change Data Feed, Declarative Pipelines (DLT).</td>
           </tr>
           <tr>
-            <td><strong>Level 300</strong><br><span style="font-weight:400; color:#64748b;">Advanced</span></td>
+            <td><strong>Level 3</strong><br><span style="font-weight:400; color:#64748b;">Advanced</span></td>
             <td>Unity Catalog Governance &amp; Spark/Photon Engine</td>
             <td>3-level namespace, Row Filters, Column Masks, Lakehouse Federation, Catalyst AQE, Photon C++ vectorization, Spark UI 5 S's diagnostics.</td>
           </tr>
           <tr>
-            <td><strong>Level 400</strong><br><span style="font-weight:400; color:#64748b;">Expert / Principal</span></td>
+            <td><strong>Level 4</strong><br><span style="font-weight:400; color:#64748b;">Expert / Principal</span></td>
             <td>Frameworks, DevOps, Streaming, FinOps &amp; AI</td>
             <td>Metadata-driven PySpark/DLT frameworks, RocksDB stateful streaming, Databricks Asset Bundles (DABs), pytest/chispa, System Tables FinOps, Mosaic AI RAG.</td>
           </tr>
         </tbody>
       </table>
 
-      <div class="module-header">Module 1 (Level 100): Platform Architecture &amp; Core Concepts</div>
+      <div class="module-header">Module 1 (Level 1): Platform Architecture &amp; Core Concepts</div>
       <div class="section-title">1.1 Split-Plane Cloud Architecture</div>
       <p>
         The Databricks Data Intelligence Platform is engineered on a split-plane security model that separates orchestration and metadata management from raw compute execution and persistent customer storage. This separation ensures that proprietary enterprise data remains governed within customer storage accounts while automating infrastructure lifecycle tasks.
@@ -329,7 +329,7 @@ def generate_html():
       </ul>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 1 of 20</span>
     </div>
   </div>
@@ -389,14 +389,14 @@ def generate_html():
         <li><strong>Lakeflow Declarative Pipeline Compute:</strong> Managed compute clusters dedicated to running declarative streaming tables and materialized views with enhanced autoscaling.</li>
       </ul>
 
-      <div class="module-header">Module 2 (Level 200): Delta Lake Storage Internals &amp; Optimization</div>
+      <div class="module-header">Module 2 (Level 2): Delta Lake Storage Internals &amp; Optimization</div>
       <div class="section-title">2.1 The ACID Transaction Log (_delta_log)</div>
       <p>
         Delta Lake layers ACID transactional guarantees, scalable metadata handling, and schema enforcement directly atop immutable Apache Parquet files. Every Delta table contains a <code class="inline-code">_delta_log</code> subdirectory that acts as the single source of truth for table state.
       </p>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 2 of 20</span>
     </div>
   </div>
@@ -445,7 +445,7 @@ def generate_html():
       </table>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 3 of 20</span>
     </div>
   </div>
@@ -511,7 +511,7 @@ ALTER TABLE prod_catalog.silver.orders CLUSTER BY (order_ts, order_status);</div
       </ul>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 4 of 20</span>
     </div>
   </div>
@@ -519,7 +519,7 @@ ALTER TABLE prod_catalog.silver.orders CLUSTER BY (order_ts, order_status);</div
   <!-- ==================== PAGE 5 ==================== -->
   <div class="page">
     <div class="page-content">
-      <div class="module-header">Module 3 (Level 200–300): Data Engineering &amp; Medallion Pipelines</div>
+      <div class="module-header">Module 3 (Level 2–3): Data Engineering &amp; Medallion Pipelines</div>
       <div class="section-title">3.1 The Medallion Lakehouse Architecture</div>
       <p>
         Enterprise pipelines organize data transformations across three logical quality layers to guarantee auditability, replayability, and downstream query performance:
@@ -541,7 +541,7 @@ ALTER TABLE prod_catalog.silver.orders CLUSTER BY (order_ts, order_status);</div
       </ul>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 5 of 20</span>
     </div>
   </div>
@@ -579,7 +579,7 @@ df_bronze = (
       </p>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 6 of 20</span>
     </div>
   </div>
@@ -648,7 +648,7 @@ def upsert_cdf_to_gold(micro_batch_df, batch_id):
 )</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 7 of 20</span>
     </div>
   </div>
@@ -691,7 +691,7 @@ COLUMNS * EXCEPT (operation, source_file)
 STORED AS SCD TYPE 2;</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 8 of 20</span>
     </div>
   </div>
@@ -699,7 +699,7 @@ STORED AS SCD TYPE 2;</div>
   <!-- ==================== PAGE 9 ==================== -->
   <div class="page">
     <div class="page-content">
-      <div class="module-header">Module 4 (Level 300): Unified Governance with Unity Catalog</div>
+      <div class="module-header">Module 4 (Level 3): Unified Governance with Unity Catalog</div>
       <div class="section-title">4.1 Three-Level Namespace &amp; Securable Object Model</div>
       <p>
         Unity Catalog provides centralized access control, automated lineage, auditing, and data discovery across all workspaces attached to a regional Metastore. All queries reference objects via a three-level namespace: <code class="inline-code">catalog.schema.table_or_view_or_volume</code>.
@@ -736,7 +736,7 @@ ALTER TABLE prod_catalog.silver.customers
 SET ROW FILTER prod_catalog.security.region_rls ON (country_code);</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 9 of 20</span>
     </div>
   </div>
@@ -750,7 +750,7 @@ SET ROW FILTER prod_catalog.security.region_rls ON (country_code);</div>
         <li><strong>Delta Sharing:</strong> An open REST protocol that enables secure, live sharing of Delta tables, views, volumes, and AI models with external organizations or BI platforms without copying data or locking recipients into Databricks.</li>
       </ul>
 
-      <div class="module-header">Module 5 (Level 300–400): Compute Engine Internals — Spark, Catalyst &amp; Photon</div>
+      <div class="module-header">Module 5 (Level 3–4): Compute Engine Internals — Spark, Catalyst &amp; Photon</div>
       <div class="section-title">5.1 Catalyst Optimizer &amp; Adaptive Query Execution (AQE)</div>
       <p>
         Apache Spark compiles SQL queries and DataFrame transformations through the Catalyst Optimizer pipeline: Unresolved Logical Plan &rarr; Analyzed Logical Plan (Catalog binding) &rarr; Optimized Logical Plan (Predicate Pushdown, Column Pruning, Constant Folding) &rarr; Physical Plan (Cost-Based Join Selection).
@@ -774,7 +774,7 @@ SET ROW FILTER prod_catalog.security.region_rls ON (country_code);</div>
       </ul>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 10 of 20</span>
     </div>
   </div>
@@ -847,7 +847,7 @@ df_joined_valid = df_orders_valid.join(customers_df, on="customer_id", how="left
 df_final = df_joined_valid.unionByName(df_orders_null, allowMissingColumns=True)</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 11 of 20</span>
     </div>
   </div>
@@ -855,7 +855,7 @@ df_final = df_joined_valid.unionByName(df_orders_null, allowMissingColumns=True)
   <!-- ==================== PAGE 12 ==================== -->
   <div class="page">
     <div class="page-content">
-      <div class="module-header">Module 6 (Level 400): Advanced Stateful Streaming &amp; Metadata-Driven Frameworks</div>
+      <div class="module-header">Module 6 (Level 4): Advanced Stateful Streaming &amp; Metadata-Driven Frameworks</div>
       <div class="section-title">6.1 Stateful Structured Streaming with RocksDB &amp; Watermarking</div>
       <p>
         When running stateful streaming operations—such as streaming aggregations, <code class="inline-code">dropDuplicatesWithinWatermark</code>, or stream-to-stream joins—storing millions of active keys in the default JVM heap state store leads to OutOfMemory errors and long GC pauses. Production streaming pipelines configure the RocksDB State Store with changelog checkpointing and explicit event-time watermarks:
@@ -895,7 +895,7 @@ ad_attribution_stream = impressions.join(
 )</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 12 of 20</span>
     </div>
   </div>
@@ -928,7 +928,7 @@ CLUSTER BY (source_system, entity_name)
 TBLPROPERTIES ('delta.enableDeletionVectors' = true);</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 13 of 20</span>
     </div>
   </div>
@@ -1002,7 +1002,7 @@ def dynamic_silver_upsert(micro_batch_df, batch_id):
     )</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 14 of 20</span>
     </div>
   </div>
@@ -1010,7 +1010,7 @@ def dynamic_silver_upsert(micro_batch_df, batch_id):
   <!-- ==================== PAGE 15 ==================== -->
   <div class="page">
     <div class="page-content">
-      <div class="module-header">Module 7 (Level 400): Enterprise DevOps, CI/CD &amp; Databricks Asset Bundles</div>
+      <div class="module-header">Module 7 (Level 4): Enterprise DevOps, CI/CD &amp; Databricks Asset Bundles</div>
       <div class="section-title">7.1 Databricks Asset Bundles (DABs) Architecture</div>
       <p>
         Databricks Asset Bundles (DABs) provide a unified Infrastructure-as-Code (IaC) specification to define notebooks, Python wheels, Lakeflow Jobs, Declarative Pipelines, and permissions in YAML files deployed via the Databricks CLI (<code class="inline-code">databricks bundle validate</code>, <code class="inline-code">databricks bundle deploy</code>, <code class="inline-code">databricks bundle run</code>).
@@ -1053,7 +1053,7 @@ targets:
       service_principal_name: "00000000-1111-2222-3333-444444444444"</div>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 15 of 20</span>
     </div>
   </div>
@@ -1101,7 +1101,7 @@ resources:
       </p>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 16 of 20</span>
     </div>
   </div>
@@ -1142,7 +1142,7 @@ def test_standardize_orders_cleans_and_deduplicates(spark):
     )
     assert_df_equality(standardize_orders(input_df), expected_df, ignore_nullable=True)</div>
 
-      <div class="module-header">Module 8 (Level 400): DBSQL, FinOps System Tables, Mosaic AI &amp; Troubleshooting</div>
+      <div class="module-header">Module 8 (Level 4): DBSQL, FinOps System Tables, Mosaic AI &amp; Troubleshooting</div>
       <div class="section-title">8.1 Databricks SQL (DBSQL) &amp; BI DirectQuery Integration</div>
       <ul>
         <li><strong>Intelligent Workload Management (IWM):</strong> Serverless SQL Warehouses use machine learning models to predict incoming query memory/CPU requirements, dynamically admitting fast queries and provisioning additional compute clusters in 2–6 seconds when concurrency spikes.</li>
@@ -1151,7 +1151,7 @@ def test_standardize_orders_cleans_and_deduplicates(spark):
       </ul>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 17 of 20</span>
     </div>
   </div>
@@ -1205,7 +1205,7 @@ LIMIT 20;</div>
       </p>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 18 of 20</span>
     </div>
   </div>
@@ -1266,7 +1266,7 @@ vsc.create_delta_sync_index(
       </table>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 19 of 20</span>
     </div>
   </div>
@@ -1321,7 +1321,7 @@ vsc.create_delta_sync_index(
       </table>
     </div>
     <div class="page-footer">
-      <span>Databricks End-to-End Technical Reference Manual (Level 100 – Level 400)</span>
+      <span>Databricks End-to-End Technical Reference Manual (Level 1 – Level 4)</span>
       <span>Page 20 of 20</span>
     </div>
   </div>
@@ -1354,15 +1354,17 @@ def inject_bookmarks_and_metadata(pdf_path, toc, meta):
     os.replace(temp_path, pdf_path)
 
 def generate_previews(pdf_path, base_name):
+    from PIL import Image
     doc = fitz.open(pdf_path)
     page_1 = doc[0]
     pix = page_1.get_pixmap(dpi=250)
-    p1_path = os.path.join(IMG_DIR, f"{base_name}_page_1.png")
-    pix.save(p1_path)
+    im = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+    p1_path = os.path.join(IMG_DIR, f"{base_name}_page_1.webp")
+    im.save(p1_path, "WEBP", quality=90, method=6)
 
     # Poster image from page 1
-    poster_path = os.path.join(IMG_DIR, f"{base_name}_poster.png")
-    pix.save(poster_path)
+    poster_path = os.path.join(IMG_DIR, f"{base_name}_poster.webp")
+    im.save(poster_path, "WEBP", quality=90, method=6)
     doc.close()
 
 def main():
@@ -1387,34 +1389,34 @@ def main():
     # Hierarchical TOC
     toc = [
         [1, "Document Curriculum Overview", 1],
-        [1, "Module 1 (Level 100): Platform Architecture & Core Concepts", 1],
+        [1, "Module 1 (Level 1): Platform Architecture & Core Concepts", 1],
         [2, "1.1 Split-Plane Cloud Architecture", 1],
         [2, "1.2 Compute Resource Taxonomy & DBU Economics", 2],
-        [1, "Module 2 (Level 200): Delta Lake Storage Internals & Optimization", 2],
+        [1, "Module 2 (Level 2): Delta Lake Storage Internals & Optimization", 2],
         [2, "2.1 The ACID Transaction Log (_delta_log)", 2],
         [2, "2.2 Deletion Vectors (Merge-on-Read vs. Copy-on-Write)", 3],
         [2, "2.3 Liquid Clustering vs. Hive Partitioning & Z-Ordering", 3],
         [2, "2.4 Predictive Optimization, VACUUM & Delta UniForm", 4],
-        [1, "Module 3 (Level 200–300): Data Engineering & Medallion Pipelines", 5],
+        [1, "Module 3 (Level 2–3): Data Engineering & Medallion Pipelines", 5],
         [2, "3.1 The Medallion Lakehouse Architecture", 5],
         [2, "3.2 Incremental File Ingestion with Auto Loader (cloudFiles)", 5],
         [2, "3.3 Change Data Capture (CDC) & Delta Change Data Feed (CDF)", 6],
         [2, "3.4 Lakeflow Spark Declarative Pipelines (DLT)", 8],
-        [1, "Module 4 (Level 300): Unified Governance with Unity Catalog", 9],
+        [1, "Module 4 (Level 3): Unified Governance with Unity Catalog", 9],
         [2, "4.1 Three-Level Namespace & Securable Object Model", 9],
         [2, "4.2 Fine-Grained Access Control: Row Filters & Column Masks", 9],
         [2, "4.3 Lakehouse Federation & Delta Sharing", 10],
-        [1, "Module 5 (Level 300–400): Compute Engine Internals — Spark, Catalyst & Photon", 10],
+        [1, "Module 5 (Level 3–4): Compute Engine Internals — Spark, Catalyst & Photon", 10],
         [2, "5.1 Catalyst Optimizer & Adaptive Query Execution (AQE)", 10],
         [2, "5.2 The Photon Vectorized Execution Engine", 10],
         [2, "5.3 Spark UI & Photon Diagnostic Matrix (The 5 S's)", 11],
-        [1, "Module 6 (Level 400): Advanced Stateful Streaming & Metadata-Driven Frameworks", 12],
+        [1, "Module 6 (Level 4): Advanced Stateful Streaming & Metadata-Driven Frameworks", 12],
         [2, "6.1 Stateful Structured Streaming with RocksDB & Watermarking", 12],
         [2, "6.2 Enterprise Metadata-Driven Ingestion & Merge Framework", 13],
-        [1, "Module 7 (Level 400): Enterprise DevOps, CI/CD & Databricks Asset Bundles", 15],
+        [1, "Module 7 (Level 4): Enterprise DevOps, CI/CD & Databricks Asset Bundles", 15],
         [2, "7.1 Databricks Asset Bundles (DABs) Architecture", 15],
         [2, "7.2 Automated PySpark Unit Testing with Pytest & Chispa", 16],
-        [1, "Module 8 (Level 400): DBSQL, FinOps System Tables, Mosaic AI & Troubleshooting", 17],
+        [1, "Module 8 (Level 4): DBSQL, FinOps System Tables, Mosaic AI & Troubleshooting", 17],
         [2, "8.1 Databricks SQL (DBSQL) & BI DirectQuery Integration", 17],
         [2, "8.2 Enterprise FinOps & Observability via System Tables", 18],
         [2, "8.3 Mosaic AI, Vector Search & Governed Agent Systems", 18],
@@ -1424,7 +1426,7 @@ def main():
     meta = {
         "title": "Databricks Data Intelligence Platform: End-to-End Technical Manual",
         "author": "Santosh Jammi | Principal Data Architect",
-        "subject": "Structured Progression from Foundational Concepts (Level 100) to Principal Production Architecture (Level 400)",
+        "subject": "Structured Progression from Foundational Concepts (Level 1) to Principal Production Architecture (Level 4)",
         "keywords": "Databricks, Lakehouse, Apache Spark, Delta Lake, Unity Catalog, Photon, Liquid Clustering, Deletion Vectors, Auto Loader, Change Data Feed, Lakeflow, DLT, RocksDB, DABs, Chispa, FinOps, Mosaic AI, Troubleshooting",
         "creator": "Modern Data Engineer Reference Publishing Engine",
         "producer": "Headless Chrome / PyMuPDF High-Density Publishing Engine"
@@ -1435,7 +1437,7 @@ def main():
 
     print("Generating thumbnails and preview images...")
     generate_previews(pdf_file, filename_base)
-    # Also save as databricks_manual_poster.png and databricks_manual_page_1.png
+    # Also save as databricks_manual_poster.webp and databricks_manual_page_1.webp
     generate_previews(pdf_file, "databricks_manual")
 
     # Copy to docs/pdf/
@@ -1453,7 +1455,7 @@ def main():
         os.makedirs(os.path.join(target, "images"), exist_ok=True)
         shutil.copy2(pdf_file, os.path.join(target, "pdf", f"{filename_base}.pdf"))
         shutil.copy2(html_file, os.path.join(target, "html", f"{filename_base}.html"))
-        for img_name in [f"{filename_base}_page_1.png", f"{filename_base}_poster.png", "databricks_manual_page_1.png", "databricks_manual_poster.png"]:
+        for img_name in [f"{filename_base}_page_1.webp", f"{filename_base}_poster.webp", "databricks_manual_page_1.webp", "databricks_manual_poster.webp"]:
             src_img = os.path.join(IMG_DIR, img_name)
             if os.path.exists(src_img):
                 shutil.copy2(src_img, os.path.join(target, "images", img_name))

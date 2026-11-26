@@ -9,7 +9,7 @@ Updates all 14 repositories in the Modern Data Engineering Lakehouse ecosystem:
    - ALL sections and difficulty tiers wrapped in <details><summary>...</summary></details> (COLLAPSED BY DEFAULT).
 2. Re-generates ROADMAP.md across all 14 repositories:
    - Grouped by RELEVANT SECTIONS first (module/domain directories).
-   - Within each section, grouped by DIFFICULTY TIER (L100, L200, L300, L400).
+   - Within each section, grouped by DIFFICULTY TIER (L1, L2, L3, L4).
    - ALL sections wrapped in <details><summary>...</summary></details> (COLLAPSED BY DEFAULT).
    - Full interactive checkbox tracking (- [ ]).
 3. Updates README.md Core Curriculum Sections across all repositories:
@@ -37,10 +37,10 @@ DIFF_ORDER = {
 }
 
 DIFF_DISPLAY = {
-    "EASY": ("🟢 Easy (Level 100)", "🟢 Easy"),
-    "MEDIUM": ("🟡 Intermediate (Level 200)", "🟡 Intermediate"),
-    "HARD": ("🔴 Advanced (Level 300)", "🔴 Advanced"),
-    "ARCHITECT": ("🟣 Staff Architect (Level 400)", "🟣 Architect")
+    "EASY": ("🟢 Easy (Level 1)", "🟢 Easy"),
+    "MEDIUM": ("🟡 Intermediate (Level 2)", "🟡 Intermediate"),
+    "HARD": ("🔴 Advanced (Level 3)", "🔴 Advanced"),
+    "ARCHITECT": ("🟣 Staff Architect (Level 4)", "🟣 Architect")
 }
 
 # 14 Categories with 3-6 Functional Sections Each
@@ -397,14 +397,14 @@ def build_collapsible_roadmap_markdown(repo_slug, meta, manifest_entries):
         # Sub-group by difficulty
         diff_buckets = defaultdict(list)
         for it in items:
-            diff = (it.get('difficulty') or 'L200').upper()
+            diff = (it.get('difficulty') or 'L2').upper()
             diff_buckets[diff].append(it)
 
         for diff_code, label in [
-            ("L100", "🟢 Tier 1: Foundations (Level 100)"),
-            ("L200", "🟡 Tier 2: Core Mechanics & Implementation (Level 200)"),
-            ("L300", "🟠 Tier 3: Complex Scenarios & Performance (Level 300)"),
-            ("L400", "🔴 Tier 4: Production Hardening & Staff Architecture (Level 400)")
+            ("L1", "🟢 Tier 1: Foundations (Level 1)"),
+            ("L2", "🟡 Tier 2: Core Mechanics & Implementation (Level 2)"),
+            ("L3", "🟠 Tier 3: Complex Scenarios & Performance (Level 3)"),
+            ("L4", "🔴 Tier 4: Production Hardening & Staff Architecture (Level 4)")
         ]:
             if diff_buckets[diff_code]:
                 tier_items = diff_buckets[diff_code]

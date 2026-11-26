@@ -28,8 +28,8 @@
 
 ## v2.1 — Databricks Data Intelligence Platform Manual, 52-Blueprint Whiteboard Mastery & 11-PDF Enterprise Library (2026-11-17)
 
-### 📘 Databricks Data Intelligence Platform: End-to-End Technical Manual (Level 100–400)
-- **Authoritative 20-Page Technical Reference Manual**: Complete end-to-end curriculum progression spanning Level 100 (Foundational Architecture), Level 200 (Delta Lake Internals & Medallion ETL), Level 300 (Unity Catalog Governance & Spark/Photon Engine), and Level 400 (Metadata Frameworks, Stateful Streaming, CI/CD Asset Bundles, FinOps & Mosaic AI).
+### 📘 Databricks Data Intelligence Platform: End-to-End Technical Manual (Level 1–4)
+- **Authoritative 20-Page Technical Reference Manual**: Complete end-to-end curriculum progression spanning Level 1 (Foundational Architecture), Level 2 (Delta Lake Internals & Medallion ETL), Level 3 (Unity Catalog Governance & Spark/Photon Engine), and Level 4 (Metadata Frameworks, Stateful Streaming, CI/CD Asset Bundles, FinOps & Mosaic AI).
 - **Direct PDF Download & Web Integration**: Generated vector A4 printable manual (`docs/pdf/databricks_data_intelligence_platform_technical_manual.pdf` & `public/cheatsheets/pdf/`), integrated download CTA in `/code-practice/databricks` manual viewer, and registered in `/api/download/pdf/[filename]` route.
 - **Repository Architecture Documentation**: Created `docs/architecture/09_databricks_intelligence_platform_manual.md` documenting all 8 modules and 14 production blueprints.
 

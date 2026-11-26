@@ -2171,15 +2171,15 @@ def render_images(pdf_path, prefix, dpi=250):
 
     for i, page in enumerate(doc):
         pix = page.get_pixmap(dpi=dpi)
-        img_name = f"{prefix}_page_{i+1}.png"
+        img_name = f"{prefix}_page_{i+1}.webp"
         img_path = os.path.join(IMG_DIR, img_name)
-        pix.save(img_path)
+        Image.frombytes("RGB", [pix.width, pix.height], pix.samples).save(img_path, "WEBP", quality=90, method=6)
         page_images.append(img_path)
         print(f"  ✓ Rendered Page {i+1}: {img_name} ({pix.width}x{pix.height})")
 
     # If 2 pages, create side-by-side poster
     if len(page_images) == 2:
-        poster_name = f"{prefix}_poster.png"
+        poster_name = f"{prefix}_poster.webp"
         poster_path = os.path.join(IMG_DIR, poster_name)
         img1 = Image.open(page_images[0])
         img2 = Image.open(page_images[1])
@@ -2192,7 +2192,7 @@ def render_images(pdf_path, prefix, dpi=250):
         poster = Image.new("RGB", (total_width, max_height), color=(8, 12, 21))
         poster.paste(img1, (0, 0))
         poster.paste(img2, (img1.width + gap, 0))
-        poster.save(poster_path, quality=95)
+        poster.save(poster_path, "WEBP", quality=90, method=6)
         print(f"  ✓ Created Side-by-Side Panoramic Poster: {poster_name} ({total_width}x{max_height})")
 
 def generate_index_html():
@@ -2325,7 +2325,7 @@ def generate_index_html():
     <!-- Card 1: Spark SQL -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_sparksql_poster.png" target="_blank"><img src="../images/databricks_sparksql_page_1.png" alt="Spark SQL Cheat Sheet"></a>
+        <a href="../images/databricks_sparksql_poster.webp" target="_blank"><img src="../images/databricks_sparksql_page_1.webp" alt="Spark SQL Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2334,7 +2334,7 @@ def generate_index_html():
         </div>
         <div class="card-actions">
           <a href="../pdf/databricks_sparksql_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
-          <a href="../images/databricks_sparksql_poster.png" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_sparksql_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2342,7 +2342,7 @@ def generate_index_html():
     <!-- Card 2: PySpark -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_pyspark_poster.png" target="_blank"><img src="../images/databricks_pyspark_page_1.png" alt="PySpark Cheat Sheet"></a>
+        <a href="../images/databricks_pyspark_poster.webp" target="_blank"><img src="../images/databricks_pyspark_page_1.webp" alt="PySpark Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2351,7 +2351,7 @@ def generate_index_html():
         </div>
         <div class="card-actions">
           <a href="../pdf/databricks_pyspark_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
-          <a href="../images/databricks_pyspark_poster.png" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_pyspark_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2359,7 +2359,7 @@ def generate_index_html():
     <!-- Card 3: Spark Core -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_spark_core_poster.png" target="_blank"><img src="../images/databricks_spark_core_page_1.png" alt="Spark Core Cheat Sheet"></a>
+        <a href="../images/databricks_spark_core_poster.webp" target="_blank"><img src="../images/databricks_spark_core_page_1.webp" alt="Spark Core Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2368,7 +2368,7 @@ def generate_index_html():
         </div>
         <div class="card-actions">
           <a href="../pdf/databricks_spark_core_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
-          <a href="../images/databricks_spark_core_poster.png" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_spark_core_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2376,7 +2376,7 @@ def generate_index_html():
     <!-- Card 4: Python in Databricks -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_python_poster.png" target="_blank"><img src="../images/databricks_python_page_1.png" alt="Python in Databricks Cheat Sheet"></a>
+        <a href="../images/databricks_python_poster.webp" target="_blank"><img src="../images/databricks_python_page_1.webp" alt="Python in Databricks Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2385,7 +2385,7 @@ def generate_index_html():
         </div>
         <div class="card-actions">
           <a href="../pdf/databricks_python_cheatsheet.pdf" download class="btn btn-primary">PDF (2 Pages)</a>
-          <a href="../images/databricks_python_poster.png" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_python_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2497,9 +2497,9 @@ def main():
         try:
             rb_doc = fitz.open(runbooks_pdf)
             rb_pix = rb_doc[0].get_pixmap(dpi=250)
-            rb_img_path = os.path.join(IMG_DIR, "incident_runbooks_page_1.png")
-            rb_pix.save(rb_img_path)
-            print(f"  ✓ Rendered Runbooks Thumbnail: incident_runbooks_page_1.png ({rb_doc.page_count} pages)")
+            rb_img_path = os.path.join(IMG_DIR, "incident_runbooks_page_1.webp")
+            Image.frombytes("RGB", [rb_pix.width, rb_pix.height], rb_pix.samples).save(rb_img_path, "WEBP", quality=90, method=6)
+            print(f"  ✓ Rendered Runbooks Thumbnail: incident_runbooks_page_1.webp ({rb_doc.page_count} pages)")
         except Exception as e:
             print(f"  ⚠️ Warning rendering runbook image: {e}")
 
