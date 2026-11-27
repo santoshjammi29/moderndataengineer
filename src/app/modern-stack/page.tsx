@@ -4,8 +4,6 @@ import { getModernStackDAL, getPythonCodePracticeDAL } from "@/lib/dal";
 import { ModernStackClient } from "./modern-stack-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const modernData = await getModernStackDAL();
   return generatePageMetadata({

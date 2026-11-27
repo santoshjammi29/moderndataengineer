@@ -6,7 +6,7 @@ export const metadata: Metadata = buildPageMetadata({
   description:
     "Interactive Spark physical cluster visualizer: task scheduling, byte compilation, whole-stage codegen, and shuffle partition flow across worker nodes.",
   path: "/visualizer",
-  ogImage: "/diagrams/catalyst_photon_engine.webp",
+  ogImage: "/diagrams/catalyst_photon_engine-dark.webp",
   keywords: [
     "Spark Visualizer",
     "Catalyst Optimizer",

@@ -4,6 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Databricks Architecture & Coding Cheat Sheets Hub</title>
+<script>
+(function(){
+  function applyTheme(t){
+    var c=document.documentElement.classList;
+    c.remove('dark','light','grey','e-ink');
+    if(t==='light'||t==='e-ink'||t==='grey'||t==='dark'){c.add(t);}
+    else{c.add('dark');t='dark';}
+    var isLight=(t==='light'||t==='e-ink');
+    document.documentElement.style.colorScheme=isLight?'light':'dark';
+    var suffix=isLight?'-light.webp':'-dark.webp';
+    document.querySelectorAll('[data-themed-webp]').forEach(function(el){
+      var base=el.getAttribute('data-themed-webp');
+      if(!base)return;
+      var target=base.replace(/-(?:dark|light)\.webp$/i,'.webp').replace(/\.webp$/i,suffix);
+      if(el.tagName==='IMG')el.setAttribute('src',target);
+      else if(el.tagName==='A')el.setAttribute('href',target);
+    });
+  }
+  try{
+    var saved=localStorage.getItem('theme')||'dark';
+    applyTheme(saved);
+    window.addEventListener('DOMContentLoaded',function(){applyTheme(localStorage.getItem('theme')||'dark');});
+    window.addEventListener('storage',function(e){if(!e.key||e.key==='theme')applyTheme(localStorage.getItem('theme')||'dark');});
+  }catch(e){}
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,7 +54,7 @@
     letter-spacing: -0.5px;
   }
   header p { color: #94a3b8; font-size: 14px; }
-  .badges { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+  .badges { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
   .badge { background: #1e293b; color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid #334155; }
   .badge-orange { background: rgba(255, 54, 33, 0.15); color: #ff3621; border-color: rgba(255, 54, 33, 0.3); }
 
@@ -77,8 +103,8 @@
     text-decoration: none;
     transition: background 0.2s;
   }
-  .btn-primary { background: #ff3621; color: #fff; }
-  .btn-primary:hover { background: #e02f1d; }
+  .btn-primary { background: #b91c1c; color: #fff; }
+  .btn-primary:hover { background: #991b1b; }
   .btn-secondary { background: #1e293b; color: #38bdf8; border: 1px solid #334155; }
   .btn-secondary:hover { background: #334155; }
 
@@ -96,10 +122,29 @@
   }
   .master-info h2 { font-size: 20px; color: #fff; margin-bottom: 6px; }
   .master-info p { color: #94a3b8; font-size: 13px; max-width: 650px; }
-  .master-btn { background: #ff3621; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; }
-  .master-btn:hover { background: #e02f1d; }
+  .master-btn { background: #b91c1c; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; }
+  .master-btn:hover { background: #991b1b; }
 
   footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 50px; border-top: 1px solid #1e293b; padding-top: 20px; }
+
+  html.grey body { background: #18191c; color: #e4e5eb; }
+  html.grey .card { background: #202226; border-color: #32363e; }
+  html.light body, html.e-ink body { background: #f8f8fc; color: #0f172a; }
+  html.e-ink body { background: #f7f6f2; color: #111111; }
+  html.light header, html.e-ink header { border-bottom-color: #cbd5e1; }
+  html.light header h1, html.e-ink header h1 { color: #0f172a; }
+  html.light header p, html.e-ink header p { color: #475569; }
+  html.light .badge, html.e-ink .badge { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+  html.light .badge-orange, html.e-ink .badge-orange { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+  html.light .card, html.e-ink .card { background: #ffffff; border-color: #cbd5e1; }
+  html.light .card-img-wrap, html.e-ink .card-img-wrap { background: #f1f5f9; border-bottom-color: #e2e8f0; }
+  html.light .card-title, html.e-ink .card-title { color: #0f172a; }
+  html.light .card-desc, html.e-ink .card-desc { color: #334155; }
+  html.light .btn-secondary, html.e-ink .btn-secondary { background: #f1f5f9; color: #0369a1; border-color: #cbd5e1; }
+  html.light .master-banner, html.e-ink .master-banner { background: #ffffff; border-color: #cbd5e1; }
+  html.light .master-info h2, html.e-ink .master-info h2 { color: #0f172a; }
+  html.light .master-info p, html.e-ink .master-info p { color: #334155; }
+  html.light footer, html.e-ink footer { color: #475569; border-top-color: #cbd5e1; }
 </style>
 </head>
 <body>
@@ -120,14 +165,14 @@
       <h2>📘 Databricks Unified Architecture & Coding Cheat Sheet Suite</h2>
       <p>All four domains with high-density code blocks, detailed mechanics explanations, and performance tuning rules. Vector A4 PDFs are maintained in <code>docs/pdf/</code> in the repository.</p>
     </div>
-    <a href="../images/databricks_sparksql_poster.webp" target="_blank" class="master-btn">Explore Wall Posters (250 DPI)</a>
+    <a href="../images/databricks_sparksql_poster-dark.webp" data-themed-webp="../images/databricks_sparksql_poster.webp" target="_blank" class="master-btn">Explore Wall Posters (250 DPI)</a>
   </div>
 
   <div class="grid">
     <!-- Card 1: Spark SQL -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_sparksql_poster.webp" target="_blank"><img src="../images/databricks_sparksql_page_1.webp" alt="Spark SQL Cheat Sheet"></a>
+        <a href="../images/databricks_sparksql_poster-dark.webp" data-themed-webp="../images/databricks_sparksql_poster.webp" target="_blank"><img src="../images/databricks_sparksql_page_1-dark.webp" data-themed-webp="../images/databricks_sparksql_page_1.webp" alt="Spark SQL Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -135,8 +180,8 @@
           <div class="card-desc">12 Cards: DDL, Liquid Clustering, Delta MERGE INTO, QUALIFY Deduplication, Higher-Order Functions, Row Filters & Tuning.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_sparksql_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_sparksql_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_sparksql_page_1-dark.webp" data-themed-webp="../images/databricks_sparksql_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_sparksql_poster-dark.webp" data-themed-webp="../images/databricks_sparksql_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -144,7 +189,7 @@
     <!-- Card 2: PySpark -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_pyspark_poster.webp" target="_blank"><img src="../images/databricks_pyspark_page_1.webp" alt="PySpark Cheat Sheet"></a>
+        <a href="../images/databricks_pyspark_poster-dark.webp" data-themed-webp="../images/databricks_pyspark_poster.webp" target="_blank"><img src="../images/databricks_pyspark_page_1-dark.webp" data-themed-webp="../images/databricks_pyspark_page_1.webp" alt="PySpark Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -152,8 +197,8 @@
           <div class="card-desc">12 Cards: Strict Schemas, Standard Functions, Broadcast & Salting, Delta API, Auto Loader Streaming & Arrow UDFs.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_pyspark_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_pyspark_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_pyspark_page_1-dark.webp" data-themed-webp="../images/databricks_pyspark_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_pyspark_poster-dark.webp" data-themed-webp="../images/databricks_pyspark_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -161,7 +206,7 @@
     <!-- Card 3: Spark Core -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_spark_core_poster.webp" target="_blank"><img src="../images/databricks_spark_core_page_1.webp" alt="Spark Core Cheat Sheet"></a>
+        <a href="../images/databricks_spark_core_poster-dark.webp" data-themed-webp="../images/databricks_spark_core_poster.webp" target="_blank"><img src="../images/databricks_spark_core_page_1-dark.webp" data-themed-webp="../images/databricks_spark_core_page_1.webp" alt="Spark Core Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -169,8 +214,8 @@
           <div class="card-desc">12 Cards: Topography, JVM Unified Memory, Shuffle Spill, Catalyst Optimizer, Cluster Sizing Formula, Photon & AQE.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_spark_core_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_spark_core_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_spark_core_page_1-dark.webp" data-themed-webp="../images/databricks_spark_core_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_spark_core_poster-dark.webp" data-themed-webp="../images/databricks_spark_core_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -178,7 +223,7 @@
     <!-- Card 4: Python in Databricks -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_python_poster.webp" target="_blank"><img src="../images/databricks_python_page_1.webp" alt="Python in Databricks Cheat Sheet"></a>
+        <a href="../images/databricks_python_poster-dark.webp" data-themed-webp="../images/databricks_python_poster.webp" target="_blank"><img src="../images/databricks_python_page_1-dark.webp" data-themed-webp="../images/databricks_python_page_1.webp" alt="Python in Databricks Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -186,8 +231,8 @@
           <div class="card-desc">12 Cards: DBUtils, Delta Live Tables (DLT), CDC apply_changes, Pandas on Spark, DABs CI/CD & Unit Testing.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_python_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_python_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_python_page_1-dark.webp" data-themed-webp="../images/databricks_python_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_python_poster-dark.webp" data-themed-webp="../images/databricks_python_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>

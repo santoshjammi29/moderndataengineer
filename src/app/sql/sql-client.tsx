@@ -38,8 +38,10 @@ import { architectureDiagrams, ArchitectureDiagramItem } from "@/data/diagrams";
 import { WhiteboardCard } from "@/components/architecture/whiteboard-card";
 import { CodeBlock } from "@/components/ui/code-block";
 import { PrerequisiteBanner } from "@/components/ui/prerequisite-banner";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 type SqlSubtab = "stepper" | "window" | "rosetta" | "drills" | "runbooks";
+const SQL_VALID_TABS: readonly SqlSubtab[] = ["stepper", "window", "rosetta", "drills", "runbooks"];
 
 /* ==========================================================================
    TAB 1: INTERACTIVE QUERY CLAUSE EXECUTION STEPPER (S-F-W-G-H-O)
@@ -686,25 +688,29 @@ export function SqlClient() {
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
 
-  const [activeTab, setActiveTab] = useState<SqlSubtab>("stepper");
+  const [activeTab, setActiveTab] = useState<SqlSubtab>(() =>
+    resolveQueryParam(searchParams, "tab", SQL_VALID_TABS, "stepper")
+  );
 
   useEffect(() => {
-    const params = new URLSearchParams(searchKey);
-    const paramTab = params.get("tab")?.toLowerCase() as SqlSubtab | undefined;
-    if (paramTab && ["stepper", "window", "rosetta", "drills", "runbooks"].includes(paramTab)) {
-      setActiveTab(paramTab);
-    } else if (!paramTab) {
-      setActiveTab("stepper");
-    }
+    setActiveTab(resolveQueryParam(new URLSearchParams(searchKey), "tab", SQL_VALID_TABS, "stepper"));
   }, [searchKey]);
+
+  usePopstateSync(
+    useCallback(() => {
+      setActiveTab(resolveQueryParam(new URLSearchParams(window.location.search), "tab", SQL_VALID_TABS, "stepper"));
+    }, [])
+  );
 
   const handleTabChange = useCallback((tab: SqlSubtab) => {
     setActiveTab(tab);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("tab", tab);
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery((params) => {
+      if (tab === "stepper") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+    });
   }, []);
 
   // Stepper state
@@ -988,7 +994,7 @@ export function SqlClient() {
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* ====================================================================
             TAB 1: CLAUSE EXECUTION STEPPER
             ==================================================================== */}
@@ -1926,7 +1932,7 @@ WHERE wait_type LIKE 'PAGELATCH_%'
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

@@ -6,7 +6,7 @@ export const metadata: Metadata = buildPageMetadata({
   description:
     "Interactive Spark Catalyst query plan visualizer, multi-stage optimization pipeline (Analysis, Logical Optimization, Physical Planning, CodeGen), Adaptive Query Execution (AQE), and live physical execution simulator.",
   path: "/spark-catalyst",
-  ogImage: "/diagrams/catalyst_photon_engine.webp",
+  ogImage: "/diagrams/catalyst_photon_engine-dark.webp",
   keywords: [
     "Catalyst Optimizer",
     "Spark Query Optimizer",

@@ -218,7 +218,27 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/blueprints",
-        destination: "/architecture?tab=diagrams",
+        destination: "/whiteboards",
+        permanent: true,
+      },
+      {
+        source: "/repos",
+        destination: "/repositories",
+        permanent: true,
+      },
+      {
+        source: "/deployments",
+        destination: "/studio",
+        permanent: true,
+      },
+      {
+        source: "/spark-engine/catalyst",
+        destination: "/spark-catalyst",
+        permanent: true,
+      },
+      {
+        source: "/spark-visualizer",
+        destination: "/visualizer",
         permanent: true,
       },
       {
@@ -268,7 +288,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/lifecycle",
-        destination: "/dataops",
+        destination: "/dataops?tab=lifecycle",
         permanent: true,
       },
       {

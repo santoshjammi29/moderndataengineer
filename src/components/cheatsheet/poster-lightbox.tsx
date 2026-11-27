@@ -9,7 +9,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 
 interface PosterLightboxProps {
@@ -57,7 +58,7 @@ export function PosterLightbox({
   const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.25, 2.5));
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.25, 0.5));
   const handleReset = () => setZoom(1);
-  const webpThemeClass = getWebpThemeClass(diagramTheme, posterUrl);
+  const themedPosterUrl = getThemedWebpSrc(posterUrl, diagramTheme);
 
   return (
     <div
@@ -116,7 +117,7 @@ export function PosterLightbox({
 
           {/* Download Full Poster */}
           <a
-            href={posterUrl}
+            href={themedPosterUrl}
             download
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
           >
@@ -142,7 +143,7 @@ export function PosterLightbox({
         ref={containerRef}
         onClick={onClose}
         className={cn(
-          "flex-1 overflow-auto p-4 sm:p-8 flex items-center justify-center cursor-zoom-out transition-colors duration-300",
+          "flex-1 overflow-auto p-4 sm:p-8 flex items-center justify-center cursor-zoom-out transition-colors duration-300 whiteboard-container-themed",
           diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
         )}
       >
@@ -151,14 +152,12 @@ export function PosterLightbox({
           className="relative transition-transform duration-150 ease-out cursor-default shadow-2xl rounded-lg overflow-hidden border border-[var(--border)] max-w-full"
           style={{ transform: `scale(${zoom})`, transformOrigin: "center center" }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <ThemedWebpImage
+            useNextImage={false}
             src={posterUrl}
             alt={title}
-            className={cn(
-              "w-auto h-auto max-h-[82vh] max-w-[94vw] object-contain rounded-lg transition-all duration-300",
-              webpThemeClass
-            )}
+            theme={diagramTheme}
+            className="w-auto h-auto max-h-[82vh] max-w-[94vw] object-contain rounded-lg transition-all duration-300"
           />
         </div>
       </div>

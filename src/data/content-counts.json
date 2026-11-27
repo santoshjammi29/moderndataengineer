@@ -1,5 +1,6 @@
 {
   "searchDocuments": 12218,
+  "validatedAssets": 11368,
   "qa": 7140,
   "scenarios": 3307,
   "concepts": 921,
@@ -24,11 +25,23 @@
   "sparkSqlDrills": 160,
   "mssqlDrills": 46,
   "pythonDrills": 43,
+  "combinedPythonRunbooks": 63,
   "learningPaths": 13,
   "guidedTracks": 15,
   "companyProfiles": 156,
   "whiteboards": 52,
   "modernBlueprints": 18,
   "modernConcepts": 37,
-  "finopsPlaybooks": 15
+  "finopsPlaybooks": 15,
+  "polyglotMatrix": 19,
+  "incidentRunbooks": 91,
+  "databricksCheatCards": 48,
+  "cheatSheetsTotal": 139,
+  "databricks100": 100,
+  "databricksOps": 148,
+  "deepDiveDomains": 13,
+  "deepDiveTopics": 130,
+  "sdlcPhases": 19,
+  "sdlcControls": 152,
+  "sdlcGates": 8
 }

@@ -184,15 +184,15 @@ export function DatabricksCard({ card, isHighlighted = false }: DatabricksCardPr
       </h3>
 
       {/* Code Block Container */}
-      <div className="relative mb-3 rounded-lg border border-[var(--border)] bg-[#080c15] overflow-hidden">
-        <div className="flex items-center justify-between px-3 py-1 bg-[#10141f] border-b border-slate-800/80 text-[10px] text-slate-400 font-mono">
+      <div className="code-block-container relative mb-3 rounded-lg border border-[var(--border)] bg-[#080c15] overflow-hidden">
+        <div className="code-block-header flex items-center justify-between px-3 py-1 bg-[#10141f] border-b border-slate-800/80 text-[10px] text-slate-200 font-mono">
           <div className="flex items-center gap-1.5">
-            <FileCode2 size={11} className="text-slate-400" />
+            <FileCode2 size={11} className="text-slate-300" />
             <span>{card.language.toUpperCase()}</span>
           </div>
-          <span className="text-[9px] text-slate-500 uppercase">DBR 15.4+</span>
+          <span className="text-[9px] text-slate-300 uppercase">DBR 15.4+</span>
         </div>
-        <pre className="p-3 text-[11px] sm:text-[11.5px] font-mono leading-relaxed overflow-x-auto text-slate-200 scrollbar-thin scrollbar-thumb-slate-700">
+        <pre className="code-block p-3 text-[11px] sm:text-[11.5px] font-mono leading-relaxed overflow-x-auto text-slate-200 scrollbar-thin scrollbar-thumb-slate-700">
           <code>{card.code}</code>
         </pre>
       </div>

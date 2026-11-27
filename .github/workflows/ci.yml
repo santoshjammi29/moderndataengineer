@@ -66,6 +66,9 @@ jobs:
       - name: Run Vitest Suite
         run: npm test
 
+      - name: Verify Zero Web-Reachable PDFs
+        run: npm run check:no-pdfs
+
   # ──────────────────────────────────────────────────────────────────────────
   # JOB 3: Production Build Verification (OpenNext on Cloudflare Workers)
   # ──────────────────────────────────────────────────────────────────────────
@@ -90,6 +93,40 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
+
+      - name: Verify Zero PDFs in Built OpenNext Assets
+        run: npm run check:no-pdfs -- --require-built
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # JOB 3B: Playwright Link, Redirect & Tab Hydration Crawl
+  # ──────────────────────────────────────────────────────────────────────────
+  e2e-crawl:
+    name: Playwright Link & Tab Crawl
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate shards and build Next.js app
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: npm run content:shard && npm run build:next
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright link and tab crawl
+        run: npm run test:e2e
 
   # ──────────────────────────────────────────────────────────────────────────
   # JOB 4: Centralized Handbook Guardrails

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { m, AnimatePresence } from "framer-motion";
 import {
@@ -20,8 +19,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { CONTENT_COUNTS } from "@/data/content-counts";
 import { architectureDiagrams, ArchitectureDiagramItem } from "@/data/diagrams";
 import { useDiagramTheme } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 
 // Map diagrams to guided learning topics for deep-linking
@@ -118,7 +119,7 @@ export function HomeWhiteboardsShowcase() {
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20">
               <Workflow size={13} className="text-purple-500 dark:text-purple-400" />
-              <span>42 Architecture Whiteboards</span>
+              <span>{CONTENT_COUNTS.whiteboards} Architecture Whiteboards</span>
             </span>
             <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 hidden sm:inline">
               Hand-Drawn System Design
@@ -151,7 +152,7 @@ export function HomeWhiteboardsShowcase() {
             href="/architecture?tab=diagrams"
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-sm shadow-purple-600/20 transition-all cursor-pointer"
           >
-            <span>All 21 Blueprints</span>
+            <span>All {CONTENT_COUNTS.whiteboards} Blueprints</span>
             <ArrowRight size={13} />
           </Link>
         </div>
@@ -222,23 +223,20 @@ export function HomeWhiteboardsShowcase() {
                 setZoomLevel(1);
               }}
               className={cn(
-                "relative w-full aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 cursor-pointer shadow-inner group/img transition-colors duration-300",
+                "relative w-full aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 cursor-pointer shadow-inner group/img transition-colors duration-300 whiteboard-container-themed",
                 isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
               )}
             >
-              {/* Whiteboard Graphic - Clean View without Obstructive Overlays */}
+              {/* Whiteboard Graphic - Theme-Native WebP Variants */}
               <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-5">
-                <Image
+                <ThemedWebpImage
                   src={featuredDiagram.image}
                   alt={featuredDiagram.title}
+                  theme={theme}
                   width={1200}
                   height={750}
-                  loading="lazy"
                   sizes="(max-width: 1024px) 100vw, 65vw"
-                  className={cn(
-                    "max-h-full max-w-full w-auto h-auto object-contain transition-transform duration-300 group-hover/img:scale-[1.018]",
-                    isDark ? "whiteboard-dark" : "whiteboard-light"
-                  )}
+                  className="max-h-full max-w-full w-auto h-auto object-contain transition-transform duration-300 group-hover/img:scale-[1.018]"
                 />
               </div>
             </div>
@@ -319,23 +317,21 @@ export function HomeWhiteboardsShowcase() {
                   }}
                   className="p-3 rounded-2xl border border-[var(--border)] bg-[var(--surface-1)] hover:bg-[var(--surface-2)] transition-all cursor-pointer group flex items-start gap-3 shadow-xs hover:border-purple-500/40"
                 >
-                  {/* Thumbnail with Dark/Light Canvas Transition */}
+                  {/* Thumbnail with Theme-Native WebP Variants */}
                   <div
                     className={cn(
-                      "relative w-24 h-18 sm:w-28 sm:h-20 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0 shadow-inner flex items-center justify-center p-1 transition-colors duration-300",
+                      "relative w-24 h-18 sm:w-28 sm:h-20 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0 shadow-inner flex items-center justify-center p-1 transition-colors duration-300 whiteboard-container-themed",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                     )}
                   >
-                    <Image
+                    <ThemedWebpImage
                       src={d.image}
                       alt={d.title}
+                      theme={theme}
                       width={120}
                       height={80}
                       sizes="120px"
-                      className={cn(
-                        "max-h-full max-w-full w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-200",
-                        isDark ? "whiteboard-dark" : "whiteboard-light"
-                      )}
+                      className="max-h-full max-w-full w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-200"
                     />
                   </div>
 
@@ -462,10 +458,10 @@ export function HomeWhiteboardsShowcase() {
                 </div>
               </div>
 
-              {/* Modal Image Viewport with Dark/Light Blueprint Mode */}
+              {/* Modal Image Viewport with Theme-Native WebP Variants */}
               <div
                 className={cn(
-                  "flex-1 overflow-auto p-4 sm:p-8 flex items-center justify-center min-h-[350px] transition-colors duration-300",
+                  "flex-1 overflow-auto p-4 sm:p-8 flex items-center justify-center min-h-[350px] transition-colors duration-300 whiteboard-container-themed",
                   isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                 )}
               >
@@ -473,17 +469,15 @@ export function HomeWhiteboardsShowcase() {
                   style={{ transform: `scale(${zoomLevel})`, transformOrigin: "center center" }}
                   className="transition-transform duration-150 max-w-full"
                 >
-                  <Image
+                  <ThemedWebpImage
                     src={activeModalDiagram.image}
                     alt={activeModalDiagram.title}
+                    theme={theme}
                     width={1400}
                     height={900}
                     sizes="(max-width: 768px) 100vw, 85vw"
                     priority={true}
-                    className={cn(
-                      "object-contain max-h-[62vh] w-auto h-auto rounded-lg shadow-md transition-all duration-300",
-                      isDark ? "whiteboard-dark" : "whiteboard-light"
-                    )}
+                    className="object-contain max-h-[62vh] w-auto h-auto rounded-lg shadow-md transition-all duration-300"
                   />
                 </div>
               </div>

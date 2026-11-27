@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import React, { useState, useMemo, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Terminal,
@@ -25,6 +25,11 @@ import { CategoryBar } from "@/components/cheatsheet/category-bar";
 import { QuickJumpTOC } from "@/components/cheatsheet/quick-jump-toc";
 import { DatabricksCheatsheetView } from "@/components/cheatsheet/databricks-cheatsheet-view";
 import { cn } from "@/lib/utils";
+import { CONTENT_COUNTS } from "@/data/content-counts";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
+
+const CHEATSHEET_TABS = ["runbooks", "databricks"] as const;
+type CheatSheetTab = (typeof CHEATSHEET_TABS)[number];
 
 const ALL_CATEGORIES: CheatCodeCategory[] = [
   "Spark Core",
@@ -44,20 +49,21 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
   const cheatsheetData = initialData;
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
-  const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState<"databricks" | "runbooks">("runbooks");
+  const [activeTab, setActiveTab] = useState<CheatSheetTab>(() =>
+    resolveQueryParam(searchParams, "tab", CHEATSHEET_TABS, "runbooks")
+  );
 
-  const handleTabChange = (newTab: "databricks" | "runbooks") => {
+  const handleTabChange = useCallback((newTab: CheatSheetTab) => {
     setActiveTab(newTab);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", newTab);
-    if (newTab !== "databricks") {
-      params.delete("domain");
-      params.delete("card");
-    }
-    router.replace(`/cheat-sheet?${params.toString()}`, { scroll: false });
-  };
+    pushUrlQuery((params) => {
+      params.set("tab", newTab);
+      if (newTab !== "databricks") {
+        params.delete("domain");
+        params.delete("card");
+      }
+    });
+  }, []);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
@@ -65,15 +71,8 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
   const [selectedScenario, setSelectedScenario] = useState<string>("ALL");
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
 
-  // Synchronize URL parameters if present
-  useEffect(() => {
-    const params = new URLSearchParams(searchKey);
-    const tabParam = params.get("tab");
-    if (tabParam === "databricks") {
-      setActiveTab("databricks");
-    } else {
-      setActiveTab("runbooks");
-    }
+  const syncFromParams = useCallback((params: URLSearchParams) => {
+    setActiveTab(resolveQueryParam(params, "tab", CHEATSHEET_TABS, "runbooks"));
 
     const idParam = params.get("id");
     const catParam = params.get("category");
@@ -95,7 +94,18 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
         }
       }, 250);
     }
-  }, [searchKey]);
+  }, []);
+
+  // Synchronize URL parameters on searchParams change or browser Back/Forward
+  useEffect(() => {
+    syncFromParams(new URLSearchParams(searchKey));
+  }, [searchKey, syncFromParams]);
+
+  usePopstateSync(
+    useCallback(() => {
+      syncFromParams(new URLSearchParams(window.location.search));
+    }, [syncFromParams])
+  );
 
   // Compute category counts
   const categoryCounts = useMemo(() => {
@@ -296,9 +306,16 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           )}
         >
-          <Flame size={13} className={activeTab === "databricks" ? "text-white" : "text-amber-400"} />
+          <Flame size={13} className={activeTab === "databricks" ? "text-white" : "text-amber-700 dark:text-amber-400"} />
           <span>Databricks Cheat Sheets</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded-full font-mono bg-amber-500/20 text-amber-200">
+          <span
+            className={cn(
+              "text-[10px] px-1.5 py-0.2 rounded-full font-mono",
+              activeTab === "databricks"
+                ? "bg-amber-900/40 text-amber-100"
+                : "bg-amber-500/15 text-amber-800 dark:text-amber-200"
+            )}
+          >
             {databricksData.cards.length} Cards &amp; Posters
           </span>
         </button>
@@ -311,14 +328,14 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
           {/* Consolidated Subpage Banner */}
           <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2.5">
-              <span className="p-2 rounded-lg bg-amber-500/20 text-amber-400 shrink-0">
+              <span className="p-2 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-400 shrink-0">
                 <Flame size={16} />
               </span>
               <div>
-                <div className="font-semibold text-amber-200">
+                <div className="font-semibold text-amber-950 dark:text-amber-200">
                   All Databricks Coding Consolidated Under Single Subpage: /code-practice/databricks
                 </div>
-                <div className="text-[11px] text-amber-300/80">
+                <div className="text-[11px] text-amber-900 dark:text-amber-300/90">
                   All Databricks coding sheets, DBFS operations, transformations, Catalyst optimizations, and memory bottleneck playbooks now live in the dedicated Databricks Coding subpage under Code Practice.
                 </div>
               </div>
@@ -385,7 +402,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
           </section>
 
           {/* Main Content Area */}
-          <div className="space-y-3.5" id="main-content">
+          <div className="space-y-3.5" id="runbooks-content">
             {/* Interactive Optimization Flow Diagram */}
             <section aria-labelledby="optimization-flow-heading">
               <OptimizationFlow onSelectCheatCode={handleJumpToCode} />
@@ -407,7 +424,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                     </span>
                   </div>
                   <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-2 md:line-clamp-1 mt-0.5">
-                    Explore 48 comprehensive cards and view 250 DPI panoramic wall posters for Spark SQL, PySpark, Spark Core, and Python SDK.
+                    Explore {databricksData.cards.length} comprehensive cards and view 250 DPI panoramic wall posters for Spark SQL, PySpark, Spark Core, and Python SDK.
                   </p>
                 </div>
               </div>
@@ -417,7 +434,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                   onClick={() => handleTabChange("databricks")}
                   className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>Explore 48 Cards</span>
+                  <span>Explore {databricksData.cards.length} Cards</span>
                   <ArrowRight size={13} />
                 </button>
               </div>
@@ -431,14 +448,14 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">Looking for visual system design blueprints?</h4>
-                  <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">Pair your code optimization with 28 high-resolution whiteboard architecture diagrams detailing Spark memory shuffles, Catalyst query plans, Delta Lake ACID commits, and Airflow distributed workers.</p>
+                  <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">Pair your code optimization with {CONTENT_COUNTS.whiteboards} high-resolution whiteboard architecture diagrams detailing Spark memory shuffles, Catalyst query plans, Delta Lake ACID commits, and Airflow distributed workers.</p>
                 </div>
               </div>
               <Link
                 href="/architecture?tab=diagrams"
                 className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shrink-0 transition-colors shadow-xs"
               >
-                Explore 28 Blueprints &rarr;
+                Explore {CONTENT_COUNTS.whiteboards} Blueprints &rarr;
               </Link>
             </div>
 

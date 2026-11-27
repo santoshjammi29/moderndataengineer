@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useDeferredValue, Suspense, useCallback } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Layers,
@@ -59,6 +59,24 @@ import { fisherYatesShuffle, createSeededRandom } from "@/lib/shuffle";
 import { ShuffleControl } from "@/components/ui/shuffle-control";
 import dynamic from "next/dynamic";
 import { CodeBlock } from "@/components/ui/code-block";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
+
+const ARCH_VALID_TABS = ["scenarios", "diagrams", "python", "polyglot", "distributed"] as const;
+
+function resolveInitialArchTab(searchParams: Pick<URLSearchParams, "get">): ArchHubTab {
+  const tab = resolveQueryParam(searchParams, "tab", ARCH_VALID_TABS, "scenarios");
+  if (searchParams.get("tab")) return tab;
+  const cardParam = searchParams.get("card") || searchParams.get("id") || searchParams.get("diagram");
+  if (cardParam) {
+    if (architectureDiagrams.some((d) => d.id === cardParam) || searchParams.get("diagram")) {
+      return "diagrams";
+    }
+    if (cardParam.startsWith("py-") || cardParam.startsWith("python-")) {
+      return "python";
+    }
+  }
+  return "scenarios";
+}
 
 const AnswerRenderer = dynamic(
   () => import("@/components/ui/answer-renderer").then((mod) => mod.AnswerRenderer),
@@ -480,10 +498,10 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
   const totalScenariosCount = Math.max(serverTotalCount || 0, architectureData.length);
 
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const searchKey = searchParams.toString();
 
-  // Active Tab state: 'scenarios' | 'python' | 'polyglot' | 'distributed'
-  const [activeTab, setActiveTab] = useState<ArchHubTab>("scenarios");
+  // Active Tab state: 'scenarios' | 'diagrams' | 'python' | 'polyglot' | 'distributed'
+  const [activeTab, setActiveTab] = useState<ArchHubTab>(() => resolveInitialArchTab(searchParams));
 
   // Scenarios filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -618,28 +636,16 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
     };
   }, [serverTotalCount, initialArchitecture]);
 
-  const tabParam = searchParams.get("tab") as ArchHubTab | null;
+  const syncFromParams = useCallback((params: URLSearchParams) => {
+    const qTab = params.get("tab");
+    const cardParam = params.get("card") || params.get("id") || params.get("diagram");
+    const qParam = params.get("q") || params.get("search") || params.get("scenario");
+    const catParam = params.get("category");
+    const diffParam = params.get("difficulty");
+    const levelParam = params.get("level");
+    const kwParam = params.get("keyword") || params.get("kw");
 
-  // Reactively sync activeTab whenever URL searchParams tab changes (e.g. via Link or router)
-  useEffect(() => {
-    const validTabs: ArchHubTab[] = ["scenarios", "diagrams", "python", "polyglot", "distributed"];
-    if (tabParam && validTabs.includes(tabParam)) {
-      setActiveTab(tabParam);
-    } else if (!tabParam) {
-      setActiveTab("scenarios");
-    }
-  }, [tabParam]);
-
-  // Sync URL parameters reactively on searchParams change & popstate
-  useEffect(() => {
-    const qTab = searchParams.get("tab") as ArchHubTab | null;
-    const cardParam = searchParams.get("card") || searchParams.get("id") || searchParams.get("diagram");
-    const qParam = searchParams.get("q") || searchParams.get("search") || searchParams.get("scenario");
-    const catParam = searchParams.get("category");
-    const diffParam = searchParams.get("difficulty");
-    const levelParam = searchParams.get("level");
-    const kwParam = searchParams.get("keyword") || searchParams.get("kw");
-
+    setActiveTab(resolveInitialArchTab(params));
     setSearchQuery(qParam ?? "");
     setPySearch(qParam ?? "");
     setSelectedCategory(catParam || "ALL");
@@ -652,7 +658,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
     }
 
     if (cardParam) {
-      const isDiagram = qTab === "diagrams" || architectureDiagrams.some((d) => d.id === cardParam);
+      const isDiagram = qTab?.toLowerCase() === "diagrams" || architectureDiagrams.some((d) => d.id === cardParam);
       if (isDiagram) {
         setActiveTab("diagrams");
       } else if (cardParam.startsWith("py-") || cardParam.startsWith("python-")) {
@@ -667,9 +673,6 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
           }
         }, 350);
       } else {
-        if (!qTab || qTab === "scenarios") {
-          setActiveTab("scenarios");
-        }
         const cleanId = cardParam.replace(/^arch-/, "");
         setExpandedIds((prev) => new Set([...prev, cleanId]));
         if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
@@ -681,36 +684,47 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
         }, 350);
       }
     }
+  }, []);
 
+  // Sync URL parameters reactively on searchParams change & browser Back/Forward
+  useEffect(() => {
+    syncFromParams(new URLSearchParams(searchKey));
     return () => {
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     };
-  }, [searchParams]);
+  }, [searchKey, syncFromParams]);
+
+  usePopstateSync(
+    useCallback(() => {
+      syncFromParams(new URLSearchParams(window.location.search));
+    }, [syncFromParams])
+  );
 
   // Update URL helper
   const updateUrlParam = useCallback((key: string, value: string | null) => {
-    if (typeof window === "undefined") return;
-    const url = new URL(window.location.href);
-    if (value && value !== "ALL" && value !== "all") {
-      url.searchParams.set(key, value);
-    } else {
-      url.searchParams.delete(key);
-    }
-    router.replace(url.pathname + url.search, { scroll: false });
-  }, [router]);
+    pushUrlQuery((params) => {
+      if (value && value !== "ALL" && value !== "all") {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+  }, []);
 
   const handleTabChange = useCallback((tab: ArchHubTab) => {
     setActiveTab(tab);
-    if (typeof window === "undefined") return;
-    const url = new URL(window.location.href);
-    if (tab === "scenarios") {
-      url.searchParams.delete("tab");
-    } else {
-      url.searchParams.set("tab", tab);
-    }
-    router.replace(url.pathname + url.search, { scroll: false });
-  }, [router]);
+    pushUrlQuery((params) => {
+      if (tab === "scenarios") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+      if (tab !== "diagrams") {
+        params.delete("diagram");
+      }
+    });
+  }, []);
 
   // Distinct categories for System Scenarios
   const categories = useMemo(() => {
@@ -1143,7 +1157,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
               setSearchQuery(val);
               setVisibleCount(initialBatch);
             }}
-          searchPlaceholder="Search 3,080+ architecture blueprints (e.g., Vitess, Spanner TrueTime, Little's Law)... (Press / to search)"
+          searchPlaceholder={`Search ${totalScenariosCount.toLocaleString()} architecture blueprints (e.g., Vitess, Spanner TrueTime, Little's Law)... (Press / to search)`}
           matchCount={filteredItems.length}
           totalCount={totalScenariosCount}
           countUnit="scenarios"

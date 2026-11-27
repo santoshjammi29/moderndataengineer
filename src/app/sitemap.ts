@@ -135,6 +135,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.85,
     },
     {
+      url: `${BASE_URL}/sql`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/mindmap`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
       url: `${BASE_URL}/security`,
       lastModified: now,
       changeFrequency: "monthly",
@@ -163,7 +175,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const conceptsDb = (conceptsMod.default || conceptsMod) as Array<{ term: string }>;
 
   const coreConceptRoutes: MetadataRoute.Sitemap = conceptsDb.map((concept) => ({
-    url: `${BASE_URL}/concepts?tab=concepts&term=${encodeURIComponent(concept.term)}`,
+    url: `${BASE_URL}/concepts?view=glossary&term=${encodeURIComponent(concept.term)}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.8,

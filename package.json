@@ -9,10 +9,11 @@
     "dev": "next dev",
     "content:validate": "tsx scripts/validate-content.ts",
     "content:shard": "tsx scripts/shard-and-index.ts",
+    "check:no-pdfs": "tsx scripts/check-no-public-pdfs.ts",
     "r2:sync:local": "tsx scripts/seed-local-r2.ts",
     "build:next": "next build --webpack",
     "build:worker": "opennextjs-cloudflare build",
-    "build": "npm run content:validate && npm run content:shard && npm run build:worker",
+    "build": "npm run content:validate && npm run content:shard && npm run build:worker && npm run check:no-pdfs -- --require-built",
     "build:cf": "npm run build",
     "package": "npm run build",
     "r2:sync:remote": "tsx scripts/sync-r2-artifacts.ts",
@@ -33,6 +34,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "analyze": "cross-env ANALYZE=true next build --webpack"
   },
   "dependencies": {
@@ -65,6 +67,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261025.1",
     "@next/bundle-analyzer": "^16.4.3",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",

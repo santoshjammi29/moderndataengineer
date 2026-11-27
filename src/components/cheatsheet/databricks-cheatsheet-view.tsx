@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 import {
   Flame,
   Search,
@@ -46,33 +47,59 @@ const DOMAIN_ICONS: Record<DatabricksDomainId, React.ElementType> = {
   python: Code2,
 };
 
+const VALID_DOMAINS = ["ALL", "sparksql", "pyspark", "spark_core", "python"] as const;
+
+function resolveDomain(raw?: string | null): DatabricksDomainId | "ALL" {
+  if (!raw) return "ALL";
+  const lower = raw.trim().toLowerCase();
+  const match = VALID_DOMAINS.find((d) => d.toLowerCase() === lower);
+  return (match as DatabricksDomainId | "ALL") || "ALL";
+}
+
 export function DatabricksCheatsheetView({
   data,
   initialDomain,
   initialCardId,
 }: DatabricksCheatsheetViewProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
 
-  const [selectedDomain, setSelectedDomain] = useState<DatabricksDomainId | "ALL">(
-    (initialDomain as DatabricksDomainId) || "ALL"
+  const [selectedDomain, setSelectedDomain] = useState<DatabricksDomainId | "ALL">(() =>
+    resolveDomain(initialDomain ?? searchParams.get("domain"))
   );
   const [selectedPage, setSelectedPage] = useState<number | "ALL">("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [highlightedCardId, setHighlightedCardId] = useState<string | null>(initialCardId || null);
 
+  useEffect(() => {
+    const params = new URLSearchParams(searchKey);
+    const domParam = params.get("domain");
+    if (domParam !== null) {
+      setSelectedDomain(resolveDomain(domParam));
+    } else if (!initialDomain) {
+      setSelectedDomain("ALL");
+    }
+  }, [searchKey, initialDomain]);
+
+  usePopstateSync(
+    useCallback(() => {
+      const params = new URLSearchParams(window.location.search);
+      setSelectedDomain(resolveDomain(params.get("domain")));
+    }, [])
+  );
+
   const handleDomainSelect = (domId: DatabricksDomainId | "ALL") => {
     setSelectedDomain(domId);
     setSelectedPage("ALL");
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", "databricks");
-    if (domId === "ALL") {
-      params.delete("domain");
-    } else {
-      params.set("domain", domId);
-    }
-    params.delete("card");
-    router.replace(`/cheat-sheet?${params.toString()}`, { scroll: false });
+    pushUrlQuery((params) => {
+      params.set("tab", "databricks");
+      if (domId === "ALL") {
+        params.delete("domain");
+      } else {
+        params.set("domain", domId);
+      }
+      params.delete("card");
+    });
   };
 
   // Lightbox state

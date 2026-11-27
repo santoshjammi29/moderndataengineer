@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 import {
   DataOpsDataset,
   DataOpsConnectivityItem,
@@ -43,30 +44,37 @@ interface DataOpsClientProps {
 }
 
 type TabType = "connectivity" | "cicd" | "lifecycle" | "diagram";
+const DATAOPS_VALID_TABS: readonly TabType[] = ["connectivity", "cicd", "lifecycle", "diagram"];
 
 export function DataOpsClient({ initialData }: DataOpsClientProps) {
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
-  const router = useRouter();
 
-  const initialTab = (searchParams.get("tab") as TabType) || "connectivity";
-  const [currentTab, setCurrentTab] = useState<TabType>(initialTab);
+  const [currentTab, setCurrentTab] = useState<TabType>(() =>
+    resolveQueryParam(searchParams, "tab", DATAOPS_VALID_TABS, "connectivity")
+  );
 
   useEffect(() => {
-    const params = new URLSearchParams(searchKey);
-    const paramTab = params.get("tab") as TabType;
-    if (paramTab && ["connectivity", "cicd", "lifecycle", "diagram"].includes(paramTab)) {
-      setCurrentTab(paramTab);
-    } else if (!paramTab) {
-      setCurrentTab("connectivity");
-    }
+    setCurrentTab(resolveQueryParam(new URLSearchParams(searchKey), "tab", DATAOPS_VALID_TABS, "connectivity"));
   }, [searchKey]);
+
+  usePopstateSync(
+    useCallback(() => {
+      setCurrentTab(
+        resolveQueryParam(new URLSearchParams(window.location.search), "tab", DATAOPS_VALID_TABS, "connectivity")
+      );
+    }, [])
+  );
 
   const setTab = (tab: TabType) => {
     setCurrentTab(tab);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", tab);
-    router.replace(`/dataops?${params.toString()}`, { scroll: false });
+    pushUrlQuery((params) => {
+      if (tab === "connectivity") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+    });
   };
 
   // Search & Filter state

@@ -86,10 +86,10 @@ const QUICK_NAV_HUBS = [
   { label: "Repository Library", href: "/repositories", icon: FolderGit2, badge: "14 public projects" },
   { label: "Q&A Prep Hub", href: "/qa-prep", icon: MessageSquare, badge: `${formatContentCount(CONTENT_COUNTS.qa)}+ Drills` },
   { label: "Architecture Hub", href: "/architecture", icon: Cpu, badge: `${formatContentCount(CONTENT_COUNTS.scenarios)}+ Scenarios` },
-  { label: "Databricks Hub", href: "/code-practice/databricks", icon: Flame, badge: "148+ Ops" },
+  { label: "Databricks Hub", href: "/code-practice/databricks", icon: Flame, badge: `${CONTENT_COUNTS.databricksOps} Ops` },
   { label: "Spark Simulator", href: "/spark-engine", icon: Zap, badge: "Engine" },
   { label: "Modern Stack", href: "/modern-stack", icon: Layers, badge: "Blueprints" },
-  { label: "Cheat Sheets", href: "/cheat-sheet", icon: Terminal, badge: "PROD" },
+  { label: "Cheat Sheets", href: "/cheat-sheet", icon: Terminal, badge: `${CONTENT_COUNTS.cheatSheetsTotal} Cards` },
   { label: "Mind Map", href: "/mindmap", icon: Compass, badge: "Tree" },
 ];
 
@@ -255,11 +255,11 @@ export function CommandPaletteModal({ onClose }: CommandPaletteModalProps) {
       { id: "nav-qa", title: `Q&A Prep Hub (${formatContentCount(CONTENT_COUNTS.qa)} Questions)`, category: "Navigation", page: "Q&A Prep", icon: MessageSquare, href: "/qa-prep", badge: "SM-2" },
       { id: "nav-arch", title: `Architecture Hub (${formatContentCount(CONTENT_COUNTS.scenarios)} Scenarios)`, category: "Navigation", page: "Architecture Hub", icon: Cpu, href: "/architecture", badge: "Architect" },
       { id: "nav-code", title: "Code Practice (PySpark, SQL, Python)", category: "Navigation", page: "Code Practice", icon: FileCode2, href: "/code-practice", badge: "Polyglot" },
-      { id: "nav-code-dbx", title: "Databricks Coding Hub (148+ Ops, DBFS & Memory Triage)", category: "Code Practice", page: "Code Practice", icon: Flame, href: "/code-practice/databricks", badge: "DBX", keywords: ["databricks", "dbfs", "spark", "sql", "pyspark", "oom", "bottleneck", "d100", "spill", "skew", "volumes"] },
+      { id: "nav-code-dbx", title: `Databricks Coding Hub (${CONTENT_COUNTS.databricksOps} Ops, DBFS & Memory Triage)`, category: "Code Practice", page: "Code Practice", icon: Flame, href: "/code-practice/databricks", badge: "DBX", keywords: ["databricks", "dbfs", "spark", "sql", "pyspark", "oom", "bottleneck", "d100", "spill", "skew", "volumes"] },
       { id: "nav-spark", title: "Spark Engine & Simulator", category: "Navigation", page: "Spark Engine", icon: Zap, href: "/spark-engine", badge: "Internals" },
-      { id: "nav-cheatsheet", title: "Production Cheat Sheet (Spark, dbt, Airflow, SQL)", category: "Navigation", page: "Cheat Sheets", icon: Terminal, href: "/cheat-sheet", badge: "PROD" },
+      { id: "nav-cheatsheet", title: `Production Cheat Sheet (${CONTENT_COUNTS.incidentRunbooks} Runbooks · ${CONTENT_COUNTS.databricksCheatCards} DBX Cards)`, category: "Navigation", page: "Cheat Sheets", icon: Terminal, href: "/cheat-sheet", badge: `${CONTENT_COUNTS.cheatSheetsTotal} Cards` },
       { id: "nav-modern", title: "Modern Data Stack & AI Architecture", category: "Navigation", page: "Modern Stack", icon: Layers, href: "/modern-stack", badge: "Hard" },
-      { id: "nav-gcc", title: "Company Research (156 Profiles)", category: "Navigation", page: "Company Research", icon: Building2, href: "/company-research", badge: "Enterprise" },
+      { id: "nav-gcc", title: `Company Research (${formatContentCount(CONTENT_COUNTS.companyProfiles)} Profiles)`, category: "Navigation", page: "Company Research", icon: Building2, href: "/company-research", badge: "Enterprise" },
       { id: "nav-paths", title: `Learning Paths (${CONTENT_COUNTS.learningPaths} Structured Tracks)`, category: "Learning Paths", page: "Learning Paths", icon: Compass, href: "/learning-paths", badge: "Curriculum" },
       { id: "nav-studio", title: "My Studio & Progress", category: "Navigation", page: "Studio", icon: User, href: "/studio", badge: "Account" },
 

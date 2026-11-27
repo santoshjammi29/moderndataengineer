@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     siteName: "Lakehouse Architect",
     images: [
       {
-        url: "/diagrams/fabric_onelake_architecture.webp",
+        url: "/diagrams/fabric_onelake_architecture-dark.webp",
         width: 1200,
         height: 675,
         alt: "Lakehouse Architect - Modern Lakehouse Architecture & Systems Guide",
@@ -99,7 +99,7 @@ export const metadata: Metadata = {
       `The enterprise reference platform for Lakehouse Architecture, with ${formatContentCount(CONTENT_COUNTS.searchDocuments)} searchable learning items across Microsoft Fabric, Databricks, Delta Lake, Apache Iceberg, and Apache Spark.`,
     site: "@SANt0shJ",
     creator: "@SANt0shJ",
-    images: ["/diagrams/fabric_onelake_architecture.webp"],
+    images: ["/diagrams/fabric_onelake_architecture-dark.webp"],
   },
   robots: {
     index: true,
@@ -182,7 +182,7 @@ export default function RootLayout({
           body { background-color: var(--background, #0A0A0B); color: var(--foreground, #f0f0f5); }
         `}} />
       </head>
-      <body className="min-h-dvh overflow-x-hidden bg-[var(--background)] text-[var(--foreground)]">
+      <body className="min-h-dvh overflow-x-clip bg-[var(--background)] text-[var(--foreground)]">
 
         <AuthProvider>
         <ThemeProvider>

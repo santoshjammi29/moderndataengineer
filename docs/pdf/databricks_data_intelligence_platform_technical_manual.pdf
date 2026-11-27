@@ -2,7 +2,7 @@
 %µ¶
 
 1 0 obj
-<</Title(Databricks Data Intelligence Platform: End-to-End Technical Manual)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261126171151+00'00')/ModDate(D:20261126171151+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Structured Progression from Foundational Concepts \(Level 1\) to Principal Production Architecture \(Level 4\))/Keywords(Databricks, Lakehouse, Apache Spark 4.0, VARIANT, Delta Lake, Unity Catalog, Photon, Liquid Clustering, Deletion Vectors, Auto Loader, Change Data Feed, Lakeflow, DLT, RocksDB, DABs, OIDC, Databricks Apps, Chispa, FinOps, Mosaic AI, Troubleshooting)>>
+<</Title(Databricks Data Intelligence Platform: End-to-End Technical Manual)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261127060721+00'00')/ModDate(D:20261127060721+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Structured Progression from Foundational Concepts \(Level 1\) to Principal Production Architecture \(Level 4\))/Keywords(Databricks, Lakehouse, Apache Spark 4.0, VARIANT, Delta Lake, Unity Catalog, Photon, Liquid Clustering, Deletion Vectors, Auto Loader, Change Data Feed, Lakeflow, DLT, RocksDB, DABs, OIDC, Databricks Apps, Chispa, FinOps, Mosaic AI, Troubleshooting)>>
 endobj
 
 2 0 obj
@@ -1417,7 +1417,7 @@ endobj
 endobj
 
 115 0 obj
-<</Type/StructElem/S/TH/P 114 0 R/Pg 2 0 R/K[2 116 0 R]/A[<</O/Table/Scope/Column>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]/ID(node00000035)>>
+<</Type/StructElem/S/TH/P 114 0 R/Pg 2 0 R/K[2 116 0 R]/A[<</O/Table/Scope/Column>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]/ID(node00000033)>>
 endobj
 
 116 0 obj
@@ -1425,7 +1425,7 @@ endobj
 endobj
 
 117 0 obj
-<</Type/StructElem/S/TH/P 114 0 R/Pg 2 0 R/K[3 118 0 R]/A[<</O/Table/Scope/Column>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]/ID(node00000037)>>
+<</Type/StructElem/S/TH/P 114 0 R/Pg 2 0 R/K[3 118 0 R]/A[<</O/Table/Scope/Column>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]/ID(node00000035)>>
 endobj
 
 118 0 obj
@@ -1433,7 +1433,7 @@ endobj
 endobj
 
 119 0 obj
-<</Type/StructElem/S/TH/P 114 0 R/Pg 2 0 R/K[4 120 0 R]/A[<</O/Table/Scope/Column>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]/ID(node00000039)>>
+<</Type/StructElem/S/TH/P 114 0 R/Pg 2 0 R/K[4 120 0 R]/A[<</O/Table/Scope/Column>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]/ID(node00000037)>>
 endobj
 
 120 0 obj
@@ -1445,7 +1445,7 @@ endobj
 endobj
 
 122 0 obj
-<</Type/StructElem/S/TD/P 121 0 R/K[123 0 R 125 0 R]/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 121 0 R/K[123 0 R 125 0 R]/A[<</O/Table/Headers[(node00000033)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 123 0 obj
@@ -1461,7 +1461,7 @@ endobj
 endobj
 
 126 0 obj
-<</Type/StructElem/S/TD/P 121 0 R/K 127 0 R/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 121 0 R/K 127 0 R/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 127 0 obj
@@ -1469,7 +1469,7 @@ endobj
 endobj
 
 128 0 obj
-<</Type/StructElem/S/TD/P 121 0 R/K 129 0 R/A[<</O/Table/Headers[(node00000039)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 121 0 R/K 129 0 R/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 129 0 obj
@@ -1481,7 +1481,7 @@ endobj
 endobj
 
 131 0 obj
-<</Type/StructElem/S/TD/P 130 0 R/Pg 2 0 R/K[5 132 0 R 134 0 R]/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 130 0 R/Pg 2 0 R/K[5 132 0 R 134 0 R]/A[<</O/Table/Headers[(node00000033)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 132 0 obj
@@ -1497,7 +1497,7 @@ endobj
 endobj
 
 135 0 obj
-<</Type/StructElem/S/TD/P 130 0 R/Pg 2 0 R/K[6 136 0 R]/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 130 0 R/Pg 2 0 R/K[6 136 0 R]/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 136 0 obj
@@ -1505,7 +1505,7 @@ endobj
 endobj
 
 137 0 obj
-<</Type/StructElem/S/TD/P 130 0 R/Pg 2 0 R/K[7 138 0 R 140 0 R]/A[<</O/Table/Headers[(node00000039)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 130 0 R/Pg 2 0 R/K[7 138 0 R 140 0 R]/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 138 0 obj
@@ -1525,7 +1525,7 @@ endobj
 endobj
 
 142 0 obj
-<</Type/StructElem/S/TD/P 141 0 R/K[143 0 R 145 0 R]/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 141 0 R/K[143 0 R 145 0 R]/A[<</O/Table/Headers[(node00000033)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 143 0 obj
@@ -1541,7 +1541,7 @@ endobj
 endobj
 
 146 0 obj
-<</Type/StructElem/S/TD/P 141 0 R/K 147 0 R/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 141 0 R/K 147 0 R/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 147 0 obj
@@ -1549,7 +1549,7 @@ endobj
 endobj
 
 148 0 obj
-<</Type/StructElem/S/TD/P 141 0 R/K 149 0 R/A[<</O/Table/Headers[(node00000039)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 141 0 R/K 149 0 R/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 149 0 obj
@@ -1561,7 +1561,7 @@ endobj
 endobj
 
 151 0 obj
-<</Type/StructElem/S/TD/P 150 0 R/Pg 2 0 R/K[8 152 0 R 154 0 R]/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 150 0 R/Pg 2 0 R/K[8 152 0 R 154 0 R]/A[<</O/Table/Headers[(node00000033)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 152 0 obj
@@ -1577,7 +1577,7 @@ endobj
 endobj
 
 155 0 obj
-<</Type/StructElem/S/TD/P 150 0 R/Pg 2 0 R/K[9 156 0 R]/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 150 0 R/Pg 2 0 R/K[9 156 0 R]/A[<</O/Table/Headers[(node00000035)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 156 0 obj
@@ -1585,7 +1585,7 @@ endobj
 endobj
 
 157 0 obj
-<</Type/StructElem/S/TD/P 150 0 R/Pg 2 0 R/K[10 158 0 R]/A[<</O/Table/Headers[(node00000039)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
+<</Type/StructElem/S/TD/P 150 0 R/Pg 2 0 R/K[10 158 0 R]/A[<</O/Table/Headers[(node00000037)]>><</O/Table/RowSpan 1>><</O/Table/ColSpan 1>>]>>
 endobj
 
 158 0 obj
@@ -5889,7 +5889,7 @@ endobj
 endobj
 
 1233 0 obj
-<</Limits[(node00000035)(node00001142)]/Names[(node00000035)115 0 R(node00000037)117 0 R(node00000039)119 0 R(node00000119)186 0 R(node00000121)188 0 R(node00000123)190 0 R(node00000305)365 0 R(node00000307)367 0 R(node00000309)369 0 R(node00000311)371 0 R(node00000336)390 0 R(node00000338)392 0 R(node00000340)394 0 R(node00000342)396 0 R(node00000822)843 0 R(node00000824)845 0 R(node00000826)847 0 R(node00000828)849 0 R(node00001080)1064 0 R(node00001082)1066 0 R(node00001084)1068 0 R(node00001138)1110 0 R(node00001140)1112 0 R(node00001142)1114 0 R]>>
+<</Limits[(node00000033)(node00001142)]/Names[(node00000033)115 0 R(node00000035)117 0 R(node00000037)119 0 R(node00000119)186 0 R(node00000121)188 0 R(node00000123)190 0 R(node00000305)365 0 R(node00000307)367 0 R(node00000309)369 0 R(node00000311)371 0 R(node00000336)390 0 R(node00000338)392 0 R(node00000340)394 0 R(node00000342)396 0 R(node00000822)843 0 R(node00000824)845 0 R(node00000826)847 0 R(node00000828)849 0 R(node00001080)1064 0 R(node00001082)1066 0 R(node00001084)1068 0 R(node00001138)1110 0 R(node00001140)1112 0 R(node00001142)1114 0 R]>>
 endobj
 
 1234 0 obj
@@ -17136,7 +17136,7 @@ xref
 0000873325 00000 n 
 
 trailer
-<</Size 2315/Info 1 0 R/Root 1235 0 R/ID[<50C3BAC2BC5BC392C38C3B18C39C2E3A><E53BFA5FD4137B67DC77CC5E25C31D48>]>>
+<</Size 2315/Info 1 0 R/Root 1235 0 R/ID[<C28AC2ACC2865DC2ACC29EC2A53A5620>(\237mD\341.ee\t\326\351V \277UG*)]>>
 startxref
 873487
 %%EOF

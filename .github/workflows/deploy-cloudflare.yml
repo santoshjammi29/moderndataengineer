@@ -74,3 +74,6 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
+
+      - name: Verify Zero PDFs in Built OpenNext Assets
+        run: npm run check:no-pdfs -- --require-built

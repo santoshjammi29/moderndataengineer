@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import Image from "next/image";
 import {
   Search,
   X,
@@ -24,7 +23,8 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { architectureDiagrams, type ArchitectureDiagramItem } from "@/data/diagrams";
-import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { WhiteboardCard } from "./whiteboard-card";
 import { WhiteboardThemeToggle } from "./whiteboard-theme-toggle";
 import { LearningJourneyViewer } from "./learning-journey-viewer";
@@ -101,8 +101,8 @@ export function ArchitectureDiagramsGallery() {
   const handleDownload = (diagram: ArchitectureDiagramItem, e: React.MouseEvent) => {
     e.stopPropagation();
     const link = document.createElement("a");
-    link.href = diagram.image;
-    link.download = `${diagram.id}.webp`;
+    link.href = getThemedWebpSrc(diagram.image, theme);
+    link.download = `${diagram.id}-${theme}.webp`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -275,10 +275,10 @@ export function ArchitectureDiagramsGallery() {
               </div>
             </div>
 
-            {/* Modal Body / Blueprint View with Dark/Light Mode Filter */}
+            {/* Modal Body / Blueprint View with Theme-Native WebP Assets */}
             <div
               className={cn(
-                "flex-1 overflow-auto p-3 sm:p-8 flex items-center justify-center min-h-[240px] sm:min-h-[380px] touch-pan-x touch-pan-y transition-colors duration-300",
+                "flex-1 overflow-auto p-3 sm:p-8 flex items-center justify-center min-h-[240px] sm:min-h-[380px] touch-pan-x touch-pan-y transition-colors duration-300 whiteboard-container-themed",
                 isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
               )}
             >
@@ -286,16 +286,14 @@ export function ArchitectureDiagramsGallery() {
                 className="transition-transform duration-200 origin-center max-w-full"
                 style={{ transform: `scale(${zoomLevel})` }}
               >
-                <Image
+                <ThemedWebpImage
                   src={activeDiagram.image}
                   alt={activeDiagram.title}
+                  theme={theme}
                   width={1400}
                   height={788}
                   sizes="(max-width: 768px) 100vw, 85vw"
-                  className={cn(
-                    "max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300",
-                    getWebpThemeClass(theme, activeDiagram.image)
-                  )}
+                  className="max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300"
                   priority
                 />
               </div>

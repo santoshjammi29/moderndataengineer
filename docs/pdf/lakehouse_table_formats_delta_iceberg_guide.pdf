@@ -2,7 +2,7 @@
 %µ¶
 
 1 0 obj
-<</Title(Lakehouse Table Formats Architecture & Migration Guide: Delta Lake vs Apache Iceberg)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261126171138+00'00')/ModDate(D:20261126171138+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Lakehouse Storage Formats: Delta Lake 3.2+ and Apache Iceberg 1.5+ Architecture, Concurrency, Deletions, and UniForm)/Keywords(Delta Lake, Apache Iceberg, Lakehouse, Deletion Vectors, Liquid Clustering, UniForm, ACID, Compaction, Migration)>>
+<</Title(Lakehouse Table Formats Architecture & Migration Guide: Delta Lake vs Apache Iceberg)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261127060715+00'00')/ModDate(D:20261127060715+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Lakehouse Storage Formats: Delta Lake 3.2+ and Apache Iceberg 1.5+ Architecture, Concurrency, Deletions, and UniForm)/Keywords(Delta Lake, Apache Iceberg, Lakehouse, Deletion Vectors, Liquid Clustering, UniForm, ACID, Compaction, Migration)>>
 endobj
 
 2 0 obj
@@ -11724,7 +11724,7 @@ xref
 0000740745 00000 n 
 
 trailer
-<</Size 1443/Info 1 0 R/Root 655 0 R/ID[<5B40C3A644C2A72D2CC2A42B642E01C3><BB83CE79809A0682A4FCFDABB86F9A0A>]>>
+<</Size 1443/Info 1 0 R/Root 655 0 R/ID[<2368C3AEC2ACC3AFC395C2B4C28CC3B3><83ABD6E1C8428E6A6C240513001722F2>]>>
 startxref
 740902
 %%EOF

@@ -259,7 +259,7 @@ export function detectNavigationalIntent(query: string): NavigationalJump | null
   if (q.includes("mindmap") || q.includes("mind map") || q.includes("concept map") || q === "tree") {
     return {
       title: "Interactive Mind Map",
-      description: "Visual hierarchical relationship tree connecting 670+ data engineering concepts.",
+      description: `Visual hierarchical relationship tree connecting ${formatContentCount(CONTENT_COUNTS.concepts)} data engineering concepts.`,
       href: "/mindmap",
       page: "Mind Map",
       badge: "Interactive Graph",
@@ -274,7 +274,7 @@ export function detectNavigationalIntent(query: string): NavigationalJump | null
     q === "dbx coding"
   ) {
     return {
-      title: "Databricks Coding & Triage Hub (148+ Ops)",
+      title: `Databricks Coding & Triage Hub (${CONTENT_COUNTS.databricksOps} Ops)`,
       description: "Production PySpark and Databricks engineering drills, memory triage, and 100-day curriculum.",
       href: "/code-practice/databricks",
       page: "Code Practice",
@@ -314,7 +314,7 @@ export function detectNavigationalIntent(query: string): NavigationalJump | null
   }
   if (q.includes("company") || q.includes("companies") || q === "gcc" || q === "company research") {
     return {
-      title: "Company Tech Research (156 GCC Profiles)",
+      title: `Company Tech Research (${formatContentCount(CONTENT_COUNTS.companyProfiles)} GCC Profiles)`,
       description: "Tech stacks, data engineering interview questions, and architecture patterns by enterprise.",
       href: "/company-research",
       page: "Company Research",

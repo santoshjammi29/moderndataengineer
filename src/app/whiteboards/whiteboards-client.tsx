@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 import {
   Cpu,
   Database,
@@ -54,7 +54,8 @@ import {
   type WhiteboardCategoryData,
 } from "@/data/whiteboards-learning-data";
 import { type ArchitectureDiagramItem } from "@/data/diagrams";
-import { useDiagramTheme, getWebpThemeClass, isLightCanvasWebp } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
 import { LearningJourneyViewer } from "@/components/architecture/learning-journey-viewer";
@@ -74,17 +75,32 @@ const ICON_MAP: Record<string, React.ElementType> = {
 type ViewMode = "master" | "diagrams" | "concepts" | "blueprints" | "qa";
 type DifficultyLevel = "ALL" | "EASY" | "MEDIUM" | "HARD" | "ARCHITECT";
 
+const WHITEBOARD_VALID_TABS: readonly ViewMode[] = ["master", "diagrams", "concepts", "blueprints", "qa"];
+const DIAGRAM_ALIAS_MAP: Record<string, string> = {
+  data_skew_salting_repartition: "spark-data-skew-aqe-optimization",
+  catalyst_photon_engine: "spark-catalyst-photon-engine",
+  "delta-lake-acid-mechanics": "delta-lake-under-the-hood",
+};
+
+function resolveWhiteboardCat(params: Pick<URLSearchParams, "get">): string {
+  const cat = params.get("category");
+  if (cat && WHITEBOARD_CATEGORIES.some((c) => c.id === cat)) {
+    return cat;
+  }
+  return WHITEBOARD_CATEGORIES[0].id;
+}
+
 export function WhiteboardsClient() {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
 
   // Category Selection
-  const initialCatId = searchParams.get("category") || WHITEBOARD_CATEGORIES[0].id;
-  const [selectedCatId, setSelectedCatId] = useState<string>(initialCatId);
+  const [selectedCatId, setSelectedCatId] = useState<string>(() => resolveWhiteboardCat(searchParams));
 
   // Pillar Modality Tab
-  const initialTab = (searchParams.get("tab") as ViewMode) || "master";
-  const [activeTab, setActiveTab] = useState<ViewMode>(initialTab);
+  const [activeTab, setActiveTab] = useState<ViewMode>(() =>
+    resolveQueryParam(searchParams, "tab", WHITEBOARD_VALID_TABS, "master")
+  );
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -103,26 +119,12 @@ export function WhiteboardsClient() {
   const [masteredCategories, setMasteredCategories] = useState<string[]>([]);
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
 
-  // Sync state from URL params (?category=, ?tab=, ?diagram=, ?id=)
-  useEffect(() => {
-    const DIAGRAM_ALIAS_MAP: Record<string, string> = {
-      data_skew_salting_repartition: "spark-data-skew-aqe-optimization",
-      catalyst_photon_engine: "spark-catalyst-photon-engine",
-      "delta-lake-acid-mechanics": "delta-lake-under-the-hood",
-    };
+  const syncFromParams = useCallback((params: Pick<URLSearchParams, "get">) => {
+    setSelectedCatId(resolveWhiteboardCat(params));
+    setActiveTab(resolveQueryParam(params, "tab", WHITEBOARD_VALID_TABS, "master"));
 
-    const cat = searchParams.get("category");
-    if (cat && WHITEBOARD_CATEGORIES.some((c) => c.id === cat)) {
-      setSelectedCatId(cat);
-    }
-    const tab = searchParams.get("tab") as ViewMode;
-    if (tab && ["master", "diagrams", "concepts", "blueprints", "qa"].includes(tab)) {
-      setActiveTab(tab);
-    } else if (!tab) {
-      setActiveTab("master");
-    }
-    const rawDiagramParam = searchParams.get("diagram") || searchParams.get("id");
-    const diagramParam = rawDiagramParam ? (DIAGRAM_ALIAS_MAP[rawDiagramParam] || rawDiagramParam) : null;
+    const rawDiagramParam = params.get("diagram") || params.get("id");
+    const diagramParam = rawDiagramParam ? DIAGRAM_ALIAS_MAP[rawDiagramParam] || rawDiagramParam : null;
     if (diagramParam) {
       for (const category of WHITEBOARD_CATEGORIES) {
         const found = category.diagrams.find((d) => d.id === diagramParam);
@@ -136,7 +138,18 @@ export function WhiteboardsClient() {
     } else {
       setActiveDiagram(null);
     }
-  }, [searchParams]);
+  }, []);
+
+  // Sync state from URL params (?category=, ?tab=, ?diagram=, ?id=) & browser Back/Forward
+  useEffect(() => {
+    syncFromParams(new URLSearchParams(searchKey));
+  }, [searchKey, syncFromParams]);
+
+  usePopstateSync(
+    useCallback(() => {
+      syncFromParams(new URLSearchParams(window.location.search));
+    }, [syncFromParams])
+  );
 
   // Load mastered state from localStorage
   useEffect(() => {
@@ -192,17 +205,17 @@ export function WhiteboardsClient() {
   // Update URL params when category or tab changes
   const updateUrl = useCallback(
     (newCatId: string, newTab: ViewMode, diagramId?: string) => {
-      const params = new URLSearchParams(window.location.search);
-      params.set("category", newCatId);
-      params.set("tab", newTab);
-      if (diagramId) {
-        params.set("diagram", diagramId);
-      } else {
-        params.delete("diagram");
-      }
-      router.replace(`/whiteboards?${params.toString()}`, { scroll: false });
+      pushUrlQuery((params) => {
+        params.set("category", newCatId);
+        params.set("tab", newTab);
+        if (diagramId) {
+          params.set("diagram", diagramId);
+        } else {
+          params.delete("diagram");
+        }
+      });
     },
-    [router]
+    []
   );
 
   const handleSelectCategory = (catId: string) => {
@@ -364,8 +377,8 @@ export function WhiteboardsClient() {
   const handleDownload = (diagram: ArchitectureDiagramItem, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const link = document.createElement("a");
-    link.href = diagram.image;
-    link.download = `${diagram.id}.webp`;
+    link.href = getThemedWebpSrc(diagram.image, theme);
+    link.download = `${diagram.id}-${theme}.webp`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -379,6 +392,18 @@ export function WhiteboardsClient() {
 
   const isCurrentMastered = masteredCategories.includes(currentCategory.id);
   const percentComplete = Math.round((masteredCategories.length / WHITEBOARD_CATEGORIES.length) * 100);
+  const totalCategoryConcepts = useMemo(
+    () => WHITEBOARD_CATEGORIES.reduce((sum, cat) => sum + cat.stats.conceptsCount, 0),
+    []
+  );
+  const totalCategoryQuestions = useMemo(
+    () => WHITEBOARD_CATEGORIES.reduce((sum, cat) => sum + cat.stats.qaCount, 0),
+    []
+  );
+  const totalCategoryBlueprints = useMemo(
+    () => WHITEBOARD_CATEGORIES.reduce((sum, cat) => sum + cat.stats.blueprintsCount, 0),
+    []
+  );
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pb-20">
@@ -394,11 +419,11 @@ export function WhiteboardsClient() {
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20">
                 <Sparkles size={13} className="text-purple-500" />
-                42 Master Whiteboard Blueprints
+                {TOTAL_WHITEBOARDS_COUNT} Master Whiteboard Blueprints
               </span>
               <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">•</span>
               <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">
-                7 Core Architectural Pillars
+                {WHITEBOARD_CATEGORIES.length} Core Architectural Pillars
               </span>
             </div>
 
@@ -448,7 +473,7 @@ export function WhiteboardsClient() {
                 Core Concepts
               </div>
               <div className="text-xl sm:text-2xl font-bold font-mono text-[var(--foreground)] mt-0.5">
-                168+
+                {totalCategoryConcepts}
               </div>
               <div className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">
                 Definitions &amp; mechanisms
@@ -460,7 +485,7 @@ export function WhiteboardsClient() {
                 Architect Drills
               </div>
               <div className="text-xl sm:text-2xl font-bold font-mono text-[var(--foreground)] mt-0.5">
-                210+
+                {totalCategoryQuestions}
               </div>
               <div className="text-[11px] text-blue-600 dark:text-blue-400 mt-0.5">
                 Real-world Q&amp;A scenarios
@@ -472,7 +497,7 @@ export function WhiteboardsClient() {
                 System Designs
               </div>
               <div className="text-xl sm:text-2xl font-bold font-mono text-[var(--foreground)] mt-0.5">
-                53
+                {totalCategoryBlueprints}
               </div>
               <div className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5">
                 Mermaid flows &amp; topologies
@@ -483,7 +508,7 @@ export function WhiteboardsClient() {
       </section>
 
       {/* ── STICKY CATEGORY NAVIGATION DECK ───────────────────────────────── */}
-      <section className="sticky top-0 z-30 bg-[var(--background)]/90 backdrop-blur-md border-b border-[var(--border)] py-3 px-4 sm:px-6 lg:px-8 shadow-sm">
+      <section className="sticky top-14 lg:top-0 z-30 bg-[var(--background)]/90 backdrop-blur-md border-b border-[var(--border)] py-3 px-4 sm:px-6 lg:px-8 shadow-sm">
         <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Scrollable Categories List */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
@@ -787,23 +812,17 @@ export function WhiteboardsClient() {
                     onClick={() => setActiveDiagram(currentCategory.diagrams[0])}
                     style={{ position: "relative", height: "280px" }}
                     className={cn(
-                      "lg:col-span-7 relative aspect-[16/10] min-h-[240px] rounded-xl overflow-hidden border border-[var(--border)] cursor-pointer group flex items-center justify-center p-3 select-none transition-colors",
+                      "lg:col-span-7 relative aspect-[16/10] min-h-[240px] rounded-xl overflow-hidden border border-[var(--border)] cursor-pointer group flex items-center justify-center p-3 select-none transition-colors whiteboard-container-themed",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                     )}
                   >
-                    <Image
+                    <ThemedWebpImage
                       src={currentCategory.diagrams[0].image}
                       alt={currentCategory.diagrams[0].title}
+                      theme={theme}
                       fill
                       sizes="(max-width: 1024px) 100vw, 60vw"
-                      className={cn(
-                        "object-contain p-2 transition-transform duration-300 group-hover:scale-[1.02]",
-                        isLightCanvasWebp(currentCategory.diagrams[0].image)
-                          ? getWebpThemeClass(theme, currentCategory.diagrams[0].image)
-                          : isDark
-                          ? "whiteboard-image-dark"
-                          : "whiteboard-image-light"
-                      )}
+                      className="object-contain p-2 transition-transform duration-300 group-hover:scale-[1.02]"
                       priority
                     />
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -1040,23 +1059,17 @@ export function WhiteboardsClient() {
                   <div
                     style={{ position: "relative", minHeight: "200px", height: "220px" }}
                     className={cn(
-                      "relative aspect-[16/10] min-h-[200px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors",
+                      "relative aspect-[16/10] min-h-[200px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors whiteboard-container-themed",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                     )}
                   >
-                    <Image
+                    <ThemedWebpImage
                       src={diagram.image}
                       alt={diagram.title}
+                      theme={theme}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className={cn(
-                        "object-contain p-2 transition-transform duration-300 group-hover:scale-105",
-                        isLightCanvasWebp(diagram.image)
-                          ? getWebpThemeClass(theme, diagram.image)
-                          : isDark
-                          ? "whiteboard-image-dark"
-                          : "whiteboard-image-light"
-                      )}
+                      className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                       <span className="px-3 py-1.5 rounded-lg bg-black/80 text-white text-xs font-semibold backdrop-blur-sm flex items-center gap-1.5 shadow-md">
@@ -1633,10 +1646,10 @@ export function WhiteboardsClient() {
               </div>
             </div>
 
-            {/* Modal Canvas with Dark/Light Support & Zoom */}
+            {/* Modal Canvas with Theme-Native WebP Support & Zoom */}
             <div
               className={cn(
-                "relative flex-1 min-h-[300px] sm:min-h-[460px] max-h-[60vh] overflow-auto p-4 sm:p-8 flex items-center justify-center select-none transition-colors duration-300",
+                "relative flex-1 min-h-[300px] sm:min-h-[460px] max-h-[60vh] overflow-auto p-4 sm:p-8 flex items-center justify-center select-none transition-colors duration-300 whiteboard-container-themed",
                 isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
               )}
             >
@@ -1644,19 +1657,13 @@ export function WhiteboardsClient() {
                 style={{ transform: `scale(${zoomLevel})`, transition: "transform 0.15s ease-out" }}
                 className="relative max-w-full max-h-full flex items-center justify-center"
               >
-                <Image
+                <ThemedWebpImage
                   src={activeDiagram.image}
                   alt={activeDiagram.title}
+                  theme={theme}
                   width={1400}
                   height={900}
-                  className={cn(
-                    "object-contain max-h-[55vh] w-auto h-auto rounded-xl drop-shadow-md",
-                    isLightCanvasWebp(activeDiagram.image)
-                      ? getWebpThemeClass(theme, activeDiagram.image)
-                      : isDark
-                      ? "whiteboard-image-dark"
-                      : "whiteboard-image-light"
-                  )}
+                  className="object-contain max-h-[55vh] w-auto h-auto rounded-xl drop-shadow-md"
                   priority
                 />
               </div>

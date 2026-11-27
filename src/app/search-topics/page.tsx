@@ -4,8 +4,6 @@ import type { Metadata } from "next";
 import { SearchTopicsClient } from "./search-topics-client";
 import { buildPageMetadata, generateFAQSchema, generateBreadcrumbSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
     title: `Search ${formatContentCount(CONTENT_COUNTS.searchDocuments)} Data Engineering Topics & Questions`,

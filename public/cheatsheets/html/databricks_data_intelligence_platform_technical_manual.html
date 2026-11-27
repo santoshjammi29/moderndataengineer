@@ -2,6 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+(function(){
+  function applyTheme(t){
+    var c=document.documentElement.classList;
+    c.remove('dark','light','grey','e-ink');
+    if(t==='light'||t==='e-ink'||t==='grey'||t==='dark'){c.add(t);}
+    else{c.add('dark');t='dark';}
+    var isLight=(t==='light'||t==='e-ink');
+    document.documentElement.style.colorScheme=isLight?'light':'dark';
+    var suffix=isLight?'-light.webp':'-dark.webp';
+    document.querySelectorAll('[data-themed-webp]').forEach(function(el){
+      var base=el.getAttribute('data-themed-webp');
+      if(!base)return;
+      var target=base.replace(/-(?:dark|light)\.webp$/i,'.webp').replace(/\.webp$/i,suffix);
+      if(el.tagName==='IMG')el.setAttribute('src',target);
+      else if(el.tagName==='A')el.setAttribute('href',target);
+    });
+  }
+  try{
+    var saved=localStorage.getItem('theme')||'dark';
+    applyTheme(saved);
+    window.addEventListener('DOMContentLoaded',function(){applyTheme(localStorage.getItem('theme')||'dark');});
+    window.addEventListener('storage',function(e){if(!e.key||e.key==='theme')applyTheme(localStorage.getItem('theme')||'dark');});
+  }catch(e){}
+})();
+</script>
   <title>Databricks Data Intelligence Platform: End-to-End Technical Manual</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -221,6 +247,26 @@ code.inline-code {
 .page-content {
   flex: 1;
 }
+
+html.grey body, html.grey .page { background: #18191c !important; color: #e4e5eb !important; }
+html.dark body, html.dark .page { background: #080c15 !important; color: #e2e8f0 !important; }
+html.e-ink body, html.e-ink .page { background: #f7f6f2 !important; color: #111111 !important; }
+html.dark .doc-eyebrow, html.grey .doc-eyebrow { color: #f87171 !important; }
+html.dark .doc-title, html.dark .section-title, html.grey .doc-title, html.grey .section-title { color: #f8fafc !important; }
+html.dark .doc-subtitle, html.grey .doc-subtitle { color: #94a3b8 !important; }
+html.dark .module-header, html.grey .module-header { color: #fca5a5 !important; border-bottom-color: #334155 !important; }
+html.dark .callout-box, html.grey .callout-box { background: rgba(239, 68, 68, 0.12) !important; border-color: #334155 !important; border-left-color: #f87171 !important; color: #e2e8f0 !important; }
+html.dark .callout-box strong, html.grey .callout-box strong { color: #fca5a5 !important; }
+html.dark p, html.dark li, html.grey p, html.grey li { color: #cbd5e1 !important; }
+html.dark li strong, html.grey li strong { color: #f8fafc !important; }
+html.dark table.data-table th, html.grey table.data-table th { background: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
+html.dark table.data-table td, html.grey table.data-table td { border-color: #334155 !important; color: #cbd5e1 !important; }
+html.dark table.data-table tr:nth-child(even) td, html.grey table.data-table tr:nth-child(even) td { background: #0f172a !important; }
+html.dark table.data-table tr td:first-child, html.grey table.data-table tr td:first-child { color: #f8fafc !important; }
+html.dark .code-container, html.grey .code-container { background: #040711 !important; border-color: #1e293b !important; color: #e2e8f0 !important; }
+html.dark code.inline-code, html.grey code.inline-code { background: #1e293b !important; color: #38bdf8 !important; border-color: #334155 !important; }
+html.dark .page-footer, html.grey .page-footer { border-top-color: #334155 !important; color: #94a3b8 !important; }
+
 </style>
 </head>
 <body>

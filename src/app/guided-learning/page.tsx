@@ -5,8 +5,6 @@ import { buildPageMetadata, generateCourseSchema } from "@/lib/seo";
 import { GUIDED_TOPICS } from "@/data/guided-learning-topics";
 import { getLearningPathsDAL } from "@/lib/dal";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const paths = await getLearningPathsDAL();
   return buildPageMetadata({

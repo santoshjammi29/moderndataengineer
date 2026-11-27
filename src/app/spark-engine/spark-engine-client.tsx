@@ -26,22 +26,38 @@ import {
   Table,
   ArrowRight,
 } from "lucide-react";
-import Image from "next/image";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { architectureDiagrams, ArchitectureDiagramItem } from "@/data/diagrams";
 import { CodeSheetItem } from "@/types/data";
 import { WhiteboardCard } from "@/components/architecture/whiteboard-card";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
-import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { PrerequisiteBanner } from "@/components/ui/prerequisite-banner";
 import { OptimizationFlow } from "@/components/cheatsheet/optimization-flow";
 import { recordLastTopic } from "@/lib/user-progress";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 type SparkSubtab = "architecture" | "simulator" | "memory" | "curriculum" | "lexicon";
 type SparkFlowType = "narrow" | "wide" | "broadcast" | "aggregation" | "aqe_skew";
+
+const SPARK_VALID_TABS: readonly SparkSubtab[] = [
+  "architecture",
+  "simulator",
+  "memory",
+  "curriculum",
+  "lexicon",
+];
+const SPARK_VALID_FLOWS: readonly SparkFlowType[] = [
+  "narrow",
+  "wide",
+  "broadcast",
+  "aggregation",
+  "aqe_skew",
+];
 
 interface LexiconTerm {
   term: string;
@@ -108,7 +124,10 @@ export interface SparkEngineClientProps {
 export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
   const pysparkData = initialPyspark;
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<SparkSubtab>("architecture");
+  const searchKey = searchParams.toString();
+  const [activeTab, setActiveTab] = useState<SparkSubtab>(() =>
+    resolveQueryParam(searchParams, "tab", SPARK_VALID_TABS, "architecture")
+  );
   const simTimersRef = useRef<NodeJS.Timeout[]>([]);
 
   const clearSimTimers = useCallback(() => {
@@ -117,7 +136,9 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
   }, []);
 
   // Simulator State
-  const [flowType, setFlowType] = useState<SparkFlowType>("narrow");
+  const [flowType, setFlowType] = useState<SparkFlowType>(() =>
+    resolveQueryParam(searchParams, "flow", SPARK_VALID_FLOWS, "narrow")
+  );
   const [simStep, setSimStep] = useState(0);
   const [isSimRunning, setIsSimRunning] = useState(false);
 
@@ -147,12 +168,16 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
 
   const handleTabChange = useCallback((tabId: SparkSubtab) => {
     setActiveTab(tabId);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("tab", tabId);
-      url.hash = "";
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery(
+      (params) => {
+        if (tabId === "architecture") {
+          params.delete("tab");
+        } else {
+          params.set("tab", tabId);
+        }
+      },
+      { clearHash: true }
+    );
     const tabLabels: Record<SparkSubtab, string> = {
       architecture: "Spark 4.0 Engine Architecture",
       simulator: "Spark Physical Execution Simulator",
@@ -173,73 +198,41 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
     setSimStep(0);
     clearSimTimers();
     setIsSimRunning(false);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("flow", type);
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery((params) => {
+      params.set("flow", type);
+    });
   }, [clearSimTimers]);
 
+  const syncFromLocation = useCallback((params: Pick<URLSearchParams, "get">, hashRaw: string) => {
+    const queryTab = params.get("tab")?.trim().toLowerCase();
+    const hash = hashRaw.replace("#", "").trim().toLowerCase();
+    if (queryTab) {
+      setActiveTab(resolveQueryParam(params, "tab", SPARK_VALID_TABS, "architecture"));
+    } else if (hash && (SPARK_VALID_TABS as readonly string[]).includes(hash)) {
+      setActiveTab(hash as SparkSubtab);
+    } else {
+      setActiveTab("architecture");
+    }
+    setFlowType(resolveQueryParam(params, "flow", SPARK_VALID_FLOWS, "narrow"));
+  }, []);
+
   useEffect(() => {
-    const syncTabFromLocation = () => {
-      const hash = window.location.hash.replace("#", "").toLowerCase();
-      const params = new URLSearchParams(window.location.search);
-      const queryTab = params.get("tab")?.toLowerCase();
-      const queryFlow = params.get("flow")?.toLowerCase();
-      const target = hash || queryTab;
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    syncFromLocation(new URLSearchParams(searchKey), hash);
+  }, [searchKey, syncFromLocation]);
 
-      const validTabs: SparkSubtab[] = [
-        "architecture",
-        "simulator",
-        "memory",
-        "curriculum",
-        "lexicon",
-      ];
+  usePopstateSync(
+    useCallback(() => {
+      syncFromLocation(new URLSearchParams(window.location.search), window.location.hash);
+    }, [syncFromLocation]),
+    { includeHashChange: true }
+  );
 
-      if (target && validTabs.includes(target as SparkSubtab)) {
-        setActiveTab(target as SparkSubtab);
-      }
-
-      if (queryFlow && ["narrow", "wide", "broadcast", "aggregation", "aqe_skew"].includes(queryFlow)) {
-        setFlowType(queryFlow as SparkFlowType);
-      }
-    };
-
-    syncTabFromLocation();
-    window.addEventListener("hashchange", syncTabFromLocation);
-    window.addEventListener("popstate", syncTabFromLocation);
+  useEffect(() => {
     return () => {
-      window.removeEventListener("hashchange", syncTabFromLocation);
-      window.removeEventListener("popstate", syncTabFromLocation);
       clearSimTimers();
     };
   }, [clearSimTimers]);
-
-  // Reactively synchronize from Next.js router searchParams (?tab=, ?flow=)
-  useEffect(() => {
-    const queryTab = searchParams.get("tab")?.toLowerCase();
-    const queryFlow = searchParams.get("flow")?.toLowerCase();
-    const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "").toLowerCase() : "";
-    const target = queryTab || hash;
-
-    const validTabs: SparkSubtab[] = [
-      "architecture",
-      "simulator",
-      "memory",
-      "curriculum",
-      "lexicon",
-    ];
-
-    if (target && validTabs.includes(target as SparkSubtab)) {
-      setActiveTab(target as SparkSubtab);
-    } else if (!target) {
-      setActiveTab("architecture");
-    }
-
-    if (queryFlow && ["narrow", "wide", "broadcast", "aggregation", "aqe_skew"].includes(queryFlow)) {
-      setFlowType(queryFlow as SparkFlowType);
-    }
-  }, [searchParams]);
 
   // Lexicon Search State
   const [lexiconQuery, setLexiconQuery] = useState("");
@@ -1217,8 +1210,8 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                 <button
                   onClick={() => {
                     const link = document.createElement("a");
-                    link.href = activeModalDiagram.image;
-                    link.download = `${activeModalDiagram.id}.webp`;
+                    link.href = getThemedWebpSrc(activeModalDiagram.image, diagramTheme);
+                    link.download = `${activeModalDiagram.id}-${diagramTheme}.webp`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -1244,10 +1237,10 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
               </div>
             </div>
 
-            {/* Modal Body / Blueprint View with Dark/Light Mode Filter */}
+            {/* Modal Body / Blueprint View with Theme-Native WebP Variants */}
             <div
               className={cn(
-                "flex-1 overflow-auto p-3 sm:p-8 flex items-center justify-center min-h-[240px] sm:min-h-[380px] touch-pan-x touch-pan-y transition-colors duration-300",
+                "flex-1 overflow-auto p-3 sm:p-8 flex items-center justify-center min-h-[240px] sm:min-h-[380px] touch-pan-x touch-pan-y transition-colors duration-300 whiteboard-container-themed",
                 diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
               )}
             >
@@ -1255,17 +1248,15 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                 className="transition-transform duration-200 origin-center max-w-full"
                 style={{ transform: `scale(${modalZoomLevel})` }}
               >
-                <Image
+                <ThemedWebpImage
                   src={activeModalDiagram.image}
                   alt={activeModalDiagram.title}
+                  theme={diagramTheme}
                   width={1400}
                   height={900}
                   sizes="(max-width: 768px) 100vw, 80vw"
                   priority={true}
-                  className={cn(
-                    "max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300",
-                    getWebpThemeClass(diagramTheme, activeModalDiagram.image)
-                  )}
+                  className="max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300"
                 />
               </div>
             </div>

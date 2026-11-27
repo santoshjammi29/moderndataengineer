@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import { SqlClient } from "./sql-client";
 
-export const dynamic = "force-static";
-
 export default function SqlPage() {
   return (
     <Suspense

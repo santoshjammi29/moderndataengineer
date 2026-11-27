@@ -758,12 +758,12 @@ pre, code, .token-line, [class*="code-block"] {
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   overscroll-behavior-y: auto;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -2148,76 +2148,94 @@ code:not(pre code) {
   contain: layout style;
 }
 
-/* Whiteboard & Cheatsheet WebP Blueprint Themes (Dark, Light, Grey, E-Ink + Manual Toggle) */
+/* Whiteboard & Cheatsheet WebP Blueprint Themes (Dark, Light, Grey, E-Ink + Manual Toggle)
+   Powered by native per-theme -dark.webp and -light.webp assets (no pixel inversion hacks) */
 .whiteboard-dark,
-.whiteboard-image-dark {
-  filter: none;
-  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+.whiteboard-image-dark,
 .whiteboard-light,
-.whiteboard-image-light {
-  filter: invert(0.92) hue-rotate(180deg) contrast(1.12) brightness(1.02);
-  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.whiteboard-image-light,
+.webp-light-canvas-light,
+.webp-light-canvas-dark {
+  filter: none;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .whiteboard-container-dark {
-  background-color: #080808 !important;
+  background-color: #080808;
   color-scheme: dark;
   color: #f0f0f5;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .whiteboard-container-light {
-  background-color: #FFFFFF !important;
+  background-color: #FFFFFF;
   color-scheme: light;
   color: #0f172a;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Grey theme adaptation for dark-canvas diagrams & containers */
+/* Zero-flash synchronous container theme driven by html[data-diagram-theme] */
+html[data-diagram-theme="dark"] .whiteboard-container-themed {
+  background-color: #080808;
+  color-scheme: dark;
+  color: #f0f0f5;
+}
+
+html.grey[data-diagram-theme="dark"] .whiteboard-container-themed,
 .grey .whiteboard-container-dark {
-  background-color: #121317 !important;
+  background-color: #121317;
   color-scheme: dark;
   color: #f3f4f6;
 }
 
-.grey .whiteboard-dark,
-.grey .whiteboard-image-dark {
-  filter: brightness(1.04) contrast(0.96);
+html[data-diagram-theme="light"] .whiteboard-container-themed {
+  background-color: #FFFFFF;
+  color-scheme: light;
+  color: #0f172a;
 }
 
-/* E-Ink theme adaptation: high-contrast monochrome ink on warm paper canvas */
+html.e-ink[data-diagram-theme="light"] .whiteboard-container-themed,
 .e-ink .whiteboard-container-light {
-  background-color: #f7f6f2 !important;
+  background-color: #f7f6f2;
   color-scheme: light;
   color: #111111;
 }
 
+/* Pre-hydration zero-flash variant visibility switching */
+.diagram-variant-light {
+  display: none;
+}
+
+.diagram-variant-dark {
+  display: block;
+}
+
+html.light:not([data-diagram-theme="dark"]) .diagram-variant-dark,
+html.e-ink:not([data-diagram-theme="dark"]) .diagram-variant-dark,
+html[data-diagram-theme="light"] .diagram-variant-dark {
+  display: none;
+}
+
+html.light:not([data-diagram-theme="dark"]) .diagram-variant-light,
+html.e-ink:not([data-diagram-theme="dark"]) .diagram-variant-light,
+html[data-diagram-theme="light"] .diagram-variant-light {
+  display: block;
+}
+
+html[data-diagram-theme="dark"] .diagram-variant-dark {
+  display: block;
+}
+
+html[data-diagram-theme="dark"] .diagram-variant-light {
+  display: none;
+}
+
+/* E-Ink paper integration for native light-canvas assets (pure ink on warm paper) */
 .e-ink .whiteboard-light,
-.e-ink .whiteboard-image-light {
-  filter: invert(0.93) hue-rotate(180deg) grayscale(0.85) contrast(1.18) brightness(1.02);
-  mix-blend-mode: multiply;
-}
-
-/* Native light-canvas WebPs (e.g. manuals, Spark matrix cheatsheets) */
-.webp-light-canvas-light {
-  filter: none;
-  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+.e-ink .whiteboard-image-light,
 .e-ink .webp-light-canvas-light {
-  filter: grayscale(0.85) contrast(1.15);
+  filter: grayscale(0.85) contrast(1.08);
   mix-blend-mode: multiply;
-}
-
-.webp-light-canvas-dark {
-  filter: invert(0.92) hue-rotate(180deg) contrast(1.08) brightness(0.98);
-  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.grey .webp-light-canvas-dark {
-  filter: invert(0.88) hue-rotate(180deg) contrast(1.04) brightness(0.98);
 }
 
 /* Forced Colors / High Contrast Mode (Windows High Contrast & WCAG 2.2 Forced Colors) */

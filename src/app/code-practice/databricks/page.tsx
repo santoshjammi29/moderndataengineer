@@ -4,8 +4,6 @@ import { getDatabricksCodingHubDAL } from "@/lib/dal";
 import { DatabricksCodingClient } from "./databricks-coding-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const { suite, operations } = await getDatabricksCodingHubDAL();
   const total = suite.cards.length + operations.length;

@@ -7,6 +7,7 @@ import { ChevronRight, Home } from "lucide-react";
 import dataPathsJson from "@/data/json/data_paths.json";
 const learningPathsDb = dataPathsJson as Array<{ id: string; slug?: string; title: string }>;
 import { EXPERIENCE_TIERS, ExperienceTier } from "@/lib/user-progress";
+import { useHasMounted } from "@/lib/url-tab-sync";
 
 interface Crumb {
   label: string;
@@ -97,13 +98,15 @@ const MODERN_TABS: Record<string, string> = {
 
 function BreadcrumbsInner() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const rawSearchParams = useSearchParams();
+  const mounted = useHasMounted();
+  const searchParams = mounted ? rawSearchParams : null;
 
   const crumbs: Crumb[] = useMemo(() => {
     const list: Crumb[] = [{ label: "Home", href: "/" }];
 
     if (pathname === "/") {
-      const tier = searchParams.get("tier");
+      const tier = searchParams?.get("tier");
       if (tier) {
         const tierKey = (
           tier === "1"
@@ -128,7 +131,10 @@ function BreadcrumbsInner() {
     const routeLabel = ROUTE_LABELS[pathname] || pathname.replace("/", "").replace(/-/g, " ");
     list.push({ label: routeLabel, href: pathname });
 
-    // Inspect route-specific query params
+    // Inspect route-specific query params (only after hydration to match static HTML)
+    if (!searchParams) {
+      return list;
+    }
     if (pathname === "/learning-paths") {
       const pathId = searchParams.get("card") || searchParams.get("id");
       if (pathId) {

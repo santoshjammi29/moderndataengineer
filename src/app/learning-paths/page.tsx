@@ -4,14 +4,12 @@ import { getLearningPathsDAL } from "@/lib/dal";
 import { GuidedLearningClient } from "@/app/guided-learning/guided-learning-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const paths = await getLearningPathsDAL();
   return generatePageMetadata({
     title: `Role-Based Learning Paths (${paths.length} Curricula) | Fabric & Data Engineering`,
     description: `Structured week-by-week learning roadmaps for Fabric DP-600, Lakehouse Solutions Architect, and Lead Data Engineer.`,
-    path: "/guided-learning?tab=curricula",
+    path: "/learning-paths",
     keywords: ["Fabric Learning Paths", "Data Architect Career", "DP-600 Curriculum", "Lakehouse Roadmap"],
   });
 }
@@ -21,7 +19,7 @@ export default async function LearningPathsPage() {
 
   const courseSchema = generateCourseSchema(
     "Data Platform & Lakehouse Career Roadmaps",
-    "12 end-to-end role curricula with week-by-week phase breakdowns, projects, and certification exam prep."
+    `${paths.length} end-to-end role curricula with week-by-week phase breakdowns, projects, and certification exam prep.`
   );
 
   return (
