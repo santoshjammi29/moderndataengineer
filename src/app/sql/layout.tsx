@@ -12,7 +12,7 @@ export const metadata: Metadata = buildPageMetadata({
   description:
     "Master SQL from logical clause execution order (S-F-W-G-H-O) to live window function visualization, multi-engine rosetta stone (T-SQL, PostgreSQL, Spark SQL, Snowflake), and production query plan optimization.",
   path: "/sql",
-  ogImage: "/diagrams/sql_server_query_engine_optimization.webp",
+  ogImage: "/diagrams/sql_server_query_engine_optimization-dark.webp",
   keywords: [
     "SQL Study Guide",
     "SQL Query Execution Order",

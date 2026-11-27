@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { Maximize2, Share2, Download, Check, Sparkles, ChevronRight, Bookmark, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ArchitectureDiagramItem } from "@/data/diagrams";
-import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 
 interface WhiteboardCardProps {
   diagram: ArchitectureDiagramItem;
@@ -81,8 +81,8 @@ export function WhiteboardCard({
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
     const link = document.createElement("a");
-    link.href = diagram.image;
-    link.download = `${diagram.id}.webp`;
+    link.href = getThemedWebpSrc(diagram.image, theme);
+    link.download = `${diagram.id}-${theme}.webp`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -107,21 +107,19 @@ export function WhiteboardCard({
       {/* Visual Canvas Container - Clean, Pristine Whiteboard View without Obstructive Overlays */}
       <div
         className={cn(
-          "relative aspect-[16/10] min-h-[220px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 sm:p-5 select-none transition-colors duration-300",
+          "relative aspect-[16/10] min-h-[220px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 sm:p-5 select-none transition-colors duration-300 whiteboard-container-themed",
           isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
         )}
       >
-        {/* Diagram Image with Hardware-Accelerated Theme Transition */}
+        {/* Diagram Image with Theme-Native WebP Variants */}
         <div style={{ position: "relative", minHeight: "220px", height: "220px" }} className="relative w-full h-full min-h-[220px] flex items-center justify-center">
-          <Image
+          <ThemedWebpImage
             src={diagram.image}
             alt={diagram.title}
+            theme={theme}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className={cn(
-              "object-contain transition-transform duration-500 group-hover:scale-[1.018]",
-              getWebpThemeClass(theme, diagram.image)
-            )}
+            className="object-contain transition-transform duration-500 group-hover:scale-[1.018]"
             priority={priority}
           />
         </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
-import { clearDiagramThemeOverride } from "@/lib/diagram-theme";
+import { clearDiagramThemeOverride, getDiagramTheme, type SiteTheme } from "@/lib/diagram-theme";
 
 const COLOR_SCHEME_BY_THEME: Record<string, { scheme: "light" | "dark"; bg: string }> = {
   dark: { scheme: "dark", bg: "#0A0A0B" },
@@ -31,6 +31,11 @@ function ThemeMetaSync() {
     // whiteboard override so all .webp diagrams follow the newly selected theme.
     if (prevThemeRef.current && prevThemeRef.current !== theme) {
       clearDiagramThemeOverride();
+    } else {
+      document.documentElement.setAttribute(
+        "data-diagram-theme",
+        getDiagramTheme(theme as SiteTheme)
+      );
     }
     prevThemeRef.current = theme;
   }, [theme]);

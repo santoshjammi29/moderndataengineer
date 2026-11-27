@@ -8,11 +8,13 @@ for Spark SQL, PySpark, Spark Core & Architecture, and Python in Databricks.
 Author: Santosh Jammi | Principal Data Architect
 """
 
+import argparse
 import html
 import json
 import os
 import shutil
 import subprocess
+import tempfile
 import fitz  # PyMuPDF
 from PIL import Image
 
@@ -42,7 +44,120 @@ def find_chrome():
 
 CHROME_BIN = find_chrome()
 
-def get_base_css(theme_color="#ff3621", title_color="#38bdf8"):
+THEME_SYNC_SCRIPT = """<script>
+(function(){
+  function applyTheme(t){
+    var c=document.documentElement.classList;
+    c.remove('dark','light','grey','e-ink');
+    if(t==='light'||t==='e-ink'||t==='grey'||t==='dark'){c.add(t);}
+    else{c.add('dark');t='dark';}
+    var isLight=(t==='light'||t==='e-ink');
+    document.documentElement.style.colorScheme=isLight?'light':'dark';
+    var suffix=isLight?'-light.webp':'-dark.webp';
+    document.querySelectorAll('[data-themed-webp]').forEach(function(el){
+      var base=el.getAttribute('data-themed-webp');
+      if(!base)return;
+      var target=base.replace(/-(?:dark|light)\\.webp$/i,'.webp').replace(/\\.webp$/i,suffix);
+      if(el.tagName==='IMG')el.setAttribute('src',target);
+      else if(el.tagName==='A')el.setAttribute('href',target);
+    });
+  }
+  try{
+    var saved=localStorage.getItem('theme')||'dark';
+    applyTheme(saved);
+    window.addEventListener('DOMContentLoaded',function(){applyTheme(localStorage.getItem('theme')||'dark');});
+    window.addEventListener('storage',function(e){if(!e.key||e.key==='theme')applyTheme(localStorage.getItem('theme')||'dark');});
+  }catch(e){}
+})();
+</script>"""
+
+
+def get_base_css(theme_color="#ff3621", title_color="#38bdf8", theme="dark"):
+    is_light = theme == "light"
+    page_bg = "#f8fafc" if is_light else "#080c15"
+    body_fg = "#0f172a" if is_light else "#e2e8f0"
+    h1_fg = "#0f172a" if is_light else "#ffffff"
+    sub_fg = "#475569" if is_light else "#94a3b8"
+    badge_sec_bg = "#e0f2fe" if is_light else "#1e293b"
+    badge_sec_fg = "#0369a1" if is_light else "#38bdf8"
+    badge_sec_border = "#bae6fd" if is_light else "#334155"
+    badge_dark_bg = "#f1f5f9" if is_light else "#0f172a"
+    badge_dark_fg = "#3730a3" if is_light else "#a5b4fc"
+    badge_dark_border = "#cbd5e1" if is_light else "#1e293b"
+    badge_acc_bg = "#047857" if is_light else "#10b981"
+    badge_acc_fg = "#ffffff" if is_light else "#042f2e"
+    card_bg = "#ffffff" if is_light else "#0f172a"
+    card_border = "#cbd5e1" if is_light else "#1e293b"
+    card_shadow = "0 1px 2px rgba(15,23,42,0.06)" if is_light else "0 1px 3px rgba(0,0,0,0.3)"
+    card_title_fg = "#0369a1" if is_light else title_color
+    card_tag_bg = "#f1f5f9" if is_light else "#1e293b"
+    card_tag_fg = "#334155" if is_light else "#94a3b8"
+    code_bg = "#f1f5f9" if is_light else "#040711"
+    code_border = "#cbd5e1" if is_light else "#141e33"
+    code_fg = "#0f172a" if is_light else "#e2e8f0"
+    kw_fg = "#be123c" if is_light else "#f43f5e"
+    fn_fg = "#0369a1" if is_light else "#38bdf8"
+    str_fg = "#15803d" if is_light else "#4ade80"
+    cm_fg = "#475569" if is_light else "#64748b"
+    num_fg = "#c2410c" if is_light else "#fb923c"
+    cls_fg = "#92400e" if is_light else "#fbbf24"
+    var_fg = "#6d28d9" if is_light else "#a78bfa"
+    typ_fg = "#854d0e" if is_light else "#facc15"
+    explain_bg = "#f8fafc" if is_light else "rgba(4, 7, 17, 0.75)"
+    explain_border = "#cbd5e1" if is_light else "#1a253c"
+    explain_fg = "#334155" if is_light else "#cbd5e1"
+    explain_head_fg = "#334155" if is_light else "#94a3b8"
+    explain_bold_fg = "#0f172a" if is_light else "#f8fafc"
+    explain_code_bg = "#e2e8f0" if is_light else "#141e33"
+    explain_code_fg = "#0369a1" if is_light else "#38bdf8"
+    alert_tip_bg = "#eff6ff" if is_light else "rgba(14, 165, 233, 0.08)"
+    alert_tip_fg = "#0c4a6e" if is_light else "#bae6fd"
+    alert_perf_bg = "#ecfdf5" if is_light else "rgba(16, 185, 129, 0.08)"
+    alert_perf_fg = "#064e3b" if is_light else "#a7f3d0"
+    alert_warn_bg = "#fffbeb" if is_light else "rgba(245, 158, 11, 0.08)"
+    alert_warn_fg = "#78350f" if is_light else "#fde68a"
+    alert_sec_bg = "#f5f3ff" if is_light else "rgba(168, 85, 247, 0.08)"
+    alert_sec_fg = "#4c1d95" if is_light else "#e9d5ff"
+    footer_fg = "#475569" if is_light else "#64748b"
+    footer_right_fg = "#334155" if is_light else "#94a3b8"
+    adaptive_css = "" if is_light else """
+/* Adaptive Theme Support when viewed directly in browser */
+html.light body, html.light .page,
+html.e-ink body, html.e-ink .page { background: #f8fafc; color: #0f172a; }
+html.e-ink body, html.e-ink .page { background: #f7f6f2; color: #111111; }
+html.grey body, html.grey .page { background: #18191c; color: #e4e5eb; }
+html.light .header-title-box h1, html.e-ink .header-title-box h1 { color: #0f172a; }
+html.light .header-title-box p, html.e-ink .header-title-box p { color: #475569; }
+html.light .badge-secondary, html.e-ink .badge-secondary { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+html.light .badge-dark, html.e-ink .badge-dark { background: #f1f5f9; color: #3730a3; border-color: #cbd5e1; }
+html.light .badge-accent, html.e-ink .badge-accent { background: #047857; color: #ffffff; }
+html.light .card, html.e-ink .card { background: #ffffff; border-color: #cbd5e1; box-shadow: 0 1px 2px rgba(15,23,42,0.06); }
+html.grey .card { background: #202226; border-color: #32363e; }
+html.light .card-header, html.e-ink .card-header { border-bottom-color: #e2e8f0; }
+html.light .card-title, html.e-ink .card-title { color: #0369a1; }
+html.light .card-tag, html.e-ink .card-tag { background: #f1f5f9; color: #334155; }
+html.light pre.code, html.e-ink pre.code { background: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
+html.e-ink pre.code { background: #eeebe3; }
+html.light .kw, html.e-ink .kw { color: #be123c; }
+html.light .fn, html.e-ink .fn { color: #0369a1; }
+html.light .str, html.e-ink .str { color: #15803d; }
+html.light .cm, html.e-ink .cm { color: #475569; }
+html.light .num, html.e-ink .num { color: #c2410c; }
+html.light .cls, html.e-ink .cls { color: #92400e; }
+html.light .var, html.e-ink .var { color: #6d28d9; }
+html.light .typ, html.e-ink .typ { color: #854d0e; }
+html.light .code-explain, html.e-ink .code-explain { background: #f8fafc; border-color: #cbd5e1; color: #334155; }
+html.light .explain-head, html.e-ink .explain-head { color: #334155; }
+html.light .explain-list li, html.e-ink .explain-list li { color: #334155; }
+html.light .explain-list li b, html.e-ink .explain-list li b { color: #0f172a; }
+html.light .explain-list li code, html.e-ink .explain-list li code { background: #e2e8f0; color: #0369a1; }
+html.light .alert-tip, html.e-ink .alert-tip { background: #eff6ff; color: #0c4a6e; }
+html.light .alert-perf, html.e-ink .alert-perf { background: #ecfdf5; color: #064e3b; }
+html.light .alert-warn, html.e-ink .alert-warn { background: #fffbeb; color: #78350f; }
+html.light .alert-sec, html.e-ink .alert-sec { background: #f5f3ff; color: #4c1d95; }
+html.light .page-footer, html.e-ink .page-footer { border-top-color: #cbd5e1; color: #475569; }
+html.light .page-footer-right, html.e-ink .page-footer-right { color: #334155; }
+"""
     return f"""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
@@ -58,8 +173,8 @@ def get_base_css(theme_color="#ff3621", title_color="#38bdf8"):
 }}
 
 body {{
-  background: #080c15;
-  color: #e2e8f0;
+  background: {page_bg};
+  color: {body_fg};
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 7.2px;
   line-height: 1.28;
@@ -72,7 +187,7 @@ body {{
   height: 297mm;
   max-height: 297mm;
   padding: 5mm 6.5mm 4.5mm 6.5mm;
-  background: #080c15;
+  background: {page_bg};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -101,7 +216,7 @@ body {{
   font-size: 13.5px;
   font-weight: 800;
   letter-spacing: -0.3px;
-  color: #ffffff;
+  color: {h1_fg};
   display: flex;
   align-items: center;
   gap: 5px;
@@ -109,7 +224,7 @@ body {{
 
 .header-title-box p {{
   font-size: 7.5px;
-  color: #94a3b8;
+  color: {sub_fg};
   font-weight: 500;
 }}
 
@@ -129,9 +244,9 @@ body {{
 }}
 
 .badge-primary {{ background: {theme_color}; color: #ffffff; }}
-.badge-secondary {{ background: #1e293b; color: #38bdf8; border: 1px solid #334155; }}
-.badge-dark {{ background: #0f172a; color: #a5b4fc; border: 1px solid #1e293b; }}
-.badge-accent {{ background: #10b981; color: #042f2e; }}
+.badge-secondary {{ background: {badge_sec_bg}; color: {badge_sec_fg}; border: 1px solid {badge_sec_border}; }}
+.badge-dark {{ background: {badge_dark_bg}; color: {badge_dark_fg}; border: 1px solid {badge_dark_border}; }}
+.badge-accent {{ background: {badge_acc_bg}; color: {badge_acc_fg}; }}
 
 /* Grid Layout: 3 Rows of 2 Cards */
 .content-grid {{
@@ -144,11 +259,11 @@ body {{
 }}
 
 .card {{
-  background: #0f172a;
-  border: 1px solid #1e293b;
+  background: {card_bg};
+  border: 1px solid {card_border};
   border-radius: 5px;
   padding: 4.5px 6.5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: {card_shadow};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -160,7 +275,7 @@ body {{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid {card_border};
   padding-bottom: 2.5px;
   margin-bottom: 1px;
 }}
@@ -168,7 +283,7 @@ body {{
 .card-title {{
   font-size: 8.8px;
   font-weight: 700;
-  color: {title_color};
+  color: {card_title_fg};
   display: flex;
   align-items: center;
   gap: 4px;
@@ -176,8 +291,8 @@ body {{
 
 .card-tag {{
   font-size: 6.4px;
-  background: #1e293b;
-  color: #94a3b8;
+  background: {card_tag_bg};
+  color: {card_tag_fg};
   padding: 1.5px 4px;
   border-radius: 2px;
   font-weight: 600;
@@ -185,45 +300,45 @@ body {{
 
 /* Code Blocks */
 pre.code {{
-  background: #040711;
-  border: 1px solid #141e33;
+  background: {code_bg};
+  border: 1px solid {code_border};
   border-radius: 3px;
   padding: 3px 5px;
   font-family: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
   font-size: 6.6px;
   line-height: 1.24;
-  color: #e2e8f0;
+  color: {code_fg};
   overflow: hidden;
   white-space: pre-wrap;
   word-break: break-all;
 }}
 
 /* Syntax Highlighting */
-.kw {{ color: #f43f5e; font-weight: 600; }}    /* keywords */
-.fn {{ color: #38bdf8; font-weight: 600; }}    /* functions */
-.str {{ color: #4ade80; }}                     /* strings */
-.cm {{ color: #64748b; font-style: italic; }}  /* comments */
-.num {{ color: #fb923c; }}                     /* numbers */
-.cls {{ color: #fbbf24; font-weight: 600; }}   /* classes/types */
-.var {{ color: #a78bfa; }}                     /* variables */
-.typ {{ color: #facc15; }}                     /* SQL types */
+.kw {{ color: {kw_fg}; font-weight: 600; }}    /* keywords */
+.fn {{ color: {fn_fg}; font-weight: 600; }}    /* functions */
+.str {{ color: {str_fg}; }}                     /* strings */
+.cm {{ color: {cm_fg}; font-style: italic; }}  /* comments */
+.num {{ color: {num_fg}; }}                     /* numbers */
+.cls {{ color: {cls_fg}; font-weight: 600; }}   /* classes/types */
+.var {{ color: {var_fg}; }}                     /* variables */
+.typ {{ color: {typ_fg}; }}                     /* SQL types */
 
 /* Code Explanation Section (Below Every Code Block) */
 .code-explain {{
-  background: rgba(4, 7, 17, 0.75);
-  border: 1px solid #1a253c;
+  background: {explain_bg};
+  border: 1px solid {explain_border};
   border-left: 2px solid {theme_color};
   border-radius: 3px;
   padding: 3px 5px;
   font-size: 6.5px;
   line-height: 1.25;
-  color: #cbd5e1;
+  color: {explain_fg};
 }}
 
 .explain-head {{
   font-size: 6.2px;
   font-weight: 700;
-  color: #94a3b8;
+  color: {explain_head_fg};
   text-transform: uppercase;
   letter-spacing: 0.3px;
   margin-bottom: 2px;
@@ -246,7 +361,7 @@ pre.code {{
   padding-left: 7px;
   font-size: 6.4px;
   line-height: 1.24;
-  color: #cbd5e1;
+  color: {explain_fg};
 }}
 
 .explain-list li::before {{
@@ -259,14 +374,14 @@ pre.code {{
 }}
 
 .explain-list li b {{
-  color: #f8fafc;
+  color: {explain_bold_fg};
 }}
 
 .explain-list li code {{
   font-family: 'JetBrains Mono', monospace;
-  color: #38bdf8;
+  color: {explain_code_fg};
   font-size: 6.1px;
-  background: #141e33;
+  background: {explain_code_bg};
   padding: 0.5px 2px;
   border-radius: 2px;
 }}
@@ -283,38 +398,38 @@ pre.code {{
 }}
 
 .alert-tip {{
-  background: rgba(14, 165, 233, 0.08);
+  background: {alert_tip_bg};
   border-left: 2px solid #0ea5e9;
-  color: #bae6fd;
+  color: {alert_tip_fg};
 }}
 
 .alert-perf {{
-  background: rgba(16, 185, 129, 0.08);
+  background: {alert_perf_bg};
   border-left: 2px solid #10b981;
-  color: #a7f3d0;
+  color: {alert_perf_fg};
 }}
 
 .alert-warn {{
-  background: rgba(245, 158, 11, 0.08);
+  background: {alert_warn_bg};
   border-left: 2px solid #f59e0b;
-  color: #fde68a;
+  color: {alert_warn_fg};
 }}
 
 .alert-sec {{
-  background: rgba(168, 85, 247, 0.08);
+  background: {alert_sec_bg};
   border-left: 2px solid #a855f7;
-  color: #e9d5ff;
+  color: {alert_sec_fg};
 }}
 
 /* Footer */
 .page-footer {{
-  border-top: 1px solid #1e293b;
+  border-top: 1px solid {card_border};
   padding-top: 2.5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 6.8px;
-  color: #64748b;
+  color: {footer_fg};
 }}
 
 .page-footer-left {{
@@ -325,8 +440,9 @@ pre.code {{
 
 .page-footer-right {{
   font-weight: 600;
-  color: #94a3b8;
+  color: {footer_right_fg};
 }}
+{adaptive_css}
 """
 
 # ==============================================================================
@@ -2138,13 +2254,15 @@ resources:
 # ==============================================================================
 # GENERATOR FUNCTIONS
 # ==============================================================================
-def generate_full_html(title, theme_color, title_color, body_content):
-    css = get_base_css(theme_color=theme_color, title_color=title_color)
+def generate_full_html(title, theme_color, title_color, body_content, theme="dark", include_theme_sync=True):
+    css = get_base_css(theme_color=theme_color, title_color=title_color, theme=theme)
+    sync_script = THEME_SYNC_SCRIPT if include_theme_sync else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <title>{title}</title>
+{sync_script}
 <style>{css}</style>
 </head>
 <body>
@@ -2167,23 +2285,30 @@ def compile_pdf(html_path, pdf_path):
     size_kb = os.path.getsize(pdf_path) / 1024
     print(f"  ✓ Created {os.path.basename(pdf_path)} ({size_kb:.1f} KB)")
 
-def render_images(pdf_path, prefix, dpi=250):
-    print(f"Rendering high-res images from {os.path.basename(pdf_path)} at {dpi} DPI...")
+def render_images(pdf_path, prefix, dpi=250, theme_suffix="", write_canonical=True):
+    print(f"Rendering high-res images from {os.path.basename(pdf_path)} at {dpi} DPI ({theme_suffix or 'default'})...")
     doc = fitz.open(pdf_path)
     page_images = []
+    gap_color = (248, 250, 252) if theme_suffix == "-light" else (8, 12, 21)
 
     for i, page in enumerate(doc):
         pix = page.get_pixmap(dpi=dpi)
-        img_name = f"{prefix}_page_{i+1}.webp"
-        img_path = os.path.join(IMG_DIR, img_name)
-        Image.frombytes("RGB", [pix.width, pix.height], pix.samples).save(img_path, "WEBP", quality=90, method=6)
-        page_images.append(img_path)
-        print(f"  ✓ Rendered Page {i+1}: {img_name} ({pix.width}x{pix.height})")
+        pil_img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        if theme_suffix:
+            themed_name = f"{prefix}_page_{i+1}{theme_suffix}.webp"
+            themed_path = os.path.join(IMG_DIR, themed_name)
+            pil_img.save(themed_path, "WEBP", quality=90, method=6)
+            page_images.append(themed_path)
+        if write_canonical:
+            img_name = f"{prefix}_page_{i+1}.webp"
+            img_path = os.path.join(IMG_DIR, img_name)
+            pil_img.save(img_path, "WEBP", quality=90, method=6)
+            if not theme_suffix:
+                page_images.append(img_path)
+        print(f"  ✓ Rendered Page {i+1}: {prefix}_page_{i+1}{theme_suffix}.webp ({pix.width}x{pix.height})")
 
     # If 2 pages, create side-by-side poster
     if len(page_images) == 2:
-        poster_name = f"{prefix}_poster.webp"
-        poster_path = os.path.join(IMG_DIR, poster_name)
         img1 = Image.open(page_images[0])
         img2 = Image.open(page_images[1])
 
@@ -2192,54 +2317,61 @@ def render_images(pdf_path, prefix, dpi=250):
         total_width = img1.width + img2.width + gap
         max_height = max(img1.height, img2.height)
 
-        poster = Image.new("RGB", (total_width, max_height), color=(8, 12, 21))
+        poster = Image.new("RGB", (total_width, max_height), color=gap_color)
         poster.paste(img1, (0, 0))
         poster.paste(img2, (img1.width + gap, 0))
-        poster.save(poster_path, "WEBP", quality=90, method=6)
-        print(f"  ✓ Created Side-by-Side Panoramic Poster: {poster_name} ({total_width}x{max_height})")
+        if theme_suffix:
+            poster_themed_name = f"{prefix}_poster{theme_suffix}.webp"
+            poster.save(os.path.join(IMG_DIR, poster_themed_name), "WEBP", quality=90, method=6)
+        if write_canonical:
+            poster_name = f"{prefix}_poster.webp"
+            poster.save(os.path.join(IMG_DIR, poster_name), "WEBP", quality=90, method=6)
+        print(f"  ✓ Created Side-by-Side Panoramic Poster: {prefix}_poster{theme_suffix}.webp ({total_width}x{max_height})")
+    doc.close()
 
 def generate_index_html():
-    html = """<!DOCTYPE html>
+    html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Databricks Architecture & Coding Cheat Sheets Hub</title>
+{THEME_SYNC_SCRIPT}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
+  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{
     background: #090d16;
     color: #e2e8f0;
     font-family: 'Inter', sans-serif;
     padding: 30px 20px;
-  }
-  .container { max-width: 1200px; margin: 0 auto; }
-  header {
+  }}
+  .container {{ max-width: 1200px; margin: 0 auto; }}
+  header {{
     text-align: center;
     margin-bottom: 40px;
     border-bottom: 1px solid #1e293b;
     padding-bottom: 25px;
-  }
-  header h1 {
+  }}
+  header h1 {{
     font-family: 'Outfit', sans-serif;
     font-size: 32px;
     color: #fff;
     margin-bottom: 8px;
     letter-spacing: -0.5px;
-  }
-  header p { color: #94a3b8; font-size: 14px; }
-  .badges { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-  .badge { background: #1e293b; color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid #334155; }
-  .badge-orange { background: rgba(255, 54, 33, 0.15); color: #ff3621; border-color: rgba(255, 54, 33, 0.3); }
+  }}
+  header p {{ color: #94a3b8; font-size: 14px; }}
+  .badges {{ display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }}
+  .badge {{ background: #1e293b; color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid #334155; }}
+  .badge-orange {{ background: rgba(255, 54, 33, 0.15); color: #ff3621; border-color: rgba(255, 54, 33, 0.3); }}
 
-  .grid {
+  .grid {{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     margin-bottom: 40px;
-  }
-  .card {
+  }}
+  .card {{
     background: #0f172a;
     border: 1px solid #1e293b;
     border-radius: 8px;
@@ -2247,28 +2379,28 @@ def generate_index_html():
     transition: transform 0.2s, border-color 0.2s;
     display: flex;
     flex-direction: column;
-  }
-  .card:hover { transform: translateY(-3px); border-color: #38bdf8; }
-  .card-img-wrap {
+  }}
+  .card:hover {{ transform: translateY(-3px); border-color: #38bdf8; }}
+  .card-img-wrap {{
     height: 180px;
     overflow: hidden;
     background: #040711;
     border-bottom: 1px solid #1e293b;
     position: relative;
-  }
-  .card-img-wrap img {
+  }}
+  .card-img-wrap img {{
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top center;
     transition: transform 0.3s;
-  }
-  .card:hover .card-img-wrap img { transform: scale(1.03); }
-  .card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-  .card-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-  .card-desc { font-size: 12.5px; color: #94a3b8; line-height: 1.4; margin-bottom: 16px; }
-  .card-actions { display: flex; gap: 10px; }
-  .btn {
+  }}
+  .card:hover .card-img-wrap img {{ transform: scale(1.03); }}
+  .card-body {{ padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }}
+  .card-title {{ font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }}
+  .card-desc {{ font-size: 12.5px; color: #94a3b8; line-height: 1.4; margin-bottom: 16px; }}
+  .card-actions {{ display: flex; gap: 10px; }}
+  .btn {{
     flex: 1;
     text-align: center;
     padding: 8px 12px;
@@ -2277,13 +2409,13 @@ def generate_index_html():
     font-weight: 600;
     text-decoration: none;
     transition: background 0.2s;
-  }
-  .btn-primary { background: #ff3621; color: #fff; }
-  .btn-primary:hover { background: #e02f1d; }
-  .btn-secondary { background: #1e293b; color: #38bdf8; border: 1px solid #334155; }
-  .btn-secondary:hover { background: #334155; }
+  }}
+  .btn-primary {{ background: #b91c1c; color: #fff; }}
+  .btn-primary:hover {{ background: #991b1b; }}
+  .btn-secondary {{ background: #1e293b; color: #38bdf8; border: 1px solid #334155; }}
+  .btn-secondary:hover {{ background: #334155; }}
 
-  .master-banner {
+  .master-banner {{
     background: linear-gradient(135deg, rgba(255, 54, 33, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
     border: 1px solid rgba(255, 54, 33, 0.3);
     border-radius: 12px;
@@ -2294,13 +2426,32 @@ def generate_index_html():
     margin-bottom: 40px;
     flex-wrap: wrap;
     gap: 20px;
-  }
-  .master-info h2 { font-size: 20px; color: #fff; margin-bottom: 6px; }
-  .master-info p { color: #94a3b8; font-size: 13px; max-width: 650px; }
-  .master-btn { background: #ff3621; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; }
-  .master-btn:hover { background: #e02f1d; }
+  }}
+  .master-info h2 {{ font-size: 20px; color: #fff; margin-bottom: 6px; }}
+  .master-info p {{ color: #94a3b8; font-size: 13px; max-width: 650px; }}
+  .master-btn {{ background: #b91c1c; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; }}
+  .master-btn:hover {{ background: #991b1b; }}
 
-  footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 50px; border-top: 1px solid #1e293b; padding-top: 20px; }
+  footer {{ text-align: center; color: #64748b; font-size: 12px; margin-top: 50px; border-top: 1px solid #1e293b; padding-top: 20px; }}
+
+  html.grey body {{ background: #18191c; color: #e4e5eb; }}
+  html.grey .card {{ background: #202226; border-color: #32363e; }}
+  html.light body, html.e-ink body {{ background: #f8f8fc; color: #0f172a; }}
+  html.e-ink body {{ background: #f7f6f2; color: #111111; }}
+  html.light header, html.e-ink header {{ border-bottom-color: #cbd5e1; }}
+  html.light header h1, html.e-ink header h1 {{ color: #0f172a; }}
+  html.light header p, html.e-ink header p {{ color: #475569; }}
+  html.light .badge, html.e-ink .badge {{ background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }}
+  html.light .badge-orange, html.e-ink .badge-orange {{ background: #fee2e2; color: #991b1b; border-color: #fecaca; }}
+  html.light .card, html.e-ink .card {{ background: #ffffff; border-color: #cbd5e1; }}
+  html.light .card-img-wrap, html.e-ink .card-img-wrap {{ background: #f1f5f9; border-bottom-color: #e2e8f0; }}
+  html.light .card-title, html.e-ink .card-title {{ color: #0f172a; }}
+  html.light .card-desc, html.e-ink .card-desc {{ color: #334155; }}
+  html.light .btn-secondary, html.e-ink .btn-secondary {{ background: #f1f5f9; color: #0369a1; border-color: #cbd5e1; }}
+  html.light .master-banner, html.e-ink .master-banner {{ background: #ffffff; border-color: #cbd5e1; }}
+  html.light .master-info h2, html.e-ink .master-info h2 {{ color: #0f172a; }}
+  html.light .master-info p, html.e-ink .master-info p {{ color: #334155; }}
+  html.light footer, html.e-ink footer {{ color: #475569; border-top-color: #cbd5e1; }}
 </style>
 </head>
 <body>
@@ -2321,14 +2472,14 @@ def generate_index_html():
       <h2>📘 Databricks Unified Architecture & Coding Cheat Sheet Suite</h2>
       <p>All four domains with high-density code blocks, detailed mechanics explanations, and performance tuning rules. Vector A4 PDFs are maintained in <code>docs/pdf/</code> in the repository.</p>
     </div>
-    <a href="../images/databricks_sparksql_poster.webp" target="_blank" class="master-btn">Explore Wall Posters (250 DPI)</a>
+    <a href="../images/databricks_sparksql_poster-dark.webp" data-themed-webp="../images/databricks_sparksql_poster.webp" target="_blank" class="master-btn">Explore Wall Posters (250 DPI)</a>
   </div>
 
   <div class="grid">
     <!-- Card 1: Spark SQL -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_sparksql_poster.webp" target="_blank"><img src="../images/databricks_sparksql_page_1.webp" alt="Spark SQL Cheat Sheet"></a>
+        <a href="../images/databricks_sparksql_poster-dark.webp" data-themed-webp="../images/databricks_sparksql_poster.webp" target="_blank"><img src="../images/databricks_sparksql_page_1-dark.webp" data-themed-webp="../images/databricks_sparksql_page_1.webp" alt="Spark SQL Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2336,8 +2487,8 @@ def generate_index_html():
           <div class="card-desc">12 Cards: DDL, Liquid Clustering, Delta MERGE INTO, QUALIFY Deduplication, Higher-Order Functions, Row Filters & Tuning.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_sparksql_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_sparksql_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_sparksql_page_1-dark.webp" data-themed-webp="../images/databricks_sparksql_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_sparksql_poster-dark.webp" data-themed-webp="../images/databricks_sparksql_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2345,7 +2496,7 @@ def generate_index_html():
     <!-- Card 2: PySpark -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_pyspark_poster.webp" target="_blank"><img src="../images/databricks_pyspark_page_1.webp" alt="PySpark Cheat Sheet"></a>
+        <a href="../images/databricks_pyspark_poster-dark.webp" data-themed-webp="../images/databricks_pyspark_poster.webp" target="_blank"><img src="../images/databricks_pyspark_page_1-dark.webp" data-themed-webp="../images/databricks_pyspark_page_1.webp" alt="PySpark Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2353,8 +2504,8 @@ def generate_index_html():
           <div class="card-desc">12 Cards: Strict Schemas, Standard Functions, Broadcast & Salting, Delta API, Auto Loader Streaming & Arrow UDFs.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_pyspark_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_pyspark_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_pyspark_page_1-dark.webp" data-themed-webp="../images/databricks_pyspark_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_pyspark_poster-dark.webp" data-themed-webp="../images/databricks_pyspark_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2362,7 +2513,7 @@ def generate_index_html():
     <!-- Card 3: Spark Core -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_spark_core_poster.webp" target="_blank"><img src="../images/databricks_spark_core_page_1.webp" alt="Spark Core Cheat Sheet"></a>
+        <a href="../images/databricks_spark_core_poster-dark.webp" data-themed-webp="../images/databricks_spark_core_poster.webp" target="_blank"><img src="../images/databricks_spark_core_page_1-dark.webp" data-themed-webp="../images/databricks_spark_core_page_1.webp" alt="Spark Core Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2370,8 +2521,8 @@ def generate_index_html():
           <div class="card-desc">12 Cards: Topography, JVM Unified Memory, Shuffle Spill, Catalyst Optimizer, Cluster Sizing Formula, Photon & AQE.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_spark_core_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_spark_core_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_spark_core_page_1-dark.webp" data-themed-webp="../images/databricks_spark_core_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_spark_core_poster-dark.webp" data-themed-webp="../images/databricks_spark_core_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2379,7 +2530,7 @@ def generate_index_html():
     <!-- Card 4: Python in Databricks -->
     <div class="card">
       <div class="card-img-wrap">
-        <a href="../images/databricks_python_poster.webp" target="_blank"><img src="../images/databricks_python_page_1.webp" alt="Python in Databricks Cheat Sheet"></a>
+        <a href="../images/databricks_python_poster-dark.webp" data-themed-webp="../images/databricks_python_poster.webp" target="_blank"><img src="../images/databricks_python_page_1-dark.webp" data-themed-webp="../images/databricks_python_page_1.webp" alt="Python in Databricks Cheat Sheet"></a>
       </div>
       <div class="card-body">
         <div>
@@ -2387,8 +2538,8 @@ def generate_index_html():
           <div class="card-desc">12 Cards: DBUtils, Delta Live Tables (DLT), CDC apply_changes, Pandas on Spark, DABs CI/CD & Unit Testing.</div>
         </div>
         <div class="card-actions">
-          <a href="../images/databricks_python_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
-          <a href="../images/databricks_python_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
+          <a href="../images/databricks_python_page_1-dark.webp" data-themed-webp="../images/databricks_python_page_1.webp" target="_blank" class="btn btn-primary">Page 1 WebP</a>
+          <a href="../images/databricks_python_poster-dark.webp" data-themed-webp="../images/databricks_python_poster.webp" target="_blank" class="btn btn-secondary">Wall Poster</a>
         </div>
       </div>
     </div>
@@ -2405,7 +2556,7 @@ def generate_index_html():
         f.write(html)
     print(f"✓ Generated Interactive Hub: {path}")
 
-def generate_incident_runbooks_html(runbooks_html_path):
+def generate_incident_runbooks_html(runbooks_html_path, theme="light", include_theme_sync=True):
     """Build incident_runbooks.html dynamically from src/data/json/data_cheatsheet.json."""
     data_path = os.path.join(WORKSPACE_DIR, "src", "data", "json", "data_cheatsheet.json")
     with open(data_path, encoding="utf-8") as f:
@@ -2437,11 +2588,56 @@ def generate_incident_runbooks_html(runbooks_html_path):
 </div>"""
         )
 
+    is_dark = theme == "dark"
+    bg = "#080c15" if is_dark else "#ffffff"
+    fg = "#e2e8f0" if is_dark else "#0f172a"
+    cover_border = "#38bdf8" if is_dark else "#2563eb"
+    cover_title = "#f8fafc" if is_dark else "#1e3a8a"
+    cover_sub = "#94a3b8" if is_dark else "#475569"
+    badge_bg = "#1e293b" if is_dark else "#eff6ff"
+    badge_fg = "#38bdf8" if is_dark else "#1d4ed8"
+    badge_border = "#334155" if is_dark else "#bfdbfe"
+    card_bg = "#0f172a" if is_dark else "#f8fafc"
+    card_border = "#1e293b" if is_dark else "#cbd5e1"
+    card_header_border = "#1e293b" if is_dark else "#e2e8f0"
+    card_title = "#f8fafc" if is_dark else "#0f172a"
+    cat_bg = "#1e293b" if is_dark else "#dbeafe"
+    cat_fg = "#38bdf8" if is_dark else "#1d4ed8"
+    prob_bg = "rgba(239, 68, 68, 0.12)" if is_dark else "#fef2f2"
+    prob_border = "#f87171" if is_dark else "#ef4444"
+    prob_fg = "#fecaca" if is_dark else "#991b1b"
+    sol_bg = "rgba(16, 185, 129, 0.12)" if is_dark else "#ecfdf5"
+    sol_border = "#34d399" if is_dark else "#10b981"
+    sol_fg = "#a7f3d0" if is_dark else "#065f46"
+    code_bg = "#040711" if is_dark else "#0f172a"
+    code_fg = "#f1f5f9"
+    metrics_fg = "#94a3b8" if is_dark else "#475569"
+    metrics_border = "#334155" if is_dark else "#e2e8f0"
+    sync_script = THEME_SYNC_SCRIPT if include_theme_sync else ""
+    adaptive_css = "" if is_dark else """
+html.dark body, html.grey body { background: #080c15; color: #e2e8f0; }
+html.grey body { background: #18191c; }
+html.e-ink body { background: #f7f6f2; color: #111111; }
+html.dark .cover-page, html.grey .cover-page { border-bottom-color: #38bdf8; }
+html.dark .cover-title, html.grey .cover-title { color: #f8fafc; }
+html.dark .cover-subtitle, html.grey .cover-subtitle { color: #94a3b8; }
+html.dark .meta-badge, html.grey .meta-badge { background: #1e293b; color: #38bdf8; border-color: #334155; }
+html.dark .runbook-card, html.grey .runbook-card { background: #0f172a; border-color: #1e293b; }
+html.grey .runbook-card { background: #202226; border-color: #32363e; }
+html.dark .card-header, html.grey .card-header { border-bottom-color: #1e293b; }
+html.dark .card-title, html.grey .card-title { color: #f8fafc; }
+html.dark .card-category, html.grey .card-category { background: #1e293b; color: #38bdf8; }
+html.dark .problem-box, html.grey .problem-box { background: rgba(239, 68, 68, 0.12); border-left-color: #f87171; color: #fecaca; }
+html.dark .solution-box, html.grey .solution-box { background: rgba(16, 185, 129, 0.12); border-left-color: #34d399; color: #a7f3d0; }
+html.dark .metrics-box, html.grey .metrics-box { color: #94a3b8; border-top-color: #334155; }
+"""
+
     full_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <title>Data Engineering Production Incident Runbooks — Master A4 Reference</title>
+{sync_script}
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -2457,8 +2653,8 @@ def generate_incident_runbooks_html(runbooks_html_path):
 }}
 
 body {{
-  background: #ffffff;
-  color: #0f172a;
+  background: {bg};
+  color: {fg};
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 8pt;
   line-height: 1.4;
@@ -2468,7 +2664,7 @@ body {{
 
 .cover-page {{
   padding: 24px 15px;
-  border-bottom: 2px solid #2563eb;
+  border-bottom: 2px solid {cover_border};
   margin-bottom: 14px;
   page-break-after: avoid;
 }}
@@ -2476,13 +2672,13 @@ body {{
 .cover-title {{
   font-size: 18pt;
   font-weight: 800;
-  color: #1e3a8a;
+  color: {cover_title};
   letter-spacing: -0.5px;
 }}
 
 .cover-subtitle {{
   font-size: 9.5pt;
-  color: #475569;
+  color: {cover_sub};
   margin-top: 4px;
 }}
 
@@ -2498,15 +2694,15 @@ body {{
   font-size: 7.5pt;
   font-weight: 600;
   border-radius: 4px;
-  background: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
+  background: {badge_bg};
+  color: {badge_fg};
+  border: 1px solid {badge_border};
 }}
 
 .runbook-card {{
-  border: 1px solid #cbd5e1;
+  border: 1px solid {card_border};
   border-radius: 6px;
-  background: #f8fafc;
+  background: {card_bg};
   padding: 9px 11px;
   margin-bottom: 10px;
   page-break-inside: avoid;
@@ -2516,7 +2712,7 @@ body {{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid {card_header_border};
   padding-bottom: 4px;
   margin-bottom: 5px;
 }}
@@ -2524,42 +2720,43 @@ body {{
 .card-title {{
   font-size: 10pt;
   font-weight: 700;
-  color: #0f172a;
+  color: {card_title};
 }}
 
 .card-category {{
   font-size: 7pt;
   font-weight: 600;
-  color: #1d4ed8;
-  background: #dbeafe;
+  color: {cat_fg};
+  background: {cat_bg};
   padding: 1px 6px;
   border-radius: 3px;
   text-transform: uppercase;
 }}
 
 .problem-box {{
-  background: #fef2f2;
-  border-left: 3px solid #ef4444;
+  background: {prob_bg};
+  border-left: 3px solid {prob_border};
   padding: 4px 7px;
   font-size: 7.5pt;
-  color: #991b1b;
+  color: {prob_fg};
   margin: 3px 0;
   border-radius: 0 4px 4px 0;
 }}
 
 .solution-box {{
-  background: #ecfdf5;
-  border-left: 3px solid #10b981;
+  background: {sol_bg};
+  border-left: 3px solid {sol_border};
   padding: 4px 7px;
   font-size: 7.5pt;
-  color: #065f46;
+  color: {sol_fg};
   margin: 3px 0;
   border-radius: 0 4px 4px 0;
 }}
 
 .code-box {{
-  background: #0f172a;
-  color: #f1f5f9;
+  background: {code_bg};
+  color: {code_fg};
+  border: 1px solid {card_border};
   border-radius: 4px;
   padding: 7px 9px;
   font-family: 'JetBrains Mono', monospace;
@@ -2572,14 +2769,15 @@ body {{
 
 .metrics-box {{
   font-size: 7pt;
-  color: #475569;
+  color: {metrics_fg};
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin-top: 3px;
-  border-top: 1px dashed #e2e8f0;
+  border-top: 1px dashed {metrics_border};
   padding-top: 3px;
 }}
+{adaptive_css}
 </style>
 </head>
 <body>
@@ -2600,11 +2798,19 @@ body {{
 
     with open(runbooks_html_path, "w", encoding="utf-8") as f:
         f.write(full_html)
-    print(f"  ✓ Generated Incident Runbooks HTML ({len(runbooks)} runbooks): {os.path.basename(runbooks_html_path)}")
+    print(f"  ✓ Generated Incident Runbooks HTML ({len(runbooks)} runbooks, {theme}): {os.path.basename(runbooks_html_path)}")
     return len(runbooks)
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Generate Databricks cheat sheets and themed WebP assets")
+    parser.add_argument(
+        "--webp-only",
+        action="store_true",
+        help="Render themed -dark/-light WebPs using temp PDFs without touching docs/pdf/",
+    )
+    args = parser.parse_args()
+
     print("=" * 70)
     print("DATABRICKS CHEAT SHEETS GENERATOR - ULTRA HIGH-DENSITY EDITION")
     print("Reworked Layout: Zero Unused Space & Code Explanations Below Every Block")
@@ -2649,82 +2855,141 @@ def main():
         }
     ]
 
-    # Generate individual sheets
-    for sheet in sheets:
-        html_file = os.path.join(HTML_DIR, f"{sheet['name']}.html")
-        pdf_file = os.path.join(PDF_DIR, sheet['pdf_name'])
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        pdf_out_dir = tmp_dir if args.webp_only else PDF_DIR
 
-        full_html = generate_full_html(
-            title=sheet["title"],
-            theme_color=sheet["theme"],
-            title_color=sheet["title_color"],
-            body_content=sheet["body"]
+        # Generate individual sheets (-dark and -light WebPs)
+        for sheet in sheets:
+            html_file = os.path.join(HTML_DIR, f"{sheet['name']}.html")
+            pdf_file = os.path.join(pdf_out_dir, sheet["pdf_name"])
+
+            full_html_dark = generate_full_html(
+                title=sheet["title"],
+                theme_color=sheet["theme"],
+                title_color=sheet["title_color"],
+                body_content=sheet["body"],
+                theme="dark",
+                include_theme_sync=True,
+            )
+            with open(html_file, "w", encoding="utf-8") as f:
+                f.write(full_html_dark)
+            print(f"\n[1/3] Wrote HTML: {os.path.basename(html_file)}")
+
+            compile_pdf(html_file, pdf_file)
+            render_images(pdf_file, sheet["prefix"], dpi=250, theme_suffix="-dark", write_canonical=True)
+
+            light_html_file = os.path.join(tmp_dir, f"{sheet['name']}-light.html")
+            light_pdf_file = os.path.join(tmp_dir, f"{sheet['name']}-light.pdf")
+            full_html_light = generate_full_html(
+                title=sheet["title"],
+                theme_color=sheet["theme"],
+                title_color=sheet["title_color"],
+                body_content=sheet["body"],
+                theme="light",
+                include_theme_sync=False,
+            )
+            with open(light_html_file, "w", encoding="utf-8") as f:
+                f.write(full_html_light)
+            compile_pdf(light_html_file, light_pdf_file)
+            render_images(light_pdf_file, sheet["prefix"], dpi=250, theme_suffix="-light", write_canonical=False)
+
+        # Generate Master Unified 8-Page Edition
+        print("\n" + "=" * 70)
+        print("GENERATING MASTER 8-PAGE UNIFIED CHEAT SHEET")
+        print("=" * 70)
+        master_html_file = os.path.join(HTML_DIR, "master.html")
+        master_pdf_file = os.path.join(pdf_out_dir, "databricks_master_cheatsheet.pdf")
+
+        master_body = SPARKSQL_BODY + PYSPARK_BODY + SPARK_CORE_BODY + PYTHON_BODY
+        master_full_html = generate_full_html(
+            title="Databricks Unified Architecture & Coding Cheat Sheet (Master Edition)",
+            theme_color="#ff3621",
+            title_color="#38bdf8",
+            body_content=master_body,
+            theme="dark",
+            include_theme_sync=True,
         )
-        with open(html_file, "w", encoding="utf-8") as f:
-            f.write(full_html)
-        print(f"\n[1/3] Wrote HTML: {os.path.basename(html_file)}")
+        with open(master_html_file, "w", encoding="utf-8") as f:
+            f.write(master_full_html)
+        print(f"[1/3] Wrote Master HTML: {os.path.basename(master_html_file)}")
 
-        compile_pdf(html_file, pdf_file)
-        render_images(pdf_file, sheet["prefix"], dpi=250)
+        compile_pdf(master_html_file, master_pdf_file)
+        render_images(master_pdf_file, "databricks_master", dpi=250, theme_suffix="-dark", write_canonical=True)
 
-    # Generate Master Unified 8-Page Edition
-    print("\n" + "=" * 70)
-    print("GENERATING MASTER 8-PAGE UNIFIED CHEAT SHEET")
-    print("=" * 70)
-    master_html_file = os.path.join(HTML_DIR, "master.html")
-    master_pdf_file = os.path.join(PDF_DIR, "databricks_master_cheatsheet.pdf")
+        master_light_html = os.path.join(tmp_dir, "master-light.html")
+        master_light_pdf = os.path.join(tmp_dir, "master-light.pdf")
+        with open(master_light_html, "w", encoding="utf-8") as f:
+            f.write(
+                generate_full_html(
+                    title="Databricks Unified Architecture & Coding Cheat Sheet (Master Edition)",
+                    theme_color="#ff3621",
+                    title_color="#38bdf8",
+                    body_content=master_body,
+                    theme="light",
+                    include_theme_sync=False,
+                )
+            )
+        compile_pdf(master_light_html, master_light_pdf)
+        render_images(master_light_pdf, "databricks_master", dpi=250, theme_suffix="-light", write_canonical=False)
 
-    master_body = SPARKSQL_BODY + PYSPARK_BODY + SPARK_CORE_BODY + PYTHON_BODY
-    master_full_html = generate_full_html(
-        title="Databricks Unified Architecture & Coding Cheat Sheet (Master Edition)",
-        theme_color="#ff3621",
-        title_color="#38bdf8",
-        body_content=master_body
-    )
-    with open(master_html_file, "w", encoding="utf-8") as f:
-        f.write(master_full_html)
-    print(f"[1/3] Wrote Master HTML: {os.path.basename(master_html_file)}")
+        # Generate Incident Runbooks Thumbnail (-light and -dark)
+        print("\n" + "=" * 70)
+        print("GENERATING INCIDENT RUNBOOKS A4 PDF & THUMBNAIL")
+        print("=" * 70)
+        runbooks_html = os.path.join(HTML_DIR, "incident_runbooks.html")
+        runbooks_light_html = os.path.join(tmp_dir, "incident_runbooks-light.html")
+        runbooks_pdf = os.path.join(pdf_out_dir, "incident_runbooks.pdf")
+        generate_incident_runbooks_html(runbooks_html, theme="light", include_theme_sync=True)
+        generate_incident_runbooks_html(runbooks_light_html, theme="light", include_theme_sync=False)
+        if os.path.exists(runbooks_light_html):
+            compile_pdf(runbooks_light_html, runbooks_pdf)
+            try:
+                rb_doc = fitz.open(runbooks_pdf)
+                rb_pix = rb_doc[0].get_pixmap(dpi=250)
+                rb_pil = Image.frombytes("RGB", [rb_pix.width, rb_pix.height], rb_pix.samples)
+                rb_pil.save(os.path.join(IMG_DIR, "incident_runbooks_page_1.webp"), "WEBP", quality=90, method=6)
+                rb_pil.save(os.path.join(IMG_DIR, "incident_runbooks_page_1-light.webp"), "WEBP", quality=90, method=6)
+                print(f"  ✓ Rendered Runbooks Light Thumbnail: incident_runbooks_page_1-light.webp ({rb_doc.page_count} pages)")
+                rb_doc.close()
+            except Exception as e:
+                print(f"  ⚠️ Warning rendering runbook light image: {e}")
 
-    compile_pdf(master_html_file, master_pdf_file)
-    render_images(master_pdf_file, "databricks_master", dpi=250)
-
-    # Generate Incident Runbooks PDF from data_cheatsheet.json
-    print("\n" + "=" * 70)
-    print("GENERATING INCIDENT RUNBOOKS A4 PDF & THUMBNAIL")
-    print("=" * 70)
-    runbooks_html = os.path.join(HTML_DIR, "incident_runbooks.html")
-    runbooks_pdf = os.path.join(PDF_DIR, "incident_runbooks.pdf")
-    generate_incident_runbooks_html(runbooks_html)
-    if os.path.exists(runbooks_html):
-        compile_pdf(runbooks_html, runbooks_pdf)
+        runbooks_dark_html = os.path.join(tmp_dir, "incident_runbooks-dark.html")
+        runbooks_dark_pdf = os.path.join(tmp_dir, "incident_runbooks-dark.pdf")
+        generate_incident_runbooks_html(runbooks_dark_html, theme="dark", include_theme_sync=False)
+        compile_pdf(runbooks_dark_html, runbooks_dark_pdf)
         try:
-            rb_doc = fitz.open(runbooks_pdf)
-            rb_pix = rb_doc[0].get_pixmap(dpi=250)
-            rb_img_path = os.path.join(IMG_DIR, "incident_runbooks_page_1.webp")
-            Image.frombytes("RGB", [rb_pix.width, rb_pix.height], rb_pix.samples).save(rb_img_path, "WEBP", quality=90, method=6)
-            print(f"  ✓ Rendered Runbooks Thumbnail: incident_runbooks_page_1.webp ({rb_doc.page_count} pages)")
-            rb_doc.close()
+            rb_dark_doc = fitz.open(runbooks_dark_pdf)
+            rb_dark_pix = rb_dark_doc[0].get_pixmap(dpi=250)
+            rb_dark_pil = Image.frombytes("RGB", [rb_dark_pix.width, rb_dark_pix.height], rb_dark_pix.samples)
+            rb_dark_pil.save(os.path.join(IMG_DIR, "incident_runbooks_page_1-dark.webp"), "WEBP", quality=90, method=6)
+            print("  ✓ Rendered Runbooks Dark Thumbnail: incident_runbooks_page_1-dark.webp")
+            rb_dark_doc.close()
         except Exception as e:
-            print(f"  ⚠️ Warning rendering runbook image: {e}")
+            print(f"  ⚠️ Warning rendering runbook dark image: {e}")
 
-    # Generate All-in-One Enterprise Master Reference PDF
-    print("\n" + "=" * 70)
-    print("GENERATING ALL-IN-ONE ENTERPRISE MASTER REFERENCE PDF")
-    print("=" * 70)
-    complete_master_pdf = os.path.join(PDF_DIR, "lakehouse_enterprise_master_reference.pdf")
-    try:
-        combined_doc = fitz.open()
-        if os.path.exists(master_pdf_file):
-            with fitz.open(master_pdf_file) as m_doc:
-                combined_doc.insert_pdf(m_doc)
-        if os.path.exists(runbooks_pdf):
-            with fitz.open(runbooks_pdf) as r_doc:
-                combined_doc.insert_pdf(r_doc)
-        combined_doc.save(complete_master_pdf)
-        print(f"  ✓ Created Enterprise Master Reference PDF: {os.path.basename(complete_master_pdf)} ({combined_doc.page_count} Pages, {os.path.getsize(complete_master_pdf)/1024:.1f} KB)")
-        combined_doc.close()
-    except Exception as e:
-        print(f"  ⚠️ Warning creating combined master PDF: {e}")
+        if not args.webp_only:
+            # Generate All-in-One Enterprise Master Reference PDF
+            print("\n" + "=" * 70)
+            print("GENERATING ALL-IN-ONE ENTERPRISE MASTER REFERENCE PDF")
+            print("=" * 70)
+            complete_master_pdf = os.path.join(PDF_DIR, "lakehouse_enterprise_master_reference.pdf")
+            try:
+                combined_doc = fitz.open()
+                if os.path.exists(master_pdf_file):
+                    with fitz.open(master_pdf_file) as m_doc:
+                        combined_doc.insert_pdf(m_doc)
+                if os.path.exists(runbooks_pdf):
+                    with fitz.open(runbooks_pdf) as r_doc:
+                        combined_doc.insert_pdf(r_doc)
+                combined_doc.save(complete_master_pdf)
+                print(f"  ✓ Created Enterprise Master Reference PDF: {os.path.basename(complete_master_pdf)} ({combined_doc.page_count} Pages, {os.path.getsize(complete_master_pdf)/1024:.1f} KB)")
+                combined_doc.close()
+            except Exception as e:
+                print(f"  ⚠️ Warning creating combined master PDF: {e}")
+
+    # Generate Hub Index HTML
+    generate_index_html()
 
     # Sync web-facing HTML and WebP images only (PDFs live strictly in docs/pdf/)
     sync_targets = [
@@ -2743,9 +3008,6 @@ def main():
             print(f"  ✓ Synchronized HTML/WebP cheatsheet assets to: {target}")
         except Exception as e:
             print(f"  ⚠️ Warning syncing to {target}: {e}")
-
-    # Generate Hub Index HTML
-    generate_index_html()
 
     print("\n" + "=" * 70)
     print("ALL CHEAT SHEETS COMPILED & RENDERED SUCCESSFULLY (100% EXIT 0)")

@@ -26,14 +26,14 @@ import {
   Table,
   ArrowRight,
 } from "lucide-react";
-import Image from "next/image";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { architectureDiagrams, ArchitectureDiagramItem } from "@/data/diagrams";
 import { CodeSheetItem } from "@/types/data";
 import { WhiteboardCard } from "@/components/architecture/whiteboard-card";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
-import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { PrerequisiteBanner } from "@/components/ui/prerequisite-banner";
@@ -1217,8 +1217,8 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                 <button
                   onClick={() => {
                     const link = document.createElement("a");
-                    link.href = activeModalDiagram.image;
-                    link.download = `${activeModalDiagram.id}.webp`;
+                    link.href = getThemedWebpSrc(activeModalDiagram.image, diagramTheme);
+                    link.download = `${activeModalDiagram.id}-${diagramTheme}.webp`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -1244,10 +1244,10 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
               </div>
             </div>
 
-            {/* Modal Body / Blueprint View with Dark/Light Mode Filter */}
+            {/* Modal Body / Blueprint View with Theme-Native WebP Variants */}
             <div
               className={cn(
-                "flex-1 overflow-auto p-3 sm:p-8 flex items-center justify-center min-h-[240px] sm:min-h-[380px] touch-pan-x touch-pan-y transition-colors duration-300",
+                "flex-1 overflow-auto p-3 sm:p-8 flex items-center justify-center min-h-[240px] sm:min-h-[380px] touch-pan-x touch-pan-y transition-colors duration-300 whiteboard-container-themed",
                 diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
               )}
             >
@@ -1255,17 +1255,15 @@ export function SparkEngineClient({ initialPyspark }: SparkEngineClientProps) {
                 className="transition-transform duration-200 origin-center max-w-full"
                 style={{ transform: `scale(${modalZoomLevel})` }}
               >
-                <Image
+                <ThemedWebpImage
                   src={activeModalDiagram.image}
                   alt={activeModalDiagram.title}
+                  theme={diagramTheme}
                   width={1400}
                   height={900}
                   sizes="(max-width: 768px) 100vw, 80vw"
                   priority={true}
-                  className={cn(
-                    "max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300",
-                    getWebpThemeClass(diagramTheme, activeModalDiagram.image)
-                  )}
+                  className="max-h-[60vh] sm:max-h-[66vh] w-auto h-auto object-contain mx-auto shadow-sm transition-all duration-300"
                 />
               </div>
             </div>

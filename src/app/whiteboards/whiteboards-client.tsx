@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -54,7 +53,8 @@ import {
   type WhiteboardCategoryData,
 } from "@/data/whiteboards-learning-data";
 import { type ArchitectureDiagramItem } from "@/data/diagrams";
-import { useDiagramTheme, getWebpThemeClass, isLightCanvasWebp } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 import { SystemDesignFlow } from "@/components/architecture/system-design-flow";
 import { LearningJourneyViewer } from "@/components/architecture/learning-journey-viewer";
@@ -364,8 +364,8 @@ export function WhiteboardsClient() {
   const handleDownload = (diagram: ArchitectureDiagramItem, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     const link = document.createElement("a");
-    link.href = diagram.image;
-    link.download = `${diagram.id}.webp`;
+    link.href = getThemedWebpSrc(diagram.image, theme);
+    link.download = `${diagram.id}-${theme}.webp`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -799,23 +799,17 @@ export function WhiteboardsClient() {
                     onClick={() => setActiveDiagram(currentCategory.diagrams[0])}
                     style={{ position: "relative", height: "280px" }}
                     className={cn(
-                      "lg:col-span-7 relative aspect-[16/10] min-h-[240px] rounded-xl overflow-hidden border border-[var(--border)] cursor-pointer group flex items-center justify-center p-3 select-none transition-colors",
+                      "lg:col-span-7 relative aspect-[16/10] min-h-[240px] rounded-xl overflow-hidden border border-[var(--border)] cursor-pointer group flex items-center justify-center p-3 select-none transition-colors whiteboard-container-themed",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                     )}
                   >
-                    <Image
+                    <ThemedWebpImage
                       src={currentCategory.diagrams[0].image}
                       alt={currentCategory.diagrams[0].title}
+                      theme={theme}
                       fill
                       sizes="(max-width: 1024px) 100vw, 60vw"
-                      className={cn(
-                        "object-contain p-2 transition-transform duration-300 group-hover:scale-[1.02]",
-                        isLightCanvasWebp(currentCategory.diagrams[0].image)
-                          ? getWebpThemeClass(theme, currentCategory.diagrams[0].image)
-                          : isDark
-                          ? "whiteboard-image-dark"
-                          : "whiteboard-image-light"
-                      )}
+                      className="object-contain p-2 transition-transform duration-300 group-hover:scale-[1.02]"
                       priority
                     />
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -1052,23 +1046,17 @@ export function WhiteboardsClient() {
                   <div
                     style={{ position: "relative", minHeight: "200px", height: "220px" }}
                     className={cn(
-                      "relative aspect-[16/10] min-h-[200px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors",
+                      "relative aspect-[16/10] min-h-[200px] w-full overflow-hidden border-b border-[var(--border)] flex items-center justify-center p-3 select-none transition-colors whiteboard-container-themed",
                       isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
                     )}
                   >
-                    <Image
+                    <ThemedWebpImage
                       src={diagram.image}
                       alt={diagram.title}
+                      theme={theme}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className={cn(
-                        "object-contain p-2 transition-transform duration-300 group-hover:scale-105",
-                        isLightCanvasWebp(diagram.image)
-                          ? getWebpThemeClass(theme, diagram.image)
-                          : isDark
-                          ? "whiteboard-image-dark"
-                          : "whiteboard-image-light"
-                      )}
+                      className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                       <span className="px-3 py-1.5 rounded-lg bg-black/80 text-white text-xs font-semibold backdrop-blur-sm flex items-center gap-1.5 shadow-md">
@@ -1645,10 +1633,10 @@ export function WhiteboardsClient() {
               </div>
             </div>
 
-            {/* Modal Canvas with Dark/Light Support & Zoom */}
+            {/* Modal Canvas with Theme-Native WebP Support & Zoom */}
             <div
               className={cn(
-                "relative flex-1 min-h-[300px] sm:min-h-[460px] max-h-[60vh] overflow-auto p-4 sm:p-8 flex items-center justify-center select-none transition-colors duration-300",
+                "relative flex-1 min-h-[300px] sm:min-h-[460px] max-h-[60vh] overflow-auto p-4 sm:p-8 flex items-center justify-center select-none transition-colors duration-300 whiteboard-container-themed",
                 isDark ? "whiteboard-container-dark" : "whiteboard-container-light"
               )}
             >
@@ -1656,19 +1644,13 @@ export function WhiteboardsClient() {
                 style={{ transform: `scale(${zoomLevel})`, transition: "transform 0.15s ease-out" }}
                 className="relative max-w-full max-h-full flex items-center justify-center"
               >
-                <Image
+                <ThemedWebpImage
                   src={activeDiagram.image}
                   alt={activeDiagram.title}
+                  theme={theme}
                   width={1400}
                   height={900}
-                  className={cn(
-                    "object-contain max-h-[55vh] w-auto h-auto rounded-xl drop-shadow-md",
-                    isLightCanvasWebp(activeDiagram.image)
-                      ? getWebpThemeClass(theme, activeDiagram.image)
-                      : isDark
-                      ? "whiteboard-image-dark"
-                      : "whiteboard-image-light"
-                  )}
+                  className="object-contain max-h-[55vh] w-auto h-auto rounded-xl drop-shadow-md"
                   priority
                 />
               </div>

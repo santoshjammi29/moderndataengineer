@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Compass,
@@ -23,11 +22,14 @@ import {
   getPlatformOverviewStats,
 } from "@/lib/guided-learning";
 import { TopicIcon } from "@/components/ui/topic-icon";
+import { useDiagramTheme } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 
 export function HomeGuidedLearningHub() {
   const [selectedDomain, setSelectedDomain] = useState<string>("All Tracks");
   const [completedMap, setCompletedMap] = useState<Record<string, number>>({});
   const [isShuffling, setIsShuffling] = useState(false);
+  const [diagramTheme] = useDiagramTheme();
 
   // Load completed counts per track from localStorage
   useEffect(() => {
@@ -269,11 +271,18 @@ export function HomeGuidedLearningHub() {
                 {/* Paired Whiteboard Blueprint Preview Pill */}
                 {diagram && (
                   <div className="p-2 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center gap-2">
-                    <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-white shrink-0">
-                      <Image
+                    <div
+                      className={cn(
+                        "relative w-8 h-8 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0 whiteboard-container-themed",
+                        diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
+                      )}
+                    >
+                      <ThemedWebpImage
                         src={diagram.image}
                         alt={diagram.title}
+                        theme={diagramTheme}
                         fill
+                        sizes="32px"
                         className="object-contain p-0.5"
                       />
                     </div>

@@ -68,6 +68,8 @@ export function clearDiagramThemeOverride() {
   } catch {
     // ignore storage errors
   }
+  const resolved = siteThemeToDiagramTheme(detectSiteTheme());
+  document.documentElement.setAttribute("data-diagram-theme", resolved);
   window.dispatchEvent(new CustomEvent("diagram-theme-changed", { detail: "auto" }));
 }
 
@@ -87,6 +89,7 @@ export function setDiagramTheme(theme: DiagramThemeOverride, currentSiteTheme?: 
     // ignore storage errors
   }
   const resolved = theme === "auto" ? siteDefault : theme;
+  document.documentElement.setAttribute("data-diagram-theme", resolved);
   window.dispatchEvent(new CustomEvent("diagram-theme-changed", { detail: resolved }));
 }
 
@@ -98,6 +101,30 @@ const LIGHT_CANVAS_WEBP_PATTERNS = [
   "spark_join_strategies_decision_matrix",
   "spark_performance_skew_spill_triage",
 ];
+
+/**
+ * Resolves the pre-rendered -dark.webp and -light.webp variant URLs for any
+ * diagram or cheatsheet WebP asset so no CSS pixel inversion hacks are needed.
+ */
+export function getThemedWebpVariants(src: string): { dark: string; light: string } {
+  if (!src || !/\.webp(?:$|\?)/i.test(src)) {
+    return { dark: src, light: src };
+  }
+  const [pathname, query] = src.split("?");
+  const normalized = pathname.replace(/-(?:dark|light)\.webp$/i, ".webp");
+  const darkPath = normalized.replace(/\.webp$/i, "-dark.webp");
+  const lightPath = normalized.replace(/\.webp$/i, "-light.webp");
+  const suffix = query ? `?${query}` : "";
+  return {
+    dark: `${darkPath}${suffix}`,
+    light: `${lightPath}${suffix}`,
+  };
+}
+
+export function getThemedWebpSrc(src: string, diagramTheme: DiagramTheme): string {
+  const variants = getThemedWebpVariants(src);
+  return diagramTheme === "light" ? variants.light : variants.dark;
+}
 
 /**
  * Identifies whether a .webp asset was originally rendered on a light/white canvas

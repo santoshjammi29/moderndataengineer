@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import React from "react";
+import fs from "node:fs";
+import path from "node:path";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import {
   useDiagramTheme,
@@ -8,6 +10,8 @@ import {
   clearDiagramThemeOverride,
   isLightCanvasWebp,
   getWebpThemeClass,
+  getThemedWebpVariants,
+  getThemedWebpSrc,
   siteThemeToDiagramTheme,
 } from "@/lib/diagram-theme";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
@@ -116,12 +120,74 @@ describe("WebP & Diagram Theme Synchronization", () => {
     const { container } = render(<WhiteboardCard diagram={sampleDiagram} />);
 
     expect(container.querySelector(".whiteboard-container-light")).not.toBeNull();
+    expect(container.querySelector(".whiteboard-container-themed")).not.toBeNull();
     expect(container.querySelector(".whiteboard-light")).not.toBeNull();
+    expect(container.querySelector(".diagram-variant-light")).not.toBeNull();
+    expect(container.querySelector(".diagram-variant-dark")).not.toBeNull();
 
     act(() => {
       setDiagramTheme("dark");
     });
     expect(container.querySelector(".whiteboard-container-dark")).not.toBeNull();
     expect(container.querySelector(".whiteboard-dark")).not.toBeNull();
+  });
+
+  it("resolves -dark.webp and -light.webp variants cleanly without double suffixes", () => {
+    expect(getThemedWebpVariants("/diagrams/catalyst_photon_engine.webp")).toEqual({
+      dark: "/diagrams/catalyst_photon_engine-dark.webp",
+      light: "/diagrams/catalyst_photon_engine-light.webp",
+    });
+    expect(getThemedWebpVariants("/cheatsheets/images/databricks_sparksql_poster-light.webp")).toEqual({
+      dark: "/cheatsheets/images/databricks_sparksql_poster-dark.webp",
+      light: "/cheatsheets/images/databricks_sparksql_poster-light.webp",
+    });
+    expect(getThemedWebpSrc("/diagrams/fabric_onelake_architecture.webp", "light")).toBe(
+      "/diagrams/fabric_onelake_architecture-light.webp"
+    );
+    expect(getThemedWebpSrc("/diagrams/fabric_onelake_architecture.webp", "dark")).toBe(
+      "/diagrams/fabric_onelake_architecture-dark.webp"
+    );
+  });
+
+  it("eliminates CSS invert/hue-rotate filter hacks and provides -dark/-light assets for all 56 diagrams and 37 cheatsheets", () => {
+    const globalsCss = fs.readFileSync(path.join(process.cwd(), "src/app/globals.css"), "utf-8");
+    expect(globalsCss).not.toContain("invert(");
+    expect(globalsCss).not.toContain("hue-rotate(");
+
+    const diagramsDir = path.join(process.cwd(), "public/diagrams");
+    const canonicalDiagrams = fs
+      .readdirSync(diagramsDir)
+      .filter((f) => f.endsWith(".webp") && !f.endsWith("-dark.webp") && !f.endsWith("-light.webp"));
+    expect(canonicalDiagrams.length).toBe(56);
+    for (const fname of canonicalDiagrams) {
+      const stem = fname.slice(0, -5);
+      expect(fs.existsSync(path.join(diagramsDir, `${stem}-dark.webp`)), `Missing ${stem}-dark.webp`).toBe(true);
+      expect(fs.existsSync(path.join(diagramsDir, `${stem}-light.webp`)), `Missing ${stem}-light.webp`).toBe(true);
+    }
+
+    const cheatsheetsImgDir = path.join(process.cwd(), "public/cheatsheets/images");
+    const allCsEntries = fs.readdirSync(cheatsheetsImgDir);
+    expect(allCsEntries.some((f) => /\.(png|jpg|jpeg)$/i.test(f))).toBe(false);
+    const canonicalCs = allCsEntries.filter(
+      (f) => f.endsWith(".webp") && !f.endsWith("-dark.webp") && !f.endsWith("-light.webp")
+    );
+    expect(canonicalCs.length).toBe(37);
+    for (const fname of canonicalCs) {
+      const stem = fname.slice(0, -5);
+      expect(fs.existsSync(path.join(cheatsheetsImgDir, `${stem}-dark.webp`)), `Missing ${stem}-dark.webp`).toBe(true);
+      expect(fs.existsSync(path.join(cheatsheetsImgDir, `${stem}-light.webp`)), `Missing ${stem}-light.webp`).toBe(true);
+    }
+
+    const whiteboardsAssetsDir = path.join(process.cwd(), "assets/whiteboards");
+    const canonicalAssets = fs.readdirSync(whiteboardsAssetsDir).filter((f) => f.endsWith(".webp"));
+    expect(canonicalAssets.length).toBe(52);
+
+    const htmlDir = path.join(process.cwd(), "public/cheatsheets/html");
+    const htmlFiles = fs.readdirSync(htmlDir).filter((f) => f.endsWith(".html"));
+    expect(htmlFiles.length).toBeGreaterThan(0);
+    for (const htmlFile of htmlFiles) {
+      const content = fs.readFileSync(path.join(htmlDir, htmlFile), "utf-8");
+      expect(content, `Missing theme sync in ${htmlFile}`).toContain("localStorage.getItem('theme')");
+    }
   });
 });
