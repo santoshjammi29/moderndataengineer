@@ -3,7 +3,6 @@
 import { EvidenceSources } from "@/components/ui/evidence-sources";
 
 import React, { useState, useEffect, useMemo, useDeferredValue, useCallback, Suspense } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { m, AnimatePresence } from "framer-motion";
@@ -35,7 +34,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useDiagramTheme, getWebpThemeClass } from "@/lib/diagram-theme";
+import { useDiagramTheme, getThemedWebpSrc } from "@/lib/diagram-theme";
+import { ThemedWebpImage } from "@/components/ui/themed-webp-image";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
 import { LearningPath } from "@/types/data";
 import { learningPathsDb } from "@/data";
@@ -1062,11 +1062,15 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     setActiveDiagramModal(featuredDiagram);
                     setDiagramZoom(1);
                   }}
-                  className="relative group cursor-pointer w-full md:w-44 h-24 rounded-lg overflow-hidden border border-[var(--border)] bg-black shrink-0 shadow-xs"
+                  className={cn(
+                    "relative group cursor-pointer w-full md:w-44 h-24 rounded-lg overflow-hidden border border-[var(--border)] shrink-0 shadow-xs whiteboard-container-themed",
+                    diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
+                  )}
                 >
-                  <Image
+                  <ThemedWebpImage
                     src={featuredDiagram.image}
                     alt={featuredDiagram.title}
+                    theme={diagramTheme}
                     width={300}
                     height={180}
                     sizes="(max-width: 768px) 100vw, 200px"
@@ -1144,10 +1148,16 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                       }}
                       className="p-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] hover:border-purple-500/40 text-left transition-all flex items-center gap-2.5 group"
                     >
-                      <div className="w-12 h-8 rounded bg-black shrink-0 overflow-hidden relative border border-[var(--border)] shadow-xs">
-                        <Image
+                      <div
+                        className={cn(
+                          "w-12 h-8 rounded shrink-0 overflow-hidden relative border border-[var(--border)] shadow-xs whiteboard-container-themed",
+                          diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
+                        )}
+                      >
+                        <ThemedWebpImage
                           src={rd.image}
                           alt={rd.title}
+                          theme={diagramTheme}
                           width={80}
                           height={50}
                           sizes="80px"
@@ -1653,22 +1663,20 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
               {/* Modal Body with Zoomable Image */}
               <div
                 className={cn(
-                  "flex-1 overflow-auto p-4 flex items-center justify-center min-h-[360px] transition-colors",
+                  "flex-1 overflow-auto p-4 flex items-center justify-center min-h-[360px] transition-colors whiteboard-container-themed",
                   diagramTheme === "dark" ? "whiteboard-container-dark" : "whiteboard-container-light"
                 )}
               >
-                <Image
+                <ThemedWebpImage
                   src={activeDiagramModal.image}
                   alt={activeDiagramModal.title}
+                  theme={diagramTheme}
                   width={1400}
                   height={900}
                   sizes="(max-width: 768px) 100vw, 85vw"
                   priority={true}
                   style={{ transform: `scale(${diagramZoom})`, transformOrigin: "center center" }}
-                  className={cn(
-                    "max-h-[58vh] max-w-full w-auto h-auto object-contain rounded-lg transition-transform duration-150",
-                    getWebpThemeClass(diagramTheme, activeDiagramModal.image)
-                  )}
+                  className="max-h-[58vh] max-w-full w-auto h-auto object-contain rounded-lg transition-transform duration-150"
                 />
               </div>
 
@@ -1679,7 +1687,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
                     Architectural Mechanisms
                   </span>
                   <a
-                    href={activeDiagramModal.image}
+                    href={getThemedWebpSrc(activeDiagramModal.image, diagramTheme)}
                     download
                     className="text-xs text-[var(--muted-foreground)] hover:text-purple-400 transition-colors"
                   >

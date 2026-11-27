@@ -3,6 +3,32 @@
 <head>
 <meta charset="utf-8">
 <title>Data Engineering Production Incident Runbooks — Master A4 Reference</title>
+<script>
+(function(){
+  function applyTheme(t){
+    var c=document.documentElement.classList;
+    c.remove('dark','light','grey','e-ink');
+    if(t==='light'||t==='e-ink'||t==='grey'||t==='dark'){c.add(t);}
+    else{c.add('dark');t='dark';}
+    var isLight=(t==='light'||t==='e-ink');
+    document.documentElement.style.colorScheme=isLight?'light':'dark';
+    var suffix=isLight?'-light.webp':'-dark.webp';
+    document.querySelectorAll('[data-themed-webp]').forEach(function(el){
+      var base=el.getAttribute('data-themed-webp');
+      if(!base)return;
+      var target=base.replace(/-(?:dark|light)\.webp$/i,'.webp').replace(/\.webp$/i,suffix);
+      if(el.tagName==='IMG')el.setAttribute('src',target);
+      else if(el.tagName==='A')el.setAttribute('href',target);
+    });
+  }
+  try{
+    var saved=localStorage.getItem('theme')||'dark';
+    applyTheme(saved);
+    window.addEventListener('DOMContentLoaded',function(){applyTheme(localStorage.getItem('theme')||'dark');});
+    window.addEventListener('storage',function(e){if(!e.key||e.key==='theme')applyTheme(localStorage.getItem('theme')||'dark');});
+  }catch(e){}
+})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
@@ -121,6 +147,7 @@ body {
 .code-box {
   background: #0f172a;
   color: #f1f5f9;
+  border: 1px solid #cbd5e1;
   border-radius: 4px;
   padding: 7px 9px;
   font-family: 'JetBrains Mono', monospace;
@@ -141,6 +168,23 @@ body {
   border-top: 1px dashed #e2e8f0;
   padding-top: 3px;
 }
+
+html.dark body, html.grey body { background: #080c15; color: #e2e8f0; }
+html.grey body { background: #18191c; }
+html.e-ink body { background: #f7f6f2; color: #111111; }
+html.dark .cover-page, html.grey .cover-page { border-bottom-color: #38bdf8; }
+html.dark .cover-title, html.grey .cover-title { color: #f8fafc; }
+html.dark .cover-subtitle, html.grey .cover-subtitle { color: #94a3b8; }
+html.dark .meta-badge, html.grey .meta-badge { background: #1e293b; color: #38bdf8; border-color: #334155; }
+html.dark .runbook-card, html.grey .runbook-card { background: #0f172a; border-color: #1e293b; }
+html.grey .runbook-card { background: #202226; border-color: #32363e; }
+html.dark .card-header, html.grey .card-header { border-bottom-color: #1e293b; }
+html.dark .card-title, html.grey .card-title { color: #f8fafc; }
+html.dark .card-category, html.grey .card-category { background: #1e293b; color: #38bdf8; }
+html.dark .problem-box, html.grey .problem-box { background: rgba(239, 68, 68, 0.12); border-left-color: #f87171; color: #fecaca; }
+html.dark .solution-box, html.grey .solution-box { background: rgba(16, 185, 129, 0.12); border-left-color: #34d399; color: #a7f3d0; }
+html.dark .metrics-box, html.grey .metrics-box { color: #94a3b8; border-top-color: #334155; }
+
 </style>
 </head>
 <body>

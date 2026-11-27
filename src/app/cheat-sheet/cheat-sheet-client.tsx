@@ -296,9 +296,16 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
               : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
           )}
         >
-          <Flame size={13} className={activeTab === "databricks" ? "text-white" : "text-amber-400"} />
+          <Flame size={13} className={activeTab === "databricks" ? "text-white" : "text-amber-700 dark:text-amber-400"} />
           <span>Databricks Cheat Sheets</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded-full font-mono bg-amber-500/20 text-amber-200">
+          <span
+            className={cn(
+              "text-[10px] px-1.5 py-0.2 rounded-full font-mono",
+              activeTab === "databricks"
+                ? "bg-amber-900/40 text-amber-100"
+                : "bg-amber-500/15 text-amber-800 dark:text-amber-200"
+            )}
+          >
             {databricksData.cards.length} Cards &amp; Posters
           </span>
         </button>
@@ -311,14 +318,14 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
           {/* Consolidated Subpage Banner */}
           <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2.5">
-              <span className="p-2 rounded-lg bg-amber-500/20 text-amber-400 shrink-0">
+              <span className="p-2 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-400 shrink-0">
                 <Flame size={16} />
               </span>
               <div>
-                <div className="font-semibold text-amber-200">
+                <div className="font-semibold text-amber-950 dark:text-amber-200">
                   All Databricks Coding Consolidated Under Single Subpage: /code-practice/databricks
                 </div>
-                <div className="text-[11px] text-amber-300/80">
+                <div className="text-[11px] text-amber-900 dark:text-amber-300/90">
                   All Databricks coding sheets, DBFS operations, transformations, Catalyst optimizations, and memory bottleneck playbooks now live in the dedicated Databricks Coding subpage under Code Practice.
                 </div>
               </div>

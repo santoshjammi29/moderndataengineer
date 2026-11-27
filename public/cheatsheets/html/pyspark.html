@@ -3,6 +3,32 @@
 <head>
 <meta charset="utf-8">
 <title>Databricks PySpark Cheat Sheet</title>
+<script>
+(function(){
+  function applyTheme(t){
+    var c=document.documentElement.classList;
+    c.remove('dark','light','grey','e-ink');
+    if(t==='light'||t==='e-ink'||t==='grey'||t==='dark'){c.add(t);}
+    else{c.add('dark');t='dark';}
+    var isLight=(t==='light'||t==='e-ink');
+    document.documentElement.style.colorScheme=isLight?'light':'dark';
+    var suffix=isLight?'-light.webp':'-dark.webp';
+    document.querySelectorAll('[data-themed-webp]').forEach(function(el){
+      var base=el.getAttribute('data-themed-webp');
+      if(!base)return;
+      var target=base.replace(/-(?:dark|light)\.webp$/i,'.webp').replace(/\.webp$/i,suffix);
+      if(el.tagName==='IMG')el.setAttribute('src',target);
+      else if(el.tagName==='A')el.setAttribute('href',target);
+    });
+  }
+  try{
+    var saved=localStorage.getItem('theme')||'dark';
+    applyTheme(saved);
+    window.addEventListener('DOMContentLoaded',function(){applyTheme(localStorage.getItem('theme')||'dark');});
+    window.addEventListener('storage',function(e){if(!e.key||e.key==='theme')applyTheme(localStorage.getItem('theme')||'dark');});
+  }catch(e){}
+})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
@@ -287,6 +313,44 @@ pre.code {
   font-weight: 600;
   color: #94a3b8;
 }
+
+/* Adaptive Theme Support when viewed directly in browser */
+html.light body, html.light .page,
+html.e-ink body, html.e-ink .page { background: #f8fafc; color: #0f172a; }
+html.e-ink body, html.e-ink .page { background: #f7f6f2; color: #111111; }
+html.grey body, html.grey .page { background: #18191c; color: #e4e5eb; }
+html.light .header-title-box h1, html.e-ink .header-title-box h1 { color: #0f172a; }
+html.light .header-title-box p, html.e-ink .header-title-box p { color: #475569; }
+html.light .badge-secondary, html.e-ink .badge-secondary { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+html.light .badge-dark, html.e-ink .badge-dark { background: #f1f5f9; color: #3730a3; border-color: #cbd5e1; }
+html.light .badge-accent, html.e-ink .badge-accent { background: #047857; color: #ffffff; }
+html.light .card, html.e-ink .card { background: #ffffff; border-color: #cbd5e1; box-shadow: 0 1px 2px rgba(15,23,42,0.06); }
+html.grey .card { background: #202226; border-color: #32363e; }
+html.light .card-header, html.e-ink .card-header { border-bottom-color: #e2e8f0; }
+html.light .card-title, html.e-ink .card-title { color: #0369a1; }
+html.light .card-tag, html.e-ink .card-tag { background: #f1f5f9; color: #334155; }
+html.light pre.code, html.e-ink pre.code { background: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
+html.e-ink pre.code { background: #eeebe3; }
+html.light .kw, html.e-ink .kw { color: #be123c; }
+html.light .fn, html.e-ink .fn { color: #0369a1; }
+html.light .str, html.e-ink .str { color: #15803d; }
+html.light .cm, html.e-ink .cm { color: #475569; }
+html.light .num, html.e-ink .num { color: #c2410c; }
+html.light .cls, html.e-ink .cls { color: #92400e; }
+html.light .var, html.e-ink .var { color: #6d28d9; }
+html.light .typ, html.e-ink .typ { color: #854d0e; }
+html.light .code-explain, html.e-ink .code-explain { background: #f8fafc; border-color: #cbd5e1; color: #334155; }
+html.light .explain-head, html.e-ink .explain-head { color: #334155; }
+html.light .explain-list li, html.e-ink .explain-list li { color: #334155; }
+html.light .explain-list li b, html.e-ink .explain-list li b { color: #0f172a; }
+html.light .explain-list li code, html.e-ink .explain-list li code { background: #e2e8f0; color: #0369a1; }
+html.light .alert-tip, html.e-ink .alert-tip { background: #eff6ff; color: #0c4a6e; }
+html.light .alert-perf, html.e-ink .alert-perf { background: #ecfdf5; color: #064e3b; }
+html.light .alert-warn, html.e-ink .alert-warn { background: #fffbeb; color: #78350f; }
+html.light .alert-sec, html.e-ink .alert-sec { background: #f5f3ff; color: #4c1d95; }
+html.light .page-footer, html.e-ink .page-footer { border-top-color: #cbd5e1; color: #475569; }
+html.light .page-footer-right, html.e-ink .page-footer-right { color: #334155; }
+
 </style>
 </head>
 <body>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://moderndataengineer.uk";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/diagrams/fabric_onelake_architecture.webp`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/diagrams/fabric_onelake_architecture-dark.webp`;
 
 export interface PageMetadataOptions {
   title: string;
