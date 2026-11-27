@@ -116,8 +116,8 @@ describe("Streamlined Navigation & Meaningful Bottom Page Notes", () => {
     expect(screen.getByText("2026 Edition")).toBeDefined();
     expect(screen.getByText(formatContentCount(CONTENT_COUNTS.searchDocuments))).toBeDefined();
     expect(screen.getByText("Searchable Items")).toBeDefined();
-    expect(screen.getByText("42 Blueprints")).toBeDefined();
-    expect(screen.getByText("156 Profiles")).toBeDefined();
+    expect(screen.getByText(`${CONTENT_COUNTS.whiteboards} Blueprints`)).toBeDefined();
+    expect(screen.getByText(`${formatContentCount(CONTENT_COUNTS.companyProfiles)} Profiles`)).toBeDefined();
     expect(screen.getByText(`${formatContentCount(CONTENT_COUNTS.concepts)} Concepts`)).toBeDefined();
 
     // Redundant bottom bar controls removed

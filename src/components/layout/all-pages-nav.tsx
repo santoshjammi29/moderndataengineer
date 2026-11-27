@@ -71,7 +71,7 @@ const NAV_SECTIONS: NavSection[] = [
     subpages: [
       { label: "Topic Tracks", href: "/guided-learning", description: "Structured step-by-step learning tracks" },
       { label: "Career Curricula", href: "/guided-learning?tab=curricula", badge: `${CONTENT_COUNTS.learningPaths} Paths`, description: "Role-based roadmaps for architects" },
-      { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: "130 Dives", description: "Interactive deep-dive concept inventory" },
+      { label: "Lab & Topic Tree", href: "/guided-learning?tab=tree", badge: `${CONTENT_COUNTS.deepDiveTopics} Dives`, description: "Interactive deep-dive concept inventory" },
       { label: "Learning Portal", href: "/learning-paths", description: "Modular self-paced learning portal" },
     ],
   },
@@ -92,12 +92,12 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Architecture",
     href: "/architecture",
     icon: Layers,
-    badge: "3.2k+",
+    badge: `${(CONTENT_COUNTS.scenarios / 1000).toFixed(1)}k+`,
     subpages: [
-      { label: "Whiteboard Mastery Hub", href: "/whiteboards", badge: "42 Blueprints", description: "Illustrated whiteboard systems blueprints" },
+      { label: "Whiteboard Mastery Hub", href: "/whiteboards", badge: `${CONTENT_COUNTS.whiteboards} Blueprints`, description: "Illustrated whiteboard systems blueprints" },
       { label: "System Scenarios", href: "/architecture?tab=scenarios", badge: formatContentCount(CONTENT_COUNTS.scenarios), description: "End-to-end distributed system designs" },
-      { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: "42", description: "Detailed architectural SVG diagrams" },
-      { label: "Python Runbooks", href: "/architecture?tab=python", badge: "42", description: "Production Python lakehouse runbooks" },
+      { label: "Whiteboard Diagrams", href: "/architecture?tab=diagrams", badge: String(CONTENT_COUNTS.whiteboards), description: "Detailed architectural WebP diagrams" },
+      { label: "Python Runbooks", href: "/architecture?tab=python", badge: String(CONTENT_COUNTS.pythonDrills), description: "Production Python lakehouse runbooks" },
     ],
   },
   {
@@ -121,7 +121,7 @@ const NAV_SECTIONS: NavSection[] = [
     subpages: [
       { label: "4-Stage Mastery Journey", href: "/stages?tab=mastery", badge: "4 Stages", description: "Progressive career milestones from foundations to architect" },
       { label: "7-Stage Lakehouse Flow", href: "/stages?tab=lakehouse", badge: "7 Stages", description: "End-to-end modern lakehouse architecture canvas" },
-      { label: "6-Stage SDLC Playbook", href: "/stages?tab=sdlc", badge: "6 Stages", description: "Production project delivery lifecycle with 152 controls" },
+      { label: "6-Stage SDLC Playbook", href: "/stages?tab=sdlc", badge: "6 Stages", description: `Production project delivery lifecycle with ${CONTENT_COUNTS.sdlcControls} controls` },
       { label: "5-Stage Catalyst Pipeline", href: "/stages?tab=catalyst", badge: "5 Stages", description: "Spark physical query execution and Whole-Stage CodeGen" },
       { label: "8 Production Flows", href: "/stages?tab=flows", badge: "8 Flows", description: "Interactive architectural flow diagrams gallery" },
     ],
@@ -136,11 +136,11 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "Cloud × Table Matrix", href: "/modern-stack?tab=compatibility", badge: "Compatibility", description: "Azure, AWS, GCP table format support across 10 engines" },
       { label: "FinOps & Cost Playbooks", href: "/modern-stack?tab=cost", description: "DBU, compute, and warehouse cost engineering" },
       { label: "Engine Simulators", href: "/modern-stack?tab=simulators", badge: "6 Tools", description: "Interactive DBU, storage tiering & shuffle calculators" },
-      { label: "Lakehouse Primitives", href: "/modern-stack?tab=concepts", badge: "30", description: "Storage, compute, and transaction primitives" },
+      { label: "Lakehouse Primitives", href: "/modern-stack?tab=concepts", badge: String(CONTENT_COUNTS.modernConcepts), description: "Storage, compute, and transaction primitives" },
       { label: "AI & Vector Serving", href: "/modern-stack?tab=ai", description: "RAG infrastructure and agentic protocol" },
       { label: "Tool Secrets & Connectivity", href: "/dataops?tab=connectivity", badge: "Secrets", description: "Key Vault, Managed Identity, and PATs" },
       { label: "CI/CD Pipelines", href: "/dataops?tab=cicd", badge: "5 Paths", description: "GitHub Actions, Azure DevOps, DABs" },
-      { label: "360° SDLC Lifecycle", href: "/dataops?tab=lifecycle", badge: "152 Controls", description: "NIST SSDF & SRE production controls" },
+      { label: "360° SDLC Lifecycle", href: "/dataops?tab=lifecycle", badge: `${CONTENT_COUNTS.sdlcControls} Controls`, description: "NIST SSDF & SRE production controls" },
       { label: "Architecture Flow", href: "/dataops?tab=diagram", badge: "Flow", description: "5-column interactive architecture canvas" },
     ],
   },
@@ -153,9 +153,9 @@ const NAV_SECTIONS: NavSection[] = [
     subpages: [
       { label: "Coding Hub", href: "/code-practice", description: "All practice drills across languages" },
       { label: "Interactive Drills", href: "/code-practice?db=pyspark", badge: formatContentCount(CONTENT_COUNTS.pysparkDrills), description: "PySpark, Spark SQL, T-SQL, Python & Polars" },
-      { label: "Databricks Coding Hub", href: "/code-practice/databricks", badge: "148 Drills", description: "Interactive PySpark, SQL, and DBFS triage" },
-      { label: "Polyglot Code Matrix", href: "/code-practice?tab=matrix", badge: "15", description: "Side-by-side PySpark, SQL, DuckDB, Polars" },
-      { label: "Python Lakehouse Runbooks", href: "/code-practice?tab=runbooks", badge: "42", description: "Production Python lakehouse scripts & runbooks" },
+      { label: "Databricks Coding Hub", href: "/code-practice/databricks", badge: `${CONTENT_COUNTS.databricksOps} Drills`, description: "Interactive PySpark, SQL, and DBFS triage" },
+      { label: "Polyglot Code Matrix", href: "/code-practice?tab=matrix", badge: String(CONTENT_COUNTS.polyglotMatrix), description: "Side-by-side PySpark, SQL, DuckDB, Polars" },
+      { label: "Python Lakehouse Runbooks", href: "/code-practice?tab=runbooks", badge: String(CONTENT_COUNTS.combinedPythonRunbooks), description: "Production Python lakehouse scripts & runbooks" },
     ],
   },
   {
@@ -163,10 +163,10 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Cheat Sheets",
     href: "/cheat-sheet",
     icon: FileCode2,
-    badge: "124 Cards",
+    badge: `${CONTENT_COUNTS.cheatSheetsTotal} Cards`,
     subpages: [
-      { label: "Production Runbooks", href: "/cheat-sheet?tab=runbooks", badge: "76", description: "Severity-1 triage & emergency commands" },
-      { label: "Databricks Cheat Sheets", href: "/cheat-sheet?tab=databricks", badge: "48", description: "Photon, Spark conf, and DBFS cheat codes" },
+      { label: "Production Runbooks", href: "/cheat-sheet?tab=runbooks", badge: String(CONTENT_COUNTS.incidentRunbooks), description: "Severity-1 triage & emergency commands" },
+      { label: "Databricks Cheat Sheets", href: "/cheat-sheet?tab=databricks", badge: String(CONTENT_COUNTS.databricksCheatCards), description: "Photon, Spark conf, and DBFS cheat codes" },
     ],
   },
   {
@@ -174,10 +174,10 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Interview Bank",
     href: "/qa-prep",
     icon: MessageSquare,
-    badge: "7.1k+",
+    badge: `${(CONTENT_COUNTS.qa / 1000).toFixed(1)}k+`,
     subpages: [
       { label: "Question Drill Bank", href: "/qa-prep", badge: `${formatContentCount(CONTENT_COUNTS.qa)}+`, description: "Architect scenarios with SM-2 spaced repetition" },
-      { label: "Target Company Intel", href: "/company-research", badge: "156 GCCs", description: "Interview rubrics, hiring GCCs & salary bands" },
+      { label: "Target Company Intel", href: "/company-research", badge: `${formatContentCount(CONTENT_COUNTS.companyProfiles)} GCCs`, description: "Interview rubrics, hiring GCCs & salary bands" },
     ],
   },
   {

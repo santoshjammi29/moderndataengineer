@@ -93,7 +93,7 @@ export function RollingTicker() {
           </span>
           <span className="hidden sm:inline">Live Topics</span>
           <span className="sm:hidden">Live</span>
-          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-500/30 text-purple-200 border border-purple-400/30 font-semibold tracking-normal lowercase">6k+</span>
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-500/30 text-purple-200 border border-purple-400/30 font-semibold tracking-normal lowercase">{(CONTENT_COUNTS.qa / 1000).toFixed(1)}k+</span>
         </div>
 
         {/* Shuffle Button */}

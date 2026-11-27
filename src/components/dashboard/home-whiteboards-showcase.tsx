@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { CONTENT_COUNTS } from "@/data/content-counts";
 import { architectureDiagrams, ArchitectureDiagramItem } from "@/data/diagrams";
 import { useDiagramTheme } from "@/lib/diagram-theme";
 import { WhiteboardThemeToggle } from "@/components/architecture/whiteboard-theme-toggle";
@@ -118,7 +119,7 @@ export function HomeWhiteboardsShowcase() {
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20">
               <Workflow size={13} className="text-purple-500 dark:text-purple-400" />
-              <span>42 Architecture Whiteboards</span>
+              <span>{CONTENT_COUNTS.whiteboards} Architecture Whiteboards</span>
             </span>
             <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 hidden sm:inline">
               Hand-Drawn System Design
@@ -151,7 +152,7 @@ export function HomeWhiteboardsShowcase() {
             href="/architecture?tab=diagrams"
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-sm shadow-purple-600/20 transition-all cursor-pointer"
           >
-            <span>All 21 Blueprints</span>
+            <span>All {CONTENT_COUNTS.whiteboards} Blueprints</span>
             <ArrowRight size={13} />
           </Link>
         </div>

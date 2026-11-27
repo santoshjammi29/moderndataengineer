@@ -128,9 +128,9 @@ describe('RollingTicker component', () => {
     expect(archLink).toBeDefined()
   })
 
-  it('displays 6k+ database indicator badge', () => {
+  it('displays dynamic Q&A count indicator badge', () => {
     render(<RollingTicker />)
-    expect(screen.getByText('6k+')).toBeDefined()
+    expect(screen.getByText(/\d+\.\dk\+/)).toBeDefined()
   })
 
   it('renders a shuffle button and updates items when clicked', () => {
