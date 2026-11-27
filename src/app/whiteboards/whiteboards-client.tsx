@@ -3,7 +3,8 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 import {
   Cpu,
   Database,
@@ -74,17 +75,32 @@ const ICON_MAP: Record<string, React.ElementType> = {
 type ViewMode = "master" | "diagrams" | "concepts" | "blueprints" | "qa";
 type DifficultyLevel = "ALL" | "EASY" | "MEDIUM" | "HARD" | "ARCHITECT";
 
+const WHITEBOARD_VALID_TABS: readonly ViewMode[] = ["master", "diagrams", "concepts", "blueprints", "qa"];
+const DIAGRAM_ALIAS_MAP: Record<string, string> = {
+  data_skew_salting_repartition: "spark-data-skew-aqe-optimization",
+  catalyst_photon_engine: "spark-catalyst-photon-engine",
+  "delta-lake-acid-mechanics": "delta-lake-under-the-hood",
+};
+
+function resolveWhiteboardCat(params: Pick<URLSearchParams, "get">): string {
+  const cat = params.get("category");
+  if (cat && WHITEBOARD_CATEGORIES.some((c) => c.id === cat)) {
+    return cat;
+  }
+  return WHITEBOARD_CATEGORIES[0].id;
+}
+
 export function WhiteboardsClient() {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
 
   // Category Selection
-  const initialCatId = searchParams.get("category") || WHITEBOARD_CATEGORIES[0].id;
-  const [selectedCatId, setSelectedCatId] = useState<string>(initialCatId);
+  const [selectedCatId, setSelectedCatId] = useState<string>(() => resolveWhiteboardCat(searchParams));
 
   // Pillar Modality Tab
-  const initialTab = (searchParams.get("tab") as ViewMode) || "master";
-  const [activeTab, setActiveTab] = useState<ViewMode>(initialTab);
+  const [activeTab, setActiveTab] = useState<ViewMode>(() =>
+    resolveQueryParam(searchParams, "tab", WHITEBOARD_VALID_TABS, "master")
+  );
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -103,26 +119,12 @@ export function WhiteboardsClient() {
   const [masteredCategories, setMasteredCategories] = useState<string[]>([]);
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
 
-  // Sync state from URL params (?category=, ?tab=, ?diagram=, ?id=)
-  useEffect(() => {
-    const DIAGRAM_ALIAS_MAP: Record<string, string> = {
-      data_skew_salting_repartition: "spark-data-skew-aqe-optimization",
-      catalyst_photon_engine: "spark-catalyst-photon-engine",
-      "delta-lake-acid-mechanics": "delta-lake-under-the-hood",
-    };
+  const syncFromParams = useCallback((params: Pick<URLSearchParams, "get">) => {
+    setSelectedCatId(resolveWhiteboardCat(params));
+    setActiveTab(resolveQueryParam(params, "tab", WHITEBOARD_VALID_TABS, "master"));
 
-    const cat = searchParams.get("category");
-    if (cat && WHITEBOARD_CATEGORIES.some((c) => c.id === cat)) {
-      setSelectedCatId(cat);
-    }
-    const tab = searchParams.get("tab") as ViewMode;
-    if (tab && ["master", "diagrams", "concepts", "blueprints", "qa"].includes(tab)) {
-      setActiveTab(tab);
-    } else if (!tab) {
-      setActiveTab("master");
-    }
-    const rawDiagramParam = searchParams.get("diagram") || searchParams.get("id");
-    const diagramParam = rawDiagramParam ? (DIAGRAM_ALIAS_MAP[rawDiagramParam] || rawDiagramParam) : null;
+    const rawDiagramParam = params.get("diagram") || params.get("id");
+    const diagramParam = rawDiagramParam ? DIAGRAM_ALIAS_MAP[rawDiagramParam] || rawDiagramParam : null;
     if (diagramParam) {
       for (const category of WHITEBOARD_CATEGORIES) {
         const found = category.diagrams.find((d) => d.id === diagramParam);
@@ -136,7 +138,18 @@ export function WhiteboardsClient() {
     } else {
       setActiveDiagram(null);
     }
-  }, [searchParams]);
+  }, []);
+
+  // Sync state from URL params (?category=, ?tab=, ?diagram=, ?id=) & browser Back/Forward
+  useEffect(() => {
+    syncFromParams(new URLSearchParams(searchKey));
+  }, [searchKey, syncFromParams]);
+
+  usePopstateSync(
+    useCallback(() => {
+      syncFromParams(new URLSearchParams(window.location.search));
+    }, [syncFromParams])
+  );
 
   // Load mastered state from localStorage
   useEffect(() => {
@@ -192,17 +205,17 @@ export function WhiteboardsClient() {
   // Update URL params when category or tab changes
   const updateUrl = useCallback(
     (newCatId: string, newTab: ViewMode, diagramId?: string) => {
-      const params = new URLSearchParams(window.location.search);
-      params.set("category", newCatId);
-      params.set("tab", newTab);
-      if (diagramId) {
-        params.set("diagram", diagramId);
-      } else {
-        params.delete("diagram");
-      }
-      router.replace(`/whiteboards?${params.toString()}`, { scroll: false });
+      pushUrlQuery((params) => {
+        params.set("category", newCatId);
+        params.set("tab", newTab);
+        if (diagramId) {
+          params.set("diagram", diagramId);
+        } else {
+          params.delete("diagram");
+        }
+      });
     },
-    [router]
+    []
   );
 
   const handleSelectCategory = (catId: string) => {
@@ -483,7 +496,7 @@ export function WhiteboardsClient() {
       </section>
 
       {/* ── STICKY CATEGORY NAVIGATION DECK ───────────────────────────────── */}
-      <section className="sticky top-0 z-30 bg-[var(--background)]/90 backdrop-blur-md border-b border-[var(--border)] py-3 px-4 sm:px-6 lg:px-8 shadow-sm">
+      <section className="sticky top-14 lg:top-0 z-30 bg-[var(--background)]/90 backdrop-blur-md border-b border-[var(--border)] py-3 px-4 sm:px-6 lg:px-8 shadow-sm">
         <div className="w-full max-w-7xl 2xl:max-w-[1800px] 3xl:max-w-[2200px] 4xl:max-w-none mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Scrollable Categories List */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">

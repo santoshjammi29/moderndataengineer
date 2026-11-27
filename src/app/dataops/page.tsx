@@ -4,8 +4,6 @@ import { getDataOpsDataDAL } from "@/lib/dal";
 import { DataOpsClient } from "./dataops-client";
 import { generatePageMetadata, generateHowToSchema, generateCourseSchema, generateBreadcrumbSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getDataOpsDataDAL();
   return generatePageMetadata({

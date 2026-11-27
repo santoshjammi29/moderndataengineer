@@ -9,6 +9,7 @@ import { TextSizeController } from "@/components/ui/text-size-controller";
 import { ChevronLeft, Columns2, ChevronDown, Search } from "lucide-react";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { NAV_GROUPS, isSubHrefActive, NavItem } from "@/data/navigation-data";
+import { useHasMounted } from "@/lib/url-tab-sync";
 
 const pillVariants: Record<string, string> = {
   easy: "bg-green-500/10 text-green-400 border-green-500/20",
@@ -26,7 +27,9 @@ const COLLAPSED_WIDTH_DESKTOP = 72;
 
 function SidebarInner() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const rawSearchParams = useSearchParams();
+  const mounted = useHasMounted();
+  const searchParams = mounted ? rawSearchParams : null;
   const [collapsed, setCollapsed] = useState(false);
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [isDragging, setIsDragging] = useState(false);
@@ -36,6 +39,18 @@ function SidebarInner() {
   // Desktop subpages are expanded by default
   const [manualExpanded, setManualExpanded] = useState<Record<string, boolean>>({});
   const [defaultExpanded, setDefaultExpanded] = useState<boolean>(true);
+  const [currentHash, setCurrentHash] = useState<string>("");
+
+  useEffect(() => {
+    const syncHash = () => setCurrentHash(window.location.hash || "");
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, [pathname, searchParams]);
 
   const itemsWithSub = useMemo(() => {
     return NAV_GROUPS.flatMap((g) => g.items).filter((i) => i.subItems && i.subItems.length > 0);
@@ -57,10 +72,14 @@ function SidebarInner() {
   const toggleItemExpanded = (href: string) => {
     setManualExpanded((prev) => {
       const current = prev[href] !== undefined ? prev[href] : defaultExpanded;
-      return {
+      const next = {
         ...prev,
         [href]: !current,
       };
+      try {
+        localStorage.setItem("sidebar-expanded-groups", JSON.stringify(next));
+      } catch {}
+      return next;
     });
   };
 
@@ -73,6 +92,10 @@ function SidebarInner() {
       });
       setManualExpanded(newMap);
       setDefaultExpanded(false);
+      try {
+        localStorage.setItem("sidebar-expanded-groups", JSON.stringify(newMap));
+        localStorage.setItem("sidebar-default-expanded", "false");
+      } catch {}
     } else {
       // Expand every group
       const newMap: Record<string, boolean> = {};
@@ -81,6 +104,10 @@ function SidebarInner() {
       });
       setManualExpanded(newMap);
       setDefaultExpanded(true);
+      try {
+        localStorage.setItem("sidebar-expanded-groups", JSON.stringify(newMap));
+        localStorage.setItem("sidebar-default-expanded", "true");
+      } catch {}
     }
   };
 
@@ -99,6 +126,22 @@ function SidebarInner() {
         setWidth(num);
       }
     }
+
+    try {
+      const savedDefaultExpanded = localStorage.getItem("sidebar-default-expanded");
+      if (savedDefaultExpanded === "false") {
+        setDefaultExpanded(false);
+      } else if (savedDefaultExpanded === "true") {
+        setDefaultExpanded(true);
+      }
+      const savedExpanded = localStorage.getItem("sidebar-expanded-groups");
+      if (savedExpanded) {
+        const parsed = JSON.parse(savedExpanded);
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          setManualExpanded(parsed);
+        }
+      }
+    } catch {}
   }, []);
 
   // Close width menu on outside click
@@ -226,9 +269,9 @@ function SidebarInner() {
             />
             {!collapsed && (
               <div className="min-w-0 flex-1">
-                <h1 className="text-sm font-bold text-[var(--foreground)] tracking-tight break-words leading-tight group-hover:text-blue-500 transition-colors">
+                <div className="text-sm font-bold text-[var(--foreground)] tracking-tight break-words leading-tight group-hover:text-blue-500 transition-colors">
                   Modern Data Engineer
-                </h1>
+                </div>
                 <span className="text-[10px] font-medium text-[var(--muted-foreground)] block -mt-0.5">
                   Study Workspace
                 </span>
@@ -443,7 +486,7 @@ function SidebarInner() {
                       {expanded && !collapsed && hasChildren && item.subItems && (
                         <ul className="ml-5 pl-2.5 border-l-2 border-blue-500/25 my-1.5 space-y-1" role="list">
                           {item.subItems.map((sub) => {
-                            const isSubActive = isSubHrefActive(pathname, searchParams, sub.href);
+                            const isSubActive = isSubHrefActive(pathname, searchParams, sub.href, currentHash);
                             return (
                               <li key={sub.href}>
                                 <Link

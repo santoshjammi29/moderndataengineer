@@ -34,8 +34,16 @@ import { CodeBlock } from "@/components/ui/code-block";
 import { SmoothAccordion } from "@/components/ui/smooth-accordion";
 import { PrerequisiteBanner } from "@/components/ui/prerequisite-banner";
 import { OptimizationFlow } from "@/components/cheatsheet/optimization-flow";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 type CatalystSubtab = "visualizer" | "pipeline" | "inspector" | "blueprint" | "tuning";
+const CATALYST_VALID_TABS: readonly CatalystSubtab[] = [
+  "visualizer",
+  "pipeline",
+  "inspector",
+  "blueprint",
+  "tuning",
+];
 
 interface SparkCatalystClientProps {
   initialPyspark?: CodeSheetItem[];
@@ -335,31 +343,32 @@ while (streamReader.hasMoreSlices(startBlock, endBlock)) {
 
 export function SparkCatalystClient({ initialPyspark }: SparkCatalystClientProps) {
   const searchParams = useSearchParams();
-  const initialTabParam = searchParams.get("tab")?.toLowerCase() as CatalystSubtab | undefined;
-  const [activeTab, setActiveTab] = useState<CatalystSubtab>(
-    initialTabParam && ["visualizer", "pipeline", "inspector", "blueprint", "tuning"].includes(initialTabParam)
-      ? initialTabParam
-      : "visualizer"
+  const searchKey = searchParams.toString();
+  const [activeTab, setActiveTab] = useState<CatalystSubtab>(() =>
+    resolveQueryParam(searchParams, "tab", CATALYST_VALID_TABS, "visualizer")
   );
 
-  // Reactively sync tab with URL searchParams
+  // Reactively sync tab with URL searchParams & browser Back/Forward
   useEffect(() => {
-    const paramTab = searchParams.get("tab")?.toLowerCase() as CatalystSubtab | undefined;
-    if (paramTab && ["visualizer", "pipeline", "inspector", "blueprint", "tuning"].includes(paramTab)) {
-      setActiveTab(paramTab);
-    } else if (!paramTab) {
-      setActiveTab("visualizer");
-    }
-  }, [searchParams]);
+    setActiveTab(resolveQueryParam(new URLSearchParams(searchKey), "tab", CATALYST_VALID_TABS, "visualizer"));
+  }, [searchKey]);
+
+  usePopstateSync(
+    useCallback(() => {
+      setActiveTab(resolveQueryParam(new URLSearchParams(window.location.search), "tab", CATALYST_VALID_TABS, "visualizer"));
+    }, [])
+  );
 
   // Sync tab with URL
   const handleTabChange = useCallback((tab: CatalystSubtab) => {
     setActiveTab(tab);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("tab", tab);
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery((params) => {
+      if (tab === "visualizer") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+    });
   }, []);
 
   // Simulator State

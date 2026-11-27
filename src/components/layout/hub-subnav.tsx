@@ -4,6 +4,7 @@ import React, { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useHasMounted } from "@/lib/url-tab-sync";
 
 export interface HubSubnavItem {
   label: string;
@@ -21,7 +22,9 @@ interface HubSubnavProps {
 
 function HubSubnavInner({ hubTitle, items, className }: HubSubnavProps) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const rawSearchParams = useSearchParams();
+  const mounted = useHasMounted();
+  const searchParams = mounted ? rawSearchParams : null;
 
   const isItemActive = (href: string) => {
     const [itemPath, itemQuery] = href.split("?");

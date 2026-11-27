@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import React, { useState, useMemo, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Terminal,
@@ -25,6 +25,10 @@ import { CategoryBar } from "@/components/cheatsheet/category-bar";
 import { QuickJumpTOC } from "@/components/cheatsheet/quick-jump-toc";
 import { DatabricksCheatsheetView } from "@/components/cheatsheet/databricks-cheatsheet-view";
 import { cn } from "@/lib/utils";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
+
+const CHEATSHEET_TABS = ["runbooks", "databricks"] as const;
+type CheatSheetTab = (typeof CHEATSHEET_TABS)[number];
 
 const ALL_CATEGORIES: CheatCodeCategory[] = [
   "Spark Core",
@@ -44,20 +48,21 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
   const cheatsheetData = initialData;
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
-  const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState<"databricks" | "runbooks">("runbooks");
+  const [activeTab, setActiveTab] = useState<CheatSheetTab>(() =>
+    resolveQueryParam(searchParams, "tab", CHEATSHEET_TABS, "runbooks")
+  );
 
-  const handleTabChange = (newTab: "databricks" | "runbooks") => {
+  const handleTabChange = useCallback((newTab: CheatSheetTab) => {
     setActiveTab(newTab);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", newTab);
-    if (newTab !== "databricks") {
-      params.delete("domain");
-      params.delete("card");
-    }
-    router.replace(`/cheat-sheet?${params.toString()}`, { scroll: false });
-  };
+    pushUrlQuery((params) => {
+      params.set("tab", newTab);
+      if (newTab !== "databricks") {
+        params.delete("domain");
+        params.delete("card");
+      }
+    });
+  }, []);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
@@ -65,15 +70,8 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
   const [selectedScenario, setSelectedScenario] = useState<string>("ALL");
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
 
-  // Synchronize URL parameters if present
-  useEffect(() => {
-    const params = new URLSearchParams(searchKey);
-    const tabParam = params.get("tab");
-    if (tabParam === "databricks") {
-      setActiveTab("databricks");
-    } else {
-      setActiveTab("runbooks");
-    }
+  const syncFromParams = useCallback((params: URLSearchParams) => {
+    setActiveTab(resolveQueryParam(params, "tab", CHEATSHEET_TABS, "runbooks"));
 
     const idParam = params.get("id");
     const catParam = params.get("category");
@@ -95,7 +93,18 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
         }
       }, 250);
     }
-  }, [searchKey]);
+  }, []);
+
+  // Synchronize URL parameters on searchParams change or browser Back/Forward
+  useEffect(() => {
+    syncFromParams(new URLSearchParams(searchKey));
+  }, [searchKey, syncFromParams]);
+
+  usePopstateSync(
+    useCallback(() => {
+      syncFromParams(new URLSearchParams(window.location.search));
+    }, [syncFromParams])
+  );
 
   // Compute category counts
   const categoryCounts = useMemo(() => {
@@ -385,7 +394,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
           </section>
 
           {/* Main Content Area */}
-          <div className="space-y-3.5" id="main-content">
+          <div className="space-y-3.5" id="runbooks-content">
             {/* Interactive Optimization Flow Diagram */}
             <section aria-labelledby="optimization-flow-heading">
               <OptimizationFlow onSelectCheatCode={handleJumpToCode} />

@@ -64,7 +64,7 @@ export function MobileNav() {
   const isOtherActive =
     !isActive("/") &&
     !isActive("/guided-learning") &&
-    !isActive("/concepts") &&
+    !isActive("/code-practice") &&
     !isActive("/qa-prep");
 
   const openDrawer = () => {
@@ -90,6 +90,7 @@ export function MobileNav() {
             <Link
               key={tab.href}
               href={tab.href}
+              aria-current={active ? "page" : undefined}
               className={cn(
                 "flex-1 flex flex-col items-center justify-center py-1.5 px-0.5 min-h-[48px] rounded-xl transition-all relative touch-manipulation",
                 active
@@ -156,6 +157,7 @@ export function MobileNav() {
             <Link
               key={tab.href}
               href={tab.href}
+              aria-current={active ? "page" : undefined}
               className={cn(
                 "flex-1 flex flex-col items-center justify-center py-1.5 px-1 min-h-[48px] rounded-xl transition-all relative touch-manipulation shrink-0",
                 active

@@ -2,7 +2,8 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 import { m, AnimatePresence } from "framer-motion";
 import {
   FileCode2,
@@ -50,6 +51,30 @@ import {
 type CodePracticeTab = "drills" | "databricks" | "matrix" | "runbooks";
 type LanguageKey = "pyspark" | "sparksql" | "mssql" | "python";
 
+const VALID_LANGS: readonly LanguageKey[] = ["pyspark", "sparksql", "mssql", "python"];
+
+function resolveCodePracticeState(params: Pick<URLSearchParams, "get">): {
+  tab: CodePracticeTab;
+  lang: LanguageKey;
+} {
+  const dbParam = params.get("db")?.trim().toLowerCase();
+  const rawTabParam = params.get("tab")?.trim().toLowerCase();
+
+  if (rawTabParam === "databricks" || dbParam === "databricks") {
+    return { tab: "databricks", lang: "pyspark" };
+  }
+  if (rawTabParam === "matrix") {
+    return { tab: "matrix", lang: "pyspark" };
+  }
+  if (rawTabParam === "runbooks" || rawTabParam === "python") {
+    return { tab: "runbooks", lang: "pyspark" };
+  }
+  if (dbParam && VALID_LANGS.includes(dbParam as LanguageKey)) {
+    return { tab: "drills", lang: dbParam as LanguageKey };
+  }
+  return { tab: "drills", lang: "pyspark" };
+}
+
 const levelBadges: Record<CodeLevel, { bg: string; text: string; border: string }> = {
   beginner: { bg: "bg-green-500/10", text: "text-green-400", border: "border-green-500/20" },
   intermediate: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/20" },
@@ -78,14 +103,12 @@ export function CodePracticeClient({
   initialDatabricksSuite,
   initialDatabricks100,
 }: CodePracticeClientProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const dbParam = searchParams.get("db")?.toLowerCase();
-  const rawTabParam = searchParams.get("tab")?.toLowerCase();
-  const tabParam = rawTabParam as CodePracticeTab | null;
+  const searchKey = searchParams.toString();
 
-  const [activeMainTab, setActiveMainTab] = useState<CodePracticeTab>("drills");
-  const [activeLang, setActiveLang] = useState<LanguageKey>("pyspark");
+  const initialResolved = resolveCodePracticeState(searchParams);
+  const [activeMainTab, setActiveMainTab] = useState<CodePracticeTab>(initialResolved.tab);
+  const [activeLang, setActiveLang] = useState<LanguageKey>(initialResolved.lang);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<string>("ALL");
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -140,53 +163,37 @@ export function CodePracticeClient({
 
   // Sync tab with URL search parameter (?tab= or ?db=)
   useEffect(() => {
-    if (rawTabParam === "databricks" || dbParam === "databricks") {
-      setActiveMainTab("databricks");
-      return;
-    }
-    if (rawTabParam === "matrix") {
-      setActiveMainTab("matrix");
-      return;
-    }
-    if (rawTabParam === "runbooks" || rawTabParam === "python") {
-      setActiveMainTab("runbooks");
-      return;
-    }
-    if (rawTabParam === "drills") {
-      setActiveMainTab("drills");
-    }
+    const resolved = resolveCodePracticeState(new URLSearchParams(searchKey));
+    setActiveMainTab(resolved.tab);
+    setActiveLang(resolved.lang);
+  }, [searchKey]);
 
-    const validLangs: LanguageKey[] = ["pyspark", "sparksql", "mssql", "python"];
-    if (dbParam && validLangs.includes(dbParam as LanguageKey)) {
-      setActiveMainTab("drills");
-      setActiveLang(dbParam as LanguageKey);
-      return;
-    }
-
-    if (!rawTabParam && !dbParam) {
-      setActiveMainTab("drills");
-      setActiveLang("pyspark");
-    }
-  }, [rawTabParam, dbParam]);
+  usePopstateSync(
+    useCallback(() => {
+      const resolved = resolveCodePracticeState(new URLSearchParams(window.location.search));
+      setActiveMainTab(resolved.tab);
+      setActiveLang(resolved.lang);
+    }, [])
+  );
 
   const handleMainTabChange = (tab: CodePracticeTab) => {
     setActiveMainTab(tab);
-    const url = new URL(window.location.href);
-    url.searchParams.set("tab", tab);
-    if (tab === "drills") {
-      url.searchParams.set("db", activeLang);
-    } else {
-      url.searchParams.delete("db");
-    }
-    router.replace(url.toString(), { scroll: false });
+    pushUrlQuery((params) => {
+      params.set("tab", tab);
+      if (tab === "drills") {
+        params.set("db", activeLang);
+      } else {
+        params.delete("db");
+      }
+    });
   };
 
   const handleLangChange = (lang: LanguageKey) => {
     setActiveLang(lang);
-    const url = new URL(window.location.href);
-    url.searchParams.set("tab", "drills");
-    url.searchParams.set("db", lang);
-    router.replace(url.toString(), { scroll: false });
+    pushUrlQuery((params) => {
+      params.set("tab", "drills");
+      params.set("db", lang);
+    });
   };
 
   const handleShuffle = () => {

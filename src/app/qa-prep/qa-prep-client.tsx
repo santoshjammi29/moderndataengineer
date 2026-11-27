@@ -49,6 +49,7 @@ import {
   computeFilterCounts,
   getQuestionSearchCorpus,
 } from "@/lib/qa-filters";
+import { pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 const AnswerRenderer = dynamic(
   () => import("@/components/ui/answer-renderer").then((mod) => mod.AnswerRenderer),
@@ -170,12 +171,18 @@ export function QaPrepClient({
   const initialTech = (searchParams.get("tech") || searchParams.get("ecosystem") || "ALL").toUpperCase() as TechEcosystemId;
   const initialArchetype = (searchParams.get("archetype") || searchParams.get("scenario") || "ALL").toUpperCase() as ScenarioArchetypeId;
 
+  const initialDiffRaw = searchParams.get("difficulty")?.toUpperCase();
+  const initialDifficulty =
+    initialDiffRaw && ["EASY", "MEDIUM", "HARD", "ARCHITECT", "ALL"].includes(initialDiffRaw)
+      ? initialDiffRaw
+      : "ALL";
+
   const [questions, setQuestions] = useState<UnifiedQuestion[]>(initialQuestions);
   const totalCount = Math.max(totalQuestionCount || 0, questions.length);
 
   const [searchQuery, setSearchQuery] = useState(initialQ);
   const deferredSearch = useDeferredValue(searchQuery);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("ALL");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>(initialDifficulty);
   const [selectedDomain, setSelectedDomain] = useState<string>(initialDomain);
   const [selectedTech, setSelectedTech] = useState<TechEcosystemId>(
     TECH_ECOSYSTEMS.some((e) => e.id === initialTech) ? initialTech : "ALL"
@@ -597,7 +604,18 @@ export function QaPrepClient({
           },
           studyMode: {
             isActive: isStudyMode,
-            onToggle: () => setIsStudyMode(!isStudyMode),
+            onToggle: () => {
+              const next = !isStudyMode;
+              setIsStudyMode(next);
+              pushUrlQuery((params) => {
+                if (next) {
+                  params.set("view", "study");
+                } else {
+                  params.delete("view");
+                  params.delete("mode");
+                }
+              });
+            },
           },
           shuffle: {
             isShuffled,

@@ -4,7 +4,7 @@ import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   Search,
   X,
@@ -106,10 +106,9 @@ function getCategoryIcon(cat: string) {
 export function SearchTopicsClient() {
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
-  const router = useRouter();
 
-  const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [query, setQuery] = useState(() => searchParams.get("q") || "");
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") || "All");
   const [sortBy, setSortBy] = useState<"relevance" | "category" | "title">("relevance");
 
   const [loading, setLoading] = useState(false);
@@ -244,12 +243,23 @@ export function SearchTopicsClient() {
     const timer = setTimeout(() => {
       executeSearch(query, selectedCategory);
 
-      // Sync URL params without triggering full reload
-      const params = new URLSearchParams();
-      if (query.trim()) params.set("q", query.trim());
-      if (selectedCategory && selectedCategory !== "All") params.set("category", selectedCategory);
-      const newUrl = params.toString() ? `/search-topics?${params.toString()}` : "/search-topics";
-      window.history.replaceState(null, "", newUrl);
+      // Sync URL params without wiping unrelated params (e.g., ?id=)
+      const params = new URLSearchParams(window.location.search);
+      if (query.trim()) {
+        params.set("q", query.trim());
+      } else {
+        params.delete("q");
+      }
+      if (selectedCategory && selectedCategory !== "All") {
+        params.set("category", selectedCategory);
+      } else {
+        params.delete("category");
+      }
+      const nextUrl = params.toString() ? `/search-topics?${params.toString()}` : "/search-topics";
+      const currentUrl = `${window.location.pathname}${window.location.search}`;
+      if (nextUrl !== currentUrl) {
+        window.history.replaceState(null, "", nextUrl);
+      }
     }, 180);
 
     return () => clearTimeout(timer);

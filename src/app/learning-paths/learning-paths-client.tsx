@@ -15,6 +15,7 @@ import { LearningPath, Difficulty } from "@/types/data";
 import { DecisionLedger } from "@/components/learning-paths/decision-ledger";
 import { TopicIcon } from "@/components/ui/topic-icon";
 import { MasteryRoadmapFlow } from "@/components/guided-learning/mastery-roadmap-flow";
+import { pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 const difficultyColors: Record<Difficulty, { bg: string; text: string; border: string }> = {
   EASY: { bg: "bg-green-500/10", text: "text-green-400", border: "border-green-500/20" },
@@ -42,17 +43,29 @@ export function LearningPathsClient({ initialPaths }: { initialPaths: LearningPa
     const cardOrId = searchParams.get("card") || searchParams.get("id");
     if (cardOrId && learningPathsDb.some((p) => p.id === cardOrId)) {
       setSelectedPathId(cardOrId);
+    } else if (!cardOrId && learningPathsDb[0]?.id) {
+      setSelectedPathId(learningPathsDb[0].id);
     }
   }, [searchParams, learningPathsDb]);
 
+  usePopstateSync(
+    React.useCallback(() => {
+      const params = new URLSearchParams(window.location.search);
+      const cardOrId = params.get("card") || params.get("id");
+      if (cardOrId && learningPathsDb.some((p) => p.id === cardOrId)) {
+        setSelectedPathId(cardOrId);
+      } else if (learningPathsDb[0]?.id) {
+        setSelectedPathId(learningPathsDb[0].id);
+      }
+    }, [learningPathsDb])
+  );
+
   const handleSelectPath = React.useCallback((id: string) => {
     setSelectedPathId(id);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("card", id);
-      url.searchParams.set("id", id);
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery((params) => {
+      params.set("card", id);
+      params.set("id", id);
+    });
   }, []);
 
   const filteredPaths = useMemo(() => {

@@ -206,7 +206,7 @@ describe("Cloud × Table Matrix First & Consolidated Clubbed Pages Verification"
     it("switches subtabs without invoking window or element scroll", () => {
       const scrollIntoViewMock = vi.fn();
       window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
-      const replaceStateSpy = vi.spyOn(window.history, "replaceState");
+      const pushStateSpy = vi.spyOn(window.history, "pushState");
 
       render(
         <ModernStackClient
@@ -226,8 +226,8 @@ describe("Cloud × Table Matrix First & Consolidated Clubbed Pages Verification"
       fireEvent.click(overviewBtn);
 
       // Verify URL updated with ?tab=overview and no hash
-      expect(replaceStateSpy).toHaveBeenCalled();
-      const lastCallUrl = replaceStateSpy.mock.calls[replaceStateSpy.mock.calls.length - 1][2] as string;
+      expect(pushStateSpy).toHaveBeenCalled();
+      const lastCallUrl = pushStateSpy.mock.calls[pushStateSpy.mock.calls.length - 1][2] as string;
       expect(lastCallUrl).toContain("tab=overview");
       expect(lastCallUrl).not.toContain("#overview");
 

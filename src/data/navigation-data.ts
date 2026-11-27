@@ -63,7 +63,7 @@ export const NAV_GROUPS: NavGroup[] = [
     title: "Start",
     items: [
       { label: "Home", href: "/", icon: Home },
-      { label: "Repository Library", href: "/repositories", icon: FolderGit2, matches: ["/repositories"], pill: { text: "14 projects", variant: "info" } },
+      { label: "Repository Library", href: "/repositories", icon: FolderGit2, matches: ["/repositories", "/repos"], pill: { text: "14 projects", variant: "info" } },
       {
         label: "Search All Content",
         href: "/search-topics",
@@ -398,7 +398,8 @@ export const ALL_FLAT_PAGES_AND_SUBPAGES: FlatNavPage[] = [
 export function isSubHrefActive(
   pathname: string | null,
   searchParams: URLSearchParams | null,
-  subHref: string
+  subHref: string,
+  currentHash = ""
 ): boolean {
   if (!pathname) return false;
 
@@ -407,16 +408,19 @@ export function isSubHrefActive(
 
   if (pathname !== subPath) return false;
 
-  // Handle hash if present
+  // Handle hash if present (use caller-supplied hydrated hash to avoid SSR mismatch)
   if (hash) {
-    if (typeof window !== "undefined" && window.location.hash === `#${hash}`) {
-      return true;
-    }
+    return currentHash === `#${hash}`;
   }
 
   // If subHref has NO query string
   if (!subQuery) {
-    if (!searchParams || Array.from(searchParams.entries()).length === 0) return true;
+    if (!searchParams || Array.from(searchParams.entries()).length === 0) {
+      if (pathname === "/studio" && currentHash === "#bookmarks") {
+        return false;
+      }
+      return true;
+    }
     const currentTab = searchParams.get("tab")?.toLowerCase();
     const currentDb = searchParams.get("db")?.toLowerCase();
     const currentView = searchParams.get("view")?.toLowerCase();
@@ -436,8 +440,8 @@ export function isSubHrefActive(
     if (pathname === "/guided-learning" && (!currentTab || currentTab === "topics")) return true;
     if (pathname === "/qa-prep" && !currentDifficulty && (!currentDomain || currentDomain === "all")) return true;
     if (pathname === "/company-research" && !currentLocation && (!currentView || currentView === "cards")) return true;
-    if (pathname === "/studio" && !hash) {
-      return typeof window === "undefined" || window.location.hash !== "#bookmarks";
+    if (pathname === "/studio") {
+      return currentHash !== "#bookmarks";
     }
 
     return false;

@@ -4,8 +4,6 @@ import { getCompanyProfilesDAL } from "@/lib/dal";
 import { CompanyResearchClient } from "./company-research-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const profiles = await getCompanyProfilesDAL();
   return generatePageMetadata({

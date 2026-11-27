@@ -43,6 +43,7 @@ import { cn } from "@/lib/utils";
 import { TopicIcon } from "@/components/ui/topic-icon";
 import { CodeBlock } from "@/components/ui/code-block";
 import dynamic from "next/dynamic";
+import { pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 const SmoothAccordion = dynamic(
   () => import("@/components/ui/smooth-accordion").then((mod) => mod.SmoothAccordion),
@@ -59,6 +60,32 @@ type ModernSubtab =
   | "cost"
   | "compatibility"
   | "python";
+
+const MODERN_VALID_TABS: readonly ModernSubtab[] = [
+  "compatibility",
+  "overview",
+  "concepts",
+  "matrix",
+  "simulators",
+  "blueprints",
+  "ai",
+  "cost",
+  "python",
+];
+
+function resolveModernTab(params: Pick<URLSearchParams, "get">, hashRaw = ""): ModernSubtab {
+  const queryTab = (params.get("tab") || params.get("view"))?.trim().toLowerCase();
+  if (queryTab) {
+    return (MODERN_VALID_TABS as readonly string[]).includes(queryTab)
+      ? (queryTab as ModernSubtab)
+      : "compatibility";
+  }
+  const hash = hashRaw.replace("#", "").trim().toLowerCase();
+  if (hash && (MODERN_VALID_TABS as readonly string[]).includes(hash)) {
+    return hash as ModernSubtab;
+  }
+  return "compatibility";
+}
 
 export interface EngineCompatRecord {
   id: string;
@@ -378,78 +405,36 @@ export function ModernStackClient(props: ModernStackClientProps) {
   } = props.initialModernStack;
   const pythonData = props.initialPython;
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<ModernSubtab>("compatibility");
+  const searchKey = searchParams.toString();
+  const [activeTab, setActiveTab] = useState<ModernSubtab>(() => resolveModernTab(searchParams));
 
   const handleTabChange = useCallback((tabId: ModernSubtab) => {
     setActiveTab(tabId);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("tab", tabId);
-      url.hash = "";
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery(
+      (params) => {
+        params.delete("view");
+        params.set("tab", tabId);
+      },
+      { clearHash: true }
+    );
   }, []);
 
-  useEffect(() => {
-    const syncTabFromLocation = () => {
-      const hash = window.location.hash.replace("#", "").toLowerCase();
-      const params = new URLSearchParams(window.location.search);
-      const queryTab = params.get("tab")?.toLowerCase();
-
-      const validTabs: ModernSubtab[] = [
-        "compatibility",
-        "overview",
-        "concepts",
-        "matrix",
-        "simulators",
-        "blueprints",
-        "ai",
-        "cost",
-        "python",
-      ];
-
-      if (queryTab && validTabs.includes(queryTab as ModernSubtab)) {
-        setActiveTab(queryTab as ModernSubtab);
-      } else if (hash && validTabs.includes(hash as ModernSubtab)) {
-        setActiveTab(hash as ModernSubtab);
-      } else if (!queryTab && !hash) {
-        setActiveTab("compatibility");
-      }
-    };
-
-    syncTabFromLocation();
-    window.addEventListener("hashchange", syncTabFromLocation);
-    window.addEventListener("popstate", syncTabFromLocation);
-    return () => {
-      window.removeEventListener("hashchange", syncTabFromLocation);
-      window.removeEventListener("popstate", syncTabFromLocation);
-    };
+  const syncFromLocation = useCallback((params: Pick<URLSearchParams, "get">, hashRaw: string) => {
+    setActiveTab(resolveModernTab(params, hashRaw));
   }, []);
 
   // Reactively synchronize from Next.js router searchParams (?tab=, ?view=, #hash)
   useEffect(() => {
-    const queryTab = searchParams.get("tab")?.toLowerCase() || searchParams.get("view")?.toLowerCase();
-    const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "").toLowerCase() : "";
-    const validTabs: ModernSubtab[] = [
-      "compatibility",
-      "overview",
-      "concepts",
-      "matrix",
-      "simulators",
-      "blueprints",
-      "ai",
-      "cost",
-      "python",
-    ];
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    syncFromLocation(new URLSearchParams(searchKey), hash);
+  }, [searchKey, syncFromLocation]);
 
-    if (queryTab && validTabs.includes(queryTab as ModernSubtab)) {
-      setActiveTab(queryTab as ModernSubtab);
-    } else if (hash && validTabs.includes(hash as ModernSubtab)) {
-      setActiveTab(hash as ModernSubtab);
-    } else if (!queryTab && !hash) {
-      setActiveTab("compatibility");
-    }
-  }, [searchParams]);
+  usePopstateSync(
+    useCallback(() => {
+      syncFromLocation(new URLSearchParams(window.location.search), window.location.hash);
+    }, [syncFromLocation]),
+    { includeHashChange: true }
+  );
 
   // ──────────────────────────────────────────────────────────
   // 1. OVERVIEW: 7-STAGE INTERACTIVE CANVAS

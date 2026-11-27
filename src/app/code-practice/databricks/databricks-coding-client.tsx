@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 import {
   Terminal,
   Flame,
@@ -390,18 +391,17 @@ print(f"Triggering {target_env} pipeline for {batch_date}")`,
   },
 ];
 
+const VALID_DATABRICKS_VIEWS = ["all", "manual", "cheatsheets", "d100", "bottlenecks", "dbfs"] as const;
+
 export function DatabricksCodingClient({
   suiteData,
   operationsData,
 }: DatabricksCodingClientProps) {
   const searchParams = useSearchParams();
-  const [viewMode, setViewMode] = useState<CodingViewMode>(() => {
-    const v = searchParams.get("view")?.toLowerCase();
-    if (v === "manual" || v === "cheatsheets" || v === "d100" || v === "bottlenecks" || v === "dbfs") {
-      return v as CodingViewMode;
-    }
-    return "all";
-  });
+  const searchKey = searchParams.toString();
+  const [viewMode, setViewMode] = useState<CodingViewMode>(() =>
+    resolveQueryParam(searchParams, "view", VALID_DATABRICKS_VIEWS, "all")
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("ALL");
@@ -418,35 +418,35 @@ export function DatabricksCodingClient({
 
   // Sync viewMode from URL searchParams and hash anchors (#triage, #day100)
   useEffect(() => {
-    const v = searchParams.get("view")?.toLowerCase();
+    const params = new URLSearchParams(searchKey);
     const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "").toLowerCase() : "";
-    if (v && ["all", "manual", "cheatsheets", "d100", "bottlenecks", "dbfs"].includes(v)) {
-      setViewMode(v as CodingViewMode);
-    } else if (!v) {
-      if (hash === "triage") {
-        setViewMode("all");
-      } else if (hash === "day100") {
-        setViewMode("all");
-      } else {
-        setViewMode("all");
-      }
-    }
+    setViewMode(resolveQueryParam(params, "view", VALID_DATABRICKS_VIEWS, "all"));
     if (hash === "triage" || hash === "day100") {
       setTimeout(() => {
         const el = document.getElementById(hash);
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 150);
     }
-  }, [searchParams]);
+  }, [searchKey]);
+
+  usePopstateSync(
+    useCallback(() => {
+      setViewMode(resolveQueryParam(new URLSearchParams(window.location.search), "view", VALID_DATABRICKS_VIEWS, "all"));
+    }, [])
+  );
 
   const handleViewChange = useCallback((mode: CodingViewMode) => {
     setViewMode(mode);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("view", mode);
-      url.hash = "";
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery(
+      (params) => {
+        if (mode === "all") {
+          params.delete("view");
+        } else {
+          params.set("view", mode);
+        }
+      },
+      { clearHash: true }
+    );
   }, []);
 
   // Filtered Cheatsheet Cards (48 cards)
