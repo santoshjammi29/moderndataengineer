@@ -23,7 +23,7 @@ import { getLastTopic, getStoredExperienceTier, hasRealUserProgress } from "@/li
 
 export function DashboardClient() {
   const [isClient, setIsClient] = useState(false);
-  const activeTier = getStoredExperienceTier();
+  const activeTier = isClient ? getStoredExperienceTier() : "associate";
   const topic = getLastTopic(activeTier);
   const bookmarks = useUserStore((s) => s.bookmarks);
   const userData = useUserStore((s) => s.userData);

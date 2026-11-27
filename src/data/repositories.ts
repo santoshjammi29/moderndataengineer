@@ -168,7 +168,7 @@ export const REPOSITORIES: ProjectRepository[] = [
     category: "Azure & Blueprints",
     tags: ["Azure Databricks", "Lakehouse", "Project blueprints"],
     githubUrl: github("azure-databricks-project-blueprints"),
-    portalHref: "/blueprints",
+    portalHref: "/whiteboards",
     portalLabel: "Open blueprints",
   },
   {

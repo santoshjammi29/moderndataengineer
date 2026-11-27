@@ -8,8 +8,6 @@ import { TOTAL_SCENARIO_COUNT, INITIAL_SCENARIO_ITEMS } from "@/data/initial-dat
 import { ArchitectureClient } from "./architecture-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: `Lakehouse Architecture Hub: ${TOTAL_SCENARIO_COUNT} Enterprise Scenarios & Blueprints`,

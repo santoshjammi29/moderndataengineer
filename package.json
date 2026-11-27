@@ -34,6 +34,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "analyze": "cross-env ANALYZE=true next build --webpack"
   },
   "dependencies": {
@@ -66,6 +67,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261025.1",
     "@next/bundle-analyzer": "^16.4.3",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",

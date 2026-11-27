@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { TopicIcon } from "@/components/ui/topic-icon";
 import { EnterpriseStackFlow } from "@/components/company-research/enterprise-stack-flow";
 import type { CompanyProfile, CompanyTier } from "@/types/data";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 const POPULAR_TECHS = [
   "All",
@@ -65,6 +66,24 @@ const MAJOR_HUBS = [
 type ViewMode = "grid" | "split" | "table";
 type ActiveTab = "prompts" | "interviewFocus" | "challenge";
 
+const VALID_COMPANY_VIEWS: readonly ViewMode[] = ["grid", "split", "table"];
+
+function resolveCompanyHub(params: Pick<URLSearchParams, "get">): string {
+  const locationParam = params.get("location");
+  const hubParam = params.get("hub");
+  if (locationParam) {
+    const normalizedLocation =
+      locationParam.toLowerCase() === "bangalore"
+        ? "Bengaluru"
+        : MAJOR_HUBS.find((hub) => hub.toLowerCase() === locationParam.toLowerCase());
+    return normalizedLocation || "All Hubs";
+  }
+  if (hubParam) {
+    return MAJOR_HUBS.find((hub) => hub.toLowerCase() === hubParam.toLowerCase()) || hubParam;
+  }
+  return "All Hubs";
+}
+
 const ITEMS_PER_PAGE = 24;
 
 function getTierStyle(tier: CompanyTier) {
@@ -93,13 +112,18 @@ function getTierStyle(tier: CompanyTier) {
 
 export function CompanyResearchClient({ initialProfiles }: { initialProfiles: CompanyProfile[] }) {
   const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTier, setSelectedTier] = useState<string>("ALL");
-  const [selectedTech, setSelectedTech] = useState<string>("All");
-  const [selectedHub, setSelectedHub] = useState<string>("All Hubs");
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("q") || searchParams.get("company") || searchParams.get("search") || ""
+  );
+  const [selectedTier, setSelectedTier] = useState<string>(() => searchParams.get("tier") || "ALL");
+  const [selectedTech, setSelectedTech] = useState<string>(() => searchParams.get("tech") || "All");
+  const [selectedHub, setSelectedHub] = useState<string>(() => resolveCompanyHub(searchParams));
+  const [viewMode, setViewMode] = useState<ViewMode>(() =>
+    resolveQueryParam(searchParams, "view", VALID_COMPANY_VIEWS, "grid")
+  );
 
   // In-card tabs & modal state
   const [expandedCardTabs, setExpandedCardTabs] = useState<Record<string, ActiveTab | null>>({});
@@ -115,36 +139,39 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
   const [sortField, setSortField] = useState<"default" | "name" | "tier" | "salary">("default");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  // Reactively synchronize from searchParams
-  useEffect(() => {
-    const qParam = searchParams.get("q") || searchParams.get("company") || searchParams.get("search");
-    const tierParam = searchParams.get("tier");
-    const techParam = searchParams.get("tech");
-    const hubParam = searchParams.get("hub");
-    const locationParam = searchParams.get("location");
-    const viewParam = searchParams.get("view") as ViewMode | null;
+  const syncFromParams = useCallback((params: Pick<URLSearchParams, "get">) => {
+    const qParam = params.get("q") || params.get("company") || params.get("search");
+    const tierParam = params.get("tier");
+    const techParam = params.get("tech");
 
     setSearchQuery(qParam ?? "");
     setSelectedTier(tierParam || "ALL");
     setSelectedTech(techParam || "All");
+    setSelectedHub(resolveCompanyHub(params));
+    setViewMode(resolveQueryParam(params, "view", VALID_COMPANY_VIEWS, "grid"));
+  }, []);
 
-    if (locationParam) {
-      const normalizedLocation = locationParam.toLowerCase() === "bangalore"
-        ? "Bengaluru"
-        : MAJOR_HUBS.find((hub) => hub.toLowerCase() === locationParam.toLowerCase());
-      setSelectedHub(normalizedLocation || "All Hubs");
-    } else if (hubParam) {
-      setSelectedHub(hubParam);
-    } else {
-      setSelectedHub("All Hubs");
-    }
+  // Reactively synchronize from searchParams and browser Back/Forward
+  useEffect(() => {
+    syncFromParams(new URLSearchParams(searchKey));
+  }, [searchKey, syncFromParams]);
 
-    if (viewParam && ["grid", "split", "table"].includes(viewParam)) {
-      setViewMode(viewParam);
-    } else {
-      setViewMode("grid");
-    }
-  }, [searchParams]);
+  usePopstateSync(
+    useCallback(() => {
+      syncFromParams(new URLSearchParams(window.location.search));
+    }, [syncFromParams])
+  );
+
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
+    setViewMode(mode);
+    pushUrlQuery((params) => {
+      if (mode === "grid") {
+        params.delete("view");
+      } else {
+        params.set("view", mode);
+      }
+    });
+  }, []);
 
   // Global Keyboard shortcuts (/ to focus, Esc to clear, Shift+E to expand all prompts)
   useEffect(() => {
@@ -423,7 +450,7 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
             {/* View Mode Switcher (Grid | Split | Table) */}
             <div className="flex items-center gap-0.5 p-0.5 bg-[var(--surface-2)] border border-[var(--border)] rounded-lg">
               <button
-                onClick={() => setViewMode("grid")}
+                onClick={() => handleViewModeChange("grid")}
                 className={cn(
                   "p-1.5 rounded-md text-xs transition-colors cursor-pointer",
                   viewMode === "grid"
@@ -436,7 +463,7 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
                 <LayoutGrid size={13} />
               </button>
               <button
-                onClick={() => setViewMode("split")}
+                onClick={() => handleViewModeChange("split")}
                 className={cn(
                   "p-1.5 rounded-md text-xs transition-colors cursor-pointer",
                   viewMode === "split"
@@ -449,7 +476,7 @@ export function CompanyResearchClient({ initialProfiles }: { initialProfiles: Co
                 <Columns2 size={13} />
               </button>
               <button
-                onClick={() => setViewMode("table")}
+                onClick={() => handleViewModeChange("table")}
                 className={cn(
                   "p-1.5 rounded-md text-xs transition-colors cursor-pointer",
                   viewMode === "table"

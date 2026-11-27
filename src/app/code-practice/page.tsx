@@ -4,8 +4,6 @@ import { getCodePracticeDataDAL, getDatabricksCodingHubDAL } from "@/lib/dal";
 import { CodePracticeClient } from "./code-practice-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const [data, databricksData] = await Promise.all([
     getCodePracticeDataDAL(),

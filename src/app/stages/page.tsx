@@ -1,8 +1,6 @@
 import React, { Suspense } from "react";
 import { StagesClient } from "./stages-client";
 
-export const dynamic = "force-static";
-
 export default function StagesPage() {
   return (
     <Suspense

@@ -6,6 +6,7 @@ import { CONTENT_COUNTS } from "@/data/content-counts";
 import React, { useState, useEffect, useMemo, useDeferredValue, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { resolveQueryParam, pushUrlQuery } from "@/lib/url-tab-sync";
 import { m, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -161,6 +162,25 @@ interface GuidedLearningContentProps {
   defaultTab?: "topics" | "curricula";
 }
 
+const GUIDED_TABS = ["topics", "curricula", "tree"] as const;
+type GuidedMainTab = (typeof GUIDED_TABS)[number];
+
+function resolveGuidedMainTab(
+  params: Pick<URLSearchParams, "get">,
+  defaultTab: "topics" | "curricula"
+): GuidedMainTab {
+  const fallback: GuidedMainTab = defaultTab === "curricula" ? "curricula" : "topics";
+  const tabParam = params.get("tab")?.trim().toLowerCase();
+  if (tabParam) {
+    return resolveQueryParam(params, "tab", GUIDED_TABS, fallback);
+  }
+  const idParam = params.get("id") || params.get("card");
+  if (idParam && idParam.startsWith("path-")) {
+    return "curricula";
+  }
+  return fallback;
+}
+
 function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLearningContentProps) {
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
@@ -170,29 +190,15 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     [initialPaths]
   );
 
-  const [activeMainTab, setActiveMainTab] = useState<"topics" | "curricula" | "tree">(
-    defaultTab === "curricula" ? "curricula" : "topics"
+  const [activeMainTab, setActiveMainTab] = useState<GuidedMainTab>(() =>
+    resolveGuidedMainTab(searchParams, defaultTab)
   );
 
   const [highlightedTier, setHighlightedTier] = useState<number | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(searchKey);
-    const tabParam = params.get("tab");
-    if (tabParam === "curricula") {
-      setActiveMainTab("curricula");
-    } else if (tabParam === "tree") {
-      setActiveMainTab("tree");
-    } else if (tabParam === "topics") {
-      setActiveMainTab("topics");
-    } else {
-      const idParam = params.get("id") || params.get("card");
-      if (idParam && idParam.startsWith("path-")) {
-        setActiveMainTab("curricula");
-      } else {
-        setActiveMainTab(defaultTab === "curricula" ? "curricula" : "topics");
-      }
-    }
+    setActiveMainTab(resolveGuidedMainTab(params, defaultTab));
 
     const stageParam = params.get("stage");
     const stageMap: Record<string, string> = {
@@ -224,28 +230,29 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     }
   }, [searchKey, defaultTab]);
 
-  const handleMainTabChange = useCallback((tab: "topics" | "curricula" | "tree") => {
+  const handleMainTabChange = useCallback((tab: GuidedMainTab) => {
     setActiveMainTab(tab);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
+    pushUrlQuery((params) => {
       if (tab === "curricula") {
-        url.searchParams.set("tab", "curricula");
-        url.searchParams.delete("topic");
+        params.set("tab", "curricula");
+        params.delete("topic");
       } else if (tab === "tree") {
-        url.searchParams.set("tab", "tree");
-        url.searchParams.delete("topic");
-        url.searchParams.delete("id");
-        url.searchParams.delete("card");
+        params.set("tab", "tree");
+        params.delete("topic");
+        params.delete("id");
+        params.delete("card");
       } else {
-        url.searchParams.delete("tab");
-        url.searchParams.delete("id");
-        url.searchParams.delete("card");
+        params.delete("tab");
+        params.delete("id");
+        params.delete("card");
       }
-      window.history.pushState(null, "", url.toString());
-    }
+    });
   }, []);
 
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(() => {
+    const topicParam = searchParams.get("topic");
+    return topicParam && GUIDED_TOPICS.some((t) => t.key === topicParam) ? topicParam : null;
+  });
   const [selectedDomain, setSelectedDomain] = useState<string>("All Tracks");
   const [searchQuery, setSearchQuery] = useState("");
   const deferredSearch = useDeferredValue(searchQuery);
@@ -279,10 +286,10 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
   // Sync state and push browser history when topic changes
   useEffect(() => {
     if (selectedTopic) {
-      const currentUrlTopic = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("topic") : null;
-      if (currentUrlTopic !== selectedTopic && typeof window !== "undefined") {
-        window.history.pushState(null, "", `?topic=${selectedTopic}`);
-      }
+      pushUrlQuery((params) => {
+        params.set("topic", selectedTopic);
+        params.delete("tab");
+      });
       try {
         const saved = localStorage.getItem(`gl-completed-${selectedTopic}`);
         if (saved) {
@@ -325,7 +332,9 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     } else if (typeof window !== "undefined") {
       const currentUrlTopic = new URLSearchParams(window.location.search).get("topic");
       if (currentUrlTopic) {
-        window.history.pushState(null, "", window.location.pathname);
+        pushUrlQuery((params) => {
+          params.delete("topic");
+        });
       }
     }
   }, [selectedTopic]);
@@ -335,6 +344,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     if (typeof window === "undefined") return;
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
+      setActiveMainTab(resolveGuidedMainTab(params, defaultTab));
       const top = params.get("topic");
       if (top && GUIDED_TOPICS.some((t) => t.key === top)) {
         setSelectedTopic(top);
@@ -344,7 +354,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [defaultTab]);
 
   const activeTopicObj = useMemo(
     () => GUIDED_TOPICS.find((t) => t.key === selectedTopic),

@@ -9,6 +9,8 @@ export function useFocusTrap<T extends HTMLElement>(
   onEscape?: () => void
 ) {
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const onEscapeRef = useRef(onEscape);
+  onEscapeRef.current = onEscape;
 
   useEffect(() => {
     if (!isActive) return;
@@ -28,9 +30,9 @@ export function useFocusTrap<T extends HTMLElement>(
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && onEscape) {
+      if (e.key === "Escape" && onEscapeRef.current) {
         e.preventDefault();
-        onEscape();
+        onEscapeRef.current();
         return;
       }
 
@@ -67,5 +69,5 @@ export function useFocusTrap<T extends HTMLElement>(
         previousActiveElement.current.focus();
       }
     };
-  }, [isActive, onEscape, ref]);
+  }, [isActive, ref]);
 }

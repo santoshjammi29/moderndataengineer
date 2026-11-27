@@ -5,8 +5,6 @@ import { architectureDiagrams } from "@/data/diagrams";
 import { QaPrepClient } from "./qa-prep-client";
 import { buildPageMetadata, generateCourseSchema, generateFAQSchema, generateBreadcrumbSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
     title: `Lakehouse Architect Interview Questions & Scenarios (${TOTAL_QA_COUNT}+ Q&As)`,

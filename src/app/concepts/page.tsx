@@ -5,8 +5,6 @@ import { architectureDiagrams } from "@/data/diagrams";
 import { ConceptsClient } from "./concepts-client";
 import { buildPageMetadata, generateCourseSchema, generateHowToSchema, generateBreadcrumbSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   const concepts = await getConceptsDAL();
   return buildPageMetadata({

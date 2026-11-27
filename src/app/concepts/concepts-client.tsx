@@ -39,8 +39,16 @@ import { recordLastTopic } from "@/lib/user-progress";
 import { TopicIcon } from "@/components/ui/topic-icon";
 import { UnifiedSearchFilterBox } from "@/components/ui/unified-search-filter-box";
 import { ConceptsMindmapView } from "@/components/concepts/concepts-mindmap-view";
+import { pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 
 export type ConceptViewMode = "glossary" | "mindmap" | "study";
+
+function resolveConceptViewMode(params: Pick<URLSearchParams, "get">): ConceptViewMode {
+  const viewParam = (params.get("view") || params.get("tab"))?.trim().toLowerCase();
+  if (viewParam === "study" || viewParam === "flashcards") return "study";
+  if (viewParam === "mindmap") return "mindmap";
+  return "glossary";
+}
 
 const SmoothAccordion = dynamic(
   () => import("@/components/ui/smooth-accordion").then((mod) => mod.SmoothAccordion),
@@ -196,27 +204,7 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
   const [statusAnnouncement, setStatusAnnouncement] = useState("");
 
   // Unified View Mode State (Mindmap, Glossary, Study)
-  const initialViewParam = (searchParams.get("view") || searchParams.get("tab"))?.toLowerCase();
-  const hasFilterParams = Boolean(
-    searchParams.get("term") ||
-      searchParams.get("q") ||
-      searchParams.get("search") ||
-      searchParams.get("category") ||
-      searchParams.get("difficulty") ||
-      searchParams.get("card") ||
-      searchParams.get("id")
-  );
-  const [viewMode, setViewMode] = useState<ConceptViewMode>(
-    initialViewParam === "study" || initialViewParam === "flashcards"
-      ? "study"
-      : initialViewParam === "glossary" ||
-        initialViewParam === "cards" ||
-        initialViewParam === "list" ||
-        initialViewParam === "concepts" ||
-        (hasFilterParams && initialViewParam !== "mindmap")
-      ? "glossary"
-      : "mindmap"
-  );
+  const [viewMode, setViewMode] = useState<ConceptViewMode>(() => resolveConceptViewMode(searchParams));
   const isStudyMode = viewMode === "study";
   const [studyIndex, setStudyIndex] = useState(0);
   const [isCardFlipped, setIsCardFlipped] = useState(false);
@@ -227,16 +215,17 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
 
   const handleViewChange = useCallback((mode: ConceptViewMode) => {
     setViewMode(mode);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      if (mode === "mindmap") {
-        url.searchParams.delete("view");
-      } else {
-        url.searchParams.set("view", mode);
-      }
-      url.hash = "";
-      window.history.replaceState(null, "", url.toString());
-    }
+    pushUrlQuery(
+      (params) => {
+        params.delete("tab");
+        if (mode === "glossary") {
+          params.delete("view");
+        } else {
+          params.set("view", mode);
+        }
+      },
+      { clearHash: true }
+    );
   }, []);
 
   const handleShuffle = useCallback(() => {
@@ -262,67 +251,66 @@ export function ConceptsClient({ initialConcepts, categories, diagrams = [] }: C
   }, []);
 
   // Reactively synchronize URL search parameters (term, q, search, category, difficulty, card, id, view, tab)
-  useEffect(() => {
-    const termParam = searchParams.get("term") || searchParams.get("q") || searchParams.get("search");
-    const catParam = searchParams.get("category");
-    const diffParam = searchParams.get("difficulty");
-    const cardParam = searchParams.get("card") || searchParams.get("id");
-    const viewParam = (searchParams.get("view") || searchParams.get("tab"))?.toLowerCase();
-    const hasFilter = Boolean(termParam || catParam || diffParam || cardParam);
+  const syncFromParams = useCallback(
+    (params: Pick<URLSearchParams, "get">) => {
+      const termParam = params.get("term") || params.get("q") || params.get("search");
+      const catParam = params.get("category");
+      const diffParam = params.get("difficulty");
+      const cardParam = params.get("card") || params.get("id");
 
-    if (viewParam === "study" || viewParam === "flashcards") {
-      setViewMode("study");
-    } else if (
-      viewParam === "glossary" ||
-      viewParam === "cards" ||
-      viewParam === "list" ||
-      viewParam === "concepts" ||
-      (hasFilter && viewParam !== "mindmap")
-    ) {
-      setViewMode("glossary");
-    } else if (viewParam === "mindmap" || (!viewParam && !hasFilter)) {
-      setViewMode("mindmap");
-    }
+      setViewMode(resolveConceptViewMode(params));
 
-    if (termParam !== null) {
-      setSearchQuery(termParam);
-    } else {
-      setSearchQuery("");
-    }
-
-    if (catParam) {
-      const match = categories.find((c) => c.toLowerCase() === catParam.toLowerCase());
-      if (match) {
-        setSelectedCategory(match);
+      if (termParam !== null) {
+        setSearchQuery(termParam);
       } else {
-        setSelectedCategory(catParam);
+        setSearchQuery("");
       }
-    } else {
-      setSelectedCategory("ALL");
-    }
 
-    if (diffParam && ["EASY", "MEDIUM", "HARD", "ARCHITECT", "ALL"].includes(diffParam.toUpperCase())) {
-      setSelectedDifficulty(diffParam.toUpperCase());
-    } else {
-      setSelectedDifficulty("ALL");
-    }
-
-    if (cardParam) {
-      const target = initialConcepts.find(
-        (c) => c.id === cardParam || c.term.toLowerCase() === cardParam.toLowerCase()
-      );
-      if (target) {
-        setExpandedIds((prev) => new Set([...prev, target.id]));
-        if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
-        scrollTimerRef.current = setTimeout(() => {
-          const el = document.getElementById(`concept-${target.id}`);
-          if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        }, 250);
+      if (catParam) {
+        const match = categories.find((c) => c.toLowerCase() === catParam.toLowerCase());
+        if (match) {
+          setSelectedCategory(match);
+        } else {
+          setSelectedCategory(catParam);
+        }
+      } else {
+        setSelectedCategory("ALL");
       }
-    }
-  }, [searchParams, categories, initialConcepts]);
+
+      if (diffParam && ["EASY", "MEDIUM", "HARD", "ARCHITECT", "ALL"].includes(diffParam.toUpperCase())) {
+        setSelectedDifficulty(diffParam.toUpperCase());
+      } else {
+        setSelectedDifficulty("ALL");
+      }
+
+      if (cardParam) {
+        const target = initialConcepts.find(
+          (c) => c.id === cardParam || c.term.toLowerCase() === cardParam.toLowerCase()
+        );
+        if (target) {
+          setExpandedIds((prev) => new Set([...prev, target.id]));
+          if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+          scrollTimerRef.current = setTimeout(() => {
+            const el = document.getElementById(`concept-${target.id}`);
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          }, 250);
+        }
+      }
+    },
+    [categories, initialConcepts]
+  );
+
+  useEffect(() => {
+    syncFromParams(searchParams);
+  }, [searchParams, syncFromParams]);
+
+  usePopstateSync(
+    useCallback(() => {
+      syncFromParams(new URLSearchParams(window.location.search));
+    }, [syncFromParams])
+  );
 
   // Filter concepts
   const filteredConcepts = useMemo(() => {

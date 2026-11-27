@@ -4,8 +4,6 @@ import { getPysparkCodePracticeDAL } from "@/lib/dal";
 import { SparkEngineClient } from "./spark-engine-client";
 import { generatePageMetadata, generateCourseSchema } from "@/lib/seo";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   return generatePageMetadata({
     title: "Apache Spark 4.0 Engine Architecture & Physical Execution Simulator",

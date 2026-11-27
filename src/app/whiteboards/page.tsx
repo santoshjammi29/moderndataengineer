@@ -4,8 +4,6 @@ import { WhiteboardsClient } from "./whiteboards-client";
 import { buildPageMetadata, generateCourseSchema, generateBreadcrumbSchema } from "@/lib/seo";
 import { TOTAL_WHITEBOARDS_COUNT, WHITEBOARD_CATEGORIES } from "@/data/whiteboards-learning-data";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
     title: `Whiteboard Architecture Mastery: ${TOTAL_WHITEBOARDS_COUNT} Blueprints across ${WHITEBOARD_CATEGORIES.length} Pillars | Lakehouse Architect`,

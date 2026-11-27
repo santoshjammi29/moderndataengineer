@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import { SparkCatalystClient } from "./spark-catalyst-client";
 
-export const dynamic = "force-static";
-
 export default function SparkCatalystPage() {
   return (
     <Suspense

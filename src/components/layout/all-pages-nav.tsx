@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isSubHrefActive } from "@/data/navigation-data";
+import { useHasMounted } from "@/lib/url-tab-sync";
 
 interface SubpageLink {
   label: string;
@@ -191,10 +192,24 @@ const NAV_SECTIONS: NavSection[] = [
 
 function AllPagesNavInner() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const rawSearchParams = useSearchParams();
+  const mounted = useHasMounted();
+  const searchParams = mounted ? rawSearchParams : null;
   const searchParamsString = searchParams?.toString();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [currentHash, setCurrentHash] = useState<string>("");
   const navContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const syncHash = () => setCurrentHash(window.location.hash || "");
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, [pathname, searchParamsString]);
 
   const openSearch = () => {
     if (typeof window !== "undefined") {
@@ -233,7 +248,7 @@ function AllPagesNavInner() {
     if (!pathname) return false;
     if (section.href === "/" && pathname === "/") return true;
     if (section.href !== "/" && pathname.startsWith(section.href)) return true;
-    if (section.subpages?.some((sub) => isSubHrefActive(pathname, searchParams, sub.href))) {
+    if (section.subpages?.some((sub) => isSubHrefActive(pathname, searchParams, sub.href, currentHash))) {
       return true;
     }
     return false;
@@ -343,7 +358,7 @@ function AllPagesNavInner() {
                     </div>
 
                     {section.subpages?.map((sub) => {
-                      const isSubActive = isSubHrefActive(pathname, searchParams, sub.href);
+                      const isSubActive = isSubHrefActive(pathname, searchParams, sub.href, currentHash);
                       return (
                         <Link
                           key={sub.href}

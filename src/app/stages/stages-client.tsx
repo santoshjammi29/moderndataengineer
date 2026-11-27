@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { resolveQueryParam, pushUrlQuery, usePopstateSync } from "@/lib/url-tab-sync";
 import {
   Layers,
   Workflow,
@@ -55,12 +56,15 @@ interface CanvasStage {
   codeFilename: string;
 }
 
-export function StagesClient() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const queryTab = searchParams.get("tab") as StageTab | null;
+const STAGE_VALID_TABS = ["mastery", "lakehouse", "sdlc", "catalyst", "flows"] as const;
 
-  const [activeTab, setActiveTab] = useState<StageTab>("mastery");
+export function StagesClient() {
+  const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
+
+  const [activeTab, setActiveTab] = useState<StageTab>(() =>
+    resolveQueryParam(searchParams, "tab", STAGE_VALID_TABS, "mastery")
+  );
   const [selectedCanvasStage, setSelectedCanvasStage] = useState<number>(0);
   const [selectedSdlcStage, setSelectedSdlcStage] = useState<number>(0);
   const [selectedCatalystStage, setSelectedCatalystStage] = useState<number>(0);
@@ -68,19 +72,24 @@ export function StagesClient() {
 
   // Sync tab with URL query parameter
   useEffect(() => {
-    const validTabs: StageTab[] = ["mastery", "lakehouse", "sdlc", "catalyst", "flows"];
-    if (queryTab && validTabs.includes(queryTab)) {
-      setActiveTab(queryTab);
-    } else if (!queryTab) {
-      setActiveTab("mastery");
-    }
-  }, [queryTab]);
+    setActiveTab(resolveQueryParam(new URLSearchParams(searchKey), "tab", STAGE_VALID_TABS, "mastery"));
+  }, [searchKey]);
+
+  usePopstateSync(
+    useCallback(() => {
+      setActiveTab(resolveQueryParam(new URLSearchParams(window.location.search), "tab", STAGE_VALID_TABS, "mastery"));
+    }, [])
+  );
 
   const handleTabChange = (tab: StageTab) => {
     setActiveTab(tab);
-    const url = new URL(window.location.href);
-    url.searchParams.set("tab", tab);
-    router.replace(url.toString(), { scroll: false });
+    pushUrlQuery((params) => {
+      if (tab === "mastery") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+    });
   };
 
   // 1. 4-Stage Mastery Data

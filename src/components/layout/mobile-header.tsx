@@ -11,6 +11,7 @@ import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { cn } from "@/lib/utils";
 import { NAV_GROUPS, isSubHrefActive, NavItem } from "@/data/navigation-data";
+import { useHasMounted } from "@/lib/url-tab-sync";
 
 const badgeVariants: Record<string, string> = {
   easy: "bg-green-500/10 text-green-400 border-green-500/20",
@@ -24,12 +25,41 @@ const badgeVariants: Record<string, string> = {
 function MobileHeaderInner() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const rawSearchParams = useSearchParams();
+  const mounted = useHasMounted();
+  const searchParams = mounted ? rawSearchParams : null;
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Subpages expansion state in mobile drawer
   const [manualExpanded, setManualExpanded] = useState<Record<string, boolean>>({});
   const [defaultExpanded, setDefaultExpanded] = useState<boolean>(true);
+  const [currentHash, setCurrentHash] = useState<string>("");
+
+  useEffect(() => {
+    const syncHash = () => setCurrentHash(window.location.hash || "");
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, [pathname, searchParams]);
+
+  useEffect(() => {
+    try {
+      const savedDefault = localStorage.getItem("sidebar-default-expanded");
+      if (savedDefault === "false") setDefaultExpanded(false);
+      else if (savedDefault === "true") setDefaultExpanded(true);
+      const savedExpanded = localStorage.getItem("sidebar-expanded-groups");
+      if (savedExpanded) {
+        const parsed = JSON.parse(savedExpanded);
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          setManualExpanded(parsed);
+        }
+      }
+    } catch {}
+  }, []);
 
   const itemsWithSub = useMemo(() => {
     return NAV_GROUPS.flatMap((g) => g.items).filter((i) => i.subItems && i.subItems.length > 0);
@@ -51,10 +81,14 @@ function MobileHeaderInner() {
   const toggleItemExpanded = (href: string) => {
     setManualExpanded((prev) => {
       const current = prev[href] !== undefined ? prev[href] : defaultExpanded;
-      return {
+      const next = {
         ...prev,
         [href]: !current,
       };
+      try {
+        localStorage.setItem("sidebar-expanded-groups", JSON.stringify(next));
+      } catch {}
+      return next;
     });
   };
 
@@ -66,6 +100,10 @@ function MobileHeaderInner() {
       });
       setManualExpanded(newMap);
       setDefaultExpanded(false);
+      try {
+        localStorage.setItem("sidebar-expanded-groups", JSON.stringify(newMap));
+        localStorage.setItem("sidebar-default-expanded", "false");
+      } catch {}
     } else {
       const newMap: Record<string, boolean> = {};
       itemsWithSub.forEach((i) => {
@@ -73,6 +111,10 @@ function MobileHeaderInner() {
       });
       setManualExpanded(newMap);
       setDefaultExpanded(true);
+      try {
+        localStorage.setItem("sidebar-expanded-groups", JSON.stringify(newMap));
+        localStorage.setItem("sidebar-default-expanded", "true");
+      } catch {}
     }
   };
 
@@ -311,7 +353,7 @@ function MobileHeaderInner() {
                           {expanded && hasChildren && item.subItems && (
                             <ul className="ml-5 pl-2.5 border-l-2 border-blue-500/25 my-1 space-y-1" role="list">
                               {item.subItems.map((sub) => {
-                                const isSubActive = isSubHrefActive(pathname, searchParams, sub.href);
+                                const isSubActive = isSubHrefActive(pathname, searchParams, sub.href, currentHash);
                                 return (
                                   <li key={sub.href}>
                                     <Link
