@@ -66,6 +66,9 @@ jobs:
       - name: Run Vitest Suite
         run: npm test
 
+      - name: Verify Zero Web-Reachable PDFs
+        run: npm run check:no-pdfs
+
   # ──────────────────────────────────────────────────────────────────────────
   # JOB 3: Production Build Verification (OpenNext on Cloudflare Workers)
   # ──────────────────────────────────────────────────────────────────────────
@@ -90,6 +93,9 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
+
+      - name: Verify Zero PDFs in Built OpenNext Assets
+        run: npm run check:no-pdfs -- --require-built
 
   # ──────────────────────────────────────────────────────────────────────────
   # JOB 4: Centralized Handbook Guardrails

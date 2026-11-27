@@ -17,6 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CONTENT_COUNTS, formatContentCount } from "@/data/content-counts";
 
 interface DeploymentHighlight {
   id: string;
@@ -75,17 +76,17 @@ const DEPLOYMENT_HIGHLIGHTS: DeploymentHighlight[] = [
     id: "whiteboard-blueprints",
     badge: "System Design",
     badgeColor: "bg-amber-500/10 text-amber-500 dark:text-amber-400 border-amber-500/25",
-    title: "42 Production Whiteboard Blueprints",
+    title: `${CONTENT_COUNTS.whiteboards} Production Whiteboard Blueprints`,
     subtitle: "Hand-drawn digital whiteboard sketch architecture diagrams",
     description:
-      "Curated 42 authoritative architectural blueprints following digital whiteboard sketch design standards: Fabric OneLake, Direct Lake VertiPaq, Airflow, Spark AQE, Delta Lake ACID mechanics, Unity Catalog, Purview, Kimball Star Schema, and Enterprise Data Mesh.",
+      `Curated ${CONTENT_COUNTS.whiteboards} authoritative architectural blueprints following digital whiteboard sketch design standards: Fabric OneLake, Direct Lake VertiPaq, Airflow, Spark AQE, Delta Lake ACID mechanics, Unity Catalog, Purview, Kimball Star Schema, and Enterprise Data Mesh.`,
     keyUpdates: [
-      "42 High-resolution digital whiteboard visuals",
+      `${CONTENT_COUNTS.whiteboards} High-resolution digital whiteboard visuals`,
       "Semantic color coding (Compute, Data, Storage)",
       "Control flow vs data flow arrow differentiation",
       "Deep-dive technical architectural explanations",
     ],
-    ctaLabel: "Browse 42 Blueprints",
+    ctaLabel: `Browse ${CONTENT_COUNTS.whiteboards} Blueprints`,
     ctaHref: "/architecture?tab=diagrams",
     icon: Layers,
     iconBg: "bg-amber-600",
@@ -113,14 +114,14 @@ const DEPLOYMENT_HIGHLIGHTS: DeploymentHighlight[] = [
     id: "qa-prep-drills",
     badge: "Interview Practice",
     badgeColor: "bg-purple-500/10 text-purple-500 dark:text-purple-400 border-purple-500/25",
-    title: "6,570+ Verified Q&As & Company Intel",
+    title: `${formatContentCount(CONTENT_COUNTS.qa)} Verified Q&As & Company Intel`,
     subtitle: "SM-2 spaced repetition flashcards & BigTech hiring dossiers",
     description:
       "Enhanced the interview drill bank with SM-2 spaced repetition flashcards mode, detailed architectural defense rubrics, and targeted interview intel dossiers for Microsoft, Amazon, Google, Meta, Apple, Uber, Walmart, and Tier-1 GCC enterprises.",
     keyUpdates: [
-      "6,570+ Architect-level technical scenarios",
+      `${formatContentCount(CONTENT_COUNTS.qa)} Architect-level technical scenarios`,
       "Interactive SM-2 spaced repetition flashcards",
-      "6 Tier-1 GCC enterprise hiring dossiers",
+      `${formatContentCount(CONTENT_COUNTS.companyProfiles)} Tier-1 GCC & BigTech hiring dossiers`,
       "Instant bookmarking and review studio",
     ],
     ctaLabel: "Start Question Drill",

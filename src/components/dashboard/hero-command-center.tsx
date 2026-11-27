@@ -179,12 +179,12 @@ export function HeroCommandCenter() {
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">42</strong> Whiteboard Blueprints</span>
+              <span><strong className="text-[var(--foreground)]">{CONTENT_COUNTS.whiteboards}</strong> Whiteboard Blueprints</span>
             </div>
             <span className="hidden sm:inline text-[var(--border)]">•</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 size={13} className="text-emerald-500 dark:text-emerald-400" />
-              <span><strong className="text-[var(--foreground)]">156</strong> GCC Profiles</span>
+              <span><strong className="text-[var(--foreground)]">{formatContentCount(CONTENT_COUNTS.companyProfiles)}</strong> GCC Profiles</span>
             </div>
           </div>
         </div>

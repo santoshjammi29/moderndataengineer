@@ -2285,7 +2285,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                 Looking for High-Resolution Whiteboard Architecture Blueprints?
               </h3>
               <p className="text-xs text-[var(--muted-foreground)]">
-                View our 28 hand-drawn whiteboard architecture diagrams covering Distributed Systems, Python Arrow &amp; Polars, Data Mesh, FinOps, Apache Iceberg, Vector Search, Kafka CDC, Airflow, and Medallion Lakehouses.
+                View our {CONTENT_COUNTS.whiteboards} hand-drawn whiteboard architecture diagrams covering Distributed Systems, Python Arrow &amp; Polars, Data Mesh, FinOps, Apache Iceberg, Vector Search, Kafka CDC, Airflow, and Medallion Lakehouses.
               </p>
             </div>
             <Link
@@ -2423,7 +2423,7 @@ CREATE OR REPLACE RESOURCE MONITOR monthly_cap
                 <Code2 size={14} /> Unified into Code Practice Hub
               </div>
               <p className="text-xs text-[var(--muted-foreground)]">
-                All coding sections (Interactive Drills, Databricks 148+, Polyglot Matrix, and Python Runbooks) are now unified under one single Code Practice hub.
+                All coding sections (Interactive Drills, Databricks {CONTENT_COUNTS.databricksOps}, Polyglot Matrix, and Python Runbooks) are now unified under one single Code Practice hub.
               </p>
             </div>
             <Link

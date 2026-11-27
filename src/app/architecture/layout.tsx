@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { buildPageMetadata, generateCourseSchema } from "@/lib/seo";
+import { CONTENT_COUNTS } from "@/data/content-counts";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Data Architecture & System Design Whiteboards (21 Blueprints)",
+  title: `Data Architecture & System Design Whiteboards (${CONTENT_COUNTS.whiteboards} Blueprints)`,
   description:
     "Production-grade architecture diagrams, system design blueprints, and trade-off matrices for Microsoft Fabric, OneLake, Databricks Unity Catalog, Delta Lake, and Apache Airflow.",
   path: "/architecture",
@@ -24,7 +25,7 @@ export default function ArchitectureLayout({
 }) {
   const jsonLd = generateCourseSchema({
     name: "Enterprise Data Platform System Design & Whiteboard Architecture",
-    description: "21 production-grade whiteboard blueprints and interactive system design trade-offs.",
+    description: `${CONTENT_COUNTS.whiteboards} production-grade whiteboard blueprints and interactive system design trade-offs.`,
     url: "/architecture",
   });
 

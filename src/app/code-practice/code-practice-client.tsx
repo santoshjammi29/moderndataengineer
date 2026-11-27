@@ -352,6 +352,8 @@ export function CodePracticeClient({
     databricksData?.suite || initialDatabricksSuite || databricksCheatsheetData;
   const resolvedDatabricksOps =
     databricksData?.operations || initialDatabricks100 || databricks100Data;
+  const databricksOpsCount =
+    resolvedDatabricksSuite.cards.length + resolvedDatabricksOps.length;
 
   const totalDrillsCount =
     initialData.pyspark.length +
@@ -373,7 +375,7 @@ export function CodePracticeClient({
               Interactive Code Practice &amp; Production Runbooks
             </h1>
             <p className="text-xs sm:text-sm text-[var(--muted-foreground)] leading-relaxed">
-              Every data engineering coding resource in one roof: multi-engine practice drills (PySpark, SQL, Polars, T-SQL), Databricks 148+ operations &amp; memory triage, polyglot side-by-side translation matrix, and enterprise Python runbooks.
+              Every data engineering coding resource in one roof: multi-engine practice drills (PySpark, SQL, Polars, T-SQL), Databricks {databricksOpsCount} operations &amp; memory triage, polyglot side-by-side translation matrix, and enterprise Python runbooks.
             </p>
           </div>
 
@@ -383,7 +385,7 @@ export function CodePracticeClient({
               <div className="text-[10px] text-[var(--muted-foreground)] mt-0.5">Drills</div>
             </div>
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-center">
-              <div className="text-base font-bold text-orange-400 leading-none">148+</div>
+              <div className="text-base font-bold text-orange-400 leading-none">{databricksOpsCount}</div>
               <div className="text-[10px] text-[var(--muted-foreground)] mt-0.5">Databricks Ops</div>
             </div>
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-center">
@@ -402,7 +404,7 @@ export function CodePracticeClient({
       <div className="flex items-center gap-1.5 p-1 rounded-full bg-[var(--surface-2)] border border-[var(--border)] overflow-x-auto scrollbar-none max-w-fit shadow-xs">
         {[
           { id: "drills", label: `Interactive Drills (${totalDrillsCount})`, icon: Code2 },
-          { id: "databricks", label: "Databricks Coding Hub (148+)", icon: Flame },
+          { id: "databricks", label: `Databricks Coding Hub (${databricksOpsCount})`, icon: Flame },
           { id: "matrix", label: `Polyglot Translation Matrix (${modernCodeMatrix.length})`, icon: Table },
           { id: "runbooks", label: `Python & Lakehouse Runbooks (${combinedPythonRunbooks.length})`, icon: Terminal },
         ].map((tab) => {

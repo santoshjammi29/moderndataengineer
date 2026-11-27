@@ -15,8 +15,12 @@ import modernBlueprintsJson from '../src/data/json/modern_blueprints.json';
 import modernConceptsJson from '../src/data/json/modern_concepts.json';
 import modernCodeMatrixJson from '../src/data/json/modern_code_matrix.json';
 import modernCostPlaybooksJson from '../src/data/json/modern_cost_playbooks.json';
+import modernStackJson from '../src/data/json/modern_stack.json';
+import databricks100Json from '../src/data/json/databricks_100.json';
 import { GUIDED_TOPICS } from '../src/data/guided-learning-topics';
 import { architectureDiagrams } from '../src/data/diagrams';
+import { PRODUCTION_DEEP_DIVES } from '../src/data/production-deep-dives-data';
+import { SDLC_PHASES, SDLC_LIFECYCLE_GATES } from '../src/data/sdlc-lifecycle-data';
 
 const CONTENT_DIR = path.join(process.cwd(), 'content');
 const DATA_JSON_DIR = path.join(process.cwd(), 'src', 'data', 'json');
@@ -203,6 +207,11 @@ function shardCollection<T extends Record<string, any>>(name: string, items: T[]
   return { totalItems: items.length, shardSize: SHARD_SIZE, totalShards, shards, byCategory };
 }
 
+function isNonPdfArtifact(src: string): boolean {
+  const normalized = src.toLowerCase();
+  return !normalized.endsWith('.pdf') && path.basename(normalized) !== 'pdf';
+}
+
 function copyStaticDirectory(srcSubdir: string, destSubdir: string) {
   // Check content dir first, then public dir fallback
   let src = path.join(CONTENT_DIR, srcSubdir);
@@ -212,7 +221,7 @@ function copyStaticDirectory(srcSubdir: string, destSubdir: string) {
   const dest = path.join(R2_OUT_DIR, destSubdir);
   if (!fs.existsSync(src)) return;
   ensureDir(dest);
-  fs.cpSync(src, dest, { recursive: true });
+  fs.cpSync(src, dest, { recursive: true, filter: isNonPdfArtifact });
 }
 
 function syncResearchTrackCache(concepts: any[], qaItems: any[], scenarios: any[]) {
@@ -445,8 +454,14 @@ function run() {
     const category = String(item.category || 'General');
     conceptsByCategory[category] = (conceptsByCategory[category] || 0) + 1;
   });
+  const incidentRunbooksCount = (dataCheatsheetJson as any[]).length;
+  const databricksCheatCardsCount = dbxCards.length;
+  const databricks100Count = (databricks100Json as any[]).length;
+  const pythonDrillsCount = (dataPythonJson as any[]).length;
+  const modernPythonRunbooksCount = (modernStackJson as any[]).filter((q: any) => Boolean(q.py_code)).length;
   const contentCounts = {
     searchDocuments: searchDocs.length,
+    validatedAssets: qaItems.length + scenarioItems.length + conceptItems.length,
     qa: qaItems.length,
     scenarios: scenarioItems.length,
     concepts: conceptItems.length,
@@ -455,7 +470,8 @@ function run() {
     pysparkDrills: (dataPysparkJson as any[]).length,
     sparkSqlDrills: (dataSparksqlJson as any[]).length,
     mssqlDrills: (dataMssqlJson as any[]).length,
-    pythonDrills: (dataPythonJson as any[]).length,
+    pythonDrills: pythonDrillsCount,
+    combinedPythonRunbooks: pythonDrillsCount + modernPythonRunbooksCount,
     learningPaths: (dataPathsJson as any[]).length,
     guidedTracks: GUIDED_TOPICS.length,
     companyProfiles: (companyProfilesJson as any[]).length,
@@ -463,6 +479,17 @@ function run() {
     modernBlueprints: (modernBlueprintsJson as any[]).length,
     modernConcepts: (modernConceptsJson as any[]).length,
     finopsPlaybooks: (modernCostPlaybooksJson as any[]).length,
+    polyglotMatrix: (modernCodeMatrixJson as any[]).length,
+    incidentRunbooks: incidentRunbooksCount,
+    databricksCheatCards: databricksCheatCardsCount,
+    cheatSheetsTotal: incidentRunbooksCount + databricksCheatCardsCount,
+    databricks100: databricks100Count,
+    databricksOps: databricks100Count + databricksCheatCardsCount,
+    deepDiveDomains: PRODUCTION_DEEP_DIVES.length,
+    deepDiveTopics: PRODUCTION_DEEP_DIVES.reduce((sum, domain) => sum + domain.topics.length, 0),
+    sdlcPhases: SDLC_PHASES.length,
+    sdlcControls: SDLC_PHASES.reduce((sum, phase) => sum + phase.topics.length, 0),
+    sdlcGates: SDLC_LIFECYCLE_GATES.length,
   };
   fs.writeFileSync(path.join(process.cwd(), 'src', 'data', 'content-counts.json'), JSON.stringify(contentCounts, null, 2));
   console.log(`✓ Generated exact content counts (${contentCounts.searchDocuments} searchable items)`);
@@ -523,7 +550,7 @@ function run() {
   const publicArtifactsDir = path.join(process.cwd(), 'public', '_artifacts');
   try {
     ensureDir(publicArtifactsDir);
-    fs.cpSync(R2_OUT_DIR, publicArtifactsDir, { recursive: true });
+    fs.cpSync(R2_OUT_DIR, publicArtifactsDir, { recursive: true, filter: isNonPdfArtifact });
     console.log(`✓ Seeded static asset cache at ${publicArtifactsDir}`);
   } catch (err) {
     console.warn('Note: Could not mirror to public/_artifacts:', err);

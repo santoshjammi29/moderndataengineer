@@ -25,6 +25,7 @@ import { CategoryBar } from "@/components/cheatsheet/category-bar";
 import { QuickJumpTOC } from "@/components/cheatsheet/quick-jump-toc";
 import { DatabricksCheatsheetView } from "@/components/cheatsheet/databricks-cheatsheet-view";
 import { cn } from "@/lib/utils";
+import { CONTENT_COUNTS } from "@/data/content-counts";
 
 const ALL_CATEGORIES: CheatCodeCategory[] = [
   "Spark Core",
@@ -407,7 +408,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                     </span>
                   </div>
                   <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-2 md:line-clamp-1 mt-0.5">
-                    Explore 48 comprehensive cards and view 250 DPI panoramic wall posters for Spark SQL, PySpark, Spark Core, and Python SDK.
+                    Explore {databricksData.cards.length} comprehensive cards and view 250 DPI panoramic wall posters for Spark SQL, PySpark, Spark Core, and Python SDK.
                   </p>
                 </div>
               </div>
@@ -417,7 +418,7 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                   onClick={() => handleTabChange("databricks")}
                   className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>Explore 48 Cards</span>
+                  <span>Explore {databricksData.cards.length} Cards</span>
                   <ArrowRight size={13} />
                 </button>
               </div>
@@ -431,14 +432,14 @@ function CheatSheetContent({ initialData, databricksData }: CheatSheetContentPro
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-xs sm:text-sm font-bold text-[var(--foreground)]">Looking for visual system design blueprints?</h4>
-                  <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">Pair your code optimization with 28 high-resolution whiteboard architecture diagrams detailing Spark memory shuffles, Catalyst query plans, Delta Lake ACID commits, and Airflow distributed workers.</p>
+                  <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">Pair your code optimization with {CONTENT_COUNTS.whiteboards} high-resolution whiteboard architecture diagrams detailing Spark memory shuffles, Catalyst query plans, Delta Lake ACID commits, and Airflow distributed workers.</p>
                 </div>
               </div>
               <Link
                 href="/architecture?tab=diagrams"
                 className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shrink-0 transition-colors shadow-xs"
               >
-                Explore 28 Blueprints &rarr;
+                Explore {CONTENT_COUNTS.whiteboards} Blueprints &rarr;
               </Link>
             </div>
 

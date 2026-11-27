@@ -22,6 +22,7 @@ import {
   Filter,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CONTENT_COUNTS } from "@/data/content-counts";
 import {
   PRODUCTION_DEEP_DIVES,
   ProductionDomain,
@@ -106,13 +107,13 @@ export function LabTreeView() {
           <div className="space-y-1.5 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                130 Production Deep Dives
+                {CONTENT_COUNTS.deepDiveTopics} Production Deep Dives
               </span>
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 16 Lab Suites
               </span>
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                152 SDLC Controls
+                {CONTENT_COUNTS.sdlcControls} SDLC Controls
               </span>
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-[var(--foreground)] tracking-tight">
@@ -120,7 +121,7 @@ export function LabTreeView() {
             </h2>
             <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
               Researched against primary vendor documentation, Apache specifications, and production incident postmortems.
-              Explore 13 cutting-edge production tracks or browse the multi-level hands-on lab tree.
+              Explore {CONTENT_COUNTS.deepDiveDomains} cutting-edge production tracks or browse the multi-level hands-on lab tree.
             </p>
           </div>
 
@@ -135,7 +136,7 @@ export function LabTreeView() {
                   : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
               )}
             >
-              130 Deep Dives (13 Domains)
+              {CONTENT_COUNTS.deepDiveTopics} Deep Dives ({CONTENT_COUNTS.deepDiveDomains} Domains)
             </button>
             <button
               onClick={() => setActiveSubTab("tree")}
@@ -166,12 +167,12 @@ export function LabTreeView() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search 130 production topics, mechanisms, or lab folders..."
+                placeholder={`Search ${CONTENT_COUNTS.deepDiveTopics} production topics, mechanisms, or lab folders...`}
                 className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-[var(--border)] bg-[var(--surface-1)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-hidden focus:border-blue-500 transition-colors"
               />
             </div>
             <div className="text-xs text-[var(--muted-foreground)] flex items-center gap-2">
-              <span>Showing <strong className="text-[var(--foreground)]">{totalFilteredTopics}</strong> of 130 topics</span>
+              <span>Showing <strong className="text-[var(--foreground)]">{totalFilteredTopics}</strong> of {CONTENT_COUNTS.deepDiveTopics} topics</span>
               {selectedDomainId !== "ALL" && (
                 <button
                   onClick={() => setSelectedDomainId("ALL")}

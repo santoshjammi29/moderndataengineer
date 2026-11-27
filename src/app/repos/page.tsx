@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { CONTENT_COUNTS, formatContentCount } from '@/data/content-counts';
 import {
   Search,
   Star,
@@ -47,7 +48,7 @@ const SEED_REPOS: GitHubRepo[] = [
     id: 1,
     name: 'moderndataengineer',
     full_name: 'santoshjammi29/moderndataengineer',
-    description: 'The Open-Access Enterprise Data Engineering & Lakehouse Systems Encyclopedia. 11,360+ verified assets across 921 concepts.',
+    description: `The Open-Access Enterprise Data Engineering & Lakehouse Systems Encyclopedia. ${formatContentCount(CONTENT_COUNTS.validatedAssets)} verified assets across ${formatContentCount(CONTENT_COUNTS.concepts)} concepts.`,
     html_url: 'https://github.com/santoshjammi29/moderndataengineer',
     homepage: 'https://moderndataengineer.uk',
     stargazers_count: 142,

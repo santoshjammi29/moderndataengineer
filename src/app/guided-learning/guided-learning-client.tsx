@@ -1,6 +1,7 @@
 "use client";
 
 import { EvidenceSources } from "@/components/ui/evidence-sources";
+import { CONTENT_COUNTS } from "@/data/content-counts";
 
 import React, { useState, useEffect, useMemo, useDeferredValue, useCallback, Suspense } from "react";
 import Image from "next/image";
@@ -647,7 +648,7 @@ function GuidedLearningContent({ initialPaths, defaultTab = "topics" }: GuidedLe
           )}
         >
           <Sparkles size={13} />
-          <span>Lab &amp; Topic Tree (130 Dives)</span>
+          <span>Lab &amp; Topic Tree ({CONTENT_COUNTS.deepDiveTopics} Dives)</span>
         </button>
       </div>
 

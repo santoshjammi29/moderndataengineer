@@ -46,7 +46,7 @@ function AllPagesFooterInner() {
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] flex items-center gap-2">
               <Layers size={13} className="text-emerald-500 shrink-0" />
               <div>
-                <span className="block font-bold text-[var(--foreground)]">42 Blueprints</span>
+                <span className="block font-bold text-[var(--foreground)]">{CONTENT_COUNTS.whiteboards} Blueprints</span>
                 <span className="text-[10px] text-[var(--muted-foreground)]">Whiteboard Hub</span>
               </div>
             </div>
@@ -54,7 +54,7 @@ function AllPagesFooterInner() {
             <div className="px-3 py-1.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)] flex items-center gap-2">
               <Compass size={13} className="text-purple-500 shrink-0" />
               <div>
-                <span className="block font-bold text-[var(--foreground)]">156 Profiles</span>
+                <span className="block font-bold text-[var(--foreground)]">{formatContentCount(CONTENT_COUNTS.companyProfiles)} Profiles</span>
                 <span className="text-[10px] text-[var(--muted-foreground)]">GCC &amp; BigTech</span>
               </div>
             </div>

@@ -2,11 +2,13 @@ import React from "react";
 import Link from "next/link";
 import { ShieldCheck, Mail, AlertTriangle, Lock, Eye, FileText } from "lucide-react";
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Security Policy & Responsible Disclosure | Modern Data Engineer",
   description: "Security policy, vulnerability reporting guidelines, and responsible disclosure terms for moderndataengineer.uk.",
-};
+  path: "/security",
+});
 
 export default function SecurityPage() {
   return (

@@ -83,8 +83,8 @@ const PHASES: PhaseSection[] = [
       },
       {
         step: "Step 03",
-        title: "42 Whiteboard Blueprints Hub",
-        badge: "42 Visuals",
+        title: `${CONTENT_COUNTS.whiteboards} Whiteboard Blueprints Hub`,
+        badge: `${CONTENT_COUNTS.whiteboards} Visuals`,
         badgeColor: "bg-teal-500/10 text-teal-400 border-teal-500/20",
         icon: Sparkles,
         iconColor: "text-teal-400",
@@ -121,11 +121,11 @@ const PHASES: PhaseSection[] = [
       {
         step: "Step 05",
         title: "Cloud × Table Matrix & FinOps Playbooks",
-        badge: "15 Playbooks",
+        badge: `${CONTENT_COUNTS.finopsPlaybooks} Playbooks`,
         badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
         icon: Zap,
         iconColor: "text-amber-400",
-        description: "Cross-cloud compatibility for Azure, AWS, and GCP plus 15 actionable FinOps playbooks for DBU and compute cost reduction.",
+        description: `Cross-cloud compatibility for Azure, AWS, and GCP plus ${CONTENT_COUNTS.finopsPlaybooks} actionable FinOps playbooks for DBU and compute cost reduction.`,
         href: "/modern-stack",
         actionText: "View Matrix & FinOps",
         subLinks: [
@@ -137,7 +137,7 @@ const PHASES: PhaseSection[] = [
       {
         step: "Step 06",
         title: "360° DataOps Lifecycle & Governance",
-        badge: "152 Controls",
+        badge: `${CONTENT_COUNTS.sdlcControls} Controls`,
         badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
         icon: Workflow,
         iconColor: "text-blue-400",
@@ -177,15 +177,15 @@ const PHASES: PhaseSection[] = [
       {
         step: "Step 08",
         title: "Databricks Unified Coding Hub",
-        badge: "148+ Operations",
+        badge: `${CONTENT_COUNTS.databricksOps} Operations`,
         badgeColor: "bg-orange-500/10 text-orange-400 border-orange-500/20",
         icon: Flame,
         iconColor: "text-orange-400",
-        description: "148+ operations covering PySpark, Spark SQL, Python SDK, memory triage (OOM, shuffle spill, small files), and 100-day curriculum.",
+        description: `${CONTENT_COUNTS.databricksOps} operations covering PySpark, Spark SQL, Python SDK, memory triage (OOM, shuffle spill, small files), and ${CONTENT_COUNTS.databricks100}-day curriculum.`,
         href: "/code-practice/databricks",
         actionText: "Databricks Hub",
         subLinks: [
-          { label: "Databricks 148+ Hub", href: "/code-practice/databricks" },
+          { label: `Databricks ${CONTENT_COUNTS.databricksOps} Hub`, href: "/code-practice/databricks" },
           { label: "Memory Triage", href: "/code-practice/databricks#triage" },
           { label: "100-Day Challenge", href: "/code-practice/databricks#day100" },
         ],
@@ -193,11 +193,11 @@ const PHASES: PhaseSection[] = [
       {
         step: "Step 09",
         title: "Emergency Cheat Sheets & Runbooks",
-        badge: "124 Cards",
+        badge: `${CONTENT_COUNTS.cheatSheetsTotal} Cards`,
         badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
         icon: FileText,
         iconColor: "text-blue-400",
-        description: "76 Sev-1 incident runbooks, 48 Databricks cheatsheets, and 250-DPI panoramic architecture posters.",
+        description: `${CONTENT_COUNTS.incidentRunbooks} Sev-1 incident runbooks, ${CONTENT_COUNTS.databricksCheatCards} Databricks cheatsheets, and 250-DPI panoramic architecture posters.`,
         href: "/cheat-sheet",
         actionText: "Open Cheat Sheets",
         subLinks: [
@@ -229,8 +229,8 @@ const PHASES: PhaseSection[] = [
       },
       {
         step: "Step 11",
-        title: "Target Company Tech Research (156 GCCs)",
-        badge: "156 GCC Profiles",
+        title: `Target Company Tech Research (${formatContentCount(CONTENT_COUNTS.companyProfiles)} GCCs)`,
+        badge: `${formatContentCount(CONTENT_COUNTS.companyProfiles)} GCC Profiles`,
         badgeColor: "bg-rose-500/10 text-rose-400 border-rose-500/20",
         icon: Building2,
         iconColor: "text-rose-400",
@@ -238,7 +238,7 @@ const PHASES: PhaseSection[] = [
         href: "/company-research",
         actionText: "Explore Company Intel",
         subLinks: [
-          { label: "All 156 GCC Profiles", href: "/company-research" },
+          { label: `All ${formatContentCount(CONTENT_COUNTS.companyProfiles)} GCC Profiles`, href: "/company-research" },
           { label: "Salary Benchmarks", href: "/company-research?view=table" },
         ],
       },

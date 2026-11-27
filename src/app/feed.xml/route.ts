@@ -44,7 +44,7 @@ export async function GET() {
     <link>${BASE_URL}/cheat-sheet</link>
     <guid>${BASE_URL}/cheat-sheet</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>Production runbooks and 48 interactive Databricks reference cards with 250-DPI posters covering PySpark, Databricks, and Incident Runbooks.</description>
+    <description>${CONTENT_COUNTS.incidentRunbooks} production runbooks and ${CONTENT_COUNTS.databricksCheatCards} interactive Databricks reference cards with 250-DPI posters covering PySpark, Databricks, and Incident Runbooks.</description>
   </item>
 
   <item>
@@ -52,7 +52,7 @@ export async function GET() {
     <link>${BASE_URL}/code-practice/databricks</link>
     <guid>${BASE_URL}/code-practice/databricks</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>148+ Databricks operations with code snippets, Unity Catalog Volumes, DBFS commands, and Sev-1 Driver OOM, Executor OOM, and Skew Join triage runbooks.</description>
+    <description>${CONTENT_COUNTS.databricksOps} Databricks operations with code snippets, Unity Catalog Volumes, DBFS commands, and Sev-1 Driver OOM, Executor OOM, and Skew Join triage runbooks.</description>
   </item>
 
   <item>
@@ -63,23 +63,23 @@ export async function GET() {
     <description>Interactive visual runtime simulator of Apache Spark 4.0 Catalyst Optimizer, Tungsten memory allocator, and shuffle stage mechanics.</description>
   </item>
   <item>
-    <title>42 Enterprise Whiteboard Blueprints Mastery Hub</title>
+    <title>${CONTENT_COUNTS.whiteboards} Enterprise Whiteboard Blueprints Mastery Hub</title>
     <link>${BASE_URL}/whiteboards</link>
     <guid>${BASE_URL}/whiteboards</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>42 architect-grade digital whiteboard diagrams covering 5 persona viewpoints, engine mechanisms, incident runbooks, and governance guardrails.</description>
+    <description>${CONTENT_COUNTS.whiteboards} architect-grade digital whiteboard diagrams covering 5 persona viewpoints, engine mechanisms, incident runbooks, and governance guardrails.</description>
   </item>
 
   <item>
-    <title>360° Data Engineering SDLC Lifecycle (19 Phases · 152 Controls · 8 Gates)</title>
+    <title>360° Data Engineering SDLC Lifecycle (${CONTENT_COUNTS.sdlcPhases} Phases · ${CONTENT_COUNTS.sdlcControls} Controls · ${CONTENT_COUNTS.sdlcGates} Gates)</title>
     <link>${BASE_URL}/dataops?tab=lifecycle</link>
     <guid>${BASE_URL}/dataops?tab=lifecycle</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>
-    <description>End-to-end data platform software development lifecycle mapping product discovery to retirement across 152 controls and 8 evidence-based quality gates.</description>
+    <description>End-to-end data platform software development lifecycle mapping product discovery to retirement across ${CONTENT_COUNTS.sdlcControls} controls and ${CONTENT_COUNTS.sdlcGates} evidence-based quality gates.</description>
   </item>
 
   <item>
-    <title>130 Production Deep-Dive Topics &amp; Complete Lab Tree</title>
+    <title>${CONTENT_COUNTS.deepDiveTopics} Production Deep-Dive Topics &amp; Complete Lab Tree</title>
     <link>${BASE_URL}/guided-learning?tab=tree</link>
     <guid>${BASE_URL}/guided-learning?tab=tree</guid>
     <pubDate>${new Date().toUTCString()}</pubDate>

@@ -2,7 +2,7 @@
 %µ¶
 
 1 0 obj
-<</Title(Spark Catalyst Optimizer & Physical Execution Plan Triage Guide)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261126171132+00'00')/ModDate(D:20261126171132+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Apache Spark Catalyst Compiler, Physical Execution Plans, AQE Runtime Optimization, and Memory Tuning)/Keywords(Spark, Catalyst Optimizer, EXPLAIN, WholeStageCodegen, AQE, Skew Join, Shuffle Spill, Performance Tuning)>>
+<</Title(Spark Catalyst Optimizer & Physical Execution Plan Triage Guide)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261127060713+00'00')/ModDate(D:20261127060713+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Apache Spark Catalyst Compiler, Physical Execution Plans, AQE Runtime Optimization, and Memory Tuning)/Keywords(Spark, Catalyst Optimizer, EXPLAIN, WholeStageCodegen, AQE, Skew Join, Shuffle Spill, Performance Tuning)>>
 endobj
 
 2 0 obj
@@ -12675,7 +12675,7 @@ xref
 0000773187 00000 n 
 
 trailer
-<</Size 1566/Info 1 0 R/Root 710 0 R/ID[<0EC3A0C2AAC2B1701209C38E5AC394C3><23A16835F2D9C99DDA9DFAF403492B3E>]>>
+<</Size 1566/Info 1 0 R/Root 710 0 R/ID[<C39608C2B219C2B8C2BAC291C2B622C3><EBC9709D3A815185A2C5025C4BF1B326>]>>
 startxref
 773351
 %%EOF

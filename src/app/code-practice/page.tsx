@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     databricksData.operations.length;
   return generatePageMetadata({
     title: `Unified Code Practice Hub (${total}+ Operations) | PySpark, SQL, Databricks & Runbooks`,
-    description: `The definitive code practice and production runbooks reference for data engineers: PySpark 4.0, Spark SQL, T-SQL, Python & Polars, Databricks 148+ operations, and polyglot translation matrix.`,
+    description: `The definitive code practice and production runbooks reference for data engineers: PySpark 4.0, Spark SQL, T-SQL, Python & Polars, Databricks ${databricksData.suite.cards.length + databricksData.operations.length} operations, and polyglot translation matrix.`,
     path: "/code-practice",
     keywords: [
       "PySpark Code Practice",

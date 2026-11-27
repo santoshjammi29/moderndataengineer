@@ -379,6 +379,18 @@ export function WhiteboardsClient() {
 
   const isCurrentMastered = masteredCategories.includes(currentCategory.id);
   const percentComplete = Math.round((masteredCategories.length / WHITEBOARD_CATEGORIES.length) * 100);
+  const totalCategoryConcepts = useMemo(
+    () => WHITEBOARD_CATEGORIES.reduce((sum, cat) => sum + cat.stats.conceptsCount, 0),
+    []
+  );
+  const totalCategoryQuestions = useMemo(
+    () => WHITEBOARD_CATEGORIES.reduce((sum, cat) => sum + cat.stats.qaCount, 0),
+    []
+  );
+  const totalCategoryBlueprints = useMemo(
+    () => WHITEBOARD_CATEGORIES.reduce((sum, cat) => sum + cat.stats.blueprintsCount, 0),
+    []
+  );
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pb-20">
@@ -394,11 +406,11 @@ export function WhiteboardsClient() {
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20">
                 <Sparkles size={13} className="text-purple-500" />
-                42 Master Whiteboard Blueprints
+                {TOTAL_WHITEBOARDS_COUNT} Master Whiteboard Blueprints
               </span>
               <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">•</span>
               <span className="text-xs text-[var(--muted-foreground)] hidden sm:inline">
-                7 Core Architectural Pillars
+                {WHITEBOARD_CATEGORIES.length} Core Architectural Pillars
               </span>
             </div>
 
@@ -448,7 +460,7 @@ export function WhiteboardsClient() {
                 Core Concepts
               </div>
               <div className="text-xl sm:text-2xl font-bold font-mono text-[var(--foreground)] mt-0.5">
-                168+
+                {totalCategoryConcepts}
               </div>
               <div className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">
                 Definitions &amp; mechanisms
@@ -460,7 +472,7 @@ export function WhiteboardsClient() {
                 Architect Drills
               </div>
               <div className="text-xl sm:text-2xl font-bold font-mono text-[var(--foreground)] mt-0.5">
-                210+
+                {totalCategoryQuestions}
               </div>
               <div className="text-[11px] text-blue-600 dark:text-blue-400 mt-0.5">
                 Real-world Q&amp;A scenarios
@@ -472,7 +484,7 @@ export function WhiteboardsClient() {
                 System Designs
               </div>
               <div className="text-xl sm:text-2xl font-bold font-mono text-[var(--foreground)] mt-0.5">
-                53
+                {totalCategoryBlueprints}
               </div>
               <div className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5">
                 Mermaid flows &amp; topologies

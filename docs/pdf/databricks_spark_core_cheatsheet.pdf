@@ -2,7 +2,7 @@
 %µ¶
 
 1 0 obj
-<</Title(Databricks Spark Core Internals & JVM Tuning Suite)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261126171109+00'00')/ModDate(D:20261126171109+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Spark Cluster Topography, JVM Unified Memory, Shuffle Spill, 5-Stage Catalyst, Photon C++, AQE, and 5S Triage)/Keywords(Spark Core, JVM Tuning, G1GC, Memory Pools, Tungsten, Shuffle Spill, Catalyst, Photon, AQE, 5S Triage)>>
+<</Title(Databricks Spark Core Internals & JVM Tuning Suite)/Creator(Modern Data Engineer Reference Publishing Engine)/Producer(Headless Chrome / PyMuPDF High-Density Publishing Engine)/CreationDate(D:20261127060718+00'00')/ModDate(D:20261127060718+00'00')/Author(Santosh Jammi | Principal Data Architect)/Subject(Spark Cluster Topography, JVM Unified Memory, Shuffle Spill, 5-Stage Catalyst, Photon C++, AQE, and 5S Triage)/Keywords(Spark Core, JVM Tuning, G1GC, Memory Pools, Tungsten, Shuffle Spill, Catalyst, Photon, AQE, 5S Triage)>>
 endobj
 
 2 0 obj
@@ -13365,7 +13365,7 @@ xref
 0000839876 00000 n 
 
 trailer
-<</Size 1616/Info 1 0 R/Root 671 0 R/ID[<24C3B5C3BC28C381C380300CC3A41320><B0F631F13BBC5338C31C06378E7E0349>]>>
+<</Size 1616/Info 1 0 R/Root 671 0 R/ID[<C3AC1D04C2900968C2B8C3B4C2AC3B28><781E39598364DB208B440E9FD6268B31>]>>
 startxref
 840023
 %%EOF

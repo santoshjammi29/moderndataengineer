@@ -11,9 +11,12 @@ Compiles the authoritative 20-page A4 manual with:
 Author: Santosh Jammi | Principal Data Architect
 """
 
+import argparse
+from datetime import datetime, timezone
 import os
 import shutil
 import subprocess
+import tempfile
 import fitz  # PyMuPDF
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -1345,7 +1348,13 @@ def print_pdf_with_chrome(html_path, pdf_path):
 def inject_bookmarks_and_metadata(pdf_path, toc, meta):
     doc = fitz.open(pdf_path)
     doc.set_toc(toc)
-    doc.set_metadata(meta)
+    pdf_now = datetime.now(timezone.utc).strftime("D:%Y%m%d%H%M%S+00'00'")  # noqa: UP017
+    merged_meta = {
+        **meta,
+        "creationDate": meta.get("creationDate") or pdf_now,
+        "modDate": pdf_now,
+    }
+    doc.set_metadata(merged_meta)
     temp_path = pdf_path + ".tmp.pdf"
     doc.save(temp_path, deflate=True)
     doc.close()
@@ -1366,93 +1375,104 @@ def generate_previews(pdf_path, base_name):
     doc.close()
 
 def main():
+    parser = argparse.ArgumentParser(description="Generate the 20-page Databricks Technical Manual PDF.")
+    parser.add_argument(
+        "--pdf-only",
+        action="store_true",
+        help="Write PDF to docs/pdf/ without overwriting public/cheatsheets/html or images.",
+    )
+    args = parser.parse_args()
+
     filename_base = "databricks_data_intelligence_platform_technical_manual"
-    html_file = os.path.join(HTML_DIR, f"{filename_base}.html")
     pdf_file = os.path.join(DOCS_PDF_DIR, f"{filename_base}.pdf")
 
-    print(f"Generating HTML: {html_file}")
-    html_content = generate_html()
-    with open(html_file, "w", encoding="utf-8") as f:
-        f.write(html_content)
+    with tempfile.TemporaryDirectory() as tmp_html_dir:
+        html_file = os.path.join(tmp_html_dir if args.pdf_only else HTML_DIR, f"{filename_base}.html")
 
-    print(f"Rendering PDF via Chrome: {pdf_file}")
-    print_pdf_with_chrome(html_file, pdf_file)
+        print(f"Generating HTML: {html_file}")
+        html_content = generate_html()
+        with open(html_file, "w", encoding="utf-8") as f:
+            f.write(html_content)
 
-    # Check page count
-    doc = fitz.open(pdf_file)
-    print(f"Rendered {doc.page_count} pages.")
-    assert doc.page_count == 20, f"Expected 20 pages, got {doc.page_count}!"
-    doc.close()
+        print(f"Rendering PDF via Chrome: {pdf_file}")
+        print_pdf_with_chrome(html_file, pdf_file)
 
-    # Hierarchical TOC
-    toc = [
-        [1, "Document Curriculum Overview", 1],
-        [1, "Module 1 (Level 1): Platform Architecture & Core Concepts", 1],
-        [2, "1.1 Split-Plane Cloud Architecture", 1],
-        [2, "1.2 Compute Resource Taxonomy & DBU Economics", 2],
-        [1, "Module 2 (Level 2): Delta Lake Storage Internals & Optimization", 2],
-        [2, "2.1 The ACID Transaction Log (_delta_log)", 2],
-        [2, "2.2 Deletion Vectors (Merge-on-Read vs. Copy-on-Write)", 3],
-        [2, "2.3 Liquid Clustering vs. Hive Partitioning & Z-Ordering", 3],
-        [2, "2.4 Predictive Optimization, VACUUM & Delta UniForm", 4],
-        [1, "Module 3 (Level 2–3): Data Engineering & Medallion Pipelines", 5],
-        [2, "3.1 The Medallion Lakehouse Architecture", 5],
-        [2, "3.2 Incremental File Ingestion with Auto Loader (cloudFiles)", 5],
-        [2, "3.3 Change Data Capture (CDC) & Delta Change Data Feed (CDF)", 6],
-        [2, "3.4 Lakeflow Spark Declarative Pipelines (DLT)", 8],
-        [1, "Module 4 (Level 3): Unified Governance with Unity Catalog", 9],
-        [2, "4.1 Three-Level Namespace & Securable Object Model", 9],
-        [2, "4.2 Fine-Grained Access Control: Row Filters & Column Masks", 9],
-        [2, "4.3 Lakehouse Federation & Delta Sharing", 10],
-        [1, "Module 5 (Level 3–4): Compute Engine Internals — Spark, Catalyst & Photon", 10],
-        [2, "5.1 Catalyst Optimizer & Adaptive Query Execution (AQE)", 10],
-        [2, "5.2 The Photon Vectorized Execution Engine", 10],
-        [2, "5.3 Spark UI & Photon Diagnostic Matrix (The 5 S's)", 11],
-        [1, "Module 6 (Level 4): Advanced Stateful Streaming & Metadata-Driven Frameworks", 12],
-        [2, "6.1 Stateful Structured Streaming with RocksDB & Watermarking", 12],
-        [2, "6.2 Enterprise Metadata-Driven Ingestion & Merge Framework", 13],
-        [1, "Module 7 (Level 4): Enterprise DevOps, CI/CD & Databricks Asset Bundles", 15],
-        [2, "7.1 Databricks Asset Bundles (DABs) Architecture", 15],
-        [2, "7.2 Automated PySpark Unit Testing with Pytest & Chispa", 16],
-        [1, "Module 8 (Level 4): DBSQL, FinOps System Tables, Mosaic AI & Troubleshooting", 17],
-        [2, "8.1 Databricks SQL (DBSQL) & BI DirectQuery Integration", 17],
-        [2, "8.2 Enterprise FinOps & Observability via System Tables & Databricks Apps", 18],
-        [2, "8.3 Mosaic AI, Vector Search & Governed Agent Systems", 18],
-        [2, "8.4 Production Troubleshooting & Incident Resolution Playbook", 19],
-    ]
+        # Check page count
+        doc = fitz.open(pdf_file)
+        print(f"Rendered {doc.page_count} pages.")
+        assert doc.page_count == 20, f"Expected 20 pages, got {doc.page_count}!"
+        doc.close()
 
-    meta = {
-        "title": "Databricks Data Intelligence Platform: End-to-End Technical Manual",
-        "author": "Santosh Jammi | Principal Data Architect",
-        "subject": "Structured Progression from Foundational Concepts (Level 1) to Principal Production Architecture (Level 4)",
-        "keywords": "Databricks, Lakehouse, Apache Spark 4.0, VARIANT, Delta Lake, Unity Catalog, Photon, Liquid Clustering, Deletion Vectors, Auto Loader, Change Data Feed, Lakeflow, DLT, RocksDB, DABs, OIDC, Databricks Apps, Chispa, FinOps, Mosaic AI, Troubleshooting",
-        "creator": "Modern Data Engineer Reference Publishing Engine",
-        "producer": "Headless Chrome / PyMuPDF High-Density Publishing Engine"
-    }
+        # Hierarchical TOC
+        toc = [
+            [1, "Document Curriculum Overview", 1],
+            [1, "Module 1 (Level 1): Platform Architecture & Core Concepts", 1],
+            [2, "1.1 Split-Plane Cloud Architecture", 1],
+            [2, "1.2 Compute Resource Taxonomy & DBU Economics", 2],
+            [1, "Module 2 (Level 2): Delta Lake Storage Internals & Optimization", 2],
+            [2, "2.1 The ACID Transaction Log (_delta_log)", 2],
+            [2, "2.2 Deletion Vectors (Merge-on-Read vs. Copy-on-Write)", 3],
+            [2, "2.3 Liquid Clustering vs. Hive Partitioning & Z-Ordering", 3],
+            [2, "2.4 Predictive Optimization, VACUUM & Delta UniForm", 4],
+            [1, "Module 3 (Level 2–3): Data Engineering & Medallion Pipelines", 5],
+            [2, "3.1 The Medallion Lakehouse Architecture", 5],
+            [2, "3.2 Incremental File Ingestion with Auto Loader (cloudFiles)", 5],
+            [2, "3.3 Change Data Capture (CDC) & Delta Change Data Feed (CDF)", 6],
+            [2, "3.4 Lakeflow Spark Declarative Pipelines (DLT)", 8],
+            [1, "Module 4 (Level 3): Unified Governance with Unity Catalog", 9],
+            [2, "4.1 Three-Level Namespace & Securable Object Model", 9],
+            [2, "4.2 Fine-Grained Access Control: Row Filters & Column Masks", 9],
+            [2, "4.3 Lakehouse Federation & Delta Sharing", 10],
+            [1, "Module 5 (Level 3–4): Compute Engine Internals — Spark, Catalyst & Photon", 10],
+            [2, "5.1 Catalyst Optimizer & Adaptive Query Execution (AQE)", 10],
+            [2, "5.2 The Photon Vectorized Execution Engine", 10],
+            [2, "5.3 Spark UI & Photon Diagnostic Matrix (The 5 S's)", 11],
+            [1, "Module 6 (Level 4): Advanced Stateful Streaming & Metadata-Driven Frameworks", 12],
+            [2, "6.1 Stateful Structured Streaming with RocksDB & Watermarking", 12],
+            [2, "6.2 Enterprise Metadata-Driven Ingestion & Merge Framework", 13],
+            [1, "Module 7 (Level 4): Enterprise DevOps, CI/CD & Databricks Asset Bundles", 15],
+            [2, "7.1 Databricks Asset Bundles (DABs) Architecture", 15],
+            [2, "7.2 Automated PySpark Unit Testing with Pytest & Chispa", 16],
+            [1, "Module 8 (Level 4): DBSQL, FinOps System Tables, Mosaic AI & Troubleshooting", 17],
+            [2, "8.1 Databricks SQL (DBSQL) & BI DirectQuery Integration", 17],
+            [2, "8.2 Enterprise FinOps & Observability via System Tables & Databricks Apps", 18],
+            [2, "8.3 Mosaic AI, Vector Search & Governed Agent Systems", 18],
+            [2, "8.4 Production Troubleshooting & Incident Resolution Playbook", 19],
+        ]
 
-    print("Injecting TOC bookmarks and metadata...")
-    inject_bookmarks_and_metadata(pdf_file, toc, meta)
+        meta = {
+            "title": "Databricks Data Intelligence Platform: End-to-End Technical Manual",
+            "author": "Santosh Jammi | Principal Data Architect",
+            "subject": "Structured Progression from Foundational Concepts (Level 1) to Principal Production Architecture (Level 4)",
+            "keywords": "Databricks, Lakehouse, Apache Spark 4.0, VARIANT, Delta Lake, Unity Catalog, Photon, Liquid Clustering, Deletion Vectors, Auto Loader, Change Data Feed, Lakeflow, DLT, RocksDB, DABs, OIDC, Databricks Apps, Chispa, FinOps, Mosaic AI, Troubleshooting",
+            "creator": "Modern Data Engineer Reference Publishing Engine",
+            "producer": "Headless Chrome / PyMuPDF High-Density Publishing Engine"
+        }
 
-    print("Generating thumbnails and preview images...")
-    generate_previews(pdf_file, filename_base)
-    # Also save as databricks_manual_poster.webp and databricks_manual_page_1.webp
-    generate_previews(pdf_file, "databricks_manual")
+        print("Injecting TOC bookmarks and metadata...")
+        inject_bookmarks_and_metadata(pdf_file, toc, meta)
 
-    # Synchronize web-facing HTML and WebP previews (PDFs stay in docs/pdf/ only)
-    sync_targets = [
-        os.path.join(WORKSPACE_DIR, "public", "_artifacts", "cheat-sheets"),
-        os.path.join(WORKSPACE_DIR, ".build-artifacts", "r2", "cheat-sheets"),
-    ]
-    for target in sync_targets:
-        shutil.rmtree(os.path.join(target, "pdf"), ignore_errors=True)
-        os.makedirs(os.path.join(target, "html"), exist_ok=True)
-        os.makedirs(os.path.join(target, "images"), exist_ok=True)
-        shutil.copy2(html_file, os.path.join(target, "html", f"{filename_base}.html"))
-        for img_name in [f"{filename_base}_page_1.webp", f"{filename_base}_poster.webp", "databricks_manual_page_1.webp", "databricks_manual_poster.webp"]:
-            src_img = os.path.join(IMG_DIR, img_name)
-            if os.path.exists(src_img):
-                shutil.copy2(src_img, os.path.join(target, "images", img_name))
-        print(f"Synchronized HTML/WebP previews to {target}")
+        if not args.pdf_only:
+            print("Generating thumbnails and preview images...")
+            generate_previews(pdf_file, filename_base)
+            # Also save as databricks_manual_poster.webp and databricks_manual_page_1.webp
+            generate_previews(pdf_file, "databricks_manual")
+
+            # Synchronize web-facing HTML and WebP previews (PDFs stay in docs/pdf/ only)
+            sync_targets = [
+                os.path.join(WORKSPACE_DIR, "public", "_artifacts", "cheat-sheets"),
+                os.path.join(WORKSPACE_DIR, ".build-artifacts", "r2", "cheat-sheets"),
+            ]
+            for target in sync_targets:
+                shutil.rmtree(os.path.join(target, "pdf"), ignore_errors=True)
+                os.makedirs(os.path.join(target, "html"), exist_ok=True)
+                os.makedirs(os.path.join(target, "images"), exist_ok=True)
+                shutil.copy2(html_file, os.path.join(target, "html", f"{filename_base}.html"))
+                for img_name in [f"{filename_base}_page_1.webp", f"{filename_base}_poster.webp", "databricks_manual_page_1.webp", "databricks_manual_poster.webp"]:
+                    src_img = os.path.join(IMG_DIR, img_name)
+                    if os.path.exists(src_img):
+                        shutil.copy2(src_img, os.path.join(target, "images", img_name))
+                print(f"Synchronized HTML/WebP previews to {target}")
 
     print("Done! 20-Page PDF successfully created in docs/pdf/ and enriched.")
 

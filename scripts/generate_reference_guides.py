@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
 """
 Enterprise Reference Guides Generator & PDF Bookmark Enrichment Engine
-Generates 3 new high-density 12-card A4 reference guides:
+Generates 3 high-density 12-card A4 reference guides:
   1. Apache Spark Catalyst Optimizer & Physical Execution Plan Triage Guide
   2. Lakehouse Table Formats Architecture & Migration Guide: Delta Lake 3.2+ vs Apache Iceberg 1.5+
   3. Data Engineering SDLC, Data Contracts & Testing Pyramid Reference Guide
 
-Enriches all 10 PDFs (7 existing + 3 new) with:
+Enriches the 7 cheat-sheet/runbook PDFs + 3 reference guides with:
   - Hierarchical, accessible PDF bookmarks (TOC outlines)
-  - Standard document metadata (Title, Author, Subject, Keywords, Creator)
-  - High-resolution (250 DPI) thumbnail images & panoramic posters
+  - Standard document metadata (Title, Author, Subject, Keywords, Creator, Dates)
+  - High-resolution (250 DPI) thumbnail images & panoramic posters (unless --pdf-only)
 
 Author: Santosh Jammi | Principal Data Architect
 """
 
+import argparse
+from datetime import datetime, timezone
 import json
 import os
 import shutil
 import subprocess
+import tempfile
 import fitz  # PyMuPDF
 from PIL import Image
 
@@ -1621,7 +1624,13 @@ def inject_bookmarks_and_metadata(pdf_path, toc_entries, metadata):
     print(f"Injecting TOC bookmarks & metadata into {os.path.basename(pdf_path)}...")
     doc = fitz.open(pdf_path)
     doc.set_toc(toc_entries)
-    doc.set_metadata(metadata)
+    pdf_now = datetime.now(timezone.utc).strftime("D:%Y%m%d%H%M%S+00'00'")  # noqa: UP017
+    merged_meta = {
+        **metadata,
+        "creationDate": metadata.get("creationDate") or pdf_now,
+        "modDate": pdf_now,
+    }
+    doc.set_metadata(merged_meta)
 
     # Save to temp and replace atomically
     temp_path = pdf_path + ".tmp"
@@ -1661,6 +1670,14 @@ def build_runbooks_toc(pdf_path, page_offset=0):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Generate and enrich enterprise reference PDFs.")
+    parser.add_argument(
+        "--pdf-only",
+        action="store_true",
+        help="Write PDFs to docs/pdf/ without overwriting public/cheatsheets/html or images.",
+    )
+    args = parser.parse_args()
+
     print("=" * 75)
     print("ENTERPRISE REFERENCE GUIDES GENERATOR & PDF BOOKMARK ENGINE")
     print("=" * 75)
@@ -1753,32 +1770,35 @@ def main():
     ]
 
     # 1. Compile 3 New Reference Guides
-    for guide in guides:
-        html_file = os.path.join(HTML_DIR, f"{guide['name']}.html")
-        pdf_file = os.path.join(PDF_DIR, guide['pdf_name'])
+    with tempfile.TemporaryDirectory() as tmp_html_dir:
+        active_html_dir = tmp_html_dir if args.pdf_only else HTML_DIR
+        for guide in guides:
+            html_file = os.path.join(active_html_dir, f"{guide['name']}.html")
+            pdf_file = os.path.join(PDF_DIR, guide['pdf_name'])
 
-        full_html = generate_full_html(
-            title=guide["title"],
-            theme_color=guide["theme"],
-            title_color=guide["title_color"],
-            body_content=guide["body"]
-        )
-        with open(html_file, "w", encoding="utf-8") as f:
-            f.write(full_html)
-        print(f"\n[1/3] Wrote HTML: {os.path.basename(html_file)}")
+            full_html = generate_full_html(
+                title=guide["title"],
+                theme_color=guide["theme"],
+                title_color=guide["title_color"],
+                body_content=guide["body"]
+            )
+            with open(html_file, "w", encoding="utf-8") as f:
+                f.write(full_html)
+            print(f"\n[1/3] Wrote HTML: {os.path.basename(html_file)}")
 
-        compile_pdf(html_file, pdf_file)
-        render_images(pdf_file, guide["prefix"], dpi=250)
+            compile_pdf(html_file, pdf_file)
+            if not args.pdf_only:
+                render_images(pdf_file, guide["prefix"], dpi=250)
 
-        metadata = {
-            "title": guide["title"],
-            "author": "Santosh Jammi | Principal Data Architect",
-            "subject": guide["subject"],
-            "keywords": guide["keywords"],
-            "creator": "Modern Data Engineer Reference Publishing Engine",
-            "producer": "Headless Chrome / PyMuPDF High-Density Publishing Engine"
-        }
-        inject_bookmarks_and_metadata(pdf_file, guide["toc"], metadata)
+            metadata = {
+                "title": guide["title"],
+                "author": "Santosh Jammi | Principal Data Architect",
+                "subject": guide["subject"],
+                "keywords": guide["keywords"],
+                "creator": "Modern Data Engineer Reference Publishing Engine",
+                "producer": "Headless Chrome / PyMuPDF High-Density Publishing Engine"
+            }
+            inject_bookmarks_and_metadata(pdf_file, guide["toc"], metadata)
 
     # 2. Enrich the 7 Existing Cheat Sheets with TOC Outlines & Metadata
     print("\n" + "=" * 75)
@@ -1946,32 +1966,33 @@ def main():
             inject_bookmarks_and_metadata(pdf_path, item["toc"], meta)
 
     # 3. Synchronize Web-Facing HTML/Images Only (PDFs live strictly in docs/pdf/)
-    print("\n" + "=" * 75)
-    print("SYNCHRONIZING WEB-FACING HTML/IMAGES ACROSS ARTIFACT MIRRORS")
-    print("=" * 75)
+    if not args.pdf_only:
+        print("\n" + "=" * 75)
+        print("SYNCHRONIZING WEB-FACING HTML/IMAGES ACROSS ARTIFACT MIRRORS")
+        print("=" * 75)
 
-    sync_targets = [
-        os.path.join(WORKSPACE_DIR, "public", "_artifacts", "cheat-sheets"),
-        os.path.join(WORKSPACE_DIR, ".build-artifacts", "r2", "cheat-sheets"),
-    ]
-    for target in sync_targets:
-        try:
-            shutil.rmtree(os.path.join(target, "pdf"), ignore_errors=True)
-            os.makedirs(os.path.join(target, "html"), exist_ok=True)
-            os.makedirs(os.path.join(target, "images"), exist_ok=True)
-            for f in os.listdir(HTML_DIR):
-                shutil.copy2(os.path.join(HTML_DIR, f), os.path.join(target, "html", f))
-            for f in os.listdir(IMG_DIR):
-                shutil.copy2(os.path.join(IMG_DIR, f), os.path.join(target, "images", f))
-            print(f"  ✓ Synchronized HTML/WebP assets to: {target}")
-        except Exception as e:
-            print(f"  ⚠️ Warning syncing to {target}: {e}")
+        sync_targets = [
+            os.path.join(WORKSPACE_DIR, "public", "_artifacts", "cheat-sheets"),
+            os.path.join(WORKSPACE_DIR, ".build-artifacts", "r2", "cheat-sheets"),
+        ]
+        for target in sync_targets:
+            try:
+                shutil.rmtree(os.path.join(target, "pdf"), ignore_errors=True)
+                os.makedirs(os.path.join(target, "html"), exist_ok=True)
+                os.makedirs(os.path.join(target, "images"), exist_ok=True)
+                for f in os.listdir(HTML_DIR):
+                    shutil.copy2(os.path.join(HTML_DIR, f), os.path.join(target, "html", f))
+                for f in os.listdir(IMG_DIR):
+                    shutil.copy2(os.path.join(IMG_DIR, f), os.path.join(target, "images", f))
+                print(f"  ✓ Synchronized HTML/WebP assets to: {target}")
+            except Exception as e:
+                print(f"  ⚠️ Warning syncing to {target}: {e}")
 
     # 4. Final Comprehensive Validation
-    print("\n" + "=" * 75)
-    print("FINAL 10-DOCUMENT COMPREHENSIVE VECTOR & TOC AUDIT")
-    print("=" * 75)
     all_pdfs = sorted([f for f in os.listdir(PDF_DIR) if f.endswith(".pdf")])
+    print("\n" + "=" * 75)
+    print(f"FINAL {len(all_pdfs)}-DOCUMENT COMPREHENSIVE VECTOR & TOC AUDIT")
+    print("=" * 75)
     for f in all_pdfs:
         full_p = os.path.join(PDF_DIR, f)
         doc = fitz.open(full_p)
@@ -1979,13 +2000,13 @@ def main():
         title = doc.metadata.get("title", "UNKNOWN")
         p1_chars = len(doc[0].get_text()) if doc.page_count > 0 else 0
         size_kb = os.path.getsize(full_p) / 1024
-        print(f"  • {f:52} | {doc.page_count:2d} p | {toc_len:2d} TOC entries | {size_kb:6.1f} KB | {p1_chars:4d} text chars | {title[:32]}")
+        print(f"  • {f:58} | {doc.page_count:2d} p | {toc_len:2d} TOC entries | {size_kb:6.1f} KB | {p1_chars:4d} text chars | {title[:32]}")
         assert toc_len > 0, f"Error: {f} has no TOC entries!"
         assert p1_chars > 500, f"Error: {f} has empty or non-selectable text!"
         doc.close()
 
     print("\n" + "=" * 75)
-    print("ALL 10 PDF REFERENCE DOCUMENTS GENERATED, ENRICHED & VERIFIED (EXIT 0)")
+    print(f"ALL {len(all_pdfs)} PDF REFERENCE DOCUMENTS VERIFIED (EXIT 0)")
     print("=" * 75)
 
 if __name__ == "__main__":

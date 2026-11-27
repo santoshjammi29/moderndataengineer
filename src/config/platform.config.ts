@@ -82,7 +82,7 @@ export const PLATFORM_CONFIG = {
       title: "Guided Learning Roadmaps",
       path: "/guided-learning",
       badge: `${CONTENT_COUNTS.guidedTracks} Tracks · ${CONTENT_COUNTS.learningPaths} Paths`,
-      description: "Structured progressive learning paths, 130 production deep dives, and 152 SDLC controls from foundations to principal architect.",
+      description: `Structured progressive learning paths, ${CONTENT_COUNTS.deepDiveTopics} production deep dives, and ${CONTENT_COUNTS.sdlcControls} SDLC controls from foundations to principal architect.`,
     },
     sparkEngine: {
       title: "Apache Spark Engine Lab",
@@ -93,7 +93,7 @@ export const PLATFORM_CONFIG = {
     cheatSheet: {
       title: "Data Engineering Cheatsheets",
       path: "/cheat-sheet",
-      badge: "124 Reference Cards",
+      badge: `${CONTENT_COUNTS.cheatSheetsTotal} Reference Cards`,
       description: "Syntax, patterns, and best practices across PySpark, SQL, Delta Lake, and dbt with 250-DPI reference posters.",
     },
   },

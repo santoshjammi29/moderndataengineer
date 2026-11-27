@@ -1143,7 +1143,7 @@ function ArchitectureHubContent(props: ArchitectureClientProps) {
               setSearchQuery(val);
               setVisibleCount(initialBatch);
             }}
-          searchPlaceholder="Search 3,080+ architecture blueprints (e.g., Vitess, Spanner TrueTime, Little's Law)... (Press / to search)"
+          searchPlaceholder={`Search ${totalScenariosCount.toLocaleString()} architecture blueprints (e.g., Vitess, Spanner TrueTime, Little's Law)... (Press / to search)`}
           matchCount={filteredItems.length}
           totalCount={totalScenariosCount}
           countUnit="scenarios"
